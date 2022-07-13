@@ -1,0 +1,16 @@
+node_modules
+.next
+public
+**/**/node_modules
+**/**/.next
+**/**/public
+npm/migration/**
+
+*.lock
+*.log
+
+.gitignore
+.npmignore
+.prettierignore
+.DS_Store
+.eslintignore

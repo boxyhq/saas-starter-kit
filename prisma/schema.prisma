@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now())
+
+  tenants     Tenant[]
+  tenantUsers TenantUser[]
+
+  accounts    Account[]
+  sessions    Session[]
+  invitations Invitation[]
+}
+
+model Tenant {
+  id          String   @id @default(uuid())
+  ownerId     String   @unique
+  name        String
+  slug        String   @unique
+  domain      String?  @unique
+  defaultRole String   @default("member")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  users       TenantUser[]
+  invitations Invitation[]
+}
+
+model TenantUser {
+  id        String   @id @default(uuid())
+  tenantId  String
+  userId    String
+  role      String   @default("member")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, userId])
+}
+
+model Invitation {
+  id        String   @id @default(uuid())
+  tenantId  String
+  email     String
+  role      String   @default("member")
+  token     String   @unique
+  expires   DateTime
+  invitedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user   User   @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, email])
+}
+
+// model Team {
+//   id        String   @id @default(uuid())
+//   tenantId  String
+//   name      String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+
+//   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+//   memberships Membership[]
+//   invitations Invitation[]
+
+//   @@unique([tenantId, name])
+// }
+
+// model Membership {
+//   id        String   @id @default(uuid())
+//   teamId    String
+//   userId    String
+//   role      String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+
+//   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
