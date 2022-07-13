@@ -79,7 +79,7 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       if (token && session) {
-        session.user.id = token.sub;
+        session.user.id = token.sub as string;
       }
 
       return session;
