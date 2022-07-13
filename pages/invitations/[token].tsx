@@ -1,24 +1,39 @@
 import type { NextPageWithLayout } from "types";
-import type { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { Input, Button, Typography } from "@supabase/ui";
-import { ReactElement, useState } from "react";
+import type { GetServerSidePropsContext } from "next";
+import { Button, Typography } from "@supabase/ui";
+import { ReactElement } from "react";
 import React from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import { setCookie } from "cookies-next";
+import { useSession } from "next-auth/react";
 
-import type { User } from "@prisma/client";
-import { getSession } from "@lib/session";
-import { put } from "@lib/fetch";
 import { inferSSRProps } from "@lib/inferSSRProps";
-import users from "models/users";
 import invitations from "models/invitations";
 import { AuthLayout } from "@components/layouts";
+import { put } from "@lib/fetch";
 
-const AcceptInvitation: NextPageWithLayout<
+const AcceptOrganizationInvitation: NextPageWithLayout<
   inferSSRProps<typeof getServerSideProps>
 > = ({ invitation }) => {
+  const { status } = useSession();
   const router = useRouter();
-  console.log(invitation);
+
+  const acceptInvitation = async () => {
+    const { data, error } = await put(`/api/users/${invitation}`, {
+      data: {
+        invitationToken: invitation.token,
+      },
+    });
+
+    if (error) {
+      toast.error(error.message);
+    }
+
+    if (data) {
+      router.push("/organizations/switch");
+    }
+  };
 
   return (
     <>
@@ -34,38 +49,47 @@ const AcceptInvitation: NextPageWithLayout<
           To continue, you must either create a new account, or login to an
           existing account.
         </Typography.Title>
-        <div className="flex w-full flex-wrap justify-center gap-4">
-          <Button
-            size="medium"
-            onClick={() => {
-              router.push(`/auth/join/?invitationToken=${invitation.token}`);
-            }}
-          >
-            Create a new account
+        {status === "unauthenticated" ? (
+          <div className="flex w-full flex-wrap justify-center gap-4">
+            <Button
+              size="medium"
+              onClick={() => {
+                router.push(`/auth/join`);
+              }}
+            >
+              Create a new account
+            </Button>
+            <Button
+              size="medium"
+              type="outline"
+              onClick={() => {
+                router.push(`/auth/login`);
+              }}
+            >
+              Login using an existing account
+            </Button>
+          </div>
+        ) : (
+          <Button size="medium" onClick={acceptInvitation}>
+            Accept invitation
           </Button>
-          <Button
-            size="medium"
-            type="outline"
-            onClick={() => {
-              router.push(`/auth/login/?invitationToken=${invitation.token}`);
-            }}
-          >
-            Login using an existing account
-          </Button>
-        </div>
+        )}
       </div>
     </>
   );
 };
 
-AcceptInvitation.getLayout = function getLayout(page: ReactElement) {
+AcceptOrganizationInvitation.getLayout = function getLayout(
+  page: ReactElement
+) {
   return <AuthLayout>{page}</AuthLayout>;
 };
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { token } = context.query;
+  const { req, res, query } = context;
+  const { token } = query;
 
   const invitation = await invitations.getInvitation(token as string);
 
@@ -75,6 +99,21 @@ export const getServerSideProps = async (
     };
   }
 
+  setCookie(
+    "pending-invite",
+    {
+      token,
+      url: context.resolvedUrl,
+    },
+    {
+      req,
+      res,
+      maxAge: 60 * 6 * 24,
+      httpOnly: true,
+      sameSite: "lax",
+    }
+  );
+
   return {
     props: {
       invitation,
@@ -82,4 +121,4 @@ export const getServerSideProps = async (
   };
 };
 
-export default AcceptInvitation;
+export default AcceptOrganizationInvitation;

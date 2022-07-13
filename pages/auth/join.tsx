@@ -1,19 +1,33 @@
 import type { ReactElement } from "react";
-import type { User } from "@prisma/client";
-import { Input, Button, Typography } from "@supabase/ui";
+import { Typography } from "@supabase/ui";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
 import Image from "next/image";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { GetServerSidePropsContext } from "next";
+import toast from "react-hot-toast";
 
+import type { User } from "@prisma/client";
 import type { NextPageWithLayout } from "types";
 import { AuthLayout } from "@components/layouts";
-import { post } from "@lib/fetch";
 import Link from "next/link";
+import { inferSSRProps } from "@lib/inferSSRProps";
+import JoinWithInvitation from "components/Join/JoinWithInvitation";
+import Join from "components/Join/Join";
+import { getParsedCookie } from "@lib/cookie";
+import { post } from "@lib/fetch";
 
-const Join: NextPageWithLayout = () => {
+type SignupParam = {
+  name: string;
+  email: string;
+  tenant?: string;
+  token?: string;
+  inviteToken?: string;
+};
+
+const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
+  inviteToken,
+  next,
+}) => {
   const { status } = useSession();
   const router = useRouter();
 
@@ -21,33 +35,28 @@ const Join: NextPageWithLayout = () => {
     router.push("/");
   }
 
-  const formik = useFormik({
-    initialValues: {
-      name: "Kiran K",
-      email: "kiran@boxyhq.com",
-      tenant: "BoxyHQ",
-    },
-    validationSchema: UserSchema,
-    onSubmit: async (values) => {
-      const { name, email, tenant } = values;
+  const createAccount = async (params: SignupParam) => {
+    const { name, email, tenant, inviteToken } = params;
 
-      const { data: user, error } = await post<User>("/api/auth/join", {
-        name,
-        email,
-        tenant,
-      });
+    const { data: user, error } = await post<User>("/api/auth/join", {
+      name,
+      email,
+      tenant,
+      inviteToken,
+    });
 
-      if (error) {
-        toast.error(error.message);
-        return;
+    if (error) {
+      toast.error(error.message);
+    }
+
+    if (user) {
+      toast.success("Successfully joined");
+
+      if (next) {
+        router.push(next);
       }
-
-      if (user) {
-        toast.success("Successfully joined");
-        router.push("/auth/login");
-      }
-    },
-  });
+    }
+  };
 
   return (
     <>
@@ -69,49 +78,14 @@ const Join: NextPageWithLayout = () => {
         <Typography.Text>Start your 30-day free trial</Typography.Text>
         <div className="w-full rounded bg-white dark:border dark:border-gray-700 dark:bg-gray-800 sm:max-w-md md:mt-0 xl:p-0">
           <div className="p-6">
-            <form
-              className="space-y-4 md:space-y-6"
-              onSubmit={formik.handleSubmit}
-            >
-              <Input
-                label="Name"
-                type="text"
-                name="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                error={formik.touched.name ? formik.errors.name : undefined}
+            {inviteToken ? (
+              <JoinWithInvitation
+                inviteToken={inviteToken}
+                createAccount={createAccount}
               />
-              <Input
-                label="Organization"
-                type="text"
-                name="tenant"
-                value={formik.values.tenant}
-                onChange={formik.handleChange}
-                error={formik.touched.tenant ? formik.errors.tenant : undefined}
-              />
-              <Input
-                label="Email"
-                type="email"
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.touched.email ? formik.errors.email : undefined}
-              />
-              <Button
-                size="medium"
-                block
-                loading={formik.isSubmitting}
-                htmlType="submit"
-              >
-                Create Account
-              </Button>
-              <div>
-                <Typography.Text>
-                  Signing up signifies that you have read and agree to the Terms
-                  of Service and our Privacy Policy. Cookie Preferences.
-                </Typography.Text>
-              </div>
-            </form>
+            ) : (
+              <Join createAccount={createAccount} />
+            )}
           </div>
         </div>
         <div className="flex gap-2">
@@ -127,14 +101,23 @@ const Join: NextPageWithLayout = () => {
   );
 };
 
-Join.getLayout = function getLayout(page: ReactElement) {
+Signup.getLayout = function getLayout(page: ReactElement) {
   return <AuthLayout>{page}</AuthLayout>;
 };
 
-const UserSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  tenant: Yup.string().required("Tenant is required"),
-  email: Yup.string().required("Email is required").email("Invalid email"),
-});
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { req, res } = context;
 
-export default Join;
+  const cookieParsed = getParsedCookie(req, res);
+
+  return {
+    props: {
+      inviteToken: cookieParsed.token,
+      next: cookieParsed.url,
+    },
+  };
+};
+
+export default Signup;

@@ -49,6 +49,8 @@ export const getServerSideProps = async (
 ) => {
   const session = await getSession(context.req, context.res);
 
+  console.log(context.req.cookies);
+
   return {
     props: {
       redirectAfterSignIn: env.redirectAfterSignIn,

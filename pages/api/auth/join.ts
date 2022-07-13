@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import users from "models/users";
+import invitations from "models/invitations";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,7 +22,17 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, tenant } = req.body;
+  const { name, email, tenant, inviteToken } = req.body;
+
+  const invitation = inviteToken
+    ? await invitations.getInvitation(inviteToken)
+    : null;
+
+  if (inviteToken && !invitation) {
+    return res
+      .status(404)
+      .json({ data: null, error: { message: "Invitation not found." } });
+  }
 
   const existingUser = await users.getUserByEmail(email);
 
@@ -35,11 +46,17 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  const user = await users.createUserAndTenant({
-    name,
-    email,
-    tenant,
-  });
+  const user = invitation
+    ? await users.createUser({
+        name,
+        email,
+        tenantId: invitation.tenantId,
+      })
+    : await users.createUserAndTenant({
+        name,
+        email,
+        tenant,
+      });
 
   return res.status(200).json({ data: user, error: null });
 };

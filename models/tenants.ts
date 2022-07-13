@@ -1,5 +1,5 @@
 import { prisma } from "@lib/prisma";
-import { Tenant } from "@prisma/client";
+import { Invitation, Tenant } from "@prisma/client";
 
 const getTenants = async (userId: string | null): Promise<Tenant[] | null> => {
   if (userId === null) {
@@ -38,10 +38,24 @@ const getTenantMembers = async (slug: string) => {
   });
 };
 
+const addUserWithInvitation = async (
+  userId: string,
+  invitation: Invitation
+) => {
+  return await prisma.tenantUser.create({
+    data: {
+      userId,
+      tenantId: invitation.tenantId,
+      role: invitation.role,
+    },
+  });
+};
+
 const tenants = {
   getTenants,
   getTenantBySlug,
   getTenantMembers,
+  addUserWithInvitation,
 };
 
 export default tenants;

@@ -1,4 +1,4 @@
-# Next.js SaaS Template
+# Next.js SaaS Starter Kit
 
 The Open Source Next.js SaaS Starter Kit.
 

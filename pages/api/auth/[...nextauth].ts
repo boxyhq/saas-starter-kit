@@ -39,7 +39,7 @@ export const authOptions: NextAuthOptions = {
           (await users.createUser({
             name: `${profile.firstName} ${profile.lastName}`,
             email: profile.email,
-            tenant: profile.requested.tenant,
+            tenantId: profile.requested.tenant,
           }))
         );
       },

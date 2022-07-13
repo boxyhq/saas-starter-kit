@@ -68,30 +68,30 @@ const createUserAndTenant = async (param: {
 const createUser = async (param: {
   name: string;
   email: string;
-  tenant: string;
+  tenantId: string;
 }) => {
-  const { name, email, tenant } = param;
+  const { name, email } = param;
 
   return await prisma.user.create({
     data: {
       name,
       email,
       emailVerified: new Date(),
-      tenantUsers: {
-        create: {
-          tenantId: tenant,
-        },
-      },
+      // tenantUsers: {
+      //   create: {
+      //     tenantId,
+      //   },
+      // },
     },
   });
 };
 
 const users = {
-  getUserBySession,
-  getUser,
-  getUserByEmail,
   createUserAndTenant,
+  getUserBySession,
+  getUserByEmail,
   createUser,
+  getUser,
 };
 
 export default users;

@@ -34,8 +34,17 @@ const getInvitation = async (token: string) => {
   });
 };
 
+const deleteInvitation = async (token: string) => {
+  return await prisma.invitation.delete({
+    where: {
+      token,
+    },
+  });
+};
+
 const invitations = {
   createInvitation,
+  deleteInvitation,
   getInvitation,
 };
 
