@@ -28,7 +28,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { apiController } = await jackson();
 
-  const organization = await tenants.getTenantBySlug(slug as string);
+  const organization = await tenants.getTenant({ slug: slug as string });
 
   if (!organization) {
     return res.status(404).json({

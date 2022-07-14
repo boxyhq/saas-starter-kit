@@ -97,9 +97,9 @@ const Settings: NextPageWithLayout<
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const slug = context.query.slug as string;
+  const { slug } = context.query;
 
-  const organization = await tenants.getTenantBySlug(slug);
+  const organization = await tenants.getTenant({ slug: slug as string });
 
   if (!organization) {
     return {

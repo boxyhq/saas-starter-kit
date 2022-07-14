@@ -33,7 +33,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const session = await getSession(req, res);
 
-  const tenant = await tenants.getTenantBySlug(slug as string);
+  const tenant = await tenants.getTenant({ slug: slug as string });
   const user = await users.getUserBySession(session);
 
   if (!tenant || !user) {

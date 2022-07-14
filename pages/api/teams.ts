@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getSession } from "@lib/session";
-import { createTeam, getTeamBySlug } from "models/teams";
+import { createTeam } from "models/teams";
 
 export default async function handler(
   req: NextApiRequest,
@@ -26,15 +26,15 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const session = await getSession(req, res);
 
-  if (await getTeamBySlug(slug)) {
-    return res.status(409).json({
-      data: null,
-      error: {
-        message: "There is an error when creating team",
-        values: { slug: "Team slug is already taken." },
-      },
-    });
-  }
+  // if (await getTeamBySlug(slug)) {
+  //   return res.status(409).json({
+  //     data: null,
+  //     error: {
+  //       message: "There is an error when creating team",
+  //       values: { slug: "Team slug is already taken." },
+  //     },
+  //   });
+  // }
 
   const team = await createTeam(name, slug, session?.user.id);
 

@@ -28,7 +28,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { apiController, oauthController } = await jackson();
 
-  const tenant = await tenants.getTenantBySlug(slug);
+  const tenant = await tenants.getTenant({ slug });
 
   // Check if tenant exists
   if (!tenant) {

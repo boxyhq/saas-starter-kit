@@ -8,6 +8,8 @@ import { prisma } from "@lib/prisma";
 import env from "@lib/env";
 import jackson from "@lib/jackson";
 import users from "models/users";
+import tenants from "models/tenants";
+import { Role } from "types";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -31,17 +33,31 @@ export const authOptions: NextAuthOptions = {
         } as OAuthTokenReq;
 
         const { access_token } = await oauthController.token(params);
-
         const profile = await oauthController.userInfo(access_token);
 
-        return (
-          (await users.getUserByEmail(profile.email)) ||
-          (await users.createUser({
+        let user = await users.getUserByEmail(profile.email);
+
+        if (user === null) {
+          // Create user account if it doesn't exist
+
+          user = await users.createUser({
             name: `${profile.firstName} ${profile.lastName}`,
             email: profile.email,
             tenantId: profile.requested.tenant,
-          }))
-        );
+          });
+
+          const tenant = await tenants.getTenant({
+            id: profile.requested.tenant,
+          });
+
+          await tenants.addUser({
+            userId: user.id,
+            tenantId: tenant?.id as string,
+            role: tenant?.defaultRole as Role,
+          });
+        }
+
+        return user;
       },
     }),
     EmailProvider({
@@ -70,11 +86,7 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
 
-      const existingUser = await prisma.user.findUnique({
-        where: { email: user.email },
-      });
-
-      return existingUser ? true : false;
+      return (await users.getUserByEmail(user.email)) ? true : false;
     },
 
     async session({ session, token }) {

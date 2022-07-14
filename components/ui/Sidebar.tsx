@@ -7,7 +7,6 @@ import {
   SupportIcon,
   DocumentSearchIcon,
   LogoutIcon,
-  UserGroupIcon,
 } from "@heroicons/react/solid";
 import { signOut } from "next-auth/react";
 

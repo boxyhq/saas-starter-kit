@@ -1,8 +1,5 @@
 import type { User } from "@prisma/client";
-import { prisma } from "@lib/prisma";
 import { createUniqueId } from "@lib/common";
-
-const defaultRole = "admin";
 
 export const createTeam = async (
   name: string,
@@ -53,24 +50,3 @@ export const getTeams = async (userId: string | undefined) => {
   //   },
   // });
 };
-
-export const getTeamBySlug = async (
-  slug: string
-  // userId: string | undefined
-) => {
-  // if (!userId || !slug) {
-  //   throw new Error("User and slug is required");
-  // }
-
-  return {};
-
-  // return await prisma.team.findUnique({
-  //   where: {
-  //     id: "1",
-  //   },
-  // });
-};
-
-// export const getTeam = async (name?: string, slug?: string) => {
-//   //
-// }

@@ -44,11 +44,11 @@ const Authentication: NextPageWithLayout<
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const slug = context.query.slug as string;
+  const { slug } = context.query;
 
   const { apiController } = await jackson();
 
-  const tenant = await tenants.getTenantBySlug(slug);
+  const tenant = await tenants.getTenant({ slug: slug as string });
 
   if (!tenant) {
     return {
