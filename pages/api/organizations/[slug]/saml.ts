@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import jackson from "@lib/jackson";
 import env from "@lib/env";
+import tenants from "models/tenants";
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,18 +23,28 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { encodedRawMetadata, teamName } = req.body;
+  const { encodedRawMetadata } = req.body;
+  const { slug } = req.query;
 
   const { apiController } = await jackson();
+
+  const organization = await tenants.getTenantBySlug(slug as string);
+
+  if (!organization) {
+    return res.status(404).json({
+      data: null,
+      error: { message: `Organization ${slug} not found` },
+    });
+  }
 
   try {
     const samlConfig = await apiController.config({
       encodedRawMetadata,
       defaultRedirectUrl: env.acsUrl,
       redirectUrl: env.acsUrl,
-      tenant: teamName,
+      tenant: organization.id,
       product: env.product,
-      name: teamName,
+      name: organization.name,
       description: "",
     });
 

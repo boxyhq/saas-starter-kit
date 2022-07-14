@@ -1,27 +1,42 @@
 import type { ReactElement } from "react";
-import { Input, Button, Typography } from "@supabase/ui";
-import { useSession } from "next-auth/react";
+import { Input, Button } from "@supabase/ui";
+import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import React from "react";
 
 import type { NextPageWithLayout } from "types";
 import { AuthLayout } from "@components/layouts";
 import { post } from "@lib/fetch";
-import Link from "next/link";
 
 const SSO: NextPageWithLayout = () => {
   const { status } = useSession();
   const router = useRouter();
 
+  // SSO callback has query paramters called code and state.
+  const { code, state } = router.query;
+
   if (status === "authenticated") {
     router.push("/");
   }
 
+  // Handle the SAML SSO callback (ACS)
+  React.useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
+    signIn("saml-sso", {
+      code,
+      state,
+      redirect: false,
+    });
+  }, [router.isReady, code, state]);
+
   const formik = useFormik({
     initialValues: {
-      slug: "boxyhq",
+      slug: "",
     },
     validationSchema: Yup.object().shape({
       slug: Yup.string().required("Organization ID is required"),
@@ -48,61 +63,41 @@ const SSO: NextPageWithLayout = () => {
 
   return (
     <>
-      <a
-        href="#"
-        className="mb-6 flex items-center text-2xl font-semibold text-gray-900 dark:text-white"
-      >
-        <Image
-          className="mr-2 h-8 w-8"
-          src="https://boxyhq.com/img/logo.png"
-          alt="BoxyHQ Logo"
-          width={50}
-          height={50}
-        />
-        BoxyHQ
-      </a>
-      <div className="mb-6 flex w-1/2 flex-col items-center gap-4 p-3">
-        <Typography.Title level={3}>Sign in with SAML SSO</Typography.Title>
-        <div className="w-3/5 rounded bg-white dark:border dark:border-gray-700 dark:bg-gray-800 sm:max-w-md md:mt-0 xl:p-0">
-          <div className="p-6">
-            <form
-              className="space-y-4 md:space-y-6"
-              onSubmit={formik.handleSubmit}
-            >
-              <Input
-                label="Organization ID"
-                type="text"
-                name="slug"
-                placeholder="acme"
-                descriptionText="Contact your administrator to get your organization ID"
-                value={formik.values.slug}
-                onChange={formik.handleChange}
-                error={formik.touched.slug ? formik.errors.slug : undefined}
-              />
-              <Button
-                size="medium"
-                block
-                loading={formik.isSubmitting}
-                htmlType="submit"
-              >
-                Continue with SAML SSO
-              </Button>
-            </form>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Typography.Text>Already have an account?</Typography.Text>
-          <Link href="/auth/login">
-            <a className="text-sm">Log in</a>
-          </Link>
-        </div>
+      <div className="rounded-md bg-white p-6 shadow-sm">
+        <form className="space-y-4 md:space-y-6" onSubmit={formik.handleSubmit}>
+          <Input
+            label="Organization ID"
+            type="text"
+            name="slug"
+            placeholder="acme"
+            descriptionText="Contact your administrator to get your organization ID"
+            value={formik.values.slug}
+            onChange={formik.handleChange}
+            error={formik.touched.slug ? formik.errors.slug : undefined}
+          />
+          <Button
+            size="medium"
+            block
+            loading={formik.isSubmitting}
+            htmlType="submit"
+          >
+            Continue with SAML SSO
+          </Button>
+        </form>
       </div>
     </>
   );
 };
 
 SSO.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout>{page}</AuthLayout>;
+  return (
+    <AuthLayout
+      heading="Sign in with SAML SSO"
+      description="Your ID is the slug after the hostname."
+    >
+      {page}
+    </AuthLayout>
+  );
 };
 
 export default SSO;

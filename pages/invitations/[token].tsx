@@ -1,6 +1,6 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
-import { Button, Typography } from "@supabase/ui";
+import { Button } from "@supabase/ui";
 import { ReactElement } from "react";
 import React from "react";
 import toast from "react-hot-toast";
@@ -38,43 +38,42 @@ const AcceptOrganizationInvitation: NextPageWithLayout<
 
   return (
     <>
-      <div className="flex flex-col flex-wrap items-center gap-4 rounded border-2 border-gray-300 p-6">
-        <Typography.Title level={3}>
-          Accept organization invite
-        </Typography.Title>
-        <Typography.Title level={5}>
-          <strong>{invitation.tenant.name}</strong> is inviting you to join
-          their organization.
-        </Typography.Title>
-        <Typography.Title level={5}>
-          To continue, you must either create a new account, or login to an
-          existing account.
-        </Typography.Title>
-        {status === "unauthenticated" ? (
-          <div className="flex w-full flex-wrap justify-center gap-4">
-            <Button
-              size="medium"
-              onClick={() => {
-                router.push(`/auth/join`);
-              }}
-            >
-              Create a new account
+      <div className="rounded-md bg-white p-6 shadow-sm">
+        <div className="flex flex-col items-center space-y-3">
+          <h2 className="font-bold">{`${invitation.tenant.name} is inviting you to join their organization.`}</h2>
+          <h3 className="text-center">
+            {status === "authenticated"
+              ? "You can accept the invitation to join the organization by clicking the button below."
+              : "To continue, you must either create a new account or login to an existing account."}
+          </h3>
+          {status === "unauthenticated" ? (
+            <>
+              <Button
+                size="medium"
+                block
+                onClick={() => {
+                  router.push(`/auth/join`);
+                }}
+              >
+                Create a new account
+              </Button>
+              <Button
+                size="medium"
+                type="outline"
+                block
+                onClick={() => {
+                  router.push(`/auth/login`);
+                }}
+              >
+                Login using an existing account
+              </Button>
+            </>
+          ) : (
+            <Button size="medium" onClick={acceptInvitation} block>
+              Accept invitation
             </Button>
-            <Button
-              size="medium"
-              type="outline"
-              onClick={() => {
-                router.push(`/auth/login`);
-              }}
-            >
-              Login using an existing account
-            </Button>
-          </div>
-        ) : (
-          <Button size="medium" onClick={acceptInvitation}>
-            Accept invitation
-          </Button>
-        )}
+          )}
+        </div>
       </div>
     </>
   );
@@ -83,7 +82,14 @@ const AcceptOrganizationInvitation: NextPageWithLayout<
 AcceptOrganizationInvitation.getLayout = function getLayout(
   page: ReactElement
 ) {
-  return <AuthLayout>{page}</AuthLayout>;
+  return (
+    <AuthLayout
+      heading="Accept organization invite"
+      description="Check out the our website if you'd like to learn more before diving in."
+    >
+      {page}
+    </AuthLayout>
+  );
 };
 
 export const getServerSideProps = async (

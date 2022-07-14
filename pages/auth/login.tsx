@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { Input, Button, Typography } from "@supabase/ui";
+import { Input, Button } from "@supabase/ui";
 import { useSession, getCsrfToken, signIn } from "next-auth/react";
 import type {
   GetServerSidePropsContext,
@@ -7,7 +7,6 @@ import type {
 } from "next";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
@@ -29,10 +28,10 @@ const Login: NextPageWithLayout<
 
   const formik = useFormik({
     initialValues: {
-      email: "kiran@boxyhq.com",
+      email: "",
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string().required("Email is required").email("Invalid email"),
+      email: Yup.string().required().email(),
     }),
     onSubmit: async (values) => {
       const response = await signIn("email", {
@@ -60,65 +59,57 @@ const Login: NextPageWithLayout<
 
   return (
     <>
-      <a
-        href="#"
-        className="mb-6 flex items-center text-2xl font-semibold text-gray-900 dark:text-white"
-      >
-        <Image
-          className="mr-2 h-8 w-8"
-          src="https://boxyhq.com/img/logo.png"
-          alt="BoxyHQ Logo"
-          width={50}
-          height={50}
-        />
-        BoxyHQ
-      </a>
-      <div className="mb-6 flex w-1/2 flex-col items-center gap-4 p-3">
-        <Typography.Title level={3}>Sign in to your account</Typography.Title>
-        <div className="w-3/5 rounded bg-white dark:border dark:border-gray-700 dark:bg-gray-800 sm:max-w-md md:mt-0 xl:p-0">
-          <div className="p-6">
-            <form
-              className="space-y-4 md:space-y-6"
-              onSubmit={formik.handleSubmit}
-            >
-              <Input
-                label="Email"
-                type="email"
-                name="email"
-                descriptionText="We’ll email you a magic link for a password-free sign in."
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.touched.email ? formik.errors.email : undefined}
-              />
-              <Button size="medium" block loading={formik.isSubmitting}>
-                Sign Magic Link
-              </Button>
-            </form>
-            <div className="mt-3 flex items-center justify-center">
-              <Typography.Text>
-                or continue with
-                <Link href="/auth/sso">
-                  <a className="ml-1 text-blue-600">SAML SSO</a>
-                </Link>
-              </Typography.Text>
-            </div>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Typography.Text>
-            Don`t have an account?
-            <Link href="/auth/join">
-              <a className="ml-1 text-blue-600">Sign up</a>
-            </Link>
-          </Typography.Text>
-        </div>
+      <div className="rounded-md bg-white p-6 shadow-sm">
+        <form className="space-y-6" onSubmit={formik.handleSubmit}>
+          <Input
+            label="Email"
+            type="email"
+            name="email"
+            placeholder="jackson@boxyhq.com"
+            descriptionText="We’ll email you a magic link for a password-free sign in."
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            error={formik.touched.email ? formik.errors.email : undefined}
+          />
+          <Button
+            size="medium"
+            block
+            loading={formik.isSubmitting}
+            htmlType="submit"
+          >
+            Sign Magic Link
+          </Button>
+        </form>
+        <p className="mt-3 text-center text-sm text-gray-600">
+          You can also
+          <Link href="/auth/sso">
+            <a className="font-medium text-indigo-600 hover:text-indigo-500">
+              &nbsp;continue with SAML SSO
+            </a>
+          </Link>
+        </p>
       </div>
+      <p className="text-center text-sm text-gray-600">
+        Don`t have an account?
+        <Link href="/auth/join">
+          <a className="font-medium text-indigo-600 hover:text-indigo-500">
+            &nbsp;create a free account
+          </a>
+        </Link>
+      </p>
     </>
   );
 };
 
 Login.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout>{page}</AuthLayout>;
+  return (
+    <AuthLayout
+      heading="Sign in to your account"
+      description="Start your 14-day free trial"
+    >
+      {page}
+    </AuthLayout>
+  );
 };
 
 export const getServerSideProps = async (
