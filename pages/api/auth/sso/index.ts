@@ -62,7 +62,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const params = {
     tenant: tenant.id,
     product: env.product,
-    redirect_uri: env.acsUrl,
+    redirect_uri: env.saml.callback,
     state: "some-random-state",
   } as OAuthReqBody;
 

@@ -40,8 +40,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const samlConfig = await apiController.config({
       encodedRawMetadata,
-      defaultRedirectUrl: env.acsUrl,
-      redirectUrl: env.acsUrl,
+      defaultRedirectUrl: env.saml.callback,
+      redirectUrl: env.saml.callback,
       tenant: organization.id,
       product: env.product,
       name: organization.name,

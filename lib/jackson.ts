@@ -9,8 +9,8 @@ import env from "./env";
 
 const opts: JacksonOption = {
   externalUrl: env.appUrl,
-  samlPath: env.samlPath,
-  samlAudience: env.samlAudience,
+  samlPath: env.saml.path,
+  samlAudience: env.saml.issuer,
   db: {
     engine: "sql",
     type: "postgres",

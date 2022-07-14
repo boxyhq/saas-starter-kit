@@ -100,13 +100,13 @@ export default function Navbar() {
             </button>
             <div className="hidden items-center lg:flex">
               <span className="text-base font-normal text-gray-500">
-                <iframe
+                {/* <iframe
                   src="https://ghbtns.com/github-btn.html?user=boxyhq&repo=jackson&type=star&count=true&size=large"
                   scrolling="0"
                   width="170"
                   height="30"
                   title="GitHub"
-                ></iframe>
+                ></iframe> */}
               </span>
             </div>
           </div>

@@ -20,7 +20,7 @@ const InviteMember = ({
 }) => {
   const formik = useFormik({
     initialValues: {
-      email: "@boxyhq.com",
+      email: "",
       role: "member",
     },
     validationSchema: Yup.object().shape({

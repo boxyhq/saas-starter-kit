@@ -10,3 +10,10 @@ export type ApiResponse<T> = {
 };
 
 export type Role = "owner" | "member" | "billing";
+
+export type SAMLConfig = {
+  issuer: string;
+  path: string;
+  callback: string;
+  acs: string;
+};

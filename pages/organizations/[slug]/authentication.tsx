@@ -11,13 +11,13 @@ import { Card, AddEditSAMLConfig } from "@components/ui";
 
 const Authentication: NextPageWithLayout<
   inferSSRProps<typeof getServerSideProps>
-> = ({ tenant, config }) => {
+> = ({ tenant, config, saml }) => {
   const [visible, setVisible] = React.useState(config.enabled);
 
-  if (visible) {
-    return (
-      <>
-        <Typography.Title level={4}>{tenant.name}</Typography.Title>
+  return (
+    <>
+      <Typography.Title level={4}>{tenant.name}</Typography.Title>
+      {visible ? (
         <Card heading="SAML Authentication">
           <Card.Body className="px-3 py-3">
             <div className="flex items-center justify-between">
@@ -34,11 +34,27 @@ const Authentication: NextPageWithLayout<
             </div>
           </Card.Body>
         </Card>
-      </>
-    );
-  }
-
-  return <AddEditSAMLConfig tenant={tenant} config={config} />;
+      ) : (
+        <AddEditSAMLConfig tenant={tenant} />
+      )}
+      <Card heading="Configuring the Identity Provider">
+        <Card.Body className="px-3 py-3">
+          <div className="flex flex-col justify-between space-y-4">
+            <Typography.Text>
+              Identity Provider will ask you for the following information to
+              configure your SAML app.
+            </Typography.Text>
+            <Typography.Text>
+              <strong>Entity ID:</strong> {saml.issuer}
+            </Typography.Text>
+            <Typography.Text>
+              <strong>ACS URL:</strong> {saml.acs}
+            </Typography.Text>
+          </div>
+        </Card.Body>
+      </Card>
+    </>
+  );
 };
 
 export const getServerSideProps = async (
@@ -64,9 +80,8 @@ export const getServerSideProps = async (
   return {
     props: {
       tenant,
+      saml: env.saml,
       config: {
-        audience: env.samlAudience,
-        acsUrl: env.acsUrl,
         enabled: Object.keys(samlConfig).length > 0,
       },
     },
