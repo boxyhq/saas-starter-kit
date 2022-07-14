@@ -41,6 +41,8 @@ const Login: NextPageWithLayout<
         callbackUrl: redirectAfterSignIn,
       });
 
+      formik.resetForm();
+
       if (response?.error) {
         toast.error(
           "Something went wrong while sending the email. Please try again later."

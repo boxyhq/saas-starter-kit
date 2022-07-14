@@ -5,9 +5,9 @@ import { Input, Button, Typography } from "@supabase/ui";
 const Join = ({ createAccount }: { createAccount: any }) => {
   const formik = useFormik({
     initialValues: {
-      name: "Kiran K",
-      email: "kiran@boxyhq.com",
-      tenant: "BoxyHQ",
+      name: "",
+      email: "",
+      tenant: "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
@@ -22,6 +22,8 @@ const Join = ({ createAccount }: { createAccount: any }) => {
         email,
         tenant,
       });
+
+      formik.resetForm();
     },
   });
 
@@ -34,6 +36,7 @@ const Join = ({ createAccount }: { createAccount: any }) => {
         value={formik.values.name}
         onChange={formik.handleChange}
         error={formik.touched.name ? formik.errors.name : undefined}
+        placeholder="Your name"
       />
       <Input
         label="Organization"
@@ -42,6 +45,7 @@ const Join = ({ createAccount }: { createAccount: any }) => {
         value={formik.values.tenant}
         onChange={formik.handleChange}
         error={formik.touched.tenant ? formik.errors.tenant : undefined}
+        placeholder="Organization name"
       />
       <Input
         label="Email"
@@ -50,6 +54,7 @@ const Join = ({ createAccount }: { createAccount: any }) => {
         value={formik.values.email}
         onChange={formik.handleChange}
         error={formik.touched.email ? formik.errors.email : undefined}
+        placeholder="jackson@boxyhq.com"
       />
       <Button
         size="medium"

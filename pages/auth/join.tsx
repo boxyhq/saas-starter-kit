@@ -101,7 +101,7 @@ export const getServerSideProps = async (
   return {
     props: {
       inviteToken: cookieParsed.token,
-      next: cookieParsed.url,
+      next: cookieParsed.url ?? "/auth/login",
     },
   };
 };

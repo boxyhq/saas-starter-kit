@@ -8,6 +8,7 @@ import type {
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import React from "react";
+import { deleteCookie } from "cookies-next";
 
 import type { NextPageWithLayout } from "types";
 import { AuthLayout } from "@components/layouts";
@@ -43,20 +44,24 @@ const Organizations: NextPageWithLayout<
   );
 };
 
+Organizations.getLayout = function getLayout(page: ReactElement) {
+  return <AuthLayout>{page}</AuthLayout>;
+};
+
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const session = await getSession(context.req, context.res);
+  const { req, res } = context;
+
+  const session = await getSession(req, res);
+
+  deleteCookie("pending-invite", { req, res });
 
   return {
     props: {
       organizations: await tenants.getTenants(session?.user.id as string),
     },
   };
-};
-
-Organizations.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout>{page}</AuthLayout>;
 };
 
 export default Organizations;

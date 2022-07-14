@@ -11,8 +11,8 @@ const JoinWithInvitation = ({
 }) => {
   const formik = useFormik({
     initialValues: {
-      name: "Kiran K",
-      email: "kiran@boxyhq.com",
+      name: "",
+      email: "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
@@ -26,6 +26,8 @@ const JoinWithInvitation = ({
         email,
         inviteToken,
       });
+
+      formik.resetForm();
     },
   });
 
@@ -38,6 +40,7 @@ const JoinWithInvitation = ({
         value={formik.values.name}
         onChange={formik.handleChange}
         error={formik.touched.name ? formik.errors.name : undefined}
+        placeholder="Your name"
       />
       <Input
         label="Email"
@@ -46,6 +49,7 @@ const JoinWithInvitation = ({
         value={formik.values.email}
         onChange={formik.handleChange}
         error={formik.touched.email ? formik.errors.email : undefined}
+        placeholder="you@company.com"
       />
       <Button
         size="medium"

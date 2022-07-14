@@ -14,7 +14,7 @@ const opts: JacksonOption = {
   db: {
     engine: "sql",
     type: "postgres",
-    url: "postgresql://postgres:ojUmRph879EzYBAw@db.qsmdcxvgcacrkwkilleu.supabase.co:5432/postgres", //env.databaseUrl,
+    url: env.databaseUrl,
   },
 };
 
