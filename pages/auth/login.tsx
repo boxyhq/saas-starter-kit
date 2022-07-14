@@ -15,6 +15,7 @@ import Link from "next/link";
 import type { NextPageWithLayout } from "types";
 import { AuthLayout } from "@components/layouts";
 import env from "@lib/env";
+import { getParsedCookie } from "@lib/cookie";
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -123,10 +124,14 @@ Login.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
+  const { req, res } = context;
+
+  const cookieParsed = getParsedCookie(req, res);
+
   return {
     props: {
       csrfToken: await getCsrfToken(context),
-      redirectAfterSignIn: env.redirectAfterSignIn,
+      redirectAfterSignIn: cookieParsed.url ?? env.redirectAfterSignIn,
     },
   };
 };

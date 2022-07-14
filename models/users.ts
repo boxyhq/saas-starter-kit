@@ -77,11 +77,6 @@ const createUser = async (param: {
       name,
       email,
       emailVerified: new Date(),
-      // tenantUsers: {
-      //   create: {
-      //     tenantId,
-      //   },
-      // },
     },
   });
 };

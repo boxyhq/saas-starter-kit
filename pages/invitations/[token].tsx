@@ -20,11 +20,12 @@ const AcceptOrganizationInvitation: NextPageWithLayout<
   const router = useRouter();
 
   const acceptInvitation = async () => {
-    const { data, error } = await put(`/api/users/${invitation}`, {
-      data: {
+    const { data, error } = await put(
+      `/api/organizations/${invitation.tenant.slug}/invitations`,
+      {
         invitationToken: invitation.token,
-      },
-    });
+      }
+    );
 
     if (error) {
       toast.error(error.message);

@@ -11,7 +11,6 @@ import React from "react";
 
 import type { NextPageWithLayout } from "types";
 import { AuthLayout } from "@components/layouts";
-import env from "@lib/env";
 import tenants from "models/tenants";
 import { getSession } from "@lib/session";
 
@@ -49,11 +48,8 @@ export const getServerSideProps = async (
 ) => {
   const session = await getSession(context.req, context.res);
 
-  console.log(context.req.cookies);
-
   return {
     props: {
-      redirectAfterSignIn: env.redirectAfterSignIn,
       organizations: await tenants.getTenants(session?.user.id as string),
     },
   };

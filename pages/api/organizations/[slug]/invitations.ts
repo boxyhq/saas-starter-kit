@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
+import type { Role } from "types";
 import invitations from "models/invitations";
 import tenants from "models/tenants";
 import { getSession } from "@lib/session";
@@ -25,6 +26,7 @@ export default async function handler(
   }
 }
 
+// Invite a user to an organization
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, role } = req.body;
   const { slug } = req.query;
@@ -51,6 +53,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json({ data: invitation, error: null });
 };
 
+// Accept an invitation to an organization
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const { invitationToken } = req.body;
 
@@ -73,10 +76,22 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  const organization = await tenants.addUserWithInvitation(
-    session.user.id,
-    invitation
-  );
+  const organization = await tenants.addUser({
+    userId: session.user.id,
+    tenantId: invitation.tenant.id,
+    role: invitation.role as Role,
+  });
+
+  if (!organization) {
+    return res.status(500).json({
+      data: null,
+      error: {
+        message: "Failed to accept invitation. Contact your administrator.",
+      },
+    });
+  }
+
+  await invitations.deleteInvitation(invitationToken);
 
   return res.status(200).json({ data: organization, error: null });
 };
