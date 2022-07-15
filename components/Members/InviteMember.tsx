@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 import { post } from "@lib/fetch";
 import { Invitation, Tenant } from "@prisma/client";
+import useInvitations from "hooks/useInvitations";
 
 const InviteMember = ({
   visible,
@@ -18,6 +19,8 @@ const InviteMember = ({
   availableRoles: any;
   organization: Tenant;
 }) => {
+  const { mutateInvitation } = useInvitations(organization.slug);
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -45,6 +48,8 @@ const InviteMember = ({
       if (invitation) {
         toast.success("Invitation sent!");
       }
+
+      mutateInvitation();
 
       setVisible(false);
     },

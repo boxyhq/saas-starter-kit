@@ -1,31 +1,28 @@
-import { ApiResponse } from "types";
 import toast from "react-hot-toast";
 import React from "react";
 import { Button } from "@supabase/ui";
-import useSWR, { useSWRConfig } from "swr";
 import axios from "axios";
 
-import fetcher from "@lib/fetcher";
+import { ApiResponse } from "types";
 import { Card, LetterAvatar } from "@components/ui";
 import { Tenant, Invitation } from "@prisma/client";
+import useInvitations from "hooks/useInvitations";
 
 const InvitationsList = ({ organization }: { organization: Tenant }) => {
-  const { mutate } = useSWRConfig();
-  const url = `/api/organizations/${organization.slug}/invitations`;
-
-  const { data } = useSWR<ApiResponse<Invitation[]>>(url, fetcher);
-
-  const invitations = data?.data || [];
+  const { invitations, mutateInvitation } = useInvitations(organization.slug);
 
   const deleteInvitation = async (invitation: Invitation) => {
-    const { data: response } = await axios.delete<ApiResponse<unknown>>(url, {
-      data: {
-        invitationToken: invitation.token,
-      },
-      validateStatus: () => true,
-    });
+    const { data: response } = await axios.delete<ApiResponse<unknown>>(
+      `/api/organizations/${organization.slug}/invitations`,
+      {
+        data: {
+          invitationToken: invitation.token,
+        },
+        validateStatus: () => true,
+      }
+    );
 
-    mutate(url);
+    mutateInvitation();
 
     if (response.error) {
       toast.error(response.error.message);
