@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import type { Role } from "types";
+import { getSession } from "@lib/session";
 import invitations from "models/invitations";
 import tenants from "models/tenants";
-import { getSession } from "@lib/session";
 import users from "models/users";
 
 export default async function handler(
@@ -13,10 +13,14 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
+    case "GET":
+      return handleGET(req, res);
     case "POST":
       return handlePOST(req, res);
     case "PUT":
       return handlePUT(req, res);
+    case "DELETE":
+      return handleDELETE(req, res);
     default:
       res.setHeader("Allow", ["POST", "PUT"]);
       res.status(405).json({
@@ -94,4 +98,42 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   await invitations.deleteInvitation(invitationToken);
 
   return res.status(200).json({ data: organization, error: null });
+};
+
+// Delete an invitation
+const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { invitationToken } = req.body;
+
+  const invitation = await invitations.getInvitation(invitationToken);
+
+  if (!invitation) {
+    return res.status(404).json({
+      data: null,
+      error: {
+        message: "Invitation not found",
+      },
+    });
+  }
+
+  await invitations.deleteInvitation(invitationToken);
+
+  return res.status(200).json({ data: {}, error: null });
+};
+
+// Get all invitations for an organization
+const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { slug } = req.query;
+
+  const tenant = await tenants.getTenant({ slug: slug as string });
+
+  if (!tenant) {
+    return res.status(404).json({
+      data: null,
+      error: { message: "Tenant not found" },
+    });
+  }
+
+  const invitationsList = await invitations.getInvitations(tenant.id);
+
+  return res.status(200).json({ data: invitationsList, error: null });
 };

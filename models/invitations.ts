@@ -3,6 +3,14 @@ import { v4 as uuidv4 } from "uuid";
 import { prisma } from "@lib/prisma";
 import { Tenant, User } from "@prisma/client";
 
+const getInvitations = async (tenantId: string) => {
+  return await prisma.invitation.findMany({
+    where: {
+      tenantId,
+    },
+  });
+};
+
 const createInvitation = async (param: {
   tenant: Tenant;
   user: User;
@@ -46,6 +54,7 @@ const invitations = {
   createInvitation,
   deleteInvitation,
   getInvitation,
+  getInvitations,
 };
 
 export default invitations;

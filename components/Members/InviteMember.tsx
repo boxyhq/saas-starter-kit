@@ -2,10 +2,10 @@ import { Modal, Input, Select } from "@supabase/ui";
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import toast from "react-hot-toast";
 
 import { post } from "@lib/fetch";
 import { Invitation, Tenant } from "@prisma/client";
-import toast from "react-hot-toast";
 
 const InviteMember = ({
   visible,

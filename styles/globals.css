@@ -20,7 +20,7 @@ a {
 }
 
 .sbui-btn {
-  @apply py-2 px-4 text-sm !important;
+  @apply px-4 text-sm !important;
 }
 
 .sbui-btn-primary {

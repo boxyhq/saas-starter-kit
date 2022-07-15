@@ -1,12 +1,21 @@
+import { useSession } from "next-auth/react";
+
 import type { NextPageWithLayout } from "types";
+import { Card } from "@components/ui";
 
 const Dashboard: NextPageWithLayout = () => {
+  const { data: session } = useSession();
+
   return (
-    <div className="px-4 pt-6">
-      <div className="grid w-full grid-cols-1 gap-4">
-        <div className="rounded bg-white p-4 sm:p-6 xl:p-8 ">Dashboard 1</div>
-      </div>
-    </div>
+    <Card heading="Dashboard">
+      <Card.Body>
+        <div className="p-3">
+          <p className="">
+            {`Hi, ${session?.user.name} You have logged in using ${session?.user.email}`}
+          </p>
+        </div>
+      </Card.Body>
+    </Card>
   );
 };
 

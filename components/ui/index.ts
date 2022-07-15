@@ -6,4 +6,6 @@ export { default as Card } from "./Card";
 export { default as CreateTeam } from "./CreateTeam";
 export { default as AddEditSAMLConfig } from "./AddEditSAMLConfig";
 export { default as LetterAvatar } from "./LetterAvatar";
-export { default as InviteMember } from "./InviteMember";
+export { default as InviteMember } from "../Members/InviteMember";
+export { default as InvitationsList } from "../Members/InvitationsList";
+export { default as MembersList } from "../Members/MembersList";
