@@ -1,81 +1,85 @@
 import type { NextPageWithLayout } from "types";
-import type { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { Input, Button, Typography } from "@supabase/ui";
-import { useState } from "react";
+import type { GetServerSidePropsContext } from "next";
+import { Input, Button } from "@supabase/ui";
 import React from "react";
 import toast from "react-hot-toast";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
 
-import type { User } from "@prisma/client";
+import { inferSSRProps } from "@lib/inferSSRProps";
 import { getSession } from "@lib/session";
-import { put } from "@lib/fetch";
+import { Card } from "@components/ui";
 import users from "models/users";
 
-const Account: NextPageWithLayout<Props> = ({ user }) => {
-  const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
-    name: user.name,
-    email: user.email,
+const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
+  user,
+}) => {
+  const formik = useFormik({
+    initialValues: {
+      name: user?.name,
+      email: user?.email,
+    },
+    validationSchema: Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string().required(),
+    }),
+    onSubmit: async (values) => {
+      const { name, email } = values;
+
+      const response = await axios.put("/api/users", {
+        name,
+        email,
+      });
+
+      const { data, error } = response.data;
+
+      if (error) {
+        toast.error(error.message);
+      }
+
+      if (data) {
+        toast.success("Successfully updated");
+      }
+    },
   });
 
-  const onSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    setLoading(true);
-
-    const { data, error } = await put("/api/users", {
-      name: form.name,
-    });
-
-    setLoading(false);
-
-    if (!error && data) {
-      toast.success("Successfully updated profile");
-    }
-  };
-
-  const onChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const target = event.target as HTMLInputElement;
-
-    setForm({ ...form, [target.name]: target.value });
-  };
-
   return (
-    <div className="px-4 pt-6">
-      <div className="rounded bg-white p-6">
-        <div className="border-b border-gray-300 pb-3">
-          <Typography.Title level={3}>Account</Typography.Title>
-        </div>
-        <div className="mt-6 grid grid-cols-3">
-          <form onSubmit={onSubmit} className="space-y-3">
-            <Input
-              label="Name"
-              type="text"
-              name="name"
-              value={form.name || ""}
-              required
-              onChange={onChange}
-            />
-            <Input
-              label="Email"
-              type="email"
-              name="email"
-              defaultValue={form.email || ""}
-              readOnly
-              disabled
-            />
-            <Button size="medium" loading={loading}>
-              Save Changes
-            </Button>
-          </form>
-        </div>
-      </div>
-    </div>
+    <>
+      <form onSubmit={formik.handleSubmit}>
+        <Card heading="Account">
+          <Card.Body className="px-3 py-3">
+            <div className="flex flex-col space-y-6">
+              <Input
+                name="name"
+                label="Your name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                error={formik.errors.name}
+              />
+              <Input
+                name="slug"
+                label="Your email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                error={formik.errors.email}
+              />
+            </div>
+          </Card.Body>
+          <Card.Footer>
+            <div className="flex justify-end">
+              <Button htmlType="submit" loading={formik.isSubmitting}>
+                Save Changes
+              </Button>
+            </div>
+          </Card.Footer>
+        </Card>
+      </form>
+    </>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (
+export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const session = await getSession(context.req, context.res);
@@ -83,16 +87,9 @@ export const getServerSideProps: GetServerSideProps = async (
 
   return {
     props: {
-      user: {
-        name: user?.name,
-        email: user?.email,
-      },
+      user,
     },
   };
-};
-
-type Props = {
-  user: User;
 };
 
 export default Account;

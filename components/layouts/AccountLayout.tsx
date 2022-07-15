@@ -1,8 +1,8 @@
 import { Sidebar, Navbar } from "@components/ui";
 import React from "react";
 
-import { get } from "@lib/fetch";
 import { Tenant } from "@prisma/client";
+import { get } from "@lib/fetch";
 
 export default function AccountLayout({ children }: Props) {
   const [tenants, setTenants] = React.useState<Tenant[] | null>(null);

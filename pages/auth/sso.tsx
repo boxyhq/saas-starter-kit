@@ -48,6 +48,9 @@ const SSO: NextPageWithLayout = () => {
         `/api/auth/sso`,
         {
           slug,
+        },
+        {
+          validateStatus: () => true,
         }
       );
 

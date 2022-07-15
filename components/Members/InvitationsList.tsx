@@ -4,7 +4,7 @@ import { Button } from "@supabase/ui";
 import axios from "axios";
 
 import { ApiResponse } from "types";
-import { Card, LetterAvatar } from "@components/ui";
+import { Card, LetterAvatar, EmptyState } from "@components/ui";
 import { Tenant, Invitation } from "@prisma/client";
 import useInvitations from "hooks/useInvitations";
 
@@ -33,8 +33,18 @@ const InvitationsList = ({ organization }: { organization: Tenant }) => {
     }
   };
 
+  if (!invitations.length) {
+    return (
+      <Card heading="Invitations Sent">
+        <Card.Body>
+          <EmptyState title="No invitation found." />
+        </Card.Body>
+      </Card>
+    );
+  }
+
   return (
-    <Card heading="Sent Invitations">
+    <Card heading="Invitations Sent">
       <Card.Body>
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
