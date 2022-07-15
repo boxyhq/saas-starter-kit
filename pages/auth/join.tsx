@@ -3,16 +3,16 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 import type { User } from "@prisma/client";
-import type { NextPageWithLayout } from "types";
+import type { ApiResponse, NextPageWithLayout } from "types";
 import { AuthLayout } from "@components/layouts";
 import Link from "next/link";
 import { inferSSRProps } from "@lib/inferSSRProps";
 import JoinWithInvitation from "components/Join/JoinWithInvitation";
 import Join from "components/Join/Join";
 import { getParsedCookie } from "@lib/cookie";
-import { post } from "@lib/fetch";
 
 type SignupParam = {
   name: string;
@@ -36,12 +36,14 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   const createAccount = async (params: SignupParam) => {
     const { name, email, tenant, inviteToken } = params;
 
-    const { data: user, error } = await post<User>("/api/auth/join", {
+    const response = await axios.post<ApiResponse<User>>(`/api/auth/join`, {
       name,
       email,
       tenant,
       inviteToken,
     });
+
+    const { data: user, error } = response.data;
 
     if (error) {
       toast.error(error.message);

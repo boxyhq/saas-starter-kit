@@ -4,8 +4,6 @@ import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import { post } from "@lib/fetch";
-
 export default function CreateTeam(props: Props) {
   const { visible, setVisible } = props;
   const router = useRouter();
@@ -20,16 +18,14 @@ export default function CreateTeam(props: Props) {
       slug: Yup.string().required("Slug is required"),
     }),
     onSubmit: async (values) => {
-      const { data: team, error } = await post("/api/teams", values);
-
-      if (error && error.values) {
-        formik.setErrors(error.values);
-      }
-
-      if (team) {
-        setVisible(false);
-        router.replace(`/teams/${team.id}/settings`);
-      }
+      // const { data: team, error } = await post("/api/teams", values);
+      // if (error && error.values) {
+      //   formik.setErrors(error.values);
+      // }
+      // if (team) {
+      //   setVisible(false);
+      //   router.replace(`/teams/${team.id}/settings`);
+      // }
     },
   });
 

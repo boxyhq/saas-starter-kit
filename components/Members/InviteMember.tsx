@@ -3,10 +3,11 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
+import axios from "axios";
 
-import { post } from "@lib/fetch";
 import { Invitation, Tenant } from "@prisma/client";
 import useInvitations from "hooks/useInvitations";
+import { ApiResponse } from "types";
 
 const InviteMember = ({
   visible,
@@ -33,13 +34,15 @@ const InviteMember = ({
     onSubmit: async (values) => {
       const { email, role } = values;
 
-      const { data: invitation, error } = await post<Invitation>(
+      const response = await axios.post<ApiResponse<Invitation>>(
         `/api/organizations/${organization.slug}/invitations`,
         {
           email,
           role,
         }
       );
+
+      const { data: invitation, error } = response.data;
 
       if (error) {
         toast.error(error.message);

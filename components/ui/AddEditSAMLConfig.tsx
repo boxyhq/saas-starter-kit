@@ -2,9 +2,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Router from "next/router";
 import { Button, Input, Typography } from "@supabase/ui";
+import axios from "axios";
 
-import type { SAMLConfig } from "types";
-import { post } from "@lib/fetch";
+import type { SAMLConfig, ApiResponse } from "types";
 import { Card } from "@components/ui";
 import { Tenant } from "@prisma/client";
 
@@ -17,12 +17,14 @@ const AddEditSAMLConfig = ({ tenant }: { tenant: Tenant }) => {
       metadata: Yup.string().required("Metadata is required"),
     }),
     onSubmit: async (values) => {
-      const { data, error } = await post<SAMLConfig>(
+      const response = await axios.post<ApiResponse<SAMLConfig>>(
         `/api/organizations/${tenant.slug}/saml`,
         {
           encodedRawMetadata: Buffer.from(values.metadata).toString("base64"),
         }
       );
+
+      const { data, error } = response.data;
 
       if (error) {
         formik.setErrors(error.values);

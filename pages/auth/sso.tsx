@@ -5,10 +5,10 @@ import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import React from "react";
+import axios from "axios";
 
-import type { NextPageWithLayout } from "types";
+import type { NextPageWithLayout, ApiResponse } from "types";
 import { AuthLayout } from "@components/layouts";
-import { post } from "@lib/fetch";
 
 const SSO: NextPageWithLayout = () => {
   const { status } = useSession();
@@ -44,12 +44,14 @@ const SSO: NextPageWithLayout = () => {
     onSubmit: async (values) => {
       const { slug } = values;
 
-      const { data, error } = await post<{ redirect_url: string }>(
-        "/api/auth/sso",
+      const response = await axios.post<ApiResponse<{ redirect_url: string }>>(
+        `/api/auth/sso`,
         {
           slug,
         }
       );
+
+      const { data, error } = response.data;
 
       if (error) {
         formik.setErrors(error.values);
