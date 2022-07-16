@@ -34,7 +34,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       .json({ data: null, error: { message: "Invitation not found." } });
   }
 
-  const existingUser = await users.getUserByEmail(email);
+  const existingUser = await users.getUser({ email });
 
   if (existingUser) {
     return res.status(400).json({

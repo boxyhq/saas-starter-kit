@@ -14,20 +14,12 @@ const getUserBySession = async (session: Session | null) => {
     return null;
   }
 
-  return await getUser(id);
+  return await getUser({ id });
 };
 
-const getUser = async (id: string) => {
+const getUser = async (key: { id: string } | { email: string }) => {
   return await prisma.user.findUnique({
-    where: {
-      id,
-    },
-  });
-};
-
-const getUserByEmail = async (email: string) => {
-  return await prisma.user.findUnique({
-    where: { email },
+    where: key,
   });
 };
 
@@ -84,7 +76,6 @@ const createUser = async (param: {
 const users = {
   createUserAndTenant,
   getUserBySession,
-  getUserByEmail,
   createUser,
   getUser,
 };

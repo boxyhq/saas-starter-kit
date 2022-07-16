@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
         const { access_token } = await oauthController.token(params);
         const profile = await oauthController.userInfo(access_token);
 
-        let user = await users.getUserByEmail(profile.email);
+        let user = await users.getUser({ email: profile.email });
 
         if (user === null) {
           // Create user account if it doesn't exist
@@ -86,7 +86,7 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
 
-      return (await users.getUserByEmail(user.email)) ? true : false;
+      return (await users.getUser({ email: user.email })) ? true : false;
     },
 
     async session({ session, token }) {

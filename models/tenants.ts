@@ -18,11 +18,9 @@ const getTenants = async (userId: string | null): Promise<Tenant[] | null> => {
   });
 };
 
-const getTenant = async ({ id, slug }: { id?: string; slug?: string }) => {
-  const where = id ? { id } : { slug };
-
+const getTenant = async (key: { id: string } | { slug: string }) => {
   return await prisma.tenant.findUnique({
-    where,
+    where: key,
   });
 };
 
