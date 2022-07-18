@@ -9,3 +9,4 @@ export { default as InviteMember } from "../Members/InviteMember";
 export { default as InvitationsList } from "../Members/InvitationsList";
 export { default as MembersList } from "../Members/MembersList";
 export { default as EmptyState } from "./EmptyState";
+export { default as InputWithLabel } from "./InputWithLabel";

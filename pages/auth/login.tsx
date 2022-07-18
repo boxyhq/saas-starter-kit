@@ -1,5 +1,4 @@
 import type { ReactElement } from "react";
-import { Input, Button } from "@supabase/ui";
 import { useSession, getCsrfToken, signIn } from "next-auth/react";
 import type {
   GetServerSidePropsContext,
@@ -10,9 +9,12 @@ import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
+import { Button } from "react-daisyui";
+import React from "react";
 
 import type { NextPageWithLayout } from "types";
 import { AuthLayout } from "@components/layouts";
+import { InputWithLabel } from "@components/ui";
 import env from "@lib/env";
 import { getParsedCookie } from "@lib/cookie";
 
@@ -61,23 +63,23 @@ const Login: NextPageWithLayout<
 
   return (
     <>
-      <div className="rounded-md bg-white p-6 shadow-sm">
+      <div className="rounded-md bg-white  p-6 shadow-sm">
         <form className="space-y-6" onSubmit={formik.handleSubmit}>
-          <Input
-            label="Email"
+          <InputWithLabel
             type="email"
+            label="Email"
             name="email"
             placeholder="jackson@boxyhq.com"
-            descriptionText="We’ll email you a magic link for a password-free sign in."
             value={formik.values.email}
-            onChange={formik.handleChange}
+            descriptionText="We’ll email you a magic link for a password-free sign in."
             error={formik.touched.email ? formik.errors.email : undefined}
+            onChange={formik.handleChange}
           />
           <Button
-            size="medium"
-            block
+            type="submit"
+            color="primary"
             loading={formik.isSubmitting}
-            htmlType="submit"
+            fullWidth
           >
             Sign Magic Link
           </Button>
