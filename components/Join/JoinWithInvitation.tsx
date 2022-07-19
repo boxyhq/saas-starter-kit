@@ -1,6 +1,8 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Input, Button, Typography } from "@supabase/ui";
+import { Button } from "react-daisyui";
+
+import { InputWithLabel } from "@components/ui";
 
 const JoinWithInvitation = ({
   inviteToken,
@@ -33,37 +35,37 @@ const JoinWithInvitation = ({
 
   return (
     <form className="space-y-4 md:space-y-6" onSubmit={formik.handleSubmit}>
-      <Input
-        label="Name"
+      <InputWithLabel
         type="text"
+        label="Name"
         name="name"
-        value={formik.values.name}
-        onChange={formik.handleChange}
-        error={formik.touched.name ? formik.errors.name : undefined}
         placeholder="Your name"
-      />
-      <Input
-        label="Email"
-        type="email"
-        name="email"
-        value={formik.values.email}
+        value={formik.values.name}
+        error={formik.touched.name ? formik.errors.name : undefined}
         onChange={formik.handleChange}
+      />
+      <InputWithLabel
+        type="email"
+        label="Email"
+        name="email"
+        placeholder="jackson@boxyhq.com"
+        value={formik.values.email}
         error={formik.touched.email ? formik.errors.email : undefined}
-        placeholder="you@company.com"
+        onChange={formik.handleChange}
       />
       <Button
-        size="medium"
-        block
+        type="submit"
+        color="primary"
         loading={formik.isSubmitting}
-        htmlType="submit"
+        fullWidth
       >
         Create Account
       </Button>
       <div>
-        <Typography.Text>
+        <p className="text-sm">
           Signing up signifies that you have read and agree to the Terms of
           Service and our Privacy Policy. Cookie Preferences.
-        </Typography.Text>
+        </p>
       </div>
     </form>
   );

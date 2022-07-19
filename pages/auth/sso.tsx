@@ -1,14 +1,15 @@
 import type { ReactElement } from "react";
-import { Input, Button } from "@supabase/ui";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import React from "react";
 import axios from "axios";
+import { Button } from "react-daisyui";
 
 import type { NextPageWithLayout, ApiResponse } from "types";
 import { AuthLayout } from "@components/layouts";
+import { InputWithLabel } from "@components/ui";
 
 const SSO: NextPageWithLayout = () => {
   const { status } = useSession();
@@ -70,21 +71,21 @@ const SSO: NextPageWithLayout = () => {
     <>
       <div className="rounded-md bg-white p-6 shadow-sm">
         <form className="space-y-4 md:space-y-6" onSubmit={formik.handleSubmit}>
-          <Input
-            label="Organization ID"
+          <InputWithLabel
             type="text"
+            label="Organization ID"
             name="slug"
             placeholder="acme"
-            descriptionText="Contact your administrator to get your organization ID"
             value={formik.values.slug}
-            onChange={formik.handleChange}
+            descriptionText="Contact your administrator to get your organization ID"
             error={formik.touched.slug ? formik.errors.slug : undefined}
+            onChange={formik.handleChange}
           />
           <Button
-            size="medium"
-            block
+            type="submit"
+            color="primary"
             loading={formik.isSubmitting}
-            htmlType="submit"
+            fullWidth
           >
             Continue with SAML SSO
           </Button>

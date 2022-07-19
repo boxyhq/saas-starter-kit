@@ -4,15 +4,15 @@ import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
 import toast from "react-hot-toast";
 import axios from "axios";
+import Link from "next/link";
 
 import type { User } from "@prisma/client";
 import type { ApiResponse, NextPageWithLayout } from "types";
 import { AuthLayout } from "@components/layouts";
-import Link from "next/link";
 import { inferSSRProps } from "@lib/inferSSRProps";
+import { getParsedCookie } from "@lib/cookie";
 import JoinWithInvitation from "components/Join/JoinWithInvitation";
 import Join from "components/Join/Join";
-import { getParsedCookie } from "@lib/cookie";
 
 type SignupParam = {
   name: string;

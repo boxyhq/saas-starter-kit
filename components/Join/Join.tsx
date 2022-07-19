@@ -1,6 +1,8 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Input, Button, Typography } from "@supabase/ui";
+import { Button } from "react-daisyui";
+
+import { InputWithLabel } from "@components/ui";
 
 const Join = ({ createAccount }: { createAccount: any }) => {
   const formik = useFormik({
@@ -29,46 +31,46 @@ const Join = ({ createAccount }: { createAccount: any }) => {
 
   return (
     <form className="space-y-4 md:space-y-6" onSubmit={formik.handleSubmit}>
-      <Input
+      <InputWithLabel
+        type="text"
         label="Name"
-        type="text"
         name="name"
-        value={formik.values.name}
-        onChange={formik.handleChange}
-        error={formik.touched.name ? formik.errors.name : undefined}
         placeholder="Your name"
+        value={formik.values.name}
+        error={formik.touched.name ? formik.errors.name : undefined}
+        onChange={formik.handleChange}
       />
-      <Input
-        label="Organization"
+      <InputWithLabel
         type="text"
+        label="Organization"
         name="tenant"
-        value={formik.values.tenant}
-        onChange={formik.handleChange}
-        error={formik.touched.tenant ? formik.errors.tenant : undefined}
         placeholder="Organization name"
-      />
-      <Input
-        label="Email"
-        type="email"
-        name="email"
-        value={formik.values.email}
+        value={formik.values.tenant}
+        error={formik.touched.tenant ? formik.errors.tenant : undefined}
         onChange={formik.handleChange}
-        error={formik.touched.email ? formik.errors.email : undefined}
+      />
+      <InputWithLabel
+        type="email"
+        label="Email"
+        name="email"
         placeholder="jackson@boxyhq.com"
+        value={formik.values.email}
+        error={formik.touched.email ? formik.errors.email : undefined}
+        onChange={formik.handleChange}
       />
       <Button
-        size="medium"
-        block
+        type="submit"
+        color="primary"
         loading={formik.isSubmitting}
-        htmlType="submit"
+        fullWidth
       >
         Create Account
       </Button>
       <div>
-        <Typography.Text>
+        <p className="text-sm">
           Signing up signifies that you have read and agree to the Terms of
           Service and our Privacy Policy. Cookie Preferences.
-        </Typography.Text>
+        </p>
       </div>
     </form>
   );
