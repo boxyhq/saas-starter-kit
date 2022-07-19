@@ -1,8 +1,8 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Router from "next/router";
-import { Button, Input, Typography } from "@supabase/ui";
 import axios from "axios";
+import { Button, Textarea } from "react-daisyui";
 
 import type { SAMLConfig, ApiResponse } from "types";
 import { Card } from "@components/ui";
@@ -42,26 +42,30 @@ const AddEditSAMLConfig = ({ tenant }: { tenant: Tenant }) => {
         <Card heading="SAML Authentication">
           <Card.Body className="px-3 py-3">
             <div className="flex flex-col space-y-3">
-              <Typography.Text>
+              <p>
                 Fill out the information below to set up SAML authentication for
                 added security.
-              </Typography.Text>
-              <Input.TextArea
-                label="Metadata XML"
+              </p>
+              <Textarea
                 rows={8}
                 placeholder="Copy and paste Metadata XML here."
                 name="metadata"
                 onChange={formik.handleChange}
                 value={formik.values.metadata}
-                error={
-                  formik.touched.metadata ? formik.errors.metadata : undefined
-                }
+                // error={
+                //   formik.touched.metadata ? formik.errors.metadata : undefined
+                // }
               />
             </div>
           </Card.Body>
           <Card.Footer>
             <div className="flex justify-end">
-              <Button htmlType="submit" loading={formik.isSubmitting}>
+              <Button
+                type="submit"
+                color="primary"
+                loading={formik.isSubmitting}
+                active={formik.dirty}
+              >
                 Save Changes
               </Button>
             </div>

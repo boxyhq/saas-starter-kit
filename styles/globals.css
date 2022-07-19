@@ -19,16 +19,12 @@ a {
   box-sizing: border-box;
 }
 
-/* .sbui-btn-primary {
-  @apply rounded border border-transparent bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 !important;
+.input {
+  @apply min-h-8 h-10 rounded;
 }
 
-.sbui-formlayout__label {
-  @apply flex flex-grow;
-} */
-
-.input {
-  @apply rounded;
+.select {
+  @apply min-h-8 h-10 rounded;
 }
 
 .btn {

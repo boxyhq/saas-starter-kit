@@ -62,6 +62,7 @@ const Join = ({ createAccount }: { createAccount: any }) => {
         type="submit"
         color="primary"
         loading={formik.isSubmitting}
+        active={formik.dirty}
         fullWidth
       >
         Create Account

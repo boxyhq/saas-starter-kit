@@ -57,6 +57,7 @@ const JoinWithInvitation = ({
         type="submit"
         color="primary"
         loading={formik.isSubmitting}
+        active={formik.dirty}
         fullWidth
       >
         Create Account

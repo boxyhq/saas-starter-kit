@@ -1,7 +1,7 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
 import React from "react";
-import { Button, Typography } from "@supabase/ui";
+import { Button } from "react-daisyui";
 
 import env from "@lib/env";
 import jackson from "@lib/jackson";
@@ -16,18 +16,16 @@ const Authentication: NextPageWithLayout<
 
   return (
     <>
-      <Typography.Title level={4}>{tenant.name}</Typography.Title>
+      <h4>{tenant.name}</h4>
       {visible ? (
         <Card heading="SAML Authentication">
           <Card.Body className="px-3 py-3">
             <div className="flex items-center justify-between">
-              <Typography.Text>
-                SAML authentication is currently enabled for this team.
-              </Typography.Text>
+              <p>SAML authentication is currently enabled for this team.</p>
               <Button
-                size="tiny"
-                type="outline"
+                size="sm"
                 onClick={() => setVisible(!visible)}
+                variant="outline"
               >
                 Edit SAML Settings
               </Button>
@@ -40,16 +38,16 @@ const Authentication: NextPageWithLayout<
       <Card heading="Configuring the Identity Provider">
         <Card.Body className="px-3 py-3">
           <div className="flex flex-col justify-between space-y-4">
-            <Typography.Text>
+            <p>
               Identity Provider will ask you for the following information to
               configure your SAML app.
-            </Typography.Text>
-            <Typography.Text>
+            </p>
+            <p>
               <strong>Entity ID:</strong> {saml.issuer}
-            </Typography.Text>
-            <Typography.Text>
+            </p>
+            <p>
               <strong>ACS URL:</strong> {saml.acs}
-            </Typography.Text>
+            </p>
           </div>
         </Card.Body>
       </Card>

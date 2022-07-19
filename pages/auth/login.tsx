@@ -79,6 +79,7 @@ const Login: NextPageWithLayout<
             type="submit"
             color="primary"
             loading={formik.isSubmitting}
+            active={formik.dirty}
             fullWidth
           >
             Sign Magic Link

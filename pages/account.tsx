@@ -1,15 +1,15 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
-import { Input, Button } from "@supabase/ui";
 import React from "react";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { Button } from "react-daisyui";
 
 import { inferSSRProps } from "@lib/inferSSRProps";
 import { getSession } from "@lib/session";
-import { Card } from "@components/ui";
+import { Card, InputWithLabel } from "@components/ui";
 import users from "models/users";
 
 const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
@@ -50,25 +50,34 @@ const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
         <Card heading="Account">
           <Card.Body className="px-3 py-3">
             <div className="flex flex-col space-y-6">
-              <Input
+              <InputWithLabel
+                type="text"
+                label="Name"
                 name="name"
-                label="Your name"
+                placeholder="Your name"
                 value={formik.values.name}
+                error={formik.touched.name ? formik.errors.name : undefined}
                 onChange={formik.handleChange}
-                error={formik.errors.name}
               />
-              <Input
-                name="slug"
-                label="Your email"
+              <InputWithLabel
+                type="email"
+                label="Email"
+                name="email"
+                placeholder="Your email"
                 value={formik.values.email}
+                error={formik.touched.email ? formik.errors.email : undefined}
                 onChange={formik.handleChange}
-                error={formik.errors.email}
               />
             </div>
           </Card.Body>
           <Card.Footer>
             <div className="flex justify-end">
-              <Button htmlType="submit" loading={formik.isSubmitting}>
+              <Button
+                type="submit"
+                color="primary"
+                loading={formik.isSubmitting}
+                active={formik.dirty}
+              >
                 Save Changes
               </Button>
             </div>

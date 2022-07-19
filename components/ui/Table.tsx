@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Typography } from "@supabase/ui";
 
 type TableProps = {
   body: JSX.Element | JSX.Element[];
@@ -36,7 +35,7 @@ const Th: React.FC<ThProps> = ({ children, className, style }) => {
 
   return (
     <th className={classes.join(" ")} style={style}>
-      <Typography.Text type="secondary">{children}</Typography.Text>
+      <span>{children}</span>
     </th>
   );
 };

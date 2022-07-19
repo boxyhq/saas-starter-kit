@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import React from "react";
-import { Button } from "@supabase/ui";
 import axios from "axios";
+import { Button } from "react-daisyui";
 
 import { ApiResponse } from "types";
 import { Card, LetterAvatar, EmptyState } from "@components/ui";
@@ -78,8 +78,9 @@ const InvitationsList = ({ organization }: { organization: Tenant }) => {
                   <td className="px-6 py-3">{invitation.createdAt}</td>
                   <td className="px-6 py-3">
                     <Button
-                      danger
-                      type="default"
+                      size="sm"
+                      variant="outline"
+                      color="error"
                       onClick={() => {
                         deleteInvitation(invitation);
                       }}

@@ -1,12 +1,12 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
-import { Button } from "@supabase/ui";
 import { ReactElement } from "react";
 import React from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { setCookie } from "cookies-next";
 import { useSession } from "next-auth/react";
+import { Button } from "react-daisyui";
 
 import { inferSSRProps } from "@lib/inferSSRProps";
 import invitations from "models/invitations";
@@ -49,8 +49,7 @@ const AcceptOrganizationInvitation: NextPageWithLayout<
           {status === "unauthenticated" ? (
             <>
               <Button
-                size="medium"
-                block
+                fullWidth
                 onClick={() => {
                   router.push(`/auth/join`);
                 }}
@@ -58,9 +57,7 @@ const AcceptOrganizationInvitation: NextPageWithLayout<
                 Create a new account
               </Button>
               <Button
-                size="medium"
-                type="outline"
-                block
+                fullWidth
                 onClick={() => {
                   router.push(`/auth/login`);
                 }}
@@ -69,7 +66,7 @@ const AcceptOrganizationInvitation: NextPageWithLayout<
               </Button>
             </>
           ) : (
-            <Button size="medium" onClick={acceptInvitation} block>
+            <Button onClick={acceptInvitation} fullWidth>
               Accept invitation
             </Button>
           )}

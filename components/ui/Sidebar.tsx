@@ -7,11 +7,13 @@ import {
   SupportIcon,
   DocumentSearchIcon,
   LogoutIcon,
+  LockClosedIcon,
+  UsersIcon,
+  AdjustmentsIcon,
 } from "@heroicons/react/solid";
 import { signOut } from "next-auth/react";
 
 import { Tenant } from "@prisma/client";
-import { IconLock, IconSettings, IconUsers } from "@supabase/ui";
 
 const NavItem = (props: Props) => {
   const router = useRouter();
@@ -85,21 +87,21 @@ export default function Sidebar({ tenants }: { tenants: Tenant[] }) {
                   <NavItem
                     href={`/organizations/${tenants[0].slug}/settings`}
                     text="Settings"
-                    icon={IconSettings}
+                    icon={AdjustmentsIcon}
                   />
                 </li>
                 <li>
                   <NavItem
                     href={`/organizations/${tenants[0].slug}/authentication`}
                     text="Authentication"
-                    icon={IconLock}
+                    icon={LockClosedIcon}
                   />
                 </li>
                 <li>
                   <NavItem
                     href={`/organizations/${tenants[0].slug}/members`}
                     text="Members"
-                    icon={IconUsers}
+                    icon={UsersIcon}
                   />
                 </li>
               </ul>

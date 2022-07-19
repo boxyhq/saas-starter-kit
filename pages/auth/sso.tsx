@@ -85,6 +85,7 @@ const SSO: NextPageWithLayout = () => {
             type="submit"
             color="primary"
             loading={formik.isSubmitting}
+            active={formik.dirty}
             fullWidth
           >
             Continue with SAML SSO

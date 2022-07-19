@@ -1,7 +1,7 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
-import { Button, Typography } from "@supabase/ui";
 import React from "react";
+import { Button } from "react-daisyui";
 
 import { InviteMember, InvitationsList, MembersList } from "@components/ui";
 import { inferSSRProps } from "@lib/inferSSRProps";
@@ -18,9 +18,10 @@ const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   return (
     <>
       <div className="flex items-center justify-between">
-        <Typography.Title level={4}>{organization.name}</Typography.Title>
+        <h4>{organization.name}</h4>
         <Button
-          htmlType="button"
+          size="sm"
+          color="accent"
           onClick={() => {
             setVisible(!visible);
           }}

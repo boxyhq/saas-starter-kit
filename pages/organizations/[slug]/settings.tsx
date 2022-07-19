@@ -1,12 +1,12 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
-import { Input, Button, Typography } from "@supabase/ui";
 import React from "react";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Button } from "react-daisyui";
 
-import { Card } from "@components/ui";
+import { Card, InputWithLabel } from "@components/ui";
 import { inferSSRProps } from "@lib/inferSSRProps";
 import tenants from "models/tenants";
 import { put } from "@lib/fetch";
@@ -50,12 +50,12 @@ const Settings: NextPageWithLayout<
 
   return (
     <>
-      <Typography.Title level={4}>{organization.name}</Typography.Title>
+      <h4>{organization.name}</h4>
       <form onSubmit={formik.handleSubmit}>
         <Card heading="General">
           <Card.Body className="px-3 py-3">
             <div className="flex flex-col space-y-6">
-              <Input
+              <InputWithLabel
                 name="name"
                 label="Display name"
                 descriptionText="A human-friendly name for the organization"
@@ -63,7 +63,7 @@ const Settings: NextPageWithLayout<
                 onChange={formik.handleChange}
                 error={formik.errors.name}
               />
-              <Input
+              <InputWithLabel
                 name="slug"
                 label="Organization slug"
                 descriptionText="A unique ID used to identify this organization"
@@ -71,7 +71,7 @@ const Settings: NextPageWithLayout<
                 onChange={formik.handleChange}
                 error={formik.errors.slug}
               />
-              <Input
+              <InputWithLabel
                 name="domain"
                 label="Domain"
                 descriptionText="Domain name for the organization"
@@ -83,7 +83,12 @@ const Settings: NextPageWithLayout<
           </Card.Body>
           <Card.Footer>
             <div className="flex justify-end">
-              <Button htmlType="submit" loading={formik.isSubmitting}>
+              <Button
+                type="submit"
+                color="primary"
+                loading={formik.isSubmitting}
+                active={formik.dirty}
+              >
                 Save Changes
               </Button>
             </div>
