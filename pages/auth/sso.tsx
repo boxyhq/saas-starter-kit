@@ -8,8 +8,8 @@ import axios from "axios";
 import { Button } from "react-daisyui";
 
 import type { NextPageWithLayout, ApiResponse } from "types";
-import { AuthLayout } from "@components/layouts";
-import { InputWithLabel } from "@components/ui";
+import { AuthLayout } from "@/components/layouts";
+import { InputWithLabel } from "@/components/ui";
 
 const SSO: NextPageWithLayout = () => {
   const { status } = useSession();

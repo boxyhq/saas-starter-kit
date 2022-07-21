@@ -2,9 +2,9 @@ import Head from "next/head";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
 
-import app from "@lib/app";
 import type { AppPropsWithLayout } from "types";
-import { AccountLayout } from "@components/layouts";
+import { AccountLayout } from "@/components/layouts";
+import app from "@/lib/app";
 
 import "../styles/globals.css";
 

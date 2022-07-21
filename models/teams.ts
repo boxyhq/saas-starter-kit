@@ -1,5 +1,5 @@
 import type { User } from "@prisma/client";
-import { createUniqueId } from "@lib/common";
+import { createUniqueId } from "@/lib/common";
 
 export const createTeam = async (
   name: string,

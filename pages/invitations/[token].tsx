@@ -8,10 +8,10 @@ import { setCookie } from "cookies-next";
 import { useSession } from "next-auth/react";
 import { Button } from "react-daisyui";
 
-import { inferSSRProps } from "@lib/inferSSRProps";
+import { inferSSRProps } from "@/lib/inferSSRProps";
+import { put } from "@/lib/fetch";
+import { AuthLayout } from "@/components/layouts";
 import invitations from "models/invitations";
-import { AuthLayout } from "@components/layouts";
-import { put } from "@lib/fetch";
 
 const AcceptOrganizationInvitation: NextPageWithLayout<
   inferSSRProps<typeof getServerSideProps>

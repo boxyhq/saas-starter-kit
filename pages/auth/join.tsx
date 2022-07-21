@@ -8,11 +8,12 @@ import Link from "next/link";
 
 import type { User } from "@prisma/client";
 import type { ApiResponse, NextPageWithLayout } from "types";
-import { AuthLayout } from "@components/layouts";
-import { inferSSRProps } from "@lib/inferSSRProps";
-import { getParsedCookie } from "@lib/cookie";
-import JoinWithInvitation from "components/Join/JoinWithInvitation";
-import Join from "components/Join/Join";
+import { AuthLayout } from "@/components/layouts";
+import { inferSSRProps } from "@/lib/inferSSRProps";
+import { getParsedCookie } from "@/lib/cookie";
+
+import JoinWithInvitation from "@/components/interfaces/Auth/JoinWithInvitation";
+import Join from "@/components/interfaces/Auth/Join";
 
 type SignupParam = {
   name: string;

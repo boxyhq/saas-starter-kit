@@ -5,7 +5,7 @@ import axios from "axios";
 import { Button, Textarea } from "react-daisyui";
 
 import type { SAMLConfig, ApiResponse } from "types";
-import { Card } from "@components/ui";
+import { Card } from "@/components/ui";
 import { Tenant } from "@prisma/client";
 
 const AddEditSAMLConfig = ({ tenant }: { tenant: Tenant }) => {

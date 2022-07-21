@@ -3,20 +3,16 @@ import type { GetServerSidePropsContext } from "next";
 import React from "react";
 import { Button } from "react-daisyui";
 
-import {
-  InviteMember,
-  InvitationsList,
-  MembersList,
-} from "@/components/interfaces/Member";
+import { TeamsList, CreateTeam } from "@/components/interfaces/Team";
 import { inferSSRProps } from "@/lib/inferSSRProps";
-import { availableRoles } from "@/lib/roles";
 import tenants from "models/tenants";
 
 const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   organization,
-  availableRoles,
-  members,
+  teams,
 }) => {
+  console.log(teams);
+
   const [visible, setVisible] = React.useState(false);
 
   return (
@@ -30,17 +26,16 @@ const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
             setVisible(!visible);
           }}
         >
-          Invite Members
+          Create Team
         </Button>
       </div>
-      <InviteMember
+      {/* <InviteMember
         visible={visible}
         setVisible={setVisible}
         availableRoles={availableRoles}
         organization={organization}
-      />
-      <MembersList members={members} />
-      <InvitationsList organization={organization} />
+      /> */}
+      <TeamsList teams={teams} />
     </>
   );
 };
@@ -61,8 +56,7 @@ export const getServerSideProps = async (
   return {
     props: {
       organization,
-      availableRoles,
-      members: await tenants.getTenantMembers(slug as string),
+      teams: [],
     },
   };
 };

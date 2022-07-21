@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import jackson from "@lib/jackson";
-import env from "@lib/env";
+import jackson from "@/lib/jackson";
+import env from "@/lib/env";
 import tenants from "models/tenants";
 
 export default async function handler(

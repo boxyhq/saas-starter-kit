@@ -1,13 +1,9 @@
-import { Card, LetterAvatar } from "@components/ui";
-import { User, TenantUser } from "@prisma/client";
+import { Card, LetterAvatar } from "@/components/ui";
+import { Team } from "@prisma/client";
 
-const MembersList = ({
-  members,
-}: {
-  members: (TenantUser & { user: User })[];
-}) => {
+const TeamsList = ({ teams }: { teams: any }) => {
   return (
-    <Card heading="Members">
+    <Card heading="Your Teams">
       <Card.Body>
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
@@ -27,7 +23,7 @@ const MembersList = ({
             </tr>
           </thead>
           <tbody>
-            {members.map((member) => {
+            {/* {teams.map((team) => {
               return (
                 <tr
                   key={member.id}
@@ -46,7 +42,7 @@ const MembersList = ({
                   </td>
                 </tr>
               );
-            })}
+            })} */}
           </tbody>
         </table>
       </Card.Body>
@@ -54,4 +50,4 @@ const MembersList = ({
   );
 };
 
-export default MembersList;
+export default TeamsList;

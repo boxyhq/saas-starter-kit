@@ -51,12 +51,12 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now())
 
-  tenants     Tenant[]
-  tenantUsers TenantUser[]
-
-  accounts    Account[]
-  sessions    Session[]
-  invitations Invitation[]
+  tenants         Tenant[]
+  tenantUsers     TenantUser[]
+  accounts        Account[]
+  sessions        Session[]
+  invitations     Invitation[]
+  teamMemberships TeamMembers[]
 }
 
 model Tenant {
@@ -73,6 +73,7 @@ model Tenant {
 
   users       TenantUser[]
   invitations Invitation[]
+  teams       Team[]
 }
 
 model TenantUser {
@@ -106,29 +107,30 @@ model Invitation {
   @@unique([tenantId, email])
 }
 
-// model Team {
-//   id        String   @id @default(uuid())
-//   tenantId  String
-//   name      String
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @default(now())
+model Team {
+  id        String   @id @default(uuid())
+  tenantId  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
-//   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-//   memberships Membership[]
-//   invitations Invitation[]
+  memberships TeamMembers[]
 
-//   @@unique([tenantId, name])
-// }
+  @@unique([tenantId, name])
+}
 
-// model Membership {
-//   id        String   @id @default(uuid())
-//   teamId    String
-//   userId    String
-//   role      String
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @default(now())
+model TeamMembers {
+  id        String   @id @default(uuid())
+  teamId    String
+  userId    String
+  role      String   @default("member")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
-//   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
-//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-// }
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+}

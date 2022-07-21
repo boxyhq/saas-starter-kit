@@ -1,6 +1,6 @@
 import useSWR, { mutate } from "swr";
 
-import fetcher from "@lib/fetcher";
+import fetcher from "@/lib/fetcher";
 import { ApiResponse } from "types";
 import { Invitation } from "@prisma/client";
 

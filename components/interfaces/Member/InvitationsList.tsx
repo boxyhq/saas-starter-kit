@@ -4,7 +4,7 @@ import axios from "axios";
 import { Button } from "react-daisyui";
 
 import { ApiResponse } from "types";
-import { Card, LetterAvatar, EmptyState } from "@components/ui";
+import { Card, LetterAvatar, EmptyState } from "@/components/ui";
 import { Tenant, Invitation } from "@prisma/client";
 import useInvitations from "hooks/useInvitations";
 

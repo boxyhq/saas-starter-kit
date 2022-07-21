@@ -6,10 +6,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button } from "react-daisyui";
 
-import { Card, InputWithLabel } from "@components/ui";
-import { inferSSRProps } from "@lib/inferSSRProps";
+import { Card, InputWithLabel } from "@/components/ui";
+import { inferSSRProps } from "@/lib/inferSSRProps";
+import { put } from "@/lib/fetch";
 import tenants from "models/tenants";
-import { put } from "@lib/fetch";
 
 const Settings: NextPageWithLayout<
   inferSSRProps<typeof getServerSideProps>

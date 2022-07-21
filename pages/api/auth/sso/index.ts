@@ -2,8 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import type { OAuthReqBody } from "@boxyhq/saml-jackson";
 import tenants from "models/tenants";
-import jackson from "@lib/jackson";
-import env from "@lib/env";
+import jackson from "@/lib/jackson";
+import env from "@/lib/env";
 
 export default async function handler(
   req: NextApiRequest,

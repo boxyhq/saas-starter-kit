@@ -26,3 +26,13 @@ Boxy is an MIT-licensed Next.js based framework that saves you months of develop
 ## Integrations
 
 - [SAML Jackson](https://github.com/boxyhq/jackson)
+
+## Teams
+
+- Create a team
+- Remove a team
+- Update team settings
+- Add a team member
+- Remove a team member
+- List team members
+- List all teams

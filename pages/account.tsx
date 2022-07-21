@@ -7,9 +7,9 @@ import * as Yup from "yup";
 import axios from "axios";
 import { Button } from "react-daisyui";
 
-import { inferSSRProps } from "@lib/inferSSRProps";
-import { getSession } from "@lib/session";
-import { Card, InputWithLabel } from "@components/ui";
+import { inferSSRProps } from "@/lib/inferSSRProps";
+import { getSession } from "@/lib/session";
+import { Card, InputWithLabel } from "@/components/ui";
 import users from "models/users";
 
 const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({

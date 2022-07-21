@@ -1,6 +1,6 @@
 import type { Role } from "types";
 import type { Tenant } from "@prisma/client";
-import { prisma } from "@lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 const getTenants = async (userId: string | null): Promise<Tenant[] | null> => {
   if (userId === null) {

@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button } from "react-daisyui";
 
-import { InputWithLabel } from "@components/ui";
+import { InputWithLabel } from "@/components/ui";
 
 const Join = ({ createAccount }: { createAccount: any }) => {
   const formik = useFormik({

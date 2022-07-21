@@ -16,9 +16,8 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@lib/*": ["./lib/*"],
-      "@components/ui": ["./components/ui/index.ts"],
-      "@components/layouts": ["./components/layouts/index.ts"]
+      "@/lib/*": ["lib/*"],
+      "@/components/*": ["components/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-auth.d.ts"],

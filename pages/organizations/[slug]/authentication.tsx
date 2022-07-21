@@ -3,11 +3,11 @@ import type { GetServerSidePropsContext } from "next";
 import React from "react";
 import { Button } from "react-daisyui";
 
-import env from "@lib/env";
-import jackson from "@lib/jackson";
+import env from "@/lib/env";
+import jackson from "@/lib/jackson";
+import { inferSSRProps } from "@/lib/inferSSRProps";
+import { Card, AddEditSAMLConfig } from "@/components/ui";
 import tenants from "models/tenants";
-import { inferSSRProps } from "@lib/inferSSRProps";
-import { Card, AddEditSAMLConfig } from "@components/ui";
 
 const Authentication: NextPageWithLayout<
   inferSSRProps<typeof getServerSideProps>

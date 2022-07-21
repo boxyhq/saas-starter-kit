@@ -1,7 +1,7 @@
 import type { Session } from "next-auth";
 
-import { prisma } from "@lib/prisma";
-import { slugify } from "@lib/common";
+import { prisma } from "@/lib/prisma";
+import { slugify } from "@/lib/common";
 
 const getUserBySession = async (session: Session | null) => {
   if (session === null || session.user === null) {

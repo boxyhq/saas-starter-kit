@@ -10,6 +10,7 @@ import {
   LockClosedIcon,
   UsersIcon,
   AdjustmentsIcon,
+  CollectionIcon,
 } from "@heroicons/react/solid";
 import { signOut } from "next-auth/react";
 
@@ -102,6 +103,13 @@ export default function Sidebar({ tenants }: { tenants: Tenant[] }) {
                     href={`/organizations/${tenants[0].slug}/members`}
                     text="Members"
                     icon={UsersIcon}
+                  />
+                </li>
+                <li>
+                  <NavItem
+                    href={`/organizations/${tenants[0].slug}/teams`}
+                    text="Teams"
+                    icon={CollectionIcon}
                   />
                 </li>
               </ul>

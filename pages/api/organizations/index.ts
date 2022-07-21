@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { getSession } from "@lib/session";
+import { getSession } from "@/lib/session";
 import tenants from "models/tenants";
 
 export default async function handler(

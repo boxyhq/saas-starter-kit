@@ -13,10 +13,10 @@ import { Button } from "react-daisyui";
 import React from "react";
 
 import type { NextPageWithLayout } from "types";
-import { AuthLayout } from "@components/layouts";
-import { InputWithLabel } from "@components/ui";
-import env from "@lib/env";
-import { getParsedCookie } from "@lib/cookie";
+import { AuthLayout } from "@/components/layouts";
+import { InputWithLabel } from "@/components/ui";
+import { getParsedCookie } from "@/lib/cookie";
+import env from "@/lib/env";
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>

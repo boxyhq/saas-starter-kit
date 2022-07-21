@@ -10,9 +10,9 @@ import React from "react";
 import { deleteCookie } from "cookies-next";
 
 import type { NextPageWithLayout } from "types";
-import { AuthLayout } from "@components/layouts";
+import { AuthLayout } from "@/components/layouts";
+import { getSession } from "@/lib/session";
 import tenants from "models/tenants";
-import { getSession } from "@lib/session";
 
 const Organizations: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>

@@ -4,9 +4,9 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import type { OAuthTokenReq } from "@boxyhq/saml-jackson";
-import { prisma } from "@lib/prisma";
-import env from "@lib/env";
-import jackson from "@lib/jackson";
+import { prisma } from "@/lib/prisma";
+import env from "@/lib/env";
+import jackson from "@/lib/jackson";
 import users from "models/users";
 import tenants from "models/tenants";
 import { Role } from "types";
