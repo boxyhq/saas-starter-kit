@@ -6,8 +6,9 @@ import { Button } from "react-daisyui";
 import env from "@/lib/env";
 import jackson from "@/lib/jackson";
 import { inferSSRProps } from "@/lib/inferSSRProps";
-import { Card, AddEditSAMLConfig } from "@/components/ui";
+import { Card } from "@/components/ui";
 import tenants from "models/tenants";
+import { AddEditSAMLConfig } from "@/components/interfaces/SAML";
 
 const Authentication: NextPageWithLayout<
   inferSSRProps<typeof getServerSideProps>
