@@ -40,13 +40,6 @@ export default function Navbar() {
               href=""
               className="flex items-center text-xl font-bold lg:ml-2.5"
             >
-              <Image
-                src="https://boxyhq.com/img/logo.png"
-                className="mr-2 h-6"
-                alt="BoxyHQ Logo"
-                width={35}
-                height={35}
-              />
               <span className="self-center whitespace-nowrap">BoxyHQ</span>
             </a>
             <form action="#" method="GET" className="hidden lg:block lg:pl-32">

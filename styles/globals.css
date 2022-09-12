@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: dark light;
+}
+
 html,
 body {
   padding: 0;
@@ -19,18 +23,24 @@ a {
   box-sizing: border-box;
 }
 
-.input {
-  @apply min-h-8 h-10 rounded;
-}
+@layer components {
+  #__next {
+    @apply h-full;
+  }
 
-.select {
-  @apply min-h-8 h-10 rounded;
-}
+  .btn {
+    @apply min-h-8 h-10 rounded normal-case;
+  }
 
-.btn {
-  @apply rounded;
-}
+  .btn-primary {
+    @apply text-white;
+  }
 
-.label {
-  @apply pl-0 !important;
+  .btn-error {
+    @apply text-white;
+  }
+
+  .modal-box {
+    @apply rounded;
+  }
 }

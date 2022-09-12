@@ -9,10 +9,7 @@ import tenants from "models/tenants";
 
 const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   organization,
-  teams,
 }) => {
-  console.log(teams);
-
   const [visible, setVisible] = React.useState(false);
 
   return (
@@ -22,6 +19,7 @@ const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
         <Button
           size="sm"
           color="accent"
+          className="text-white"
           onClick={() => {
             setVisible(!visible);
           }}
@@ -29,13 +27,12 @@ const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
           Create Team
         </Button>
       </div>
-      {/* <InviteMember
+      <CreateTeam
         visible={visible}
         setVisible={setVisible}
-        availableRoles={availableRoles}
-        organization={organization}
-      /> */}
-      <TeamsList teams={teams} />
+        tenant={organization}
+      />
+      <TeamsList tenant={organization} />
     </>
   );
 };
@@ -56,7 +53,6 @@ export const getServerSideProps = async (
   return {
     props: {
       organization,
-      teams: [],
     },
   };
 };

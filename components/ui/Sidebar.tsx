@@ -30,7 +30,7 @@ const NavItem = (props: Props) => {
         onClick={onClick}
         className={classNames(
           isActive ? "bg-gray-100" : "",
-          "flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100"
+          "flex items-center rounded-lg p-2 text-sm font-semibold text-gray-900 hover:bg-gray-100"
         )}
       >
         <Icon className="h-5 w-5" />

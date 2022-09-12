@@ -25,6 +25,7 @@
     "classnames": "^2.3.1",
     "cookies-next": "^2.1.1",
     "formik": "^2.2.9",
+    "moment": "^2.29.4",
     "next": "^12.2.0",
     "next-auth": "^4.8.0",
     "next-transpile-modules": "^9.0.0",

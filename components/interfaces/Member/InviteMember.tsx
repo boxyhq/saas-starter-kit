@@ -5,9 +5,9 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { Modal, Button, Select, Input } from "react-daisyui";
 
-import { Invitation, Tenant } from "@prisma/client";
+import type { Invitation, Tenant } from "@prisma/client";
+import type { ApiResponse } from "types";
 import useInvitations from "hooks/useInvitations";
-import { ApiResponse } from "types";
 
 const InviteMember = ({
   visible,

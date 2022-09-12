@@ -29,10 +29,14 @@ Boxy is an MIT-licensed Next.js based framework that saves you months of develop
 
 ## Teams
 
-- Create a team
-- Remove a team
-- Update team settings
-- Add a team member
+- Add a team member (Choose from the members)
 - Remove a team member
 - List team members
-- List all teams
+- Remove a team
+- Update team settings
+- Leave team
+- Add a owner to the team
+
+/teams
+/teams/{teamId}/members
+/teams/{teamId}/settings

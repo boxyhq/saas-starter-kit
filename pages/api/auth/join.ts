@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import users from "models/users";
 import invitations from "models/invitations";
+import tenants from "models/tenants";
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,7 +23,7 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, tenant, inviteToken } = req.body;
+  const { name, email, tenant, inviteToken } = JSON.parse(req.body);
 
   const invitation = inviteToken
     ? await invitations.getInvitation(inviteToken)
@@ -41,7 +42,18 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       data: null,
       error: {
         message:
-          "A user with this email already exists or the email was invalid.",
+          "An user with this email already exists or the email was invalid.",
+      },
+    });
+  }
+
+  const existingTenant = await tenants.getTenant({ slug: tenant });
+
+  if (existingTenant) {
+    return res.status(400).json({
+      data: null,
+      error: {
+        message: "A tenant with this name already exists in our database.",
       },
     });
   }

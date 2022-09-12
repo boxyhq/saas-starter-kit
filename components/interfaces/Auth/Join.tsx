@@ -7,9 +7,9 @@ import { InputWithLabel } from "@/components/ui";
 const Join = ({ createAccount }: { createAccount: any }) => {
   const formik = useFormik({
     initialValues: {
-      name: "",
-      email: "",
-      tenant: "",
+      name: "Kiran",
+      email: "kiran@boxyhq.com",
+      tenant: "boxyhq",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
@@ -30,7 +30,7 @@ const Join = ({ createAccount }: { createAccount: any }) => {
   });
 
   return (
-    <form className="space-y-4 md:space-y-6" onSubmit={formik.handleSubmit}>
+    <form className="space-y-3" onSubmit={formik.handleSubmit}>
       <InputWithLabel
         type="text"
         label="Name"

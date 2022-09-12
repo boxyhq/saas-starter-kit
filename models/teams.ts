@@ -1,52 +1,28 @@
-import type { User } from "@prisma/client";
-import { createUniqueId } from "@/lib/common";
+import { prisma } from "@/lib/prisma";
+import { slugify } from "@/lib/common";
 
-export const createTeam = async (
-  name: string,
-  slug: string,
-  userId: string | undefined
-) => {
-  if (!userId) {
-    throw new Error("User id is required");
-  }
+export const createTeam = async (param: { name: string; tenantId: string }) => {
+  const { name, tenantId } = param;
 
-  return [];
-
-  // return await prisma.team.create({
-  //   data: {
-  //     name,
-  //     tenantId: "1",
-  //     memberships: {
-  //       create: {
-  //         userId,
-  //         role: defaultRole,
-  //       },
-  //     },
-  //   },
-  // });
+  return await prisma.team.create({
+    data: {
+      name: slugify(name),
+      tenantId,
+    },
+  });
 };
 
-export const createDefaultTeam = async (user: User) => {
-  const slug = createUniqueId();
-  const name = user.name;
-
-  return await createTeam(name, slug, user.id);
+export const getTeams = async (tenantId: string) => {
+  return await prisma.team.findMany({
+    where: {
+      tenantId,
+    },
+  });
 };
 
-export const getTeams = async (userId: string | undefined) => {
-  if (!userId) {
-    throw new Error("User id is required");
-  }
-
-  return {};
-
-  // return await prisma.team.findMany({
-  //   where: {
-  //     memberships: {
-  //       every: {
-  //         userId,
-  //       },
-  //     },
-  //   },
-  // });
+const teams = {
+  createTeam,
+  getTeams,
 };
+
+export default teams;

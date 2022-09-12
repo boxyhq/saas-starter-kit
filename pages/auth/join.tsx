@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
 import toast from "react-hot-toast";
-import axios from "axios";
 import Link from "next/link";
 
 import type { User } from "@prisma/client";
@@ -14,14 +13,6 @@ import { getParsedCookie } from "@/lib/cookie";
 
 import JoinWithInvitation from "@/components/interfaces/Auth/JoinWithInvitation";
 import Join from "@/components/interfaces/Auth/Join";
-
-type SignupParam = {
-  name: string;
-  email: string;
-  tenant?: string;
-  token?: string;
-  inviteToken?: string;
-};
 
 const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   inviteToken,
@@ -37,17 +28,21 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   const createAccount = async (params: SignupParam) => {
     const { name, email, tenant, inviteToken } = params;
 
-    const response = await axios.post<ApiResponse<User>>(`/api/auth/join`, {
-      name,
-      email,
-      tenant,
-      inviteToken,
+    const response = await fetch("/api/auth/join", {
+      method: "POST",
+      body: JSON.stringify({
+        name,
+        email,
+        tenant,
+        inviteToken,
+      }),
     });
 
-    const { data: user, error } = response.data;
+    const { data: user, error }: ApiResponse<User> = await response.json();
 
-    if (error) {
+    if (!response.ok && error) {
       toast.error(error.message);
+      return;
     }
 
     if (user) {
@@ -107,6 +102,14 @@ export const getServerSideProps = async (
       next: cookieParsed.url ?? "/auth/login",
     },
   };
+};
+
+type SignupParam = {
+  name: string;
+  email: string;
+  tenant?: string;
+  token?: string;
+  inviteToken?: string;
 };
 
 export default Signup;
