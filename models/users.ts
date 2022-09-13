@@ -18,7 +18,7 @@ const getUserBySession = async (session: Session | null) => {
 };
 
 const getUser = async (key: { id: string } | { email: string }) => {
-  return await prisma.user.findUnique({
+  return await prisma.user.findUniqueOrThrow({
     where: key,
   });
 };
