@@ -1,39 +1,31 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
 import React from "react";
-import { Button } from "react-daisyui";
 
+import { Card } from "@/components/ui";
 import { TeamTab } from "@/components/interfaces/Team";
 import { inferSSRProps } from "@/lib/inferSSRProps";
 import tenants from "models/tenants";
 import teams from "models/teams";
 
-const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
-  tenant,
-  team,
-}) => {
-  const [visible, setVisible] = React.useState(false);
-
+const Notifications: NextPageWithLayout<
+  inferSSRProps<typeof getServerSideProps>
+> = ({ tenant, team }) => {
   return (
     <>
       <h3 className="text-2xl font-bold">
         {tenant.name} - {team.name}
       </h3>
-      <TeamTab team={team} tenant={tenant} activeTab="members" />
-      <div className="flex items-center justify-end">
-        <Button
-          size="sm"
-          color="primary"
-          className="text-white"
-          onClick={() => {
-            setVisible(!visible);
-          }}
-        >
-          Add Member
-        </Button>
-      </div>
-      {/* <CreateTeam visible={visible} setVisible={setVisible} tenant={tenant} />
-      <TeamsList tenant={tenant} /> */}
+      <TeamTab team={team} tenant={tenant} activeTab="notifications" />
+      <Card heading="Notifications">
+        <Card.Body className="px-3 py-3">
+          <div className="space-y-3">
+            <p className="text-sm">
+              No Notification integrations have been done yet.
+            </p>
+          </div>
+        </Card.Body>
+      </Card>
     </>
   );
 };
@@ -67,4 +59,4 @@ export const getServerSideProps = async (
   };
 };
 
-export default Members;
+export default Notifications;
