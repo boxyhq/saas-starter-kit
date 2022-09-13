@@ -38,7 +38,7 @@ const Authentication: NextPageWithLayout<
       )}
       <Card heading="Configuring the Identity Provider">
         <Card.Body className="px-3 py-3">
-          <div className="flex flex-col justify-between space-y-4">
+          <div className="flex flex-col justify-between space-y-4 text-sm">
             <p>
               Identity Provider will ask you for the following information to
               configure your SAML app.

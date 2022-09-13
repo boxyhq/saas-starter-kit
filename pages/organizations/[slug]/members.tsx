@@ -25,7 +25,7 @@ const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
         <h4>{organization.name}</h4>
         <Button
           size="sm"
-          color="accent"
+          color="primary"
           onClick={() => {
             setVisible(!visible);
           }}
