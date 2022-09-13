@@ -22,6 +22,11 @@ Boxy is an MIT-licensed Next.js based framework that saves you months of develop
 - Organization setup
 - Invite members to organization
 - Remove members from organization
+- Create team
+- Update team settings
+- Directory sync (WIP)
+- Add members to team (WIP)
+- Audit logs (WIP)
 
 ## Integrations
 
