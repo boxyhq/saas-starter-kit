@@ -2,17 +2,30 @@ import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
 import React from "react";
 import { Button } from "react-daisyui";
+import { useRouter } from "next/router";
 
+import { Loading, Error } from "@/components/ui";
 import { TeamTab } from "@/components/interfaces/Team";
 import { inferSSRProps } from "@/lib/inferSSRProps";
 import tenants from "models/tenants";
-import teams from "models/teams";
+import useTeam from "hooks/useTeam";
 
 const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   tenant,
-  team,
 }) => {
+  const router = useRouter();
+  const { name } = router.query;
   const [visible, setVisible] = React.useState(false);
+
+  const { isLoading, isError, team } = useTeam(tenant.slug, name as string);
+
+  if (isLoading || !team) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return <Error />;
+  }
 
   return (
     <>
@@ -41,7 +54,7 @@ const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { slug, teamName } = context.query;
+  const { slug } = context.query;
 
   const tenant = await tenants.getTenant({ slug: slug as string });
 
@@ -51,18 +64,9 @@ export const getServerSideProps = async (
     };
   }
 
-  const team = await teams.getTeam({ name: teamName as string });
-
-  if (!team) {
-    return {
-      notFound: true,
-    };
-  }
-
   return {
     props: {
       tenant,
-      team,
     },
   };
 };

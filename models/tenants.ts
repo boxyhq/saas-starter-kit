@@ -2,7 +2,9 @@ import type { Role } from "types";
 import type { Tenant } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
-const getTenants = async (userId: string | null): Promise<Tenant[] | null> => {
+export const getTenants = async (
+  userId: string | null
+): Promise<Tenant[] | null> => {
   if (userId === null) {
     return null;
   }
@@ -18,13 +20,13 @@ const getTenants = async (userId: string | null): Promise<Tenant[] | null> => {
   });
 };
 
-const getTenant = async (key: { id: string } | { slug: string }) => {
-  return await prisma.tenant.findUnique({
+export const getTenant = async (key: { id: string } | { slug: string }) => {
+  return await prisma.tenant.findUniqueOrThrow({
     where: key,
   });
 };
 
-const getTenantMembers = async (slug: string) => {
+export const getTenantMembers = async (slug: string) => {
   return await prisma.tenantUser.findMany({
     where: {
       tenant: {
@@ -37,7 +39,7 @@ const getTenantMembers = async (slug: string) => {
   });
 };
 
-const addUser = async (params: {
+export const addUser = async (params: {
   userId: string;
   tenantId: string;
   role: Role;
@@ -53,11 +55,23 @@ const addUser = async (params: {
   });
 };
 
+export async function isTenantMember(userId: string, tenantId: string) {
+  return (await prisma.tenantUser.findFirstOrThrow({
+    where: {
+      userId,
+      tenantId,
+    },
+  }))
+    ? true
+    : false;
+}
+
 const tenants = {
   getTenants,
   getTenantMembers,
   addUser,
   getTenant,
+  isTenantMember,
 };
 
 export default tenants;

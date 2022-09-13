@@ -34,11 +34,23 @@ export const updateTeam = async (id: string, data: Partial<Team>) => {
   });
 };
 
+export async function isTeamMember(userId: string, teamId: string) {
+  return (await prisma.teamMembers.findFirstOrThrow({
+    where: {
+      userId,
+      teamId,
+    },
+  }))
+    ? true
+    : false;
+}
+
 const teams = {
   createTeam,
   getTeams,
   getTeam,
   updateTeam,
+  isTeamMember,
 };
 
 export default teams;
