@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getSession } from "@/lib/session";
-import { getTeam, isTeamMember } from "models/team";
+import { getTeam, isTeamMember, updateTeam } from "models/team";
 
 export default async function handler(
   req: NextApiRequest,
@@ -43,11 +43,25 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  // const tenantSlug = req.query.slug as string;
-  // const { name, slug, domain } = req.body;
-  // const tenant = await prisma.tenant.update({
-  //   where: { slug: tenantSlug },
-  //   data: { name, slug, domain },
-  // });
-  // return res.status(200).json({ data: tenant, error: null });
+  const { slug } = req.query;
+
+  const session = await getSession(req, res);
+  const userId = session?.user?.id as string;
+
+  const team = await getTeam({ slug: slug as string });
+
+  if (!isTeamMember(userId, team?.id)) {
+    return res.status(400).json({
+      data: null,
+      error: { message: "Bad request." },
+    });
+  }
+
+  const updatedTeam = await updateTeam(slug as string, {
+    name: req.body.name,
+    slug: req.body.slug,
+    domain: req.body.domain,
+  });
+
+  return res.status(200).json({ data: updatedTeam, error: null });
 };

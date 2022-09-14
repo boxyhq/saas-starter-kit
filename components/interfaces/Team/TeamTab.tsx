@@ -18,6 +18,16 @@ const TeamTab = (props: { activeTab: string; team: Team }) => {
       active: activeTab === "settings",
     },
     {
+      name: "SAML SSO",
+      href: `/teams/${team.slug}/saml`,
+      active: activeTab === "saml",
+    },
+    {
+      name: "Directory Sync (SCIM)",
+      href: `/teams/${team.slug}/directory-sync`,
+      active: activeTab === "directory-sync",
+    },
+    {
       name: "Notifications",
       href: `/teams/${team.slug}/notifications`,
       active: activeTab === "notifications",

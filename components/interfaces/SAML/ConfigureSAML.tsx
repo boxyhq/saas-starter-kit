@@ -1,42 +1,47 @@
-import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import toast from "react-hot-toast";
 import axios from "axios";
-import { Modal, Button, Input } from "react-daisyui";
+import { Button, Textarea, Modal } from "react-daisyui";
+import toast from "react-hot-toast";
 
-import type { ApiResponse } from "types";
-import type { Team } from "@prisma/client";
+import type { ApiResponse, SAMLConfig } from "types";
+import { Team } from "@prisma/client";
 
-const CreateTeam = ({
+const ConfigureSAML = ({
   visible,
   setVisible,
+  team,
 }: {
   visible: boolean;
   setVisible: (visible: boolean) => void;
+  team: Team;
 }) => {
   const formik = useFormik({
     initialValues: {
-      name: "",
+      metadata: "",
     },
     validationSchema: Yup.object().shape({
-      name: Yup.string().required(),
+      metadata: Yup.string().required(),
     }),
     onSubmit: async (values) => {
-      const { name } = values;
+      const { metadata } = values;
 
-      const response = await axios.post<ApiResponse<Team>>(`/api/teams`, {
-        name,
-      });
+      const response = await axios.post<ApiResponse<SAMLConfig>>(
+        `/api/teams/${team.slug}/saml`,
+        {
+          encodedRawMetadata: Buffer.from(metadata).toString("base64"),
+        }
+      );
 
-      const { data: invitation, error } = response.data;
+      const { data: samlConfig, error } = response.data;
 
       if (error) {
         toast.error(error.message);
+        return;
       }
 
-      if (invitation) {
-        toast.success("Invitation sent!");
+      if (samlConfig) {
+        toast.success("SAML Config updated successfully.");
       }
 
       setVisible(false);
@@ -46,20 +51,22 @@ const CreateTeam = ({
   return (
     <Modal open={visible}>
       <form onSubmit={formik.handleSubmit} method="POST">
-        <Modal.Header className="font-bold">Create Team</Modal.Header>
+        <Modal.Header className="font-bold">Configure SAML SSO</Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">
             <p>
-              Members of a team have access to specific areas, such as a new
-              release or a new application feature.
+              Fill out the information below to set up SAML authentication for
+              added security.
             </p>
             <div className="flex justify-between space-x-3">
-              <Input
-                name="name"
+              <Textarea
+                name="metadata"
                 className="flex-grow"
                 onChange={formik.handleChange}
-                value={formik.values.name}
-                placeholder="Eg: operations, backend-team, frontend"
+                value={formik.values.metadata}
+                rows={6}
+                placeholder="Copy and paste Metadata XML here."
+                required
               />
             </div>
           </div>
@@ -71,7 +78,7 @@ const CreateTeam = ({
             loading={formik.isSubmitting}
             active={formik.dirty}
           >
-            Create Team
+            Save Changes
           </Button>
           <Button
             type="button"
@@ -88,4 +95,4 @@ const CreateTeam = ({
   );
 };
 
-export default CreateTeam;
+export default ConfigureSAML;

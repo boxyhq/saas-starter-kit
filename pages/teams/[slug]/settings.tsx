@@ -1,35 +1,40 @@
-import type { NextPageWithLayout } from "types";
-import type { GetServerSidePropsContext } from "next";
+import type { ApiResponse, NextPageWithLayout } from "types";
 import React from "react";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button } from "react-daisyui";
+import { useRouter } from "next/router";
 
-import { Card, InputWithLabel } from "@/components/ui";
-import { inferSSRProps } from "@/lib/inferSSRProps";
-import { put } from "@/lib/fetch";
-import tenants from "models/team";
+import { Card, InputWithLabel, Error, Loading } from "@/components/ui";
+import useTeam from "hooks/useTeam";
+import axios from "axios";
+import { Team } from "@prisma/client";
+import { TeamTab } from "@/components/interfaces/Team";
 
-const Settings: NextPageWithLayout<
-  inferSSRProps<typeof getServerSideProps>
-> = ({ organization }) => {
+const TeamSettings: NextPageWithLayout = () => {
+  const router = useRouter();
+  const { slug } = router.query;
+
+  const { isLoading, isError, team } = useTeam(slug as string);
+
   const formik = useFormik({
     initialValues: {
-      name: organization.name,
-      slug: organization.slug,
-      domain: organization.domain,
+      name: team?.name,
+      slug: team?.slug,
+      domain: team?.domain,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Name is required"),
       slug: Yup.string().required("Slug is required"),
       domain: Yup.string().nullable(),
     }),
+    enableReinitialize: true,
     onSubmit: async (values) => {
       const { name, slug, domain } = values;
 
-      const { data, error } = await put(
-        `/api/organizations/${organization.slug}`,
+      const response = await axios.put<ApiResponse<Team>>(
+        `/api/teams/${team?.slug}`,
         {
           name,
           slug,
@@ -37,36 +42,48 @@ const Settings: NextPageWithLayout<
         }
       );
 
+      const { data: updatedTeam, error } = response.data;
+
       if (error) {
         toast.error(error.message);
         return;
       }
 
-      if (data) {
-        toast.success("Successfully updated");
+      if (updatedTeam) {
+        toast.success("Successfully updated!");
+        return router.push(`/teams/${updatedTeam.slug}/settings`);
       }
     },
   });
 
+  if (isLoading || !team) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return <Error />;
+  }
+
   return (
     <>
-      <h4>{organization.name}</h4>
+      <h3 className="text-2xl font-bold">{team.name}</h3>
+      <TeamTab team={team} activeTab="settings" />
       <form onSubmit={formik.handleSubmit}>
-        <Card heading="General">
+        <Card heading="Team Settings">
           <Card.Body className="px-3 py-3">
-            <div className="flex flex-col space-y-6">
+            <div className="flex flex-col">
               <InputWithLabel
                 name="name"
                 label="Display name"
-                descriptionText="A human-friendly name for the organization"
+                descriptionText="A human-friendly name for the team"
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 error={formik.errors.name}
               />
               <InputWithLabel
                 name="slug"
-                label="Organization slug"
-                descriptionText="A unique ID used to identify this organization"
+                label="Team slug"
+                descriptionText="A unique ID used to identify this team"
                 value={formik.values.slug}
                 onChange={formik.handleChange}
                 error={formik.errors.slug}
@@ -74,7 +91,7 @@ const Settings: NextPageWithLayout<
               <InputWithLabel
                 name="domain"
                 label="Domain"
-                descriptionText="Domain name for the organization"
+                descriptionText="Domain name for the team"
                 value={formik.values.domain ? formik.values.domain : ""}
                 onChange={formik.handleChange}
                 error={formik.errors.domain}
@@ -94,29 +111,22 @@ const Settings: NextPageWithLayout<
             </div>
           </Card.Footer>
         </Card>
+        <Card heading="Remove Team">
+          <Card.Body className="px-3 py-3">
+            <div className="space-y-3">
+              <p className="text-sm">
+                This action cannot be undone. This will permanently delete the
+                team and associated access.
+              </p>
+              <Button color="error" size="sm">
+                Remove Team
+              </Button>
+            </div>
+          </Card.Body>
+        </Card>
       </form>
     </>
   );
 };
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const { slug } = context.query;
-
-  const organization = await tenants.getTenant({ slug: slug as string });
-
-  if (!organization) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: {
-      organization,
-    },
-  };
-};
-
-export default Settings;
+export default TeamSettings;

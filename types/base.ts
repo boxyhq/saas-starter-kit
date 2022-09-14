@@ -9,11 +9,9 @@ export type ApiResponse<T> = {
   error: ApiError | null;
 };
 
-export type Role = "owner" | "member" | "billing";
+export type Role = "owner" | "member";
 
-export type SAMLConfig = {
+export type SPSAMLConfig = {
   issuer: string;
-  path: string;
-  callback: string;
   acs: string;
 };

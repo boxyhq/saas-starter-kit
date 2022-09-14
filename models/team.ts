@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { Team } from "@prisma/client";
 
 export const createTeam = async (param: {
   ownerId: string;
@@ -73,5 +74,14 @@ export const getTeamMembers = async (slug: string) => {
     include: {
       user: true,
     },
+  });
+};
+
+export const updateTeam = async (slug: string, data: Partial<Team>) => {
+  return await prisma.team.update({
+    where: {
+      slug,
+    },
+    data: data,
   });
 };

@@ -24,11 +24,7 @@ const Body = ({
 };
 
 const Footer = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="border-t border-gray-300 bg-violet-100 py-3 px-3">
-      {children}
-    </div>
-  );
+  return <div className="border-t border-gray-300 py-3 px-3">{children}</div>;
 };
 
 Card.Body = Body;
