@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getSession } from "@/lib/session";
-import { createTeam, getTeams } from "models/teams";
-import { getTenant, isTenantMember } from "models/tenants";
+import { createTeam, getTeams } from "models/_teams";
+import { getTenant, isTenantMember } from "models/team";
 
 export default async function handler(
   req: NextApiRequest,

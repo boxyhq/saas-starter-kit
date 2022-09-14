@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { Loading, Error } from "@/components/ui";
 import { TeamTab, Members, AddMember } from "@/components/interfaces/Team";
 import { inferSSRProps } from "@/lib/inferSSRProps";
-import tenants from "models/tenants";
+import tenants from "models/team";
 import useTeam from "hooks/useTeam";
 
 const TeamMembers: NextPageWithLayout<

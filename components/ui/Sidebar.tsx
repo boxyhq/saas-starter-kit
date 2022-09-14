@@ -14,7 +14,7 @@ import {
 } from "@heroicons/react/solid";
 import { signOut } from "next-auth/react";
 
-import { Tenant } from "@prisma/client";
+import { Team } from "@prisma/client";
 
 const NavItem = (props: Props) => {
   const router = useRouter();
@@ -40,7 +40,7 @@ const NavItem = (props: Props) => {
   );
 };
 
-export default function Sidebar({ tenants }: { tenants: Tenant[] }) {
+export default function Sidebar({ teams }: { teams: Team[] }) {
   return (
     <>
       <aside
@@ -79,38 +79,34 @@ export default function Sidebar({ tenants }: { tenants: Tenant[] }) {
                 </li>
                 <li>
                   <NavItem
-                    href={`/organizations/${tenants[0].slug}/dashboard`}
+                    href={`/teams/${teams[0].slug}/dashboard`}
                     text="Dashboard"
                     icon={HomeIcon}
                   />
                 </li>
                 <li>
                   <NavItem
-                    href={`/organizations/${tenants[0].slug}/settings`}
+                    href={`/teams/${teams[0].slug}/settings`}
                     text="Settings"
                     icon={AdjustmentsIcon}
                   />
                 </li>
                 <li>
                   <NavItem
-                    href={`/organizations/${tenants[0].slug}/authentication`}
+                    href={`/teams/${teams[0].slug}/authentication`}
                     text="Authentication"
                     icon={LockClosedIcon}
                   />
                 </li>
                 <li>
                   <NavItem
-                    href={`/organizations/${tenants[0].slug}/members`}
+                    href={`/teams/${teams[0].slug}/members`}
                     text="Members"
                     icon={UsersIcon}
                   />
                 </li>
                 <li>
-                  <NavItem
-                    href={`/organizations/${tenants[0].slug}/teams`}
-                    text="Teams"
-                    icon={CollectionIcon}
-                  />
+                  <NavItem href={`/teams`} text="Teams" icon={CollectionIcon} />
                 </li>
               </ul>
               <div className="space-y-2 pt-2">

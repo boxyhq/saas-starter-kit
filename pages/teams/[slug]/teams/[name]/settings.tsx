@@ -10,7 +10,7 @@ import axios from "axios";
 import { Card, InputWithLabel, Loading, Error } from "@/components/ui";
 import { TeamTab } from "@/components/interfaces/Team";
 import { inferSSRProps } from "@/lib/inferSSRProps";
-import tenants from "models/tenants";
+import tenants from "models/team";
 import { Team } from "@prisma/client";
 import useTeam from "hooks/useTeam";
 

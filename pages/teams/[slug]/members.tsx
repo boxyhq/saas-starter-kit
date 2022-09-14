@@ -10,7 +10,7 @@ import {
 } from "@/components/interfaces/Member";
 import { inferSSRProps } from "@/lib/inferSSRProps";
 import { availableRoles } from "@/lib/roles";
-import tenants from "models/tenants";
+import tenants from "models/team";
 
 const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   organization,

@@ -10,7 +10,6 @@ import type { ApiResponse, NextPageWithLayout } from "types";
 import { AuthLayout } from "@/components/layouts";
 import { inferSSRProps } from "@/lib/inferSSRProps";
 import { getParsedCookie } from "@/lib/cookie";
-
 import JoinWithInvitation from "@/components/interfaces/Auth/JoinWithInvitation";
 import Join from "@/components/interfaces/Auth/Join";
 
@@ -25,45 +24,46 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
     router.push("/");
   }
 
-  const createAccount = async (params: SignupParam) => {
-    const { name, email, tenant, inviteToken } = params;
+  // const createAccount = async (params: SignupParam) => {
+  //   const { name, email, tenant, inviteToken } = params;
 
-    const response = await fetch("/api/auth/join", {
-      method: "POST",
-      body: JSON.stringify({
-        name,
-        email,
-        tenant,
-        inviteToken,
-      }),
-    });
+  //   const response = await fetch("/api/auth/join", {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       name,
+  //       email,
+  //       tenant,
+  //       inviteToken,
+  //     }),
+  //   });
 
-    const { data: user, error }: ApiResponse<User> = await response.json();
+  //   const { data: user, error }: ApiResponse<User> = await response.json();
 
-    if (!response.ok && error) {
-      toast.error(error.message);
-      return;
-    }
+  //   if (!response.ok && error) {
+  //     toast.error(error.message);
+  //     return;
+  //   }
 
-    if (user) {
-      toast.success("Successfully joined");
+  //   if (user) {
+  //     toast.success("Successfully joined");
 
-      if (next) {
-        router.push(next);
-      }
-    }
-  };
+  //     if (next) {
+  //       router.push(next);
+  //     }
+  //   }
+  // };
 
   return (
     <>
       <div className="rounded-md bg-white p-6 shadow-sm">
         {inviteToken ? (
-          <JoinWithInvitation
-            inviteToken={inviteToken}
-            createAccount={createAccount}
-          />
+          <></>
         ) : (
-          <Join createAccount={createAccount} />
+          // <JoinWithInvitation
+          //   inviteToken={inviteToken}
+          //   createAccount={createAccount}
+          // />
+          <Join />
         )}
       </div>
       <p className="text-center text-sm text-gray-600">

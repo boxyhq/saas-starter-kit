@@ -6,16 +6,14 @@ import axios from "axios";
 import { Modal, Button, Input } from "react-daisyui";
 
 import type { ApiResponse } from "types";
-import type { Team, Tenant } from "@prisma/client";
+import type { Team } from "@prisma/client";
 
 const CreateTeam = ({
   visible,
   setVisible,
-  tenant,
 }: {
   visible: boolean;
   setVisible: (visible: boolean) => void;
-  tenant: Tenant;
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -27,12 +25,9 @@ const CreateTeam = ({
     onSubmit: async (values) => {
       const { name } = values;
 
-      const response = await axios.post<ApiResponse<Team>>(
-        `/api/organizations/${tenant.slug}/teams`,
-        {
-          name,
-        }
-      );
+      const response = await axios.post<ApiResponse<Team>>(`/api/teams`, {
+        name,
+      });
 
       const { data: invitation, error } = response.data;
 

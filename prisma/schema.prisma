@@ -51,17 +51,16 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now())
 
-  tenants         Tenant[]
-  tenantUsers     TenantUser[]
-  accounts        Account[]
-  sessions        Session[]
-  invitations     Invitation[]
-  teamMemberships TeamMembers[]
+  teams       Team[]
+  teamMembers TeamMember[]
+  accounts    Account[]
+  sessions    Session[]
+  invitations Invitation[]
 }
 
-model Tenant {
+model Team {
   id          String   @id @default(uuid())
-  ownerId     String   @unique
+  ownerId     String
   name        String
   slug        String   @unique
   domain      String?  @unique
@@ -71,57 +70,11 @@ model Tenant {
 
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  users       TenantUser[]
+  members     TeamMember[]
   invitations Invitation[]
-  teams       Team[]
 }
 
-model TenantUser {
-  id        String   @id @default(uuid())
-  tenantId  String
-  userId    String
-  role      String   @default("member")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([tenantId, userId])
-}
-
-model Invitation {
-  id        String   @id @default(uuid())
-  tenantId  String
-  email     String
-  role      String   @default("member")
-  token     String   @unique
-  expires   DateTime
-  invitedBy String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  user   User   @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  @@unique([tenantId, email])
-}
-
-model Team {
-  id        String   @id @default(uuid())
-  tenantId  String
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  memberships TeamMembers[]
-
-  @@unique([tenantId, name])
-}
-
-model TeamMembers {
+model TeamMember {
   id        String   @id @default(uuid())
   teamId    String
   userId    String
@@ -133,4 +86,21 @@ model TeamMembers {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([teamId, userId])
+}
+
+model Invitation {
+  id        String   @id @default(uuid())
+  teamId    String
+  email     String
+  role      String   @default("member")
+  token     String   @unique
+  expires   DateTime
+  invitedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user User @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, email])
 }

@@ -1,15 +1,21 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button } from "react-daisyui";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
+import type { User } from "@prisma/client";
+import type { ApiResponse } from "types";
 import { InputWithLabel } from "@/components/ui";
 
-const Join = ({ createAccount }: { createAccount: any }) => {
+const Join = () => {
+  const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
-      name: "Kiran",
-      email: "kiran@boxyhq.com",
-      tenant: "boxyhq",
+      name: "",
+      email: "",
+      tenant: "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
@@ -19,13 +25,27 @@ const Join = ({ createAccount }: { createAccount: any }) => {
     onSubmit: async (values) => {
       const { name, email, tenant } = values;
 
-      await createAccount({
-        name,
-        email,
-        tenant,
+      const response = await fetch("/api/auth/join", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          email,
+          tenant,
+        }),
       });
 
-      formik.resetForm();
+      const { data: user, error }: ApiResponse<User> = await response.json();
+
+      if (!response.ok && error) {
+        toast.error(error.message);
+        return;
+      }
+
+      if (user) {
+        toast.success("Successfully joined");
+        formik.resetForm();
+        router.push("/auth/login");
+      }
     },
   });
 
@@ -70,7 +90,7 @@ const Join = ({ createAccount }: { createAccount: any }) => {
       <div>
         <p className="text-sm">
           Signing up signifies that you have read and agree to the Terms of
-          Service and our Privacy Policy. Cookie Preferences.
+          Service and our Privacy Policy.
         </p>
       </div>
     </form>

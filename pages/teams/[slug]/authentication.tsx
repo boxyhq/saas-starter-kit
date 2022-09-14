@@ -7,7 +7,7 @@ import env from "@/lib/env";
 import jackson from "@/lib/jackson";
 import { inferSSRProps } from "@/lib/inferSSRProps";
 import { Card } from "@/components/ui";
-import tenants from "models/tenants";
+import tenants from "models/team";
 import { AddEditSAMLConfig } from "@/components/interfaces/SAML";
 
 const Authentication: NextPageWithLayout<

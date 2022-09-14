@@ -5,8 +5,8 @@ import React from "react";
 import { Card } from "@/components/ui";
 import { TeamTab } from "@/components/interfaces/Team";
 import { inferSSRProps } from "@/lib/inferSSRProps";
-import tenants from "models/tenants";
-import teams from "models/teams";
+import tenants from "models/team";
+import teams from "models/_teams";
 
 const Notifications: NextPageWithLayout<
   inferSSRProps<typeof getServerSideProps>

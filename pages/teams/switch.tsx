@@ -12,11 +12,11 @@ import { deleteCookie } from "cookies-next";
 import type { NextPageWithLayout } from "types";
 import { AuthLayout } from "@/components/layouts";
 import { getSession } from "@/lib/session";
-import tenants from "models/tenants";
+import { getTeams } from "models/team";
 
 const Organizations: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ organizations }) => {
+> = ({ teams }) => {
   const router = useRouter();
   const { status } = useSession();
 
@@ -25,18 +25,18 @@ const Organizations: NextPageWithLayout<
   }
 
   React.useEffect(() => {
-    if (organizations === null) {
-      toast.error("You do not have any organizations.");
+    if (teams === null) {
+      toast.error("You do not have any active team.");
       return;
     }
 
-    router.push(`/organizations/${organizations[0].slug}/dashboard`);
+    router.push(`/teams/${teams[0].slug}/dashboard`);
   });
 
   return (
     <>
       <div className="mb-6 flex w-1/2 flex-col items-center gap-4 p-3">
-        <h3>Choose your organizations</h3>
+        <h3>Choose your team</h3>
         <div className="w-3/5 rounded bg-white dark:border dark:border-gray-700 dark:bg-gray-800 sm:max-w-md md:mt-0 xl:p-0"></div>
       </div>
     </>
@@ -58,7 +58,7 @@ export const getServerSideProps = async (
 
   return {
     props: {
-      organizations: await tenants.getTenants(session?.user.id as string),
+      teams: await getTeams(session?.user.id as string),
     },
   };
 };

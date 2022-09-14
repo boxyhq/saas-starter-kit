@@ -1,31 +1,28 @@
 import React from "react";
 
-import { Sidebar, Navbar } from "@/components/ui";
-import { Tenant } from "@prisma/client";
-import { get } from "@/lib/fetch";
+import { Sidebar, Navbar, Error, Loading } from "@/components/ui";
+import useTeams from "hooks/useTeams";
 
-export default function AccountLayout({ children }: Props) {
-  const [tenants, setTenants] = React.useState<Tenant[] | null>(null);
+export default function AccountLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { isLoading, isError, teams } = useTeams();
 
-  React.useEffect(() => {
-    const getTenants = async () => {
-      const { data: tenants } = await get<Tenant[]>("/api/organizations");
+  if (isLoading || !teams) {
+    return <Loading />;
+  }
 
-      setTenants(tenants);
-    };
-
-    getTenants();
-  }, []);
-
-  if (!tenants) {
-    return null;
+  if (isError) {
+    return <Error />;
   }
 
   return (
     <>
       <Navbar />
       <div className="flex overflow-hidden pt-16">
-        <Sidebar tenants={tenants} />
+        <Sidebar teams={teams} />
         <div className="relative h-full w-full overflow-y-auto  lg:ml-64">
           <main>
             <div className="flex h-screen w-full justify-center">
@@ -37,7 +34,3 @@ export default function AccountLayout({ children }: Props) {
     </>
   );
 }
-
-type Props = {
-  children: React.ReactNode;
-};

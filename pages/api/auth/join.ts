@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import users from "models/users";
-import invitations from "models/invitations";
-import tenants from "models/tenants";
+import { createUser, getUser } from "models/user";
+import { getTeam, createTeam } from "models/team";
+import { slugify } from "@/lib/common";
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,20 +22,21 @@ export default async function handler(
   }
 }
 
+// Signup the user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name, email, tenant, inviteToken } = JSON.parse(req.body);
 
-  const invitation = inviteToken
-    ? await invitations.getInvitation(inviteToken)
-    : null;
+  // const invitation = inviteToken
+  //   ? await invitations.getInvitation(inviteToken)
+  //   : null;
 
-  if (inviteToken && !invitation) {
-    return res
-      .status(404)
-      .json({ data: null, error: { message: "Invitation not found." } });
-  }
+  // if (inviteToken && !invitation) {
+  //   return res
+  //     .status(404)
+  //     .json({ data: null, error: { message: "Invitation not found." } });
+  // }
 
-  const existingUser = await users.getUser({ email });
+  const existingUser = await getUser({ email });
 
   if (existingUser) {
     return res.status(400).json({
@@ -47,28 +48,24 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  const existingTenant = await tenants.getTenant({ slug: tenant });
+  const existingTeam = await getTeam({ slug: tenant });
 
-  if (existingTenant) {
+  if (existingTeam) {
     return res.status(400).json({
       data: null,
       error: {
-        message: "A tenant with this name already exists in our database.",
+        message: "A team with this name already exists in our database.",
       },
     });
   }
 
-  const user = invitation
-    ? await users.createUser({
-        name,
-        email,
-        tenantId: invitation.tenantId,
-      })
-    : await users.createUserAndTenant({
-        name,
-        email,
-        tenant,
-      });
+  const user = await createUser({ name, email });
+
+  await createTeam({
+    ownerId: user.id,
+    name: tenant,
+    slug: slugify(tenant),
+  });
 
   return res.status(200).json({ data: user, error: null });
 };

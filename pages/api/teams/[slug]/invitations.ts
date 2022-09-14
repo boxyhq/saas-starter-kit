@@ -3,8 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type { Role } from "types";
 import { getSession } from "@/lib/session";
 import invitations from "models/invitations";
-import tenants from "models/tenants";
-import users from "models/users";
+import tenants from "models/team";
+import users from "models/user";
 
 export default async function handler(
   req: NextApiRequest,

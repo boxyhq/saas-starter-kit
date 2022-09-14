@@ -9,7 +9,7 @@ import { Button } from "react-daisyui";
 import { Card, InputWithLabel } from "@/components/ui";
 import { inferSSRProps } from "@/lib/inferSSRProps";
 import { put } from "@/lib/fetch";
-import tenants from "models/tenants";
+import tenants from "models/team";
 
 const Settings: NextPageWithLayout<
   inferSSRProps<typeof getServerSideProps>
