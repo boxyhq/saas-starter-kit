@@ -1,12 +1,9 @@
-import Link from "next/link";
-import { Button } from "react-daisyui";
-
 import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
-import { Tenant } from "@prisma/client";
-import useTeams from "hooks/useTeams";
+import { Team } from "@prisma/client";
+import useTeamMembers from "hooks/useTeamMembers";
 
-const Members = ({ tenant }: { tenant: Tenant }) => {
-  const { isLoading, isError, teams } = useTeams(tenant.slug);
+const Members = ({ team }: { team: Team }) => {
+  const { isLoading, isError, members } = useTeamMembers(team.slug);
 
   if (isLoading) {
     return <Loading />;
@@ -26,43 +23,33 @@ const Members = ({ tenant }: { tenant: Tenant }) => {
                 Name
               </th>
               <th scope="col" className="px-6 py-3">
-                Created At
+                Email
               </th>
               <th scope="col" className="px-6 py-3">
-                Actions
+                Role
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Created At
               </th>
             </tr>
           </thead>
           <tbody>
-            {teams &&
-              teams.map((team) => {
+            {members &&
+              members.map((member) => {
                 return (
                   <tr
-                    key={team.id}
+                    key={member.id}
                     className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
                   >
                     <td className="px-6 py-3">
-                      <Link
-                        href={`/organizations/${tenant.slug}/teams/${team.name}/members`}
-                      >
-                        <a>
-                          <div className="flex items-center justify-start space-x-2">
-                            <LetterAvatar name={team.name} />
-                            <span className="underline">{team.name}</span>
-                          </div>
-                        </a>
-                      </Link>
+                      <div className="flex items-center justify-start space-x-2">
+                        <LetterAvatar name={member.user.name} />
+                        <span>{member.user.name}</span>
+                      </div>
                     </td>
-                    <td className="px-6 py-3">{team.createdAt}</td>
-                    <td className="px-6 py-3">
-                      <Button
-                        size="sm"
-                        color="secondary"
-                        className="text-white"
-                      >
-                        Leave Team
-                      </Button>
-                    </td>
+                    <td className="px-6 py-3">{member.user.email}</td>
+                    <td className="px-6 py-3">{member.role}</td>
+                    <td className="px-6 py-3">{member.createdAt}</td>
                   </tr>
                 );
               })}

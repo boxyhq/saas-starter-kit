@@ -1,70 +1,54 @@
 import type { NextPageWithLayout } from "types";
-import type { GetServerSidePropsContext } from "next";
 import React from "react";
 import { Button } from "react-daisyui";
+import { useRouter } from "next/router";
 
+import { Loading, Error } from "@/components/ui";
 import {
+  TeamTab,
+  Members,
   InviteMember,
-  InvitationsList,
-  MembersList,
-} from "@/components/interfaces/Member";
-import { inferSSRProps } from "@/lib/inferSSRProps";
-import { availableRoles } from "@/lib/roles";
-import tenants from "models/team";
+  PendingInvitations,
+} from "@/components/interfaces/Team";
+import useTeam from "hooks/useTeam";
 
-const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
-  organization,
-  availableRoles,
-  members,
-}) => {
+const TeamMembers: NextPageWithLayout = () => {
+  const router = useRouter();
+  const { slug } = router.query;
+
   const [visible, setVisible] = React.useState(false);
+
+  const { isLoading, isError, team } = useTeam(slug as string);
+
+  if (isLoading || !team) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return <Error />;
+  }
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <h4>{organization.name}</h4>
+      <h3 className="text-2xl font-bold">{team.name}</h3>
+      <TeamTab team={team} activeTab="members" />
+      <div className="flex items-center justify-end">
         <Button
           size="sm"
           color="primary"
+          className="text-white"
           onClick={() => {
             setVisible(!visible);
           }}
         >
-          Invite Members
+          Add Member
         </Button>
       </div>
-      <InviteMember
-        visible={visible}
-        setVisible={setVisible}
-        availableRoles={availableRoles}
-        organization={organization}
-      />
-      <MembersList members={members} />
-      <InvitationsList organization={organization} />
+      <Members team={team} />
+      <PendingInvitations team={team} />
+      <InviteMember visible={visible} setVisible={setVisible} team={team} />
     </>
   );
 };
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const { slug } = context.query;
-
-  const organization = await tenants.getTenant({ slug: slug as string });
-
-  if (!organization) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: {
-      organization,
-      availableRoles,
-      members: await tenants.getTenantMembers(slug as string),
-    },
-  };
-};
-
-export default Members;
+export default TeamMembers;

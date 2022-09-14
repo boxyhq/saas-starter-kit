@@ -11,7 +11,7 @@ import { Button } from "react-daisyui";
 import { inferSSRProps } from "@/lib/inferSSRProps";
 import { put } from "@/lib/fetch";
 import { AuthLayout } from "@/components/layouts";
-import invitations from "models/invitations";
+import invitations from "models/invitation";
 
 const AcceptOrganizationInvitation: NextPageWithLayout<
   inferSSRProps<typeof getServerSideProps>

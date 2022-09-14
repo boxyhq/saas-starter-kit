@@ -1,34 +1,49 @@
-import toast from "react-hot-toast";
 import React from "react";
-import axios from "axios";
 import { Button } from "react-daisyui";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-import { ApiResponse } from "types";
-import { Card, LetterAvatar, EmptyState } from "@/components/ui";
-import { Tenant, Invitation } from "@prisma/client";
+import {
+  Card,
+  LetterAvatar,
+  EmptyState,
+  Loading,
+  Error,
+} from "@/components/ui";
+import { Invitation, Team } from "@prisma/client";
 import useInvitations from "hooks/useInvitations";
+import { ApiResponse } from "types";
 
-const InvitationsList = ({ organization }: { organization: Tenant }) => {
-  const { invitations, mutateInvitation } = useInvitations(organization.slug);
+const PendingInvitations = ({ team }: { team: Team }) => {
+  const { isLoading, isError, invitations, mutateInvitation } = useInvitations(
+    team.slug
+  );
+
+  if (isLoading || !invitations) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return <Error />;
+  }
 
   const deleteInvitation = async (invitation: Invitation) => {
     const { data: response } = await axios.delete<ApiResponse<unknown>>(
-      `/api/organizations/${organization.slug}/invitations`,
+      `/api/teams/${team.slug}/invitations`,
       {
         data: {
-          invitationToken: invitation.token,
+          id: invitation.id,
         },
         validateStatus: () => true,
       }
     );
-
-    mutateInvitation();
 
     if (response.error) {
       toast.error(response.error.message);
     }
 
     if (response.data) {
+      mutateInvitation();
       toast.success("Invitation deleted");
     }
   };
@@ -80,7 +95,7 @@ const InvitationsList = ({ organization }: { organization: Tenant }) => {
                     <Button
                       size="sm"
                       variant="outline"
-                      color="error"
+                      color="secondary"
                       onClick={() => {
                         deleteInvitation(invitation);
                       }}
@@ -98,4 +113,4 @@ const InvitationsList = ({ organization }: { organization: Tenant }) => {
   );
 };
 
-export default InvitationsList;
+export default PendingInvitations;

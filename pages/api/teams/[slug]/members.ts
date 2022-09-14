@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getSession } from "@/lib/session";
-import { getTeam, isTeamMember } from "models/team";
+import { getTeam, isTeamMember, getTeamMembers } from "models/team";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,10 +12,8 @@ export default async function handler(
   switch (method) {
     case "GET":
       return handleGET(req, res);
-    case "PUT":
-      return handlePUT(req, res);
     default:
-      res.setHeader("Allow", ["GET", "PUT"]);
+      res.setHeader("Allow", ["GET"]);
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
@@ -23,7 +21,7 @@ export default async function handler(
   }
 }
 
-// Get a team by slug
+// Get members of a team
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query;
 
@@ -39,15 +37,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  return res.status(200).json({ data: team, error: null });
-};
+  const members = await getTeamMembers(slug as string);
 
-const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  // const tenantSlug = req.query.slug as string;
-  // const { name, slug, domain } = req.body;
-  // const tenant = await prisma.tenant.update({
-  //   where: { slug: tenantSlug },
-  //   data: { name, slug, domain },
-  // });
-  // return res.status(200).json({ data: tenant, error: null });
+  return res.status(200).json({ data: members, error: null });
 };

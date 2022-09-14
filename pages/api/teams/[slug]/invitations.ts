@@ -1,10 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import type { Role } from "types";
 import { getSession } from "@/lib/session";
-import invitations from "models/invitations";
-import tenants from "models/team";
-import users from "models/user";
+import {
+  createInvitation,
+  getInvitations,
+  getInvitation,
+  deleteInvitation,
+} from "models/invitation";
+import { getTeam, isTeamMember } from "models/team";
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,12 +20,12 @@ export default async function handler(
       return handleGET(req, res);
     case "POST":
       return handlePOST(req, res);
-    case "PUT":
-      return handlePUT(req, res);
+    // case "PUT":
+    //   return handlePUT(req, res);
     case "DELETE":
       return handleDELETE(req, res);
     default:
-      res.setHeader("Allow", ["POST", "PUT"]);
+      res.setHeader("Allow", ["POST", "PUT", "GET", "DELETE"]);
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
@@ -30,26 +33,26 @@ export default async function handler(
   }
 }
 
-// Invite a user to an organization
+// Invite a user to an team
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, role } = req.body;
   const { slug } = req.query;
 
   const session = await getSession(req, res);
+  const userId = session?.user?.id as string;
 
-  const tenant = await tenants.getTenant({ slug: slug as string });
-  const user = await users.getUserBySession(session);
+  const team = await getTeam({ slug: slug as string });
 
-  if (!tenant || !user) {
-    return res.status(404).json({
+  if (!isTeamMember(userId, team?.id)) {
+    return res.status(400).json({
       data: null,
-      error: { message: "Tenant or user not found" },
+      error: { message: "Bad request." },
     });
   }
 
-  const invitation = await invitations.createInvitation({
-    tenant,
-    user,
+  const invitation = await createInvitation({
+    teamId: team.id,
+    invitedBy: userId,
     email,
     role,
   });
@@ -57,83 +60,99 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json({ data: invitation, error: null });
 };
 
-// Accept an invitation to an organization
-const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { invitationToken } = req.body;
-
-  const session = await getSession(req, res);
-
-  if (!session || !session.user) {
-    return res
-      .status(401)
-      .json({ data: null, error: { message: "Not authenticated" } });
-  }
-
-  const invitation = await invitations.getInvitation(invitationToken);
-
-  if (!invitation) {
-    return res.status(404).json({
-      data: null,
-      error: {
-        message: "Invitation not found",
-      },
-    });
-  }
-
-  const organization = await tenants.addUser({
-    userId: session.user.id,
-    tenantId: invitation.tenant.id,
-    role: invitation.role as Role,
-  });
-
-  if (!organization) {
-    return res.status(500).json({
-      data: null,
-      error: {
-        message: "Failed to accept invitation. Contact your administrator.",
-      },
-    });
-  }
-
-  await invitations.deleteInvitation(invitationToken);
-
-  return res.status(200).json({ data: organization, error: null });
-};
-
-// Delete an invitation
-const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { invitationToken } = req.body;
-
-  const invitation = await invitations.getInvitation(invitationToken);
-
-  if (!invitation) {
-    return res.status(404).json({
-      data: null,
-      error: {
-        message: "Invitation not found",
-      },
-    });
-  }
-
-  await invitations.deleteInvitation(invitationToken);
-
-  return res.status(200).json({ data: {}, error: null });
-};
-
 // Get all invitations for an organization
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query;
 
-  const tenant = await tenants.getTenant({ slug: slug as string });
+  const session = await getSession(req, res);
+  const userId = session?.user?.id as string;
 
-  if (!tenant) {
-    return res.status(404).json({
+  const team = await getTeam({ slug: slug as string });
+
+  if (!isTeamMember(userId, team?.id)) {
+    return res.status(400).json({
       data: null,
-      error: { message: "Tenant not found" },
+      error: { message: "Bad request." },
     });
   }
 
-  const invitationsList = await invitations.getInvitations(tenant.id);
+  const invitations = await getInvitations(team.id);
 
-  return res.status(200).json({ data: invitationsList, error: null });
+  return res.status(200).json({ data: invitations, error: null });
 };
+
+// Delete an invitation
+const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { id } = req.body;
+  const { slug } = req.query;
+
+  const session = await getSession(req, res);
+  const userId = session?.user?.id as string;
+
+  const team = await getTeam({ slug: slug as string });
+
+  if (!isTeamMember(userId, team?.id)) {
+    return res.status(400).json({
+      data: null,
+      error: { message: "Bad request." },
+    });
+  }
+
+  const invitation = await getInvitation({ id });
+
+  if (invitation.invitedBy != userId || invitation.teamId != team.id) {
+    return res.status(400).json({
+      data: null,
+      error: {
+        message: "You don't have permission to delete this invitation.",
+      },
+    });
+  }
+
+  await deleteInvitation({ id });
+
+  return res.status(200).json({ data: {}, error: null });
+};
+
+// // Accept an invitation to an organization
+// const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
+//   const { invitationToken } = req.body;
+
+//   const session = await getSession(req, res);
+
+//   if (!session || !session.user) {
+//     return res
+//       .status(401)
+//       .json({ data: null, error: { message: "Not authenticated" } });
+//   }
+
+//   const invitation = await invitations.getInvitation(invitationToken);
+
+//   if (!invitation) {
+//     return res.status(404).json({
+//       data: null,
+//       error: {
+//         message: "Invitation not found",
+//       },
+//     });
+//   }
+
+//   const organization = await tenants.addUser({
+//     userId: session.user.id,
+//     tenantId: invitation.tenant.id,
+//     role: invitation.role as Role,
+//   });
+
+//   if (!organization) {
+//     return res.status(500).json({
+//       data: null,
+//       error: {
+//         message: "Failed to accept invitation. Contact your administrator.",
+//       },
+//     });
+//   }
+
+//   await invitations.deleteInvitation(invitationToken);
+
+//   return res.status(200).json({ data: organization, error: null });
+// };

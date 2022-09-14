@@ -21,7 +21,7 @@ export const createTeam = async (param: {
 };
 
 export const getTeam = async (key: { id: string } | { slug: string }) => {
-  return await prisma.team.findUnique({
+  return await prisma.team.findUniqueOrThrow({
     where: key,
   });
 };
@@ -52,26 +52,26 @@ export const getTeams = async (userId: string) => {
   });
 };
 
-// export const getTenantMembers = async (slug: string) => {
-//   return await prisma.tenantUser.findMany({
-//     where: {
-//       tenant: {
-//         slug,
-//       },
-//     },
-//     include: {
-//       user: true,
-//     },
-//   });
-// };
+export async function isTeamMember(userId: string, teamId: string) {
+  return (await prisma.teamMember.findFirstOrThrow({
+    where: {
+      userId,
+      teamId,
+    },
+  }))
+    ? true
+    : false;
+}
 
-// export async function isTenantMember(userId: string, tenantId: string) {
-//   return (await prisma.tenantUser.findFirstOrThrow({
-//     where: {
-//       userId,
-//       tenantId,
-//     },
-//   }))
-//     ? true
-//     : false;
-// }
+export const getTeamMembers = async (slug: string) => {
+  return await prisma.teamMember.findMany({
+    where: {
+      team: {
+        slug,
+      },
+    },
+    include: {
+      user: true,
+    },
+  });
+};

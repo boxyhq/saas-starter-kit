@@ -4,8 +4,8 @@ import type { ApiResponse } from "types";
 import type { Team } from "@prisma/client";
 import fetcher from "@/lib/fetcher";
 
-const useTeam = (slug: string, name: string) => {
-  const url = `/api/organizations/${slug}/teams/${name}`;
+const useTeam = (slug: string) => {
+  const url = `/api/teams/${slug}`;
 
   const { data, error } = useSWR<ApiResponse<Team>>(url, fetcher);
 

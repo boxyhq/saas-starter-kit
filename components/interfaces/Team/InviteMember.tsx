@@ -3,24 +3,23 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Modal, Button, Select, Input } from "react-daisyui";
+import { Modal, Button, Input } from "react-daisyui";
 
-import type { Invitation, Tenant } from "@prisma/client";
+import type { Invitation, Team } from "@prisma/client";
 import type { ApiResponse } from "types";
+import { availableRoles } from "@/lib/roles";
 import useInvitations from "hooks/useInvitations";
 
 const InviteMember = ({
   visible,
   setVisible,
-  availableRoles,
-  organization,
+  team,
 }: {
   visible: boolean;
   setVisible: (visible: boolean) => void;
-  availableRoles: any;
-  organization: Tenant;
+  team: Team;
 }) => {
-  const { mutateInvitation } = useInvitations(organization.slug);
+  const { mutateInvitation } = useInvitations(team.slug);
 
   const formik = useFormik({
     initialValues: {
@@ -35,7 +34,7 @@ const InviteMember = ({
       const { email, role } = values;
 
       const response = await axios.post<ApiResponse<Invitation>>(
-        `/api/organizations/${organization.slug}/invitations`,
+        `/api/teams/${team.slug}/invitations`,
         {
           email,
           role,
@@ -53,14 +52,14 @@ const InviteMember = ({
       }
 
       mutateInvitation();
-
       setVisible(false);
+      formik.resetForm();
     },
   });
 
   return (
     <Modal open={visible}>
-      <form onSubmit={formik.submitForm} method="POST">
+      <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header className="font-bold">Invite New Member</Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">
@@ -71,22 +70,21 @@ const InviteMember = ({
                 className="flex-grow"
                 onChange={formik.handleChange}
                 value={formik.values.email}
-                placeholder="jackson@example.com"
-                // error={formik.touched.email ? formik.errors.email : undefined}
+                placeholder="jackson@boxyhq.com"
+                required
               />
-              <Select
+              <select
+                className="select select-bordered flex-grow"
                 name="role"
-                className="flex-grow"
                 onChange={formik.handleChange}
-                value={formik.values.role}
-                // error={formik.touched.role ? formik.errors.role : undefined}
+                required
               >
                 {availableRoles.map((role: any) => (
-                  <Select.Option value={role.id} key={role.id}>
+                  <option value={role.id} key={role.id}>
                     {role.name}
-                  </Select.Option>
+                  </option>
                 ))}
-              </Select>
+              </select>
             </div>
           </div>
         </Modal.Body>
