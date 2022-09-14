@@ -32,13 +32,6 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
   const userId = session?.user?.id as string;
 
-  if (!userId) {
-    return res.status(500).json({
-      data: null,
-      error: { message: "Something went wrong." },
-    });
-  }
-
   const tenant = await getTenant({ slug: slug as string });
 
   if (!isTenantMember(userId, tenant.id)) {
@@ -67,13 +60,6 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const session = await getSession(req, res);
   const userId = session?.user?.id as string;
-
-  if (!userId) {
-    return res.status(500).json({
-      data: null,
-      error: { message: "Something went wrong." },
-    });
-  }
 
   const tenant = await getTenant({ slug: slug as string });
 

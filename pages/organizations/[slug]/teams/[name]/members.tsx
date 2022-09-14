@@ -5,14 +5,14 @@ import { Button } from "react-daisyui";
 import { useRouter } from "next/router";
 
 import { Loading, Error } from "@/components/ui";
-import { TeamTab } from "@/components/interfaces/Team";
+import { TeamTab, Members, AddMember } from "@/components/interfaces/Team";
 import { inferSSRProps } from "@/lib/inferSSRProps";
 import tenants from "models/tenants";
 import useTeam from "hooks/useTeam";
 
-const Members: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
-  tenant,
-}) => {
+const TeamMembers: NextPageWithLayout<
+  inferSSRProps<typeof getServerSideProps>
+> = ({ tenant }) => {
   const router = useRouter();
   const { name } = router.query;
   const [visible, setVisible] = React.useState(false);
@@ -71,4 +71,4 @@ export const getServerSideProps = async (
   };
 };
 
-export default Members;
+export default TeamMembers;

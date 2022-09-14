@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getSession } from "@/lib/session";
-import teams from "models/teams";
-import tenants from "models/tenants";
-import users from "models/users";
+import { createTeam, getTeams } from "models/teams";
+import { getTenant, isTenantMember } from "models/tenants";
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,18 +30,18 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query;
 
   const session = await getSession(req, res);
+  const userId = session?.user?.id as string;
 
-  const tenant = await tenants.getTenant({ slug: slug as string });
-  const user = await users.getUserBySession(session);
+  const tenant = await getTenant({ slug: slug as string });
 
-  if (!tenant || !user) {
-    return res.status(404).json({
+  if (!isTenantMember(userId, tenant.id)) {
+    return res.status(403).json({
       data: null,
-      error: { message: "Tenant or user not found" },
+      error: { message: "Bad request." },
     });
   }
 
-  const team = await teams.createTeam({ name, tenantId: tenant.id });
+  const team = await createTeam({ name, tenantId: tenant.id });
 
   return res.status(200).json({ data: team, error: null });
 };
@@ -52,18 +51,19 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query;
 
   const session = await getSession(req, res);
+  const userId = session?.user?.id as string;
 
-  const tenant = await tenants.getTenant({ slug: slug as string });
-  const user = await users.getUserBySession(session);
+  const tenant = await getTenant({ slug: slug as string });
 
-  if (!tenant || !user) {
-    return res.status(404).json({
+  if (!isTenantMember(userId, tenant.id)) {
+    return res.status(403).json({
       data: null,
-      error: { message: "Tenant or user not found" },
+      error: { message: "Bad request." },
     });
   }
 
-  const teamList = await teams.getTeams(tenant.id);
+  // TODO: Fetch teams with member
+  const teamList = await getTeams(tenant.id);
 
   return res.status(200).json({ data: teamList, error: null });
 };

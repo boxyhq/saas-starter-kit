@@ -1,21 +1,20 @@
-import { Card, LetterAvatar } from "@/components/ui";
-import { Tenant } from "@prisma/client";
-import useTeams from "hooks/useTeams";
 import Link from "next/link";
 import { Button } from "react-daisyui";
 
-const TeamsList = ({ tenant }: { tenant: Tenant }) => {
+import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
+import { Tenant } from "@prisma/client";
+import useTeams from "hooks/useTeams";
+
+const Teams = ({ tenant }: { tenant: Tenant }) => {
   const { isLoading, isError, teams } = useTeams(tenant.slug);
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <Loading />;
   }
 
   if (isError) {
-    return <>500 Error.</>;
+    return <Error />;
   }
-
-  console.log(teams);
 
   return (
     <Card heading="Your Teams">
@@ -47,9 +46,9 @@ const TeamsList = ({ tenant }: { tenant: Tenant }) => {
                         href={`/organizations/${tenant.slug}/teams/${team.name}/members`}
                       >
                         <a>
-                          <div className="flex items-center justify-start space-x-2 underline">
+                          <div className="flex items-center justify-start space-x-2">
                             <LetterAvatar name={team.name} />
-                            <span>{team.name}</span>
+                            <span className="underline">{team.name}</span>
                           </div>
                         </a>
                       </Link>
@@ -74,4 +73,4 @@ const TeamsList = ({ tenant }: { tenant: Tenant }) => {
   );
 };
 
-export default TeamsList;
+export default Teams;
