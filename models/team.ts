@@ -41,6 +41,17 @@ export const addTeamMember = async (
   });
 };
 
+export const removeTeamMember = async (teamId: string, userId: string) => {
+  return await prisma.teamMember.delete({
+    where: {
+      teamId_userId: {
+        teamId,
+        userId,
+      },
+    },
+  });
+};
+
 export const getTeams = async (userId: string) => {
   return await prisma.team.findMany({
     where: {

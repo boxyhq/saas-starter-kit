@@ -1,7 +1,6 @@
 import type { Session } from "next-auth";
 
 import { prisma } from "@/lib/prisma";
-import { slugify } from "@/lib/common";
 
 export const createUser = async (param: { name: string; email: string }) => {
   const { name, email } = param;
@@ -35,36 +34,8 @@ export const getUserBySession = async (session: Session | null) => {
   return await getUser({ id });
 };
 
-// export const createUserAndTeam = async (param: {
-//   name: string;
-//   email: string;
-//   tenant: string;
-// }) => {
-//   const { name, email, tenant } = param;
-
-//   const user = await prisma.user.create({
-//     data: {
-//       name,
-//       email,
-//       tenants: {
-//         create: {
-//           name: tenant,
-//           slug: slugify(tenant),
-//         },
-//       },
-//     },
-//     include: {
-//       tenants: true,
-//     },
-//   });
-
-//   await prisma.tenantUser.create({
-//     data: {
-//       tenantId: user.tenants[0].id,
-//       userId: user.id,
-//       role: "owner",
-//     },
-//   });
-
-//   return user;
-// };
+export const deleteUser = async (key: { id: string } | { email: string }) => {
+  return await prisma.user.delete({
+    where: key,
+  });
+};

@@ -30,8 +30,6 @@ const DirectorySync: NextPageWithLayout = () => {
     return <Error />;
   }
 
-  console.log({ directory });
-
   return (
     <>
       <h3 className="text-2xl font-bold">{team.name}</h3>

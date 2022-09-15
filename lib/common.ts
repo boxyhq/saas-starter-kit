@@ -1,3 +1,5 @@
+import type { NextApiRequest } from "next";
+
 export const createUniqueId = (length = 6) => {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   const charactersLength = characters.length;
@@ -20,4 +22,11 @@ export const slugify = (text: string) => {
     .replace(/--+/g, "-") // Replace multiple - with single -
     .replace(/^-+/, "") // Trim - from start of text
     .replace(/-+$/, ""); // Trim - from end of text
+};
+
+// Fetch the auth token from the request headers
+export const extractAuthToken = (req: NextApiRequest): string | null => {
+  const authHeader = req.headers.authorization || null;
+
+  return authHeader ? authHeader.split(" ")[1] : null;
 };
