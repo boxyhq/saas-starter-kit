@@ -3,13 +3,7 @@ import { Button } from "react-daisyui";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-import {
-  Card,
-  LetterAvatar,
-  EmptyState,
-  Loading,
-  Error,
-} from "@/components/ui";
+import { Card, LetterAvatar, Loading, Error } from "@/components/ui";
 import { Invitation, Team } from "@prisma/client";
 import useInvitations from "hooks/useInvitations";
 import { ApiResponse } from "types";
@@ -49,13 +43,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   };
 
   if (!invitations.length) {
-    return (
-      <Card heading="Invitations Sent">
-        <Card.Body>
-          <EmptyState title="No invitation found." />
-        </Card.Body>
-      </Card>
-    );
+    return null;
   }
 
   return (

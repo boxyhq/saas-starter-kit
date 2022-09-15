@@ -18,6 +18,7 @@ Boxy is an MIT-licensed Next.js based framework that saves you months of develop
 - Create account
 - Sign in via Magic Link
 - Sign via SAML SSO
+- Directory Sync (SCIM)
 - Update account
 - Create team
 - Invite users to the team
@@ -27,11 +28,13 @@ Boxy is an MIT-licensed Next.js based framework that saves you months of develop
 
 ## Coming Soon
 
-- Directory sync
 - Audit logs
 - Unit and integration tests
 - Dark mode
 - Mobile-first UI
+- Billing & subscriptions
+- Internationalization
+- Roles and Permissions
 
 ## Integrations
 

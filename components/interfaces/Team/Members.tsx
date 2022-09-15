@@ -1,10 +1,18 @@
-import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
-import { Team } from "@prisma/client";
-import useTeamMembers from "hooks/useTeamMembers";
+import { useSession } from "next-auth/react";
 import { Button } from "react-daisyui";
 
+import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
+import { Team, TeamMember } from "@prisma/client";
+import useTeamMembers from "hooks/useTeamMembers";
+import axios from "axios";
+import toast from "react-hot-toast";
+
 const Members = ({ team }: { team: Team }) => {
-  const { isLoading, isError, members } = useTeamMembers(team.slug);
+  const { data: session } = useSession();
+
+  const { isLoading, isError, members, mutateTeamMembers } = useTeamMembers(
+    team.slug
+  );
 
   if (isLoading) {
     return <Loading />;
@@ -13,6 +21,17 @@ const Members = ({ team }: { team: Team }) => {
   if (isError) {
     return <Error />;
   }
+
+  const removeTeamMember = async (member: TeamMember) => {
+    await axios.delete(`/api/teams/${team.slug}/members`, {
+      data: {
+        memberId: member.userId,
+      },
+    });
+
+    toast.success("Deleted the member successfully.");
+    mutateTeamMembers();
+  };
 
   return (
     <Card heading="Team Members">
@@ -57,9 +76,17 @@ const Members = ({ team }: { team: Team }) => {
                       {new Date(member.createdAt).toDateString()}
                     </td>
                     <td className="px-6 py-3">
-                      <Button size="sm" variant="outline">
-                        Remove
-                      </Button>
+                      {session?.user.id !== member.user.id && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            removeTeamMember(member);
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      )}
                     </td>
                   </tr>
                 );
