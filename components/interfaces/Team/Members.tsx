@@ -1,6 +1,7 @@
 import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
 import { Team } from "@prisma/client";
 import useTeamMembers from "hooks/useTeamMembers";
+import { Button } from "react-daisyui";
 
 const Members = ({ team }: { team: Team }) => {
   const { isLoading, isError, members } = useTeamMembers(team.slug);
@@ -14,9 +15,9 @@ const Members = ({ team }: { team: Team }) => {
   }
 
   return (
-    <Card heading="Your Teams">
+    <Card heading="Team Members">
       <Card.Body>
-        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+        <table className="w-full table-fixed text-left text-sm text-gray-500 dark:text-gray-400">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
@@ -30,6 +31,9 @@ const Members = ({ team }: { team: Team }) => {
               </th>
               <th scope="col" className="px-6 py-3">
                 Created At
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
               </th>
             </tr>
           </thead>
@@ -49,7 +53,14 @@ const Members = ({ team }: { team: Team }) => {
                     </td>
                     <td className="px-6 py-3">{member.user.email}</td>
                     <td className="px-6 py-3">{member.role}</td>
-                    <td className="px-6 py-3">{member.createdAt}</td>
+                    <td className="px-6 py-3">
+                      {new Date(member.createdAt).toDateString()}
+                    </td>
+                    <td className="px-6 py-3">
+                      <Button size="sm" variant="outline">
+                        Remove
+                      </Button>
+                    </td>
                   </tr>
                 );
               })}

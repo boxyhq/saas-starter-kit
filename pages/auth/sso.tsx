@@ -40,7 +40,7 @@ const SSO: NextPageWithLayout = () => {
       slug: "",
     },
     validationSchema: Yup.object().shape({
-      slug: Yup.string().required("Organization ID is required"),
+      slug: Yup.string().required("Team slug is required"),
     }),
     onSubmit: async (values) => {
       const { slug } = values;
@@ -73,11 +73,11 @@ const SSO: NextPageWithLayout = () => {
         <form className="space-y-4 md:space-y-6" onSubmit={formik.handleSubmit}>
           <InputWithLabel
             type="text"
-            label="Organization ID"
+            label="Team Slug"
             name="slug"
             placeholder="acme"
             value={formik.values.slug}
-            descriptionText="Contact your administrator to get your organization ID"
+            descriptionText="Contact your administrator to get your team slug"
             error={formik.touched.slug ? formik.errors.slug : undefined}
             onChange={formik.handleChange}
           />

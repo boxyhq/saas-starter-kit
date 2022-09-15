@@ -32,11 +32,6 @@ const AuditLogs: NextPageWithLayout = () => {
             <p className="text-sm">
               Audit Logs allow you to track and analyze each member activity.
             </p>
-            <p className="text-sm">
-              These logs show the sequence of activities performed by an
-              individual, procedure, or event enabling you to monitor and verify
-              who accessed what, for what reason and at which time.
-            </p>
             <Badge color="warning">Coming Soon</Badge>
           </div>
         </Card.Body>

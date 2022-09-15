@@ -4,8 +4,10 @@ import axios from "axios";
 import { Button, Textarea, Modal } from "react-daisyui";
 import toast from "react-hot-toast";
 
-import type { ApiResponse, SAMLConfig } from "types";
+import type { SAMLConfig } from "@boxyhq/saml-jackson";
+import type { ApiResponse } from "types";
 import { Team } from "@prisma/client";
+import useSAMLConfig from "hooks/useSAMLConfig";
 
 const ConfigureSAML = ({
   visible,
@@ -16,6 +18,8 @@ const ConfigureSAML = ({
   setVisible: (visible: boolean) => void;
   team: Team;
 }) => {
+  const { mutateSamlConfig } = useSAMLConfig(team.slug);
+
   const formik = useFormik({
     initialValues: {
       metadata: "",
@@ -44,6 +48,7 @@ const ConfigureSAML = ({
         toast.success("SAML Config updated successfully.");
       }
 
+      mutateSamlConfig();
       setVisible(false);
     },
   });

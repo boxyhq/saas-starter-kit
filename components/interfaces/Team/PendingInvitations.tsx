@@ -61,10 +61,10 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   return (
     <Card heading="Invitations Sent">
       <Card.Body>
-        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+        <table className="w-full table-fixed text-left text-sm text-gray-500 dark:text-gray-400">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3" colSpan={2}>
                 Email
               </th>
               <th scope="col" className="px-6 py-3">
@@ -73,7 +73,9 @@ const PendingInvitations = ({ team }: { team: Team }) => {
               <th scope="col" className="px-6 py-3">
                 Created At
               </th>
-              <th scope="col" className="px-6 py-3"></th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -83,14 +85,16 @@ const PendingInvitations = ({ team }: { team: Team }) => {
                   key={invitation.token}
                   className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
                 >
-                  <td className="px-6 py-3">
+                  <td className="px-6 py-3" colSpan={2}>
                     <div className="flex items-center justify-start space-x-2">
                       <LetterAvatar name={invitation.email} />
                       <span>{invitation.email}</span>
                     </div>
                   </td>
                   <td className="px-6 py-3">{invitation.role}</td>
-                  <td className="px-6 py-3">{invitation.createdAt}</td>
+                  <td className="px-6 py-3">
+                    {new Date(invitation.createdAt).toDateString()}
+                  </td>
                   <td className="px-6 py-3">
                     <Button
                       size="sm"

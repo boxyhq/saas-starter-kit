@@ -7,6 +7,7 @@ import { Modal, Button, Input } from "react-daisyui";
 
 import type { ApiResponse } from "types";
 import type { Team } from "@prisma/client";
+import useTeams from "hooks/useTeams";
 
 const CreateTeam = ({
   visible,
@@ -15,6 +16,8 @@ const CreateTeam = ({
   visible: boolean;
   setVisible: (visible: boolean) => void;
 }) => {
+  const { mutateTeams } = useTeams();
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -33,12 +36,15 @@ const CreateTeam = ({
 
       if (error) {
         toast.error(error.message);
+        return;
       }
 
       if (invitation) {
-        toast.success("Invitation sent!");
+        toast.success("Team created successfully.");
       }
 
+      mutateTeams();
+      formik.resetForm();
       setVisible(false);
     },
   });

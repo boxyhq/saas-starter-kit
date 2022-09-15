@@ -1,5 +1,4 @@
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import classNames from "classnames";
 import {
   HomeIcon,
@@ -13,11 +12,14 @@ import { signOut } from "next-auth/react";
 
 import { Team } from "@prisma/client";
 
-const NavItem = (props: Props) => {
-  const router = useRouter();
-
+const NavItem = (props: {
+  href: string;
+  text: string;
+  icon: any;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+}) => {
   const { href, text, onClick } = props;
-  const isActive = router.asPath === href;
+  const isActive = false;
   const Icon = props.icon;
 
   return (
@@ -93,6 +95,8 @@ export default function Sidebar({ teams }: { teams: Team[] }) {
                   icon={LogoutIcon}
                   onClick={() => signOut()}
                 />
+              </div>
+              <div className="space-y-2 pt-2">
                 <NavItem href="/help" text="Help" icon={SupportIcon} />
                 <NavItem href="/docs" text="Guides" icon={DocumentSearchIcon} />
               </div>
@@ -106,11 +110,4 @@ export default function Sidebar({ teams }: { teams: Team[] }) {
       />
     </>
   );
-}
-
-interface Props {
-  href: string;
-  text: string;
-  icon: any;
-  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }

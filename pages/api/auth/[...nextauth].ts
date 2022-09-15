@@ -7,59 +7,53 @@ import type { OAuthTokenReq } from "@boxyhq/saml-jackson";
 import { prisma } from "@/lib/prisma";
 import env from "@/lib/env";
 import jackson from "@/lib/jackson";
-import { getUser } from "models/user";
-// import tenants from "models/team";
-import { Role } from "types";
+import { createUser, getUser } from "models/user";
+import { addTeamMember, getTeam } from "models/team";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
-    // CredentialsProvider({
-    //   id: "saml-sso",
-    //   credentials: {
-    //     code: { type: "text" },
-    //     state: { type: "state" },
-    //   },
-    //   async authorize(credentials) {
-    //     const code = credentials?.code;
-    //     // const state = credentials?.state;
+    CredentialsProvider({
+      id: "saml-sso",
+      credentials: {
+        code: { type: "text" },
+        state: { type: "state" },
+      },
+      async authorize(credentials) {
+        const code = credentials?.code;
+        // const state = credentials?.state;
 
-    //     const { oauthController } = await jackson();
+        const { oauthController } = await jackson();
 
-    //     const params = {
-    //       client_id: "dummy",
-    //       client_secret: "dummy",
-    //       code,
-    //     } as OAuthTokenReq;
+        const params = {
+          client_id: "dummy",
+          client_secret: "dummy",
+          code,
+          redirect_uri: env.saml.callback,
+        } as OAuthTokenReq;
 
-    //     const { access_token } = await oauthController.token(params);
-    //     const profile = await oauthController.userInfo(access_token);
+        const { access_token } = await oauthController.token(params);
+        const profile = await oauthController.userInfo(access_token);
 
-    //     let user = await users.getUser({ email: profile.email });
+        let user = await getUser({ email: profile.email });
 
-    //     if (user === null) {
-    //       // Create user account if it doesn't exist
+        if (user === null) {
+          // Create user account if it doesn't exist
+          user = await createUser({
+            name: `${profile.firstName} ${profile.lastName}`,
+            email: profile.email,
+          });
 
-    //       user = await users.createUser({
-    //         name: `${profile.firstName} ${profile.lastName}`,
-    //         email: profile.email,
-    //         tenantId: profile.requested.tenant,
-    //       });
+          const team = await getTeam({
+            id: profile.requested.tenant,
+          });
 
-    //       const tenant = await tenants.getTenant({
-    //         id: profile.requested.tenant,
-    //       });
+          await addTeamMember(team.id, user.id, team.defaultRole);
+        }
 
-    //       await tenants.addUser({
-    //         userId: user.id,
-    //         tenantId: tenant?.id as string,
-    //         role: tenant?.defaultRole as Role,
-    //       });
-    //     }
-
-    //     return user;
-    //   },
-    // }),
+        return user;
+      },
+    }),
     EmailProvider({
       server: {
         host: env.smtp.host,

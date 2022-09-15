@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 import type { ApiResponse } from "types";
 import type { Team } from "@prisma/client";
@@ -9,10 +9,15 @@ const useTeams = () => {
 
   const { data, error } = useSWR<ApiResponse<Team[]>>(url, fetcher);
 
+  const mutateTeams = async () => {
+    mutate(url);
+  };
+
   return {
     isLoading: !error && !data,
     isError: error,
     teams: data?.data,
+    mutateTeams,
   };
 };
 
