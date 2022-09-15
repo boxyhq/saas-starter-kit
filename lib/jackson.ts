@@ -1,4 +1,5 @@
 import jackson, {
+  DirectorySync,
   IAPIController,
   IOAuthController,
   JacksonOption,
@@ -20,6 +21,7 @@ const opts: JacksonOption = {
 
 let apiController: IAPIController;
 let oauthController: IOAuthController;
+let directorySync: DirectorySync;
 
 const g = global as any;
 
@@ -29,17 +31,21 @@ export default async function init() {
 
     apiController = ret.apiController;
     oauthController = ret.oauthController;
+    directorySync = ret.directorySync;
 
     g.apiController = apiController;
     g.oauthController = oauthController;
+    g.directorySync = directorySync;
   } else {
     apiController = g.apiController;
     oauthController = g.oauthController;
+    directorySync = g.directorySync;
   }
 
   return {
     apiController,
     oauthController,
+    directorySync,
   };
 }
 

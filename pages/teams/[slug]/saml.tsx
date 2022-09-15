@@ -1,6 +1,6 @@
 import type { NextPageWithLayout } from "types";
 import React from "react";
-import { Button, Badge } from "react-daisyui";
+import { Button } from "react-daisyui";
 import { useRouter } from "next/router";
 
 import { Loading, Error } from "@/components/ui";
@@ -35,14 +35,9 @@ const TeamSSO: NextPageWithLayout = () => {
       <TeamTab team={team} activeTab="saml" />
       <Card heading="SAML Single Sign-On">
         <Card.Body className="px-3 py-3">
-          <div className="flex items-center justify-between">
+          <div className="mb-3 flex items-center justify-between">
             <p className="text-sm">
-              Allow team members to login using an Identity Provider.{" "}
-              {samlConfigExists && (
-                <Badge color="warning">
-                  {samlConfig.config.idpMetadata.provider}
-                </Badge>
-              )}
+              Allow team members to login using an Identity Provider.
             </p>
             <Button
               size="sm"
@@ -54,7 +49,7 @@ const TeamSSO: NextPageWithLayout = () => {
             </Button>
           </div>
           {samlConfigExists && (
-            <div className="flex flex-col justify-between space-y-4 text-sm">
+            <div className="flex flex-col justify-between space-y-2 border-t text-sm">
               <p className="mt-3 text-sm">
                 Identity Provider will ask you for the following information to
                 configure your SAML app.
