@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { createUser, getUser } from "models/user";
-import { getTeam, createTeam } from "models/team";
+import { createTeam, isTeamExists } from "models/team";
 import { slugify } from "@/lib/common";
 
 export default async function handler(
@@ -24,17 +24,7 @@ export default async function handler(
 
 // Signup the user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, tenant, inviteToken } = JSON.parse(req.body);
-
-  // const invitation = inviteToken
-  //   ? await invitations.getInvitation(inviteToken)
-  //   : null;
-
-  // if (inviteToken && !invitation) {
-  //   return res
-  //     .status(404)
-  //     .json({ data: null, error: { message: "Invitation not found." } });
-  // }
+  const { name, email, team } = JSON.parse(req.body);
 
   const existingUser = await getUser({ email });
 
@@ -48,24 +38,33 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  const existingTeam = await getTeam({ slug: tenant });
+  // Create a new team
+  if (team) {
+    const slug = slugify(team);
 
-  if (existingTeam) {
-    return res.status(400).json({
-      data: null,
-      error: {
-        message: "A team with this name already exists in our database.",
-      },
-    });
+    const nameCollisions = await isTeamExists([{ name: team }, { slug }]);
+
+    if (nameCollisions > 0) {
+      return res.status(400).json({
+        data: null,
+        error: {
+          message: "A team with this name already exists in our database.",
+        },
+      });
+    }
   }
 
   const user = await createUser({ name, email });
 
-  await createTeam({
-    ownerId: user.id,
-    name: tenant,
-    slug: slugify(tenant),
-  });
+  if (team) {
+    const slug = slugify(team);
+
+    await createTeam({
+      ownerId: user.id,
+      name: team,
+      slug,
+    });
+  }
 
   return res.status(200).json({ data: user, error: null });
 };

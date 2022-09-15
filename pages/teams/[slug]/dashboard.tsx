@@ -10,7 +10,7 @@ const Dashboard: NextPageWithLayout = () => {
     <Card heading="Dashboard">
       <Card.Body>
         <div className="p-3">
-          <p className="">
+          <p className="text-sm">
             {`Hi, ${session?.user.name} You have logged in using ${session?.user.email}`}
           </p>
         </div>

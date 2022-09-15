@@ -7,7 +7,7 @@ import {
   getInvitation,
   deleteInvitation,
 } from "models/invitation";
-import { getTeam, isTeamMember } from "models/team";
+import { addTeamMember, getTeam, isTeamMember } from "models/team";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,8 +20,8 @@ export default async function handler(
       return handleGET(req, res);
     case "POST":
       return handlePOST(req, res);
-    // case "PUT":
-    //   return handlePUT(req, res);
+    case "PUT":
+      return handlePUT(req, res);
     case "DELETE":
       return handleDELETE(req, res);
     default:
@@ -114,45 +114,18 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json({ data: {}, error: null });
 };
 
-// // Accept an invitation to an organization
-// const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-//   const { invitationToken } = req.body;
+// Accept an invitation to an organization
+const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { inviteToken } = req.body;
 
-//   const session = await getSession(req, res);
+  const session = await getSession(req, res);
+  const userId = session?.user?.id as string;
 
-//   if (!session || !session.user) {
-//     return res
-//       .status(401)
-//       .json({ data: null, error: { message: "Not authenticated" } });
-//   }
+  const invitation = await getInvitation({ token: inviteToken as string });
 
-//   const invitation = await invitations.getInvitation(invitationToken);
+  await addTeamMember(invitation.team.id, userId, invitation.role);
 
-//   if (!invitation) {
-//     return res.status(404).json({
-//       data: null,
-//       error: {
-//         message: "Invitation not found",
-//       },
-//     });
-//   }
+  await deleteInvitation({ token: inviteToken as string });
 
-//   const organization = await tenants.addUser({
-//     userId: session.user.id,
-//     tenantId: invitation.tenant.id,
-//     role: invitation.role as Role,
-//   });
-
-//   if (!organization) {
-//     return res.status(500).json({
-//       data: null,
-//       error: {
-//         message: "Failed to accept invitation. Contact your administrator.",
-//       },
-//     });
-//   }
-
-//   await invitations.deleteInvitation(invitationToken);
-
-//   return res.status(200).json({ data: organization, error: null });
-// };
+  return res.status(200).json({ data: {}, error: null });
+};

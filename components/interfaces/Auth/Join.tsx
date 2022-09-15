@@ -15,22 +15,22 @@ const Join = () => {
     initialValues: {
       name: "",
       email: "",
-      tenant: "",
+      team: "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
-      tenant: Yup.string().required(),
+      team: Yup.string().required(),
     }),
     onSubmit: async (values) => {
-      const { name, email, tenant } = values;
+      const { name, email, team } = values;
 
       const response = await fetch("/api/auth/join", {
         method: "POST",
         body: JSON.stringify({
           name,
           email,
-          tenant,
+          team,
         }),
       });
 
@@ -63,10 +63,10 @@ const Join = () => {
       <InputWithLabel
         type="text"
         label="Organization"
-        name="tenant"
+        name="team"
         placeholder="Organization name"
-        value={formik.values.tenant}
-        error={formik.touched.tenant ? formik.errors.tenant : undefined}
+        value={formik.values.team}
+        error={formik.touched.team ? formik.errors.team : undefined}
         onChange={formik.handleChange}
       />
       <InputWithLabel

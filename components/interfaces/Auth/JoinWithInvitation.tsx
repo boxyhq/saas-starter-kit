@@ -1,40 +1,77 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button } from "react-daisyui";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
-import { InputWithLabel } from "@/components/ui";
+import type { User } from "@prisma/client";
+import type { ApiResponse } from "types";
+import { InputWithLabel, Loading, Error } from "@/components/ui";
+import useInvitation from "hooks/useInvitation";
 
 const JoinWithInvitation = ({
   inviteToken,
-  createAccount,
+  next,
 }: {
   inviteToken: string;
-  createAccount: any;
+  next: string;
 }) => {
+  const router = useRouter();
+
+  const { isLoading, isError, invitation } = useInvitation(inviteToken);
+
   const formik = useFormik({
     initialValues: {
       name: "",
-      email: "",
+      email: invitation?.email,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
     }),
+    enableReinitialize: true,
     onSubmit: async (values) => {
       const { name, email } = values;
 
-      await createAccount({
-        name,
-        email,
-        inviteToken,
+      const response = await fetch("/api/auth/join", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          email,
+          inviteToken,
+        }),
       });
 
-      formik.resetForm();
+      const { data: user, error }: ApiResponse<User> = await response.json();
+
+      if (!response.ok && error) {
+        toast.error(error.message);
+        return;
+      }
+
+      if (user) {
+        toast.success("Successfully joined");
+        formik.resetForm();
+
+        if (next) {
+          router.push(next);
+        }
+
+        router.push("/auth/login");
+      }
     },
   });
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return <Error />;
+  }
+
   return (
-    <form className="space-y-4 md:space-y-6" onSubmit={formik.handleSubmit}>
+    <form className="space-y-3" onSubmit={formik.handleSubmit}>
       <InputWithLabel
         type="text"
         label="Name"
@@ -65,7 +102,7 @@ const JoinWithInvitation = ({
       <div>
         <p className="text-sm">
           Signing up signifies that you have read and agree to the Terms of
-          Service and our Privacy Policy. Cookie Preferences.
+          Service and our Privacy Policy.
         </p>
       </div>
     </form>

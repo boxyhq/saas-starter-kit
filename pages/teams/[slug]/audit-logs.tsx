@@ -6,8 +6,9 @@ import { Card } from "@/components/ui";
 import { Loading, Error } from "@/components/ui";
 import { TeamTab } from "@/components/interfaces/Team";
 import useTeam from "hooks/useTeam";
+import { Badge } from "react-daisyui";
 
-const Notifications: NextPageWithLayout = () => {
+const AuditLogs: NextPageWithLayout = () => {
   const router = useRouter();
   const { slug } = router.query;
 
@@ -24,13 +25,19 @@ const Notifications: NextPageWithLayout = () => {
   return (
     <>
       <h3 className="text-2xl font-bold">{team.name}</h3>
-      <TeamTab team={team} activeTab="notifications" />
-      <Card heading="Notifications">
+      <TeamTab team={team} activeTab="audit-logs" />
+      <Card heading="Audit Logs">
         <Card.Body className="px-3 py-3">
           <div className="space-y-3">
             <p className="text-sm">
-              No Notification integrations have been done yet.
+              Audit Logs allow you to track and analyze each member activity.
             </p>
+            <p className="text-sm">
+              These logs show the sequence of activities performed by an
+              individual, procedure, or event enabling you to monitor and verify
+              who accessed what, for what reason and at which time.
+            </p>
+            <Badge color="warning">Coming Soon</Badge>
           </div>
         </Card.Body>
       </Card>
@@ -38,4 +45,4 @@ const Notifications: NextPageWithLayout = () => {
   );
 };
 
-export default Notifications;
+export default AuditLogs;

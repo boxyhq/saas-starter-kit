@@ -10,6 +10,17 @@ export const getInvitations = async (teamId: string) => {
   });
 };
 
+export const getInvitation = async (
+  key: { token: string } | { id: string }
+) => {
+  return await prisma.invitation.findUniqueOrThrow({
+    where: key,
+    include: {
+      team: true,
+    },
+  });
+};
+
 export const createInvitation = async (param: {
   teamId: string;
   invitedBy: string;
@@ -26,17 +37,6 @@ export const createInvitation = async (param: {
       invitedBy,
       email,
       role,
-    },
-  });
-};
-
-export const getInvitation = async (
-  key: { token: string } | { id: string }
-) => {
-  return await prisma.invitation.findUniqueOrThrow({
-    where: key,
-    include: {
-      team: true,
     },
   });
 };

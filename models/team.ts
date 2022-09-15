@@ -85,3 +85,11 @@ export const updateTeam = async (slug: string, data: Partial<Team>) => {
     data: data,
   });
 };
+
+export const isTeamExists = async (condition: any) => {
+  return await prisma.team.count({
+    where: {
+      OR: condition,
+    },
+  });
+};

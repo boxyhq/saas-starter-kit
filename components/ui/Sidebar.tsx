@@ -7,9 +7,6 @@ import {
   SupportIcon,
   DocumentSearchIcon,
   LogoutIcon,
-  LockClosedIcon,
-  UsersIcon,
-  AdjustmentsIcon,
   CollectionIcon,
 } from "@heroicons/react/solid";
 import { signOut } from "next-auth/react";
@@ -82,27 +79,6 @@ export default function Sidebar({ teams }: { teams: Team[] }) {
                     href={`/teams/${teams[0].slug}/dashboard`}
                     text="Dashboard"
                     icon={HomeIcon}
-                  />
-                </li>
-                <li>
-                  <NavItem
-                    href={`/teams/${teams[0].slug}/settings`}
-                    text="Settings"
-                    icon={AdjustmentsIcon}
-                  />
-                </li>
-                <li>
-                  <NavItem
-                    href={`/teams/${teams[0].slug}/authentication`}
-                    text="Authentication"
-                    icon={LockClosedIcon}
-                  />
-                </li>
-                <li>
-                  <NavItem
-                    href={`/teams/${teams[0].slug}/members`}
-                    text="Members"
-                    icon={UsersIcon}
                   />
                 </li>
                 <li>

@@ -28,9 +28,9 @@ const TeamTab = (props: { activeTab: string; team: Team }) => {
       active: activeTab === "directory-sync",
     },
     {
-      name: "Notifications",
-      href: `/teams/${team.slug}/notifications`,
-      active: activeTab === "notifications",
+      name: "Audit Logs",
+      href: `/teams/${team.slug}/audit-logs`,
+      active: activeTab === "audit-logs",
     },
   ];
 

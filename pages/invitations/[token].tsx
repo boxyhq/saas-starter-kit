@@ -8,31 +8,44 @@ import { setCookie } from "cookies-next";
 import { useSession } from "next-auth/react";
 import { Button } from "react-daisyui";
 
-import { inferSSRProps } from "@/lib/inferSSRProps";
-import { put } from "@/lib/fetch";
 import { AuthLayout } from "@/components/layouts";
-import invitations from "models/invitation";
+import axios from "axios";
+import useInvitation from "hooks/useInvitation";
+import { Loading, Error } from "@/components/ui";
 
-const AcceptOrganizationInvitation: NextPageWithLayout<
-  inferSSRProps<typeof getServerSideProps>
-> = ({ invitation }) => {
+const AcceptTeamInvitation: NextPageWithLayout = () => {
   const { status } = useSession();
   const router = useRouter();
 
+  const { token } = router.query;
+
+  const { isLoading, isError, invitation } = useInvitation(token as string);
+
+  if (isLoading || !invitation) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return <Error />;
+  }
+
   const acceptInvitation = async () => {
-    const { data, error } = await put(
-      `/api/organizations/${invitation.tenant.slug}/invitations`,
+    const response = await axios.put(
+      `/api/teams/${invitation.team.slug}/invitations`,
       {
-        invitationToken: invitation.token,
+        inviteToken: invitation.token,
       }
     );
 
+    const { data, error } = response.data;
+
     if (error) {
       toast.error(error.message);
+      return;
     }
 
     if (data) {
-      router.push("/organizations/switch");
+      router.push("/teams/switch");
     }
   };
 
@@ -40,15 +53,17 @@ const AcceptOrganizationInvitation: NextPageWithLayout<
     <>
       <div className="rounded-md bg-white p-6 shadow-sm">
         <div className="flex flex-col items-center space-y-3">
-          <h2 className="font-bold">{`${invitation.tenant.name} is inviting you to join their organization.`}</h2>
+          <h2 className="font-bold">{`${invitation.team.name} is inviting you to join their team.`}</h2>
           <h3 className="text-center">
             {status === "authenticated"
-              ? "You can accept the invitation to join the organization by clicking the button below."
+              ? "You can accept the invitation to join the team by clicking the button below."
               : "To continue, you must either create a new account or login to an existing account."}
           </h3>
           {status === "unauthenticated" ? (
             <>
               <Button
+                color="secondary"
+                variant="outline"
                 fullWidth
                 onClick={() => {
                   router.push(`/auth/join`);
@@ -57,6 +72,8 @@ const AcceptOrganizationInvitation: NextPageWithLayout<
                 Create a new account
               </Button>
               <Button
+                color="secondary"
+                variant="outline"
                 fullWidth
                 onClick={() => {
                   router.push(`/auth/login`);
@@ -66,7 +83,7 @@ const AcceptOrganizationInvitation: NextPageWithLayout<
               </Button>
             </>
           ) : (
-            <Button onClick={acceptInvitation} fullWidth>
+            <Button onClick={acceptInvitation} fullWidth color="primary">
               Accept invitation
             </Button>
           )}
@@ -76,12 +93,10 @@ const AcceptOrganizationInvitation: NextPageWithLayout<
   );
 };
 
-AcceptOrganizationInvitation.getLayout = function getLayout(
-  page: ReactElement
-) {
+AcceptTeamInvitation.getLayout = function getLayout(page: ReactElement) {
   return (
     <AuthLayout
-      heading="Accept organization invite"
+      heading="Accept team invite"
       description="Check out the our website if you'd like to learn more before diving in."
     >
       {page}
@@ -94,14 +109,6 @@ export const getServerSideProps = async (
 ) => {
   const { req, res, query } = context;
   const { token } = query;
-
-  const invitation = await invitations.getInvitation(token as string);
-
-  if (!invitation) {
-    return {
-      notFound: true,
-    };
-  }
 
   setCookie(
     "pending-invite",
@@ -119,10 +126,8 @@ export const getServerSideProps = async (
   );
 
   return {
-    props: {
-      invitation,
-    },
+    props: {},
   };
 };
 
-export default AcceptOrganizationInvitation;
+export default AcceptTeamInvitation;
