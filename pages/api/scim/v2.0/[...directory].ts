@@ -8,7 +8,7 @@ import type {
 import jackson from "@/lib/jackson";
 import { extractAuthToken } from "@/lib/common";
 import { createUser, deleteUser, getUser } from "models/user";
-import { addTeamMember, getTeam } from "models/team";
+import { addTeamMember } from "models/team";
 import { prisma } from "@/lib/prisma";
 
 export default async function handler(

@@ -3,11 +3,11 @@ import * as Yup from "yup";
 import { Button } from "react-daisyui";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 import type { User } from "@prisma/client";
 import type { ApiResponse } from "types";
 import { InputWithLabel } from "@/components/ui";
-import axios from "axios";
 
 const Join = () => {
   const router = useRouter();
@@ -37,6 +37,8 @@ const Join = () => {
 
       const { data: user, error } = response.data;
 
+      formik.resetForm();
+
       if (error) {
         toast.error(error.message);
         return;
@@ -44,7 +46,6 @@ const Join = () => {
 
       if (user) {
         toast.success("Successfully joined");
-        formik.resetForm();
         router.push("/auth/login");
       }
     },
