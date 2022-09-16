@@ -9,6 +9,7 @@ import jackson from "@/lib/jackson";
 import { extractAuthToken } from "@/lib/common";
 import { createUser, deleteUser, getUser } from "models/user";
 import { addTeamMember, getTeam } from "models/team";
+import { prisma } from "@/lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -63,13 +64,31 @@ const handleEvents = async (event: DirectorySyncEvent) => {
       email: data.email,
     });
 
-    const team = await getTeam({ id: teamId });
-
-    await addTeamMember(team.id, user.id, team.defaultRole);
+    await addTeamMember(teamId, user.id, "member");
   }
 
   // User has been updated
   if (action === "user.updated" && "email" in data) {
+    if (data.active === true) {
+      const user = await prisma.user.upsert({
+        where: {
+          email: data.email,
+        },
+        update: {
+          name: `${data.first_name} ${data.last_name}`,
+        },
+        create: {
+          name: `${data.first_name} ${data.last_name}`,
+          email: data.email,
+          password: "",
+        },
+      });
+
+      await addTeamMember(teamId, user.id, "member");
+
+      return;
+    }
+
     const user = await getUser({ email: data.email });
 
     if (!user) {
@@ -79,18 +98,10 @@ const handleEvents = async (event: DirectorySyncEvent) => {
     if (data.active === false) {
       await deleteUser({ id: user.id });
     }
-
-    // TODO: Update user attribute
   }
 
   // User has been removed
   if (action === "user.deleted" && "email" in data) {
-    const user = await getUser({ email: data.email });
-
-    if (!user) {
-      return;
-    }
-
-    await deleteUser({ id: user.id });
+    await deleteUser({ email: data.email });
   }
 };

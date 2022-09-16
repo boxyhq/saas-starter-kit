@@ -36,7 +36,3 @@ Boxy is an MIT-licensed Next.js based framework that saves you months of develop
 - Billing & subscriptions
 - Internationalization
 - Roles and Permissions
-
-## Integrations
-
-- [SAML Jackson](https://github.com/boxyhq/jackson)
