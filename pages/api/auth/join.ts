@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createUser, getUser } from "models/user";
 import { createTeam, isTeamExists } from "models/team";
 import { slugify } from "@/lib/common";
+import { hashPassword } from "@/lib/auth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,7 +25,7 @@ export default async function handler(
 
 // Signup the user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, team } = JSON.parse(req.body);
+  const { name, email, password, team } = req.body;
 
   const existingUser = await getUser({ email });
 
@@ -54,7 +55,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  const user = await createUser({ name, email });
+  const hashedPassword = await hashPassword(password);
+
+  const user = await createUser({
+    name,
+    email,
+    password: hashedPassword,
+  });
 
   if (team) {
     const slug = slugify(team);

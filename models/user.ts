@@ -2,13 +2,18 @@ import type { Session } from "next-auth";
 
 import { prisma } from "@/lib/prisma";
 
-export const createUser = async (param: { name: string; email: string }) => {
-  const { name, email } = param;
+export const createUser = async (param: {
+  name: string;
+  email: string;
+  password: string;
+}) => {
+  const { name, email, password } = param;
 
   return await prisma.user.create({
     data: {
       name,
       email,
+      password,
       emailVerified: new Date(),
     },
   });
