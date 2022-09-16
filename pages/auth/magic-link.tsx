@@ -30,19 +30,14 @@ const Login: NextPageWithLayout<
 
   const formik = useFormik({
     initialValues: {
-      email: "kiran@cal.com",
-      password: "1234567",
+      email: "",
     },
     validationSchema: Yup.object().shape({
       email: Yup.string().required().email(),
-      password: Yup.string().required(),
     }),
     onSubmit: async (values) => {
-      const { email, password } = values;
-
-      const response = await signIn("credentials", {
-        email,
-        password,
+      const response = await signIn("email", {
+        email: values.email,
         csrfToken,
         redirect: false,
         callbackUrl: redirectAfterSignIn,
@@ -50,8 +45,17 @@ const Login: NextPageWithLayout<
 
       formik.resetForm();
 
-      if (!response?.ok) {
-        toast.error("There was a problem with your login.");
+      if (response?.error) {
+        toast.error(
+          "Something went wrong while sending the email. Please try again later."
+        );
+        return;
+      }
+
+      if (response?.status === 200 && response?.ok) {
+        toast.success(
+          "A sign in link has been sent to your email address. The link will expire in 24 hours."
+        );
         return;
       }
     },
@@ -59,31 +63,19 @@ const Login: NextPageWithLayout<
 
   return (
     <>
-      <div className="rounded-md bg-white p-6 shadow-sm">
+      <div className="rounded-md bg-white  p-6 shadow-sm">
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">
             <InputWithLabel
               type="email"
               label="Email"
               name="email"
-              placeholder="Email"
+              placeholder="jackson@boxyhq.com"
               value={formik.values.email}
+              descriptionText="We’ll email you a magic link for a password-free sign in."
               error={formik.touched.email ? formik.errors.email : undefined}
               onChange={formik.handleChange}
             />
-            <InputWithLabel
-              type="password"
-              label="Password"
-              name="password"
-              placeholder="Password"
-              value={formik.values.password}
-              error={
-                formik.touched.password ? formik.errors.password : undefined
-              }
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div className="mt-4">
             <Button
               type="submit"
               color="primary"
@@ -91,14 +83,16 @@ const Login: NextPageWithLayout<
               active={formik.dirty}
               fullWidth
             >
-              Sign in
+              Send Magic Link
             </Button>
           </div>
         </form>
         <div className="divider"></div>
         <div className="space-y-3">
-          <Link href="/auth/magic-link">
-            <a className="btn btn-outline w-full">&nbsp;Sign in with Email</a>
+          <Link href="/auth/login">
+            <a className="btn btn-outline w-full">
+              &nbsp;Sign in with Password
+            </a>
           </Link>
           <Link href="/auth/sso">
             <a className="btn btn-outline w-full">

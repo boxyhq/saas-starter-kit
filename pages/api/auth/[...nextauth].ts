@@ -9,10 +9,45 @@ import env from "@/lib/env";
 import jackson from "@/lib/jackson";
 import { createUser, getUser } from "models/user";
 import { addTeamMember, getTeam } from "models/team";
+import { verifyPassword } from "@/lib/auth";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
+    CredentialsProvider({
+      id: "credentials",
+      credentials: {
+        email: { type: "email" },
+        password: { type: "password" },
+      },
+      async authorize(credentials, req) {
+        if (!credentials) {
+          throw new Error("No credentials found.");
+        }
+
+        const email = credentials?.email as string;
+        const password = credentials?.password as string;
+
+        const user = await getUser({ email });
+
+        if (!user) {
+          return null;
+        }
+
+        const hasValidPassword = await verifyPassword(password, user.password);
+
+        if (!hasValidPassword) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        };
+      },
+    }),
+
     CredentialsProvider({
       id: "saml-sso",
       credentials: {
@@ -21,18 +56,16 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         const code = credentials?.code;
-        // const state = credentials?.state;
 
         const { oauthController } = await jackson();
 
-        const params = {
+        const { access_token } = await oauthController.token({
           client_id: "dummy",
           client_secret: "dummy",
           code,
           redirect_uri: env.saml.callback,
-        } as OAuthTokenReq;
+        } as OAuthTokenReq);
 
-        const { access_token } = await oauthController.token(params);
         const profile = await oauthController.userInfo(access_token);
 
         let user = await getUser({ email: profile.email });

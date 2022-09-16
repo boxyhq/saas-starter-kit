@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import React from "react";
 import axios from "axios";
 import { Button } from "react-daisyui";
+import Link from "next/link";
 
 import type { NextPageWithLayout, ApiResponse } from "types";
 import { AuthLayout } from "@/components/layouts";
@@ -70,27 +71,40 @@ const SSO: NextPageWithLayout = () => {
   return (
     <>
       <div className="rounded-md bg-white p-6 shadow-sm">
-        <form className="space-y-4 md:space-y-6" onSubmit={formik.handleSubmit}>
-          <InputWithLabel
-            type="text"
-            label="Team Slug"
-            name="slug"
-            placeholder="acme"
-            value={formik.values.slug}
-            descriptionText="Contact your administrator to get your team slug"
-            error={formik.touched.slug ? formik.errors.slug : undefined}
-            onChange={formik.handleChange}
-          />
-          <Button
-            type="submit"
-            color="primary"
-            loading={formik.isSubmitting}
-            active={formik.dirty}
-            fullWidth
-          >
-            Continue with SAML SSO
-          </Button>
+        <form onSubmit={formik.handleSubmit}>
+          <div className="space-y-2">
+            <InputWithLabel
+              type="text"
+              label="Team Slug"
+              name="slug"
+              placeholder="acme"
+              value={formik.values.slug}
+              descriptionText="Contact your administrator to get your team slug"
+              error={formik.touched.slug ? formik.errors.slug : undefined}
+              onChange={formik.handleChange}
+            />
+            <Button
+              type="submit"
+              color="primary"
+              loading={formik.isSubmitting}
+              active={formik.dirty}
+              fullWidth
+            >
+              Continue with SAML SSO
+            </Button>
+          </div>
         </form>
+        <div className="divider"></div>
+        <div className="space-y-3">
+          <Link href="/auth/login">
+            <a className="btn btn-outline w-full">
+              &nbsp;Sign in with Password
+            </a>
+          </Link>
+          <Link href="/auth/magic-link">
+            <a className="btn btn-outline w-full">&nbsp;Sign in with Email</a>
+          </Link>
+        </div>
       </div>
     </>
   );
