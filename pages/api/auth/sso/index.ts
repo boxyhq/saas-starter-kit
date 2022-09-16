@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type { OAuthReqBody } from "@boxyhq/saml-jackson";
 import jackson from "@/lib/jackson";
 import env from "@/lib/env";
-import { getTeam } from "models/team";
+import { prisma } from "@/lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,7 +28,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { apiController, oauthController } = await jackson();
 
-  const team = await getTeam({ slug });
+  const team = await prisma.team.findUnique({
+    where: { slug },
+  });
 
   if (!team) {
     return res.status(404).json({

@@ -30,7 +30,7 @@ const Organizations: NextPageWithLayout<
       return;
     }
 
-    router.push(`/teams/${teams[0].slug}/dashboard`);
+    router.push(`/dashboard`);
   });
 
   return (

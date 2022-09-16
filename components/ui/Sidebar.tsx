@@ -78,7 +78,7 @@ export default function Sidebar({ teams }: { teams: Team[] }) {
                 </li>
                 <li>
                   <NavItem
-                    href={`/teams/${teams[0].slug}/dashboard`}
+                    href={`/dashboard`}
                     text="Dashboard"
                     icon={HomeIcon}
                   />
