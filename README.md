@@ -70,28 +70,6 @@ In a development environment:
 npm run dev
 ```
 
-## Contributing
-
-Contributions make the open-source community a fantastic place to learn, inspire, and create. Any contributions you make are greatly appreciated.
-
-The development branch is `main`. This is the branch that all pull requests should be made against.
-
-Please try to create bug reports that are:
-
-- Reproducible. Include steps to reproduce the problem.
-- Specific. Include as much detail as possible: which version, what environment, etc.
-- Unique. Do not duplicate existing opened issues.
-- Scoped to a Single Bug. One bug per report.
-
-## Good First Issues
-
-We have a list of help wanted that contains small features and bugs with a relatively limited scope. Nevertheless, this is a great place to get started, gain experience, and get familiar with our contribution process.
-
-## Community
-
-- [Twitter](https://twitter.com/BoxyHQ)
-- [Discord](https://discord.gg/uyb7pYt4Pa)
-
 ## Features
 
 - Create account
@@ -115,6 +93,18 @@ We have a list of help wanted that contains small features and bugs with a relat
 - Billing & subscriptions
 - Internationalization
 - Roles and Permissions
+
+## Contributing
+
+Contributions make the open-source community a fantastic place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+
+[Contributing Guide](https://github.com/boxyhq/saas-starter-kit/blob/main/CONTRIBUTING)
+
+## Community
+
+- [Discord](https://discord.gg/uyb7pYt4Pa) (For live discussion with the Community and BoxyHQ team)
+- [GitHub](https://github.com/boxyhq/saas-starter-kit/issues) (Bug reports, Contributions)
+- [Twitter](https://twitter.com/BoxyHQ) (Get the news fast)
 
 ## License
 
