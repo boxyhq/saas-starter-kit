@@ -8,6 +8,7 @@ import {
   deleteInvitation,
 } from "models/invitation";
 import { addTeamMember, getTeam, isTeamMember } from "models/team";
+import { sendTeamInviteEmail } from "@/lib/email/sendTeamInviteEmail";
 
 export default async function handler(
   req: NextApiRequest,
@@ -56,6 +57,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     email,
     role,
   });
+
+  await sendTeamInviteEmail(team, invitation);
 
   return res.status(200).json({ data: invitation, error: null });
 };
