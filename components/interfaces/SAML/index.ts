@@ -1,1 +1,1 @@
-export { default as AddEditSAMLConfig } from "./SAMLConfig";
+export { default as ConfigureSAML } from "./ConfigureSAML";

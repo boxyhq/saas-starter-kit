@@ -1,9 +1,5 @@
 const Loading = () => {
-  return (
-    <div>
-      <p>Loading...</p>
-    </div>
-  );
+  return <progress className="progress w-56"></progress>;
 };
 
 export default Loading;

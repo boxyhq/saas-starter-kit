@@ -6,17 +6,18 @@ import axios from "axios";
 import { Modal, Button, Input } from "react-daisyui";
 
 import type { ApiResponse } from "types";
-import type { Team, Tenant } from "@prisma/client";
+import type { Team } from "@prisma/client";
+import useTeams from "hooks/useTeams";
 
 const CreateTeam = ({
   visible,
   setVisible,
-  tenant,
 }: {
   visible: boolean;
   setVisible: (visible: boolean) => void;
-  tenant: Tenant;
 }) => {
+  const { mutateTeams } = useTeams();
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -27,32 +28,30 @@ const CreateTeam = ({
     onSubmit: async (values) => {
       const { name } = values;
 
-      const response = await axios.post<ApiResponse<Team>>(
-        `/api/organizations/${tenant.slug}/teams`,
-        {
-          name,
-        }
-      );
+      const response = await axios.post<ApiResponse<Team>>(`/api/teams`, {
+        name,
+      });
 
       const { data: invitation, error } = response.data;
 
       if (error) {
         toast.error(error.message);
+        return;
       }
 
       if (invitation) {
-        toast.success("Invitation sent!");
+        toast.success("Team created successfully.");
       }
 
-      // mutateInvitation();
-
+      mutateTeams();
+      formik.resetForm();
       setVisible(false);
     },
   });
 
   return (
     <Modal open={visible}>
-      <form onSubmit={formik.submitForm} method="POST">
+      <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header className="font-bold">Create Team</Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">

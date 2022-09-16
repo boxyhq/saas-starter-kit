@@ -1,5 +1,4 @@
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import classNames from "classnames";
 import {
   HomeIcon,
@@ -7,20 +6,20 @@ import {
   SupportIcon,
   DocumentSearchIcon,
   LogoutIcon,
-  LockClosedIcon,
-  UsersIcon,
-  AdjustmentsIcon,
   CollectionIcon,
 } from "@heroicons/react/solid";
 import { signOut } from "next-auth/react";
 
-import { Tenant } from "@prisma/client";
+import { Team } from "@prisma/client";
 
-const NavItem = (props: Props) => {
-  const router = useRouter();
-
+const NavItem = (props: {
+  href: string;
+  text: string;
+  icon: any;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+}) => {
   const { href, text, onClick } = props;
-  const isActive = router.asPath === href;
+  const isActive = false;
   const Icon = props.icon;
 
   return (
@@ -40,7 +39,7 @@ const NavItem = (props: Props) => {
   );
 };
 
-export default function Sidebar({ tenants }: { tenants: Tenant[] }) {
+export default function Sidebar({ teams }: { teams: Team[] }) {
   return (
     <>
       <aside
@@ -79,38 +78,13 @@ export default function Sidebar({ tenants }: { tenants: Tenant[] }) {
                 </li>
                 <li>
                   <NavItem
-                    href={`/organizations/${tenants[0].slug}/dashboard`}
+                    href={`/teams/${teams[0].slug}/dashboard`}
                     text="Dashboard"
                     icon={HomeIcon}
                   />
                 </li>
                 <li>
-                  <NavItem
-                    href={`/organizations/${tenants[0].slug}/settings`}
-                    text="Settings"
-                    icon={AdjustmentsIcon}
-                  />
-                </li>
-                <li>
-                  <NavItem
-                    href={`/organizations/${tenants[0].slug}/authentication`}
-                    text="Authentication"
-                    icon={LockClosedIcon}
-                  />
-                </li>
-                <li>
-                  <NavItem
-                    href={`/organizations/${tenants[0].slug}/members`}
-                    text="Members"
-                    icon={UsersIcon}
-                  />
-                </li>
-                <li>
-                  <NavItem
-                    href={`/organizations/${tenants[0].slug}/teams`}
-                    text="Teams"
-                    icon={CollectionIcon}
-                  />
+                  <NavItem href={`/teams`} text="Teams" icon={CollectionIcon} />
                 </li>
               </ul>
               <div className="space-y-2 pt-2">
@@ -121,6 +95,8 @@ export default function Sidebar({ tenants }: { tenants: Tenant[] }) {
                   icon={LogoutIcon}
                   onClick={() => signOut()}
                 />
+              </div>
+              <div className="space-y-2 pt-2">
                 <NavItem href="/help" text="Help" icon={SupportIcon} />
                 <NavItem href="/docs" text="Guides" icon={DocumentSearchIcon} />
               </div>
@@ -134,11 +110,4 @@ export default function Sidebar({ tenants }: { tenants: Tenant[] }) {
       />
     </>
   );
-}
-
-interface Props {
-  href: string;
-  text: string;
-  icon: any;
-  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }

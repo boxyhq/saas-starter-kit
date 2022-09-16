@@ -1,26 +1,36 @@
 import Link from "next/link";
 import classNames from "classnames";
 
-import type { Team, Tenant } from "@prisma/client";
+import type { Team } from "@prisma/client";
 
-const TeamTab = (props: { activeTab: string; tenant: Tenant; team: Team }) => {
-  const { activeTab, tenant, team } = props;
+const TeamTab = (props: { activeTab: string; team: Team }) => {
+  const { activeTab, team } = props;
 
   const menus = [
     {
       name: "Members",
-      href: `/organizations/${tenant.slug}/teams/${team.name}/members`,
+      href: `/teams/${team.slug}/members`,
       active: activeTab === "members",
     },
     {
       name: "Settings",
-      href: `/organizations/${tenant.slug}/teams/${team.name}/settings`,
+      href: `/teams/${team.slug}/settings`,
       active: activeTab === "settings",
     },
     {
-      name: "Notifications",
-      href: `/organizations/${tenant.slug}/teams/${team.name}/notifications`,
-      active: activeTab === "notifications",
+      name: "SAML SSO",
+      href: `/teams/${team.slug}/saml`,
+      active: activeTab === "saml",
+    },
+    {
+      name: "Directory Sync (SCIM)",
+      href: `/teams/${team.slug}/directory-sync`,
+      active: activeTab === "directory-sync",
+    },
+    {
+      name: "Audit Logs",
+      href: `/teams/${team.slug}/audit-logs`,
+      active: activeTab === "audit-logs",
     },
   ];
 

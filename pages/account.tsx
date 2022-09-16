@@ -10,7 +10,7 @@ import { Button } from "react-daisyui";
 import { inferSSRProps } from "@/lib/inferSSRProps";
 import { getSession } from "@/lib/session";
 import { Card, InputWithLabel } from "@/components/ui";
-import users from "models/users";
+import { getUserBySession } from "models/user";
 
 const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   user,
@@ -92,7 +92,7 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   const session = await getSession(context.req, context.res);
-  const user = await users.getUserBySession(session);
+  const user = await getUserBySession(session);
 
   return {
     props: {

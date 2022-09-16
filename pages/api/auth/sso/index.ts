@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import type { OAuthReqBody } from "@boxyhq/saml-jackson";
-import tenants from "models/tenants";
 import jackson from "@/lib/jackson";
 import env from "@/lib/env";
+import { getTeam } from "models/team";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,39 +28,38 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { apiController, oauthController } = await jackson();
 
-  const tenant = await tenants.getTenant({ slug });
+  const team = await getTeam({ slug });
 
-  // Check if tenant exists
-  if (!tenant) {
+  if (!team) {
     return res.status(404).json({
       data: null,
       error: {
         values: {
-          slug: "The organization does not exist in the database.",
+          slug: "The team does not exist in the database.",
         },
       },
     });
   }
 
   const samlConfig = await apiController.getConfig({
-    tenant: tenant.id,
+    tenant: team.id,
     product: env.product,
   });
 
-  // Check if the SAML config exists for the tenant
+  // Check if the SAML config exists for the team
   if (Object.keys(samlConfig).length === 0) {
     return res.status(404).json({
       data: null,
       error: {
         values: {
-          slug: "SAML SSO is not configured for this organization.",
+          slug: "SAML SSO is not configured for this team.",
         },
       },
     });
   }
 
   const params = {
-    tenant: tenant.id,
+    tenant: team.id,
     product: env.product,
     redirect_uri: env.saml.callback,
     state: "some-random-state",

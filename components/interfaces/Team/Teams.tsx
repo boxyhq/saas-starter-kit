@@ -2,11 +2,10 @@ import Link from "next/link";
 import { Button } from "react-daisyui";
 
 import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
-import { Tenant } from "@prisma/client";
 import useTeams from "hooks/useTeams";
 
-const Teams = ({ tenant }: { tenant: Tenant }) => {
-  const { isLoading, isError, teams } = useTeams(tenant.slug);
+const Teams = () => {
+  const { isLoading, isError, teams } = useTeams();
 
   if (isLoading) {
     return <Loading />;
@@ -19,7 +18,7 @@ const Teams = ({ tenant }: { tenant: Tenant }) => {
   return (
     <Card heading="Your Teams">
       <Card.Body>
-        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+        <table className="w-full table-fixed text-left text-sm text-gray-500 dark:text-gray-400">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
@@ -42,9 +41,7 @@ const Teams = ({ tenant }: { tenant: Tenant }) => {
                     className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
                   >
                     <td className="px-6 py-3">
-                      <Link
-                        href={`/organizations/${tenant.slug}/teams/${team.name}/members`}
-                      >
+                      <Link href={`/teams/${team.slug}/members`}>
                         <a>
                           <div className="flex items-center justify-start space-x-2">
                             <LetterAvatar name={team.name} />
@@ -53,12 +50,15 @@ const Teams = ({ tenant }: { tenant: Tenant }) => {
                         </a>
                       </Link>
                     </td>
-                    <td className="px-6 py-3">{team.createdAt}</td>
+                    <td className="px-6 py-3">
+                      {new Date(team.createdAt).toDateString()}
+                    </td>
                     <td className="px-6 py-3">
                       <Button
                         size="sm"
                         color="secondary"
                         className="text-white"
+                        variant="outline"
                       >
                         Leave Team
                       </Button>

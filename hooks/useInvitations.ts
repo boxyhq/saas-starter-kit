@@ -5,18 +5,18 @@ import { ApiResponse } from "types";
 import { Invitation } from "@prisma/client";
 
 const useInvitations = (slug: string) => {
-  const url = `/api/organizations/${slug}/invitations`;
+  const url = `/api/teams/${slug}/invitations`;
 
-  const { data } = useSWR<ApiResponse<Invitation[]>>(url, fetcher);
-
-  const invitations = data?.data || [];
+  const { data, error } = useSWR<ApiResponse<Invitation[]>>(url, fetcher);
 
   const mutateInvitation = async () => {
     mutate(url);
   };
 
   return {
-    invitations,
+    isLoading: !error && !data,
+    isError: error,
+    invitations: data?.data,
     mutateInvitation,
   };
 };

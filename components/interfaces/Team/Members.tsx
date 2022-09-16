@@ -1,12 +1,18 @@
-import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { Button } from "react-daisyui";
 
 import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
-import { Tenant } from "@prisma/client";
-import useTeams from "hooks/useTeams";
+import { Team, TeamMember } from "@prisma/client";
+import useTeamMembers from "hooks/useTeamMembers";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-const Members = ({ tenant }: { tenant: Tenant }) => {
-  const { isLoading, isError, teams } = useTeams(tenant.slug);
+const Members = ({ team }: { team: Team }) => {
+  const { data: session } = useSession();
+
+  const { isLoading, isError, members, mutateTeamMembers } = useTeamMembers(
+    team.slug
+  );
 
   if (isLoading) {
     return <Loading />;
@@ -16,8 +22,19 @@ const Members = ({ tenant }: { tenant: Tenant }) => {
     return <Error />;
   }
 
+  const removeTeamMember = async (member: TeamMember) => {
+    await axios.delete(`/api/teams/${team.slug}/members`, {
+      data: {
+        memberId: member.userId,
+      },
+    });
+
+    toast.success("Deleted the member successfully.");
+    mutateTeamMembers();
+  };
+
   return (
-    <Card heading="Your Teams">
+    <Card heading="Team Members">
       <Card.Body>
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
@@ -26,42 +43,50 @@ const Members = ({ tenant }: { tenant: Tenant }) => {
                 Name
               </th>
               <th scope="col" className="px-6 py-3">
+                Email
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Role
+              </th>
+              <th scope="col" className="px-6 py-3">
                 Created At
               </th>
               <th scope="col" className="px-6 py-3">
-                Actions
+                Action
               </th>
             </tr>
           </thead>
           <tbody>
-            {teams &&
-              teams.map((team) => {
+            {members &&
+              members.map((member) => {
                 return (
                   <tr
-                    key={team.id}
+                    key={member.id}
                     className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
                   >
                     <td className="px-6 py-3">
-                      <Link
-                        href={`/organizations/${tenant.slug}/teams/${team.name}/members`}
-                      >
-                        <a>
-                          <div className="flex items-center justify-start space-x-2">
-                            <LetterAvatar name={team.name} />
-                            <span className="underline">{team.name}</span>
-                          </div>
-                        </a>
-                      </Link>
+                      <div className="flex items-center justify-start space-x-2">
+                        <LetterAvatar name={member.user.name} />
+                        <span>{member.user.name}</span>
+                      </div>
                     </td>
-                    <td className="px-6 py-3">{team.createdAt}</td>
+                    <td className="px-6 py-3">{member.user.email}</td>
+                    <td className="px-6 py-3">{member.role}</td>
                     <td className="px-6 py-3">
-                      <Button
-                        size="sm"
-                        color="secondary"
-                        className="text-white"
-                      >
-                        Leave Team
-                      </Button>
+                      {new Date(member.createdAt).toDateString()}
+                    </td>
+                    <td className="px-6 py-3">
+                      {session?.user.id !== member.user.id && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            removeTeamMember(member);
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      )}
                     </td>
                   </tr>
                 );

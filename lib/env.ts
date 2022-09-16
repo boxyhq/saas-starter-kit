@@ -1,10 +1,8 @@
-import type { SAMLConfig } from "types";
-
 const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
   product: "saas-next",
-  redirectAfterSignIn: "/organizations/switch",
+  redirectAfterSignIn: "/teams/switch",
 
   // SAML Jackson configuration
   saml: {
@@ -12,7 +10,7 @@ const env = {
     path: "/api/auth/sso/acs",
     callback: `${process.env.APP_URL}/auth/sso`,
     acs: `${process.env.APP_URL}/api/auth/sso/acs`,
-  } as SAMLConfig,
+  },
 
   // SMTP configuration for NextAuth
   smtp: {

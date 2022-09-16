@@ -7,13 +7,47 @@ import type { OAuthTokenReq } from "@boxyhq/saml-jackson";
 import { prisma } from "@/lib/prisma";
 import env from "@/lib/env";
 import jackson from "@/lib/jackson";
-import users from "models/users";
-import tenants from "models/tenants";
-import { Role } from "types";
+import { createUser, getUser } from "models/user";
+import { addTeamMember, getTeam } from "models/team";
+import { verifyPassword } from "@/lib/auth";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
+    CredentialsProvider({
+      id: "credentials",
+      credentials: {
+        email: { type: "email" },
+        password: { type: "password" },
+      },
+      async authorize(credentials, req) {
+        if (!credentials) {
+          throw new Error("No credentials found.");
+        }
+
+        const email = credentials?.email as string;
+        const password = credentials?.password as string;
+
+        const user = await getUser({ email });
+
+        if (!user) {
+          return null;
+        }
+
+        const hasValidPassword = await verifyPassword(password, user.password);
+
+        if (!hasValidPassword) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        };
+      },
+    }),
+
     CredentialsProvider({
       id: "saml-sso",
       credentials: {
@@ -22,39 +56,32 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         const code = credentials?.code;
-        // const state = credentials?.state;
 
         const { oauthController } = await jackson();
 
-        const params = {
+        const { access_token } = await oauthController.token({
           client_id: "dummy",
           client_secret: "dummy",
           code,
-        } as OAuthTokenReq;
+          redirect_uri: env.saml.callback,
+        } as OAuthTokenReq);
 
-        const { access_token } = await oauthController.token(params);
         const profile = await oauthController.userInfo(access_token);
 
-        let user = await users.getUser({ email: profile.email });
+        let user = await getUser({ email: profile.email });
 
         if (user === null) {
           // Create user account if it doesn't exist
-
-          user = await users.createUser({
+          user = await createUser({
             name: `${profile.firstName} ${profile.lastName}`,
             email: profile.email,
-            tenantId: profile.requested.tenant,
           });
 
-          const tenant = await tenants.getTenant({
+          const team = await getTeam({
             id: profile.requested.tenant,
           });
 
-          await tenants.addUser({
-            userId: user.id,
-            tenantId: tenant?.id as string,
-            role: tenant?.defaultRole as Role,
-          });
+          await addTeamMember(team.id, user.id, team.defaultRole);
         }
 
         return user;
@@ -86,7 +113,7 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
 
-      return (await users.getUser({ email: user.email })) ? true : false;
+      return (await getUser({ email: user.email })) ? true : false;
     },
 
     async session({ session, token }) {

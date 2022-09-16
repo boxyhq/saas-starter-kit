@@ -1,76 +1,108 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button } from "react-daisyui";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
+import type { User } from "@prisma/client";
+import type { ApiResponse } from "types";
 import { InputWithLabel } from "@/components/ui";
+import axios from "axios";
 
-const Join = ({ createAccount }: { createAccount: any }) => {
+const Join = () => {
+  const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
-      name: "Kiran",
-      email: "kiran@boxyhq.com",
-      tenant: "boxyhq",
+      name: "",
+      email: "",
+      password: "",
+      team: "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
-      tenant: Yup.string().required(),
+      password: Yup.string().required().min(7),
+      team: Yup.string().required().min(3),
     }),
     onSubmit: async (values) => {
-      const { name, email, tenant } = values;
+      const { name, email, password, team } = values;
 
-      await createAccount({
+      const response = await axios.post<ApiResponse<User>>("/api/auth/join", {
         name,
         email,
-        tenant,
+        password,
+        team,
       });
 
-      formik.resetForm();
+      const { data: user, error } = response.data;
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+
+      if (user) {
+        toast.success("Successfully joined");
+        formik.resetForm();
+        router.push("/auth/login");
+      }
     },
   });
 
   return (
-    <form className="space-y-3" onSubmit={formik.handleSubmit}>
-      <InputWithLabel
-        type="text"
-        label="Name"
-        name="name"
-        placeholder="Your name"
-        value={formik.values.name}
-        error={formik.touched.name ? formik.errors.name : undefined}
-        onChange={formik.handleChange}
-      />
-      <InputWithLabel
-        type="text"
-        label="Organization"
-        name="tenant"
-        placeholder="Organization name"
-        value={formik.values.tenant}
-        error={formik.touched.tenant ? formik.errors.tenant : undefined}
-        onChange={formik.handleChange}
-      />
-      <InputWithLabel
-        type="email"
-        label="Email"
-        name="email"
-        placeholder="jackson@boxyhq.com"
-        value={formik.values.email}
-        error={formik.touched.email ? formik.errors.email : undefined}
-        onChange={formik.handleChange}
-      />
-      <Button
-        type="submit"
-        color="primary"
-        loading={formik.isSubmitting}
-        active={formik.dirty}
-        fullWidth
-      >
-        Create Account
-      </Button>
-      <div>
+    <form className="" onSubmit={formik.handleSubmit}>
+      <div className="space-y-1">
+        <InputWithLabel
+          type="text"
+          label="Name"
+          name="name"
+          placeholder="Your name"
+          value={formik.values.name}
+          error={formik.touched.name ? formik.errors.name : undefined}
+          onChange={formik.handleChange}
+        />
+        <InputWithLabel
+          type="text"
+          label="Team"
+          name="team"
+          placeholder="Team name"
+          value={formik.values.team}
+          error={formik.touched.team ? formik.errors.team : undefined}
+          onChange={formik.handleChange}
+        />
+        <InputWithLabel
+          type="email"
+          label="Email"
+          name="email"
+          placeholder="jackson@boxyhq.com"
+          value={formik.values.email}
+          error={formik.touched.email ? formik.errors.email : undefined}
+          onChange={formik.handleChange}
+        />
+        <InputWithLabel
+          type="password"
+          label="Password"
+          name="password"
+          placeholder="Password"
+          value={formik.values.password}
+          error={formik.touched.password ? formik.errors.password : undefined}
+          onChange={formik.handleChange}
+        />
+      </div>
+      <div className="mt-3 space-y-3">
+        <Button
+          type="submit"
+          color="primary"
+          loading={formik.isSubmitting}
+          active={formik.dirty}
+          fullWidth
+        >
+          Create Account
+        </Button>
         <p className="text-sm">
           Signing up signifies that you have read and agree to the Terms of
-          Service and our Privacy Policy. Cookie Preferences.
+          Service and our Privacy Policy.
         </p>
       </div>
     </form>
