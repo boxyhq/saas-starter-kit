@@ -98,7 +98,7 @@ npm run dev
 
 Contributions make the open-source community a fantastic place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
-[Contributing Guide](https://github.com/boxyhq/saas-starter-kit/blob/main/CONTRIBUTING)
+[Contributing Guide](https://github.com/boxyhq/saas-starter-kit/blob/main/CONTRIBUTING.md)
 
 ## Community
 
