@@ -9,7 +9,8 @@ import env from "@/lib/env";
 import jackson from "@/lib/jackson";
 import { createUser, getUser } from "models/user";
 import { addTeamMember, getTeam } from "models/team";
-import { verifyPassword } from "@/lib/auth";
+import { hashPassword, verifyPassword } from "@/lib/auth";
+import { createRandomString } from "@/lib/common";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -75,6 +76,7 @@ export const authOptions: NextAuthOptions = {
           user = await createUser({
             name: `${profile.firstName} ${profile.lastName}`,
             email: profile.email,
+            password: await hashPassword(createRandomString()),
           });
 
           const team = await getTeam({

@@ -6,10 +6,11 @@ import type {
   DirectorySyncEvent,
 } from "@boxyhq/saml-jackson";
 import jackson from "@/lib/jackson";
-import { extractAuthToken } from "@/lib/common";
+import { createRandomString, extractAuthToken } from "@/lib/common";
 import { createUser, deleteUser, getUser } from "models/user";
 import { addTeamMember } from "models/team";
 import { prisma } from "@/lib/prisma";
+import { hashPassword } from "@/lib/auth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -62,6 +63,7 @@ const handleEvents = async (event: DirectorySyncEvent) => {
     const user = await createUser({
       name: `${data.first_name} ${data.last_name}`,
       email: data.email,
+      password: await hashPassword(createRandomString()),
     });
 
     await addTeamMember(teamId, user.id, "member");

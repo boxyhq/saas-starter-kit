@@ -55,12 +55,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  const hashedPassword = await hashPassword(password);
-
   const user = await createUser({
     name,
     email,
-    password: hashedPassword,
+    password: await hashPassword(password),
   });
 
   if (team) {
