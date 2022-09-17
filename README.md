@@ -72,6 +72,14 @@ In a development environment:
 npm run dev
 ```
 
+#### 7. Start the Prisma Studio
+
+Prisma Studio is a visual editor for the data in your database.
+
+```bash
+npx prisma studio
+```
+
 ## Features
 
 - Create account
