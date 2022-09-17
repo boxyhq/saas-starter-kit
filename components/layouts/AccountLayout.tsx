@@ -22,7 +22,7 @@ export default function AccountLayout({
     <>
       <Navbar />
       <div className="flex overflow-hidden pt-16">
-        <Sidebar teams={teams} />
+        <Sidebar />
         <div className="relative h-full w-full overflow-y-auto  lg:ml-64">
           <main>
             <div className="flex h-screen w-full justify-center">

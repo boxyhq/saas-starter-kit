@@ -10,8 +10,6 @@ import {
 } from "@heroicons/react/solid";
 import { signOut } from "next-auth/react";
 
-import { Team } from "@prisma/client";
-
 const NavItem = (props: {
   href: string;
   text: string;
@@ -39,7 +37,7 @@ const NavItem = (props: {
   );
 };
 
-export default function Sidebar({ teams }: { teams: Team[] }) {
+export default function Sidebar() {
   return (
     <>
       <aside
