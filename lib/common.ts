@@ -1,6 +1,6 @@
 import type { NextApiRequest } from "next";
 
-export const createUniqueId = (length = 6) => {
+export const createRandomString = (length = 6) => {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   const charactersLength = characters.length;
 
