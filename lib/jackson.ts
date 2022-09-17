@@ -8,7 +8,7 @@ import jackson, {
 
 import env from "./env";
 
-const opts: JacksonOption = {
+const opts = {
   externalUrl: env.appUrl,
   samlPath: env.saml.path,
   samlAudience: env.saml.issuer,
@@ -17,7 +17,8 @@ const opts: JacksonOption = {
     type: "postgres",
     url: env.databaseUrl,
   },
-};
+  openid: {},
+} as JacksonOption;
 
 let apiController: IAPIController;
 let oauthController: IOAuthController;
