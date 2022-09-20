@@ -10,6 +10,7 @@ import {
 } from "models/team";
 import { User } from "next-auth";
 import { Team, TeamMember } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,8 +23,10 @@ export default async function handler(
       return handleGET(req, res);
     case "DELETE":
       return handleDELETE(req, res);
+    case "PUT":
+      return handlePUT(req, res);
     default:
-      res.setHeader("Allow", ["GET", "DELETE"]);
+      res.setHeader("Allow", ["GET", "DELETE", "PUT"]);
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
@@ -40,8 +43,8 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const team = await getTeam({ slug: slug as string });
 
-  if (!isTeamMember(userId, team?.id)) {
-    return res.status(400).json({
+  if (!(await isTeamMember(userId, team?.id))) {
+    return res.status(200).json({
       data: null,
       error: { message: "Bad request." },
     });
@@ -60,7 +63,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(400).json({
+    return res.status(200).json({
       data: null,
       error: { message: "Bad request." },
     });
@@ -69,13 +72,55 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const team = await getTeam({ slug: slug as string });
 
   if (!(await canRemoveTeamMember(session?.user, team, memberId))) {
-    return res.status(400).json({
+    return res.status(200).json({
       data: null,
       error: { message: "Bad request." },
     });
   }
 
   await removeTeamMember(team.id, memberId);
+
+  return res.status(200).json({ data: {}, error: null });
+};
+
+// Leave a team
+const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { slug } = req.query;
+
+  const session = await getSession(req, res);
+  const userId = session?.user?.id as string;
+
+  if (!session) {
+    return res.status(200).json({
+      data: null,
+      error: { message: "Bad request." },
+    });
+  }
+
+  const team = await getTeam({ slug: slug as string });
+
+  if (!(await isTeamMember(userId, team.id))) {
+    return res.status(200).json({
+      data: null,
+      error: { message: "Bad request." },
+    });
+  }
+
+  const totalTeamOwners = await prisma.teamMember.count({
+    where: {
+      role: "owner",
+      teamId: team.id,
+    },
+  });
+
+  if (totalTeamOwners <= 1) {
+    return res.status(200).json({
+      data: null,
+      error: { message: "A team should have at least 2 owners." },
+    });
+  }
+
+  await removeTeamMember(team.id, userId);
 
   return res.status(200).json({ data: {}, error: null });
 };

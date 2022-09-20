@@ -60,6 +60,11 @@ export const getTeams = async (userId: string) => {
         },
       },
     },
+    include: {
+      _count: {
+        select: { members: true },
+      },
+    },
   });
 };
 
@@ -95,6 +100,16 @@ export const getTeamMembers = async (slug: string) => {
     },
     include: {
       user: true,
+    },
+  });
+};
+
+export const getTeamMemberCount = async (slug: string) => {
+  return await prisma.teamMember.aggregate({
+    where: {
+      team: {
+        slug,
+      },
     },
   });
 };

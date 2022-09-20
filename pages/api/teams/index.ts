@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getSession } from "@/lib/session";
-import { createTeam, getTeams } from "models/team";
+import { createTeam, getTeams, isTeamExists } from "models/team";
 import { slugify } from "@/lib/common";
 
 export default async function handler(
@@ -38,11 +38,21 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name } = req.body;
 
   const session = await getSession(req, res);
+  const slug = slugify(name);
+
+  if (await isTeamExists({ slug })) {
+    return res.status(200).json({
+      data: null,
+      error: {
+        message: "A team with the name already exists.",
+      },
+    });
+  }
 
   const team = await createTeam({
     userId: session?.user?.id as string,
     name,
-    slug: slugify(name),
+    slug,
   });
 
   return res.status(200).json({ data: team, error: null });

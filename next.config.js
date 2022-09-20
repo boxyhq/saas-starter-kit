@@ -5,7 +5,7 @@ const withTM = require("next-transpile-modules")(["react-daisyui"]);
 const nextConfig = withTM({
   reactStrictMode: true,
   images: {
-    domains: ["tailwindui.com", "boxyhq.com"],
+    domains: [],
   },
 });
 
