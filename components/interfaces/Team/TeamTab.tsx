@@ -32,6 +32,11 @@ const TeamTab = (props: { activeTab: string; team: Team }) => {
       href: `/teams/${team.slug}/audit-logs`,
       active: activeTab === "audit-logs",
     },
+    {
+      name: "Webhooks",
+      href: `/teams/${team.slug}/webhooks`,
+      active: activeTab === "webhooks",
+    },
   ];
 
   return (

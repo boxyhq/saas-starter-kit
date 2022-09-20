@@ -25,6 +25,12 @@ const env = {
   nextAuth: {
     secret: process.env.NEXTAUTH_SECRET,
   },
+
+  // Svix
+  svix: {
+    url: `${process.env.SVIX_URL}`,
+    apiKey: `${process.env.SVIX_API_KEY}`,
+  },
 };
 
 export default env;
