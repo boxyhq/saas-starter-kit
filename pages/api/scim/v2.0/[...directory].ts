@@ -54,16 +54,18 @@ const handleEvents = async (event: DirectorySyncEvent) => {
 
   // User has been created
   if (action === "user.created" && "email" in data) {
-    const existingUser = await getUser({ email: data.email });
-
-    if (existingUser) {
-      return;
-    }
-
-    const user = await createUser({
-      name: `${data.first_name} ${data.last_name}`,
-      email: data.email,
-      password: await hashPassword(createRandomString()),
+    const user = await prisma.user.upsert({
+      where: {
+        email: data.email,
+      },
+      update: {
+        name: `${data.first_name} ${data.last_name}`,
+      },
+      create: {
+        name: `${data.first_name} ${data.last_name}`,
+        email: data.email,
+        password: await hashPassword(createRandomString()),
+      },
     });
 
     await addTeamMember(teamId, user.id, "member");
@@ -82,7 +84,7 @@ const handleEvents = async (event: DirectorySyncEvent) => {
         create: {
           name: `${data.first_name} ${data.last_name}`,
           email: data.email,
-          password: "",
+          password: await hashPassword(createRandomString()),
         },
       });
 

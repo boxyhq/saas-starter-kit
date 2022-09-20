@@ -40,7 +40,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   const team = await createTeam({
-    ownerId: session?.user?.id as string,
+    userId: session?.user?.id as string,
     name,
     slug: slugify(name),
   });
