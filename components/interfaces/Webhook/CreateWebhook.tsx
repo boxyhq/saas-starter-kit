@@ -9,6 +9,7 @@ import type { ApiResponse } from "types";
 import type { Team } from "@prisma/client";
 import { InputWithLabel } from "@/components/ui";
 import useWebhooks from "hooks/useWebhooks";
+import EventTypes from "./EventTypes";
 
 const CreateWebhook = ({
   visible,
@@ -25,19 +26,22 @@ const CreateWebhook = ({
     initialValues: {
       name: "",
       url: "",
+      eventTypes: [],
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
-      url: Yup.string().required(),
+      url: Yup.string().required().url(),
+      eventTypes: Yup.array(),
     }),
     onSubmit: async (values) => {
-      const { name, url } = values;
+      const { name, url, eventTypes } = values;
 
-      const response = await axios.post<ApiResponse<Team>>(
+      const response = await axios.post<ApiResponse>(
         `/api/teams/${team.slug}/webhooks`,
         {
           name,
           url,
+          eventTypes,
         }
       );
 
@@ -83,6 +87,19 @@ const CreateWebhook = ({
                 error={formik.errors.url}
                 descriptionText="The endpoint URL must be HTTPS"
               />
+              <div className="divider"></div>
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text">Events to send</span>
+                </label>
+                <p className="ml-1 text-sm font-normal text-gray-500">
+                  You can choose which events are sent to which endpoint. By
+                  default, all messages are sent to all endpoints.
+                </p>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  <EventTypes onChange={formik.handleChange} />
+                </div>
+              </div>
             </div>
           </div>
         </Modal.Body>

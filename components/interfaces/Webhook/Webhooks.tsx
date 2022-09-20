@@ -11,7 +11,9 @@ import useWebhooks from "hooks/useWebhooks";
 const Webhooks = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
 
-  const { isLoading, isError, webhooks } = useWebhooks(team.slug);
+  const { isLoading, isError, webhooks, mutateWebhooks } = useWebhooks(
+    team.slug
+  );
 
   if (isLoading || !webhooks) {
     return <Loading />;
@@ -22,17 +24,26 @@ const Webhooks = ({ team }: { team: Team }) => {
   }
 
   const deleteWebhook = async (webhook: EndpointOut) => {
-    // await axios.delete(`/api/teams/${team.slug}/members`, {
-    //   data: {
-    //     memberId: member.userId,
-    //   },
-    // });
+    const response = await axios.delete(`/api/teams/${team.slug}/webhooks`, {
+      data: {
+        webhookId: webhook.id,
+      },
+    });
 
-    toast.success("Deleted the member successfully.");
+    const { error } = response.data;
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    mutateWebhooks();
+
+    toast.success("Webhook deleted successfully.");
   };
 
   return (
-    <Card heading="Team Members">
+    <Card heading="Webhooks">
       <Card.Body>
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
@@ -44,7 +55,7 @@ const Webhooks = ({ team }: { team: Team }) => {
                 URL
               </th>
               <th scope="col" className="px-6 py-3">
-                Version
+                Created At
               </th>
               <th scope="col" className="px-6 py-3">
                 Action
@@ -60,17 +71,22 @@ const Webhooks = ({ team }: { team: Team }) => {
                 >
                   <td className="px-6 py-3">{webhook.description}</td>
                   <td className="px-6 py-3">{webhook.url}</td>
-                  <td className="px-6 py-3">{webhook.version}</td>
+                  <td className="px-6 py-3">{webhook.createdAt}</td>
                   <td className="px-6 py-3">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        deleteWebhook(webhook);
-                      }}
-                    >
-                      Remove
-                    </Button>
+                    <div className="flex space-x-2">
+                      <Button size="sm" variant="outline">
+                        Edit
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          deleteWebhook(webhook);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               );

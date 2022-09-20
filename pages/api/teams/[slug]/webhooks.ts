@@ -2,7 +2,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getSession } from "@/lib/session";
 import { getTeam, isTeamMember } from "models/team";
-import { findOrCreateApp, createWebhook, listWebhooks } from "@/lib/svix";
+import {
+  findOrCreateApp,
+  createWebhook,
+  listWebhooks,
+  deleteWebhook,
+} from "@/lib/svix";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,8 +20,10 @@ export default async function handler(
       return handlePOST(req, res);
     case "GET":
       return handleGET(req, res);
+    case "DELETE":
+      return handleDELETE(req, res);
     default:
-      res.setHeader("Allow", ["POST", "GET"]);
+      res.setHeader("Allow", ["POST", "GET", "DELETE"]);
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
@@ -27,7 +34,7 @@ export default async function handler(
 // Create a Webhook endpoint
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const slug = req.query.slug as string;
-  const { name, url } = req.body;
+  const { name, url, eventTypes } = req.body;
 
   const session = await getSession(req, res);
   const userId = session?.user?.id as string;
@@ -45,7 +52,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // TODO: The endpoint URL must be HTTPS.
 
-  const endpoint = await createWebhook(app.id, name, url, ["kiran"]);
+  const endpoint = await createWebhook(app.id, name, url, eventTypes);
 
   return res.status(200).json({ data: endpoint, error: null });
 };
@@ -71,4 +78,35 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const webhooks = await listWebhooks(app.id);
 
   return res.status(200).json({ data: webhooks.data, error: null });
+};
+
+// Delete a webhook
+const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
+  const slug = req.query.slug as string;
+  const { webhookId } = req.body;
+
+  const session = await getSession(req, res);
+  const userId = session?.user?.id as string;
+
+  const team = await getTeam({ slug });
+
+  if (!(await isTeamMember(userId, team?.id))) {
+    return res.status(200).json({
+      data: null,
+      error: { message: "Bad request." },
+    });
+  }
+
+  const app = await findOrCreateApp(team.name, team.id);
+
+  if (app.uid != team.id) {
+    return res.status(200).json({
+      data: null,
+      error: { message: "Bad request." },
+    });
+  }
+
+  await deleteWebhook(app.id, webhookId);
+
+  return res.status(200).json({ data: {}, error: null });
 };

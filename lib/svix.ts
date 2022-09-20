@@ -35,3 +35,7 @@ export const createWebhook = async (
 export const listWebhooks = async (appId: string) => {
   return await svix.endpoint.list(appId);
 };
+
+export const deleteWebhook = async (appId: string, endpointId: string) => {
+  return await svix.endpoint.delete(appId, endpointId);
+};
