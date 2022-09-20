@@ -1,11 +1,11 @@
 import { useSession } from "next-auth/react";
 import { Button } from "react-daisyui";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
 import { Team, TeamMember } from "@prisma/client";
 import useTeamMembers from "hooks/useTeamMembers";
-import axios from "axios";
-import toast from "react-hot-toast";
 import { isTeamOwner } from "@/lib/teams";
 
 const Members = ({ team }: { team: Team }) => {
@@ -52,7 +52,7 @@ const Members = ({ team }: { team: Team }) => {
               <th scope="col" className="px-6 py-3">
                 Created At
               </th>
-              {isTeamOwner(session.user, members) && (
+              {isTeamOwner(session.user, members) && members.length > 1 && (
                 <th scope="col" className="px-6 py-3">
                   Action
                 </th>
@@ -77,7 +77,7 @@ const Members = ({ team }: { team: Team }) => {
                   <td className="px-6 py-3">
                     {new Date(member.createdAt).toDateString()}
                   </td>
-                  {isTeamOwner(session.user, members) && (
+                  {isTeamOwner(session.user, members) && members.length > 1 && (
                     <td className="px-6 py-3">
                       {session.user.id != member.userId && (
                         <Button

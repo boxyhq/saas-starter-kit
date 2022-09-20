@@ -14,8 +14,10 @@ export default async function handler(
       return handleGET(req, res);
     case "PUT":
       return handlePUT(req, res);
+    case "DELETE":
+      return handleDELETE(req, res);
     default:
-      res.setHeader("Allow", ["GET", "PUT"]);
+      res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
@@ -32,7 +34,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const team = await getTeam({ slug: slug as string });
 
-  if (!isTeamMember(userId, team?.id)) {
+  if (!(await isTeamMember(userId, team?.id))) {
     return res.status(400).json({
       data: null,
       error: { message: "Bad request." },
@@ -50,7 +52,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const team = await getTeam({ slug: slug as string });
 
-  if (!isTeamMember(userId, team?.id)) {
+  if (!(await isTeamMember(userId, team?.id))) {
     return res.status(400).json({
       data: null,
       error: { message: "Bad request." },
@@ -64,4 +66,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   return res.status(200).json({ data: updatedTeam, error: null });
+};
+
+const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
+  // Delete a team
 };

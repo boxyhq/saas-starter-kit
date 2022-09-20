@@ -35,7 +35,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const team = await getTeam({ slug: slug as string });
 
-  if (!isTeamMember(userId, team?.id)) {
+  if (!(await isTeamMember(userId, team?.id))) {
     return res.status(400).json({
       data: null,
       error: { message: "Bad request." },
@@ -81,7 +81,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const team = await getTeam({ slug: slug as string });
 
-  if (!isTeamMember(userId, team?.id)) {
+  if (!(await isTeamMember(userId, team?.id))) {
     return res.status(400).json({
       data: null,
       error: { message: "Bad request." },
