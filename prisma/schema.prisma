@@ -52,7 +52,6 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now())
 
-  teams       Team[]
   teamMembers TeamMember[]
   accounts    Account[]
   sessions    Session[]
@@ -61,15 +60,12 @@ model User {
 
 model Team {
   id          String   @id @default(uuid())
-  ownerId     String
   name        String
   slug        String   @unique
   domain      String?  @unique
   defaultRole String   @default("member")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
-
-  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   members     TeamMember[]
   invitations Invitation[]

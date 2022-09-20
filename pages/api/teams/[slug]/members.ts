@@ -6,7 +6,10 @@ import {
   isTeamMember,
   getTeamMembers,
   removeTeamMember,
+  isTeamOwner,
 } from "models/team";
+import { User } from "next-auth";
+import { Team, TeamMember } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -55,11 +58,17 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const { memberId } = req.body;
 
   const session = await getSession(req, res);
-  const userId = session?.user?.id as string;
+
+  if (!session) {
+    return res.status(400).json({
+      data: null,
+      error: { message: "Bad request." },
+    });
+  }
 
   const team = await getTeam({ slug: slug as string });
 
-  if (!isTeamMember(userId, team?.id)) {
+  if (!(await canRemoveTeamMember(session?.user, team, memberId))) {
     return res.status(400).json({
       data: null,
       error: { message: "Bad request." },
@@ -69,4 +78,20 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   await removeTeamMember(team.id, memberId);
 
   return res.status(200).json({ data: {}, error: null });
+};
+
+const canRemoveTeamMember = async (
+  user: User,
+  team: Team,
+  memberId: TeamMember["id"]
+) => {
+  if (!(await isTeamOwner(user.id, team.id))) {
+    return false;
+  }
+
+  if (memberId === user.id) {
+    return false;
+  }
+
+  return true;
 };

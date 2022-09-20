@@ -6,6 +6,7 @@ import { Team, TeamMember } from "@prisma/client";
 import useTeamMembers from "hooks/useTeamMembers";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { isTeamOwner } from "@/lib/teams";
 
 const Members = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
@@ -14,11 +15,11 @@ const Members = ({ team }: { team: Team }) => {
     team.slug
   );
 
-  if (isLoading) {
+  if (isLoading || !members) {
     return <Loading />;
   }
 
-  if (isError) {
+  if (isError || !session) {
     return <Error />;
   }
 
@@ -51,32 +52,34 @@ const Members = ({ team }: { team: Team }) => {
               <th scope="col" className="px-6 py-3">
                 Created At
               </th>
-              <th scope="col" className="px-6 py-3">
-                Action
-              </th>
+              {isTeamOwner(session.user, members) && (
+                <th scope="col" className="px-6 py-3">
+                  Action
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
-            {members &&
-              members.map((member) => {
-                return (
-                  <tr
-                    key={member.id}
-                    className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                  >
+            {members.map((member) => {
+              return (
+                <tr
+                  key={member.id}
+                  className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+                >
+                  <td className="px-6 py-3">
+                    <div className="flex items-center justify-start space-x-2">
+                      <LetterAvatar name={member.user.name} />
+                      <span>{member.user.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-3">{member.user.email}</td>
+                  <td className="px-6 py-3">{member.role}</td>
+                  <td className="px-6 py-3">
+                    {new Date(member.createdAt).toDateString()}
+                  </td>
+                  {isTeamOwner(session.user, members) && (
                     <td className="px-6 py-3">
-                      <div className="flex items-center justify-start space-x-2">
-                        <LetterAvatar name={member.user.name} />
-                        <span>{member.user.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-3">{member.user.email}</td>
-                    <td className="px-6 py-3">{member.role}</td>
-                    <td className="px-6 py-3">
-                      {new Date(member.createdAt).toDateString()}
-                    </td>
-                    <td className="px-6 py-3">
-                      {session?.user.id !== member.user.id && (
+                      {session.user.id != member.userId && (
                         <Button
                           size="sm"
                           variant="outline"
@@ -88,9 +91,10 @@ const Members = ({ team }: { team: Team }) => {
                         </Button>
                       )}
                     </td>
-                  </tr>
-                );
-              })}
+                  )}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </Card.Body>
