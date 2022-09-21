@@ -2,42 +2,10 @@ import Link from "next/link";
 import classNames from "classnames";
 
 import type { Team } from "@prisma/client";
+import { teamNavigations } from "@/lib/teams";
 
-const TeamTab = (props: { activeTab: string; team: Team }) => {
-  const { activeTab, team } = props;
-
-  const menus = [
-    {
-      name: "Members",
-      href: `/teams/${team.slug}/members`,
-      active: activeTab === "members",
-    },
-    {
-      name: "Settings",
-      href: `/teams/${team.slug}/settings`,
-      active: activeTab === "settings",
-    },
-    {
-      name: "SAML SSO",
-      href: `/teams/${team.slug}/saml`,
-      active: activeTab === "saml",
-    },
-    {
-      name: "Directory Sync (SCIM)",
-      href: `/teams/${team.slug}/directory-sync`,
-      active: activeTab === "directory-sync",
-    },
-    {
-      name: "Audit Logs",
-      href: `/teams/${team.slug}/audit-logs`,
-      active: activeTab === "audit-logs",
-    },
-    {
-      name: "Webhooks",
-      href: `/teams/${team.slug}/webhooks`,
-      active: activeTab === "webhooks",
-    },
-  ];
+const TeamTab = ({ activeTab, team }: { activeTab: string; team: Team }) => {
+  const navigations = teamNavigations(team.slug, activeTab);
 
   return (
     <div className="mb-5">
@@ -45,7 +13,7 @@ const TeamTab = (props: { activeTab: string; team: Team }) => {
         className="-mb-px flex space-x-5 border-b border-gray-300"
         aria-label="Tabs"
       >
-        {menus.map((menu) => {
+        {navigations.map((menu) => {
           return (
             <Link href={menu.href} key={menu.href}>
               <a
