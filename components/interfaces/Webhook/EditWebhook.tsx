@@ -1,24 +1,39 @@
+import type { EndpointOut } from "svix";
 import type { FormikHelpers } from "formik";
 import React from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+import type { WebookFormSchema } from "types";
 import type { ApiResponse } from "types";
 import type { Team } from "@prisma/client";
-import useWebhooks from "hooks/useWebhooks";
 import ModalForm from "./Form";
-import type { WebookFormSchema } from "types";
+import useWebhook from "hooks/useWebhook";
+import useWebhooks from "hooks/useWebhooks";
+import { Error, Loading } from "@/components/ui";
 
-const CreateWebhook = ({
+const EditWebhook = ({
   visible,
   setVisible,
   team,
+  endpoint,
 }: {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   team: Team;
+  endpoint: EndpointOut;
 }) => {
+  const { isLoading, isError, webhook } = useWebhook(team.slug, endpoint.id);
+
   const { mutateWebhooks } = useWebhooks(team.slug);
+
+  if (isLoading || !webhook) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return <Error />;
+  }
 
   const onSubmit = async (
     values: WebookFormSchema,
@@ -26,8 +41,8 @@ const CreateWebhook = ({
   ) => {
     const { name, url, eventTypes } = values;
 
-    const response = await axios.post<ApiResponse>(
-      `/api/teams/${team.slug}/webhooks`,
+    const response = await axios.put<ApiResponse>(
+      `/api/teams/${team.slug}/webhooks/${endpoint.id}`,
       { name, url, eventTypes }
     );
 
@@ -43,8 +58,8 @@ const CreateWebhook = ({
     }
 
     mutateWebhooks();
-    setVisible(false);
     formikHelpers.resetForm();
+    setVisible(false);
   };
 
   return (
@@ -52,13 +67,13 @@ const CreateWebhook = ({
       visible={visible}
       setVisible={setVisible}
       initialValues={{
-        name: "",
-        url: "",
-        eventTypes: [],
+        name: webhook.description as string,
+        url: webhook.url,
+        eventTypes: webhook.filterTypes as string[],
       }}
       onSubmit={onSubmit}
     />
   );
 };
 
-export default CreateWebhook;
+export default EditWebhook;

@@ -4,12 +4,12 @@ import { Button } from "react-daisyui";
 import { useRouter } from "next/router";
 
 import { Loading, Error } from "@/components/ui";
+import { TeamTab, Members } from "@/components/interfaces/Team";
 import {
-  TeamTab,
-  Members,
   InviteMember,
   PendingInvitations,
-} from "@/components/interfaces/Team";
+} from "@/components/interfaces/Invitation";
+
 import useTeam from "hooks/useTeam";
 
 const TeamMembers: NextPageWithLayout = () => {

@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { EndpointIn } from "svix";
 
 import { getSession } from "@/lib/session";
 import { getTeam, isTeamMember } from "models/team";
@@ -52,7 +53,17 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // TODO: The endpoint URL must be HTTPS.
 
-  const endpoint = await createWebhook(app.id, name, url, eventTypes);
+  const data: EndpointIn = {
+    description: name,
+    url,
+    version: 1,
+  };
+
+  if (eventTypes.length > 0) {
+    data["filterTypes"] = eventTypes;
+  }
+
+  const endpoint = await createWebhook(app.id, data);
 
   return res.status(200).json({ data: endpoint, error: null });
 };

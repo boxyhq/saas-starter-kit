@@ -104,16 +104,6 @@ export const getTeamMembers = async (slug: string) => {
   });
 };
 
-export const getTeamMemberCount = async (slug: string) => {
-  return await prisma.teamMember.aggregate({
-    where: {
-      team: {
-        slug,
-      },
-    },
-  });
-};
-
 export const updateTeam = async (slug: string, data: Partial<Team>) => {
   return await prisma.team.update({
     where: {

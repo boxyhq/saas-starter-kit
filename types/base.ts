@@ -25,3 +25,9 @@ export type TeamWithMemberCount = Prisma.TeamGetPayload<{
     };
   };
 }>;
+
+export type WebookFormSchema = {
+  name: string;
+  url: string;
+  eventTypes: string[];
+};
