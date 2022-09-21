@@ -4,21 +4,17 @@ import { Button } from "react-daisyui";
 import { useRouter } from "next/router";
 
 import { Loading, Error } from "@/components/ui";
-import { TeamTab, Members } from "@/components/interfaces/Team";
-import {
-  InviteMember,
-  PendingInvitations,
-} from "@/components/interfaces/Invitation";
-
+import { TeamTab } from "@/components/interfaces/Team";
+import { Webhooks, CreateWebhook } from "@/components/interfaces/Webhook";
 import useTeam from "hooks/useTeam";
 
-const TeamMembers: NextPageWithLayout = () => {
+const WebhookList: NextPageWithLayout = () => {
   const router = useRouter();
-  const { slug } = router.query;
+  const slug = router.query.slug as string;
 
   const [visible, setVisible] = React.useState(false);
 
-  const { isLoading, isError, team } = useTeam(slug as string);
+  const { isLoading, isError, team } = useTeam(slug);
 
   if (isLoading || !team) {
     return <Loading />;
@@ -31,7 +27,7 @@ const TeamMembers: NextPageWithLayout = () => {
   return (
     <>
       <h3 className="text-2xl font-bold">{team.name}</h3>
-      <TeamTab team={team} activeTab="members" />
+      <TeamTab team={team} activeTab="webhooks" />
       <div className="flex items-center justify-end">
         <Button
           size="sm"
@@ -41,14 +37,13 @@ const TeamMembers: NextPageWithLayout = () => {
             setVisible(!visible);
           }}
         >
-          Add Member
+          Add Webhook
         </Button>
       </div>
-      <Members team={team} />
-      <PendingInvitations team={team} />
-      <InviteMember visible={visible} setVisible={setVisible} team={team} />
+      <Webhooks team={team} />
+      <CreateWebhook visible={visible} setVisible={setVisible} team={team} />
     </>
   );
 };
 
-export default TeamMembers;
+export default WebhookList;

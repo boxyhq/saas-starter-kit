@@ -7,7 +7,7 @@ import type {
 } from "@boxyhq/saml-jackson";
 import jackson from "@/lib/jackson";
 import { createRandomString, extractAuthToken } from "@/lib/common";
-import { createUser, deleteUser, getUser } from "models/user";
+import { deleteUser, getUser } from "models/user";
 import { addTeamMember } from "models/team";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";

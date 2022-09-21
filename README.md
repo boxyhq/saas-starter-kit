@@ -15,6 +15,7 @@ Boxy is an MIT-licensed Next.js based framework that saves you months of develop
 - [Prisma](https://www.prisma.io)
 - [TypeScript](https://www.typescriptlang.org)
 - [SAML Jackson](https://github.com/boxyhq/jackson)
+- [Svix](https://www.svix.com/)
 
 ## Getting Started
 
@@ -92,7 +93,7 @@ npx prisma studio
 - Invite users to the team
 - Manage team members
 - Update team settings
-- Configure SAML SSO
+- Webhooks & Events
 
 ## Coming Soon
 
