@@ -1,43 +1,23 @@
-import NextLink from "next/link";
-import classNames from "classnames";
 import {
   HomeIcon,
   UserIcon,
-  SupportIcon,
-  DocumentSearchIcon,
   LogoutIcon,
   CollectionIcon,
 } from "@heroicons/react/solid";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
-const NavItem = (props: {
-  href: string;
-  text: string;
-  icon: any;
-  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
-}) => {
-  const { href, text, onClick } = props;
-  const isActive = false;
-  const Icon = props.icon;
-
-  return (
-    <NextLink href={href}>
-      <a
-        href={href}
-        onClick={onClick}
-        className={classNames(
-          isActive ? "bg-gray-100" : "",
-          "flex items-center rounded-lg p-2 text-sm font-semibold text-gray-900 hover:bg-gray-100"
-        )}
-      >
-        <Icon className="h-5 w-5" />
-        <span className="ml-3">{text}</span>
-      </a>
-    </NextLink>
-  );
-};
+import NavItem from "./NavItem";
+import TeamNav from "../interfaces/Team/TeamNav";
+import useTeam from "hooks/useTeam";
 
 export default function Sidebar() {
+  const router = useRouter();
+
+  const slug = router.query.slug as string;
+
+  const { team } = useTeam(slug);
+
   return (
     <>
       <aside
@@ -76,27 +56,46 @@ export default function Sidebar() {
                 </li>
                 <li>
                   <NavItem
-                    href={`/dashboard`}
+                    href="/dashboard"
                     text="Dashboard"
                     icon={HomeIcon}
+                    active={router.pathname === "/dashboard"}
                   />
                 </li>
                 <li>
-                  <NavItem href={`/teams`} text="Teams" icon={CollectionIcon} />
+                  <NavItem
+                    href="/teams"
+                    text="Teams"
+                    icon={CollectionIcon}
+                    active={router.pathname === "/teams"}
+                  />
                 </li>
               </ul>
+              {team && (
+                <div className="space-y-2 pt-2">
+                  <NavItem
+                    href="javascript:void(0);"
+                    text={team.name}
+                    icon={UserIcon}
+                    active={false}
+                  />
+                  <TeamNav slug={slug} />
+                </div>
+              )}
               <div className="space-y-2 pt-2">
-                <NavItem href="/account" text="Account" icon={UserIcon} />
+                <NavItem
+                  href="/account"
+                  text="Account"
+                  icon={UserIcon}
+                  active={router.pathname === "/account"}
+                />
                 <NavItem
                   href="#"
                   text="Logout"
                   icon={LogoutIcon}
                   onClick={() => signOut()}
+                  active={false}
                 />
-              </div>
-              <div className="space-y-2 pt-2">
-                <NavItem href="/help" text="Help" icon={SupportIcon} />
-                <NavItem href="/docs" text="Guides" icon={DocumentSearchIcon} />
               </div>
             </div>
           </div>
