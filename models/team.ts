@@ -26,6 +26,12 @@ export const getTeam = async (key: { id: string } | { slug: string }) => {
   });
 };
 
+export const deleteTeam = async (key: { id: string } | { slug: string }) => {
+  return await prisma.team.delete({
+    where: key,
+  });
+};
+
 export const addTeamMember = async (
   teamId: string,
   userId: string,
