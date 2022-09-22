@@ -25,6 +25,10 @@ Boxy is an MIT-licensed Next.js based framework that saves you months of develop
 - [SAML Jackson](https://github.com/boxyhq/jackson)
 - [Svix](https://www.svix.com/)
 
+## Deployment
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fboxyhq%2Fsaas-starter-kit&env=NEXTAUTH_URL,NEXTAUTH_SECRET,SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASSWORD,SMTP_FROM,DATABASE_URL,APP_URL)
+
 ## Getting Started
 
 Please follow these simple steps to get a local copy up and running.
