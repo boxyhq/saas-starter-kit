@@ -22,8 +22,8 @@ Boxy is an MIT-licensed Next.js based framework that saves you months of develop
 - [React](https://reactjs.org)
 - [Prisma](https://www.prisma.io)
 - [TypeScript](https://www.typescriptlang.org)
-- [SAML Jackson](https://github.com/boxyhq/jackson)
-- [Svix](https://www.svix.com/)
+- [SAML Jackson](https://github.com/boxyhq/jackson) (Provides SAML SSO)
+- [Svix](https://www.svix.com/) (Provides Webhook Orchestration)
 
 ## Deployment
 
