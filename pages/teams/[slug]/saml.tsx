@@ -1,5 +1,5 @@
 import type { NextPageWithLayout } from "types";
-import React from "react";
+import { useState } from "react";
 import { Button } from "react-daisyui";
 import { useRouter } from "next/router";
 
@@ -14,7 +14,7 @@ const TeamSSO: NextPageWithLayout = () => {
   const router = useRouter();
   const { slug } = router.query;
 
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
 
   const { isLoading, isError, team } = useTeam(slug as string);
   const { samlConfig } = useSAMLConfig(slug as string);

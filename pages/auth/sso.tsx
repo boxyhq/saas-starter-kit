@@ -1,9 +1,8 @@
-import type { ReactElement } from "react";
+import { useEffect, type ReactElement } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import React from "react";
 import axios from "axios";
 import { Button } from "react-daisyui";
 import Link from "next/link";
@@ -24,7 +23,7 @@ const SSO: NextPageWithLayout = () => {
   }
 
   // Handle the SAML SSO callback (ACS)
-  React.useEffect(() => {
+  useEffect(() => {
     if (!router.isReady) {
       return;
     }

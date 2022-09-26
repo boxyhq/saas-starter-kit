@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import { ReactElement } from "react";
-import React from "react";
+import { useEffect } from "react";
 
 import { NextPageWithLayout } from "types";
 
 const Home: NextPageWithLayout = () => {
   const router = useRouter();
 
-  React.useEffect(() => {
+  useEffect(() => {
     router.push("/auth/login");
   });
 

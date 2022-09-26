@@ -1,5 +1,5 @@
 import type { NextPageWithLayout } from "types";
-import React from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { Button } from "react-daisyui";
 
@@ -17,7 +17,7 @@ const DirectorySync: NextPageWithLayout = () => {
   const router = useRouter();
   const { slug } = router.query;
 
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
 
   const { isLoading, isError, team } = useTeam(slug as string);
   const { directory } = useDirectory(slug as string);

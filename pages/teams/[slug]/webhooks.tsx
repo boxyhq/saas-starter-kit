@@ -1,5 +1,5 @@
 import type { NextPageWithLayout } from "types";
-import React from "react";
+import { useState } from "react";
 import { Button } from "react-daisyui";
 import { useRouter } from "next/router";
 
@@ -12,7 +12,7 @@ const WebhookList: NextPageWithLayout = () => {
   const router = useRouter();
   const slug = router.query.slug as string;
 
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
 
   const { isLoading, isError, team } = useTeam(slug);
 
