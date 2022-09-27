@@ -7,9 +7,6 @@ export const eventTypes = [
   "member.removed",
   "invitation.created",
   "invitation.removed",
-  "project.created",
-  "project.updated",
-  "project.removed",
 ];
 
 const EventTypes = ({
