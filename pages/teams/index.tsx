@@ -1,11 +1,11 @@
 import type { NextPageWithLayout } from "types";
 import { Button } from "react-daisyui";
-import React from "react";
+import { useState } from "react";
 
 import { CreateTeam, Teams } from "@/components/interfaces/Team";
 
 const AllTeams: NextPageWithLayout = () => {
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
 
   return (
     <>

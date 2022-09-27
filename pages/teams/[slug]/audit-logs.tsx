@@ -1,5 +1,4 @@
 import type { NextPageWithLayout } from "types";
-import React from "react";
 import { useRouter } from "next/router";
 
 import { Card } from "@/components/ui";

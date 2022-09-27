@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import { useEffect, type ReactElement } from "react";
 import { useSession } from "next-auth/react";
 import type {
   GetServerSidePropsContext,
@@ -6,7 +6,6 @@ import type {
 } from "next";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import React from "react";
 import { deleteCookie } from "cookies-next";
 
 import type { NextPageWithLayout } from "types";
@@ -24,7 +23,7 @@ const Organizations: NextPageWithLayout<
     router.push("/auth/login");
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (teams === null) {
       toast.error("You do not have any active team.");
       return;

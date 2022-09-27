@@ -1,7 +1,6 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
-import { ReactElement } from "react";
-import React from "react";
+import type { ReactElement } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { setCookie } from "cookies-next";

@@ -1,6 +1,5 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
-import React from "react";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";

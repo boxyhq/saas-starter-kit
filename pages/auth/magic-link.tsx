@@ -10,7 +10,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
 import { Button } from "react-daisyui";
-import React from "react";
 
 import type { NextPageWithLayout } from "types";
 import { AuthLayout } from "@/components/layouts";
