@@ -12,7 +12,7 @@
 
 The Open Source Next.js Enterprise SaaS Starter Kit.
 
-Boxy is an MIT-licensed Next.js based framework that saves you months of development by starting you off with all the features that are the same in every product, so you can focus on what makes your app unique.
+Next.js based SaaS starter kit that saves you months of development by starting you off with all the features that are the same in every product, so you can focus on what makes your app unique.
 
 ## Built With
 
