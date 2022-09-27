@@ -4,16 +4,6 @@ import env from "./env";
 
 const svix = new Svix(env.svix.apiKey);
 
-export const eventTypes = [
-  "member.created",
-  "member.removed",
-  "invitation.created",
-  "invitation.removed",
-  "project.created",
-  "project.updated",
-  "project.removed",
-];
-
 export const findOrCreateApp = async (name: string, uid: string) => {
   return await svix.application.getOrCreate({ name, uid });
 };
