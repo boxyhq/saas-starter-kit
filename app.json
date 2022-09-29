@@ -3,40 +3,46 @@
     "description": "The Open Source Next.js Enterprise SaaS Starter Kit. Next.js based SaaS starter kit that saves you months of development by starting you off with all the features that are the same in every product, so you can focus on what makes your app unique.",
     "repository": "https://github.com/boxyhq/saas-starter-kit",
     "logo": "https://boxyhq.com/img/logo.png",
+    "keywords": [
+        "saas",
+        "starter",
+        "kit",
+        "enterprise"
+    ],
     "env": {
         "NEXTAUTH_URL": {
-            "description": "Provide Next.js authentication URL."
+            "description": "Next.js authentication URL."
         },
         "NEXTAUTH_SECRET": {
-            "description": "Provide Next.js authentication secret."
+            "description": "Next.js authentication secret."
         },
         "SMTP_HOST": {
-            "description": "Provide SMTP server host name."
+            "description": "SMTP server host name."
         },
         "SMTP_PORT": {
-            "description": "Provide SMTP server port number."
+            "description": "SMTP server port number."
         },
         "SMTP_USER": {
-            "description": "Provide SMTP server username."
+            "description": "SMTP server username."
         },
         "SMTP_PASSWORD": {
-            "description": "Provide SMTP server password."
+            "description": "SMTP server password."
         },
         "SMTP_FROM": {
-            "description": "Provide SMTP server sender's email address."
+            "description": "SMTP server sender's email address."
         },
         "DATABASE_URL": {
-            "description": "Provide Hosted Database URL."
+            "description": "Hosted Database URL."
         },
         "APP_URL": {
-            "description": "Provide public root URL of the Enterprise SaaS installation, replace <HEROKU_APP_NAME> with the app name.",
+            "description": "Public root URL of the Enterprise SaaS installation, replace <HEROKU_APP_NAME> with the app name.",
             "value": "https://<HEROKU_APP_NAME>.herokuapp.com"
         },
         "SVIX_URL": {
-            "description": "Provide SVIX URL."
+            "description": "SVIX URL."
         },
         "SVIX_API_KEY": {
-            "description": "Provide SVIX API key."
+            "description": "SVIX API key."
         }
     },
     "success_url": "/"
