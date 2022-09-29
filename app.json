@@ -1,18 +1,43 @@
 {
-    "name": "boxyhq",
+    "name": "BoxyHQ Enterprise SaaS Starter Kit",
     "description": "The Open Source Next.js Enterprise SaaS Starter Kit. Next.js based SaaS starter kit that saves you months of development by starting you off with all the features that are the same in every product, so you can focus on what makes your app unique.",
     "repository": "https://github.com/boxyhq/saas-starter-kit",
+    "logo": "https://boxyhq.com/img/logo.png",
     "env": {
-        "NEXTAUTH_URL": {},
-        "NEXTAUTH_SECRET": {},
-        "SMTP_HOST": {},
-        "SMTP_PORT": {},
-        "SMTP_USER": {},
-        "SMTP_PASSWORD": {},
-        "SMTP_FROM": {},
-        "DATABASE_URL": {},
-        "APP_URL": {},
-        "SVIX_URL": {},
-        "SVIX_API_KEY": {}
-    }
+        "NEXTAUTH_URL": {
+            "description": "Provide Next.js authentication URL."
+        },
+        "NEXTAUTH_SECRET": {
+            "description": "Provide Next.js authentication secret."
+        },
+        "SMTP_HOST": {
+            "description": "Provide SMTP server host name."
+        },
+        "SMTP_PORT": {
+            "description": "Provide SMTP server port number."
+        },
+        "SMTP_USER": {
+            "description": "Provide SMTP server username."
+        },
+        "SMTP_PASSWORD": {
+            "description": "Provide SMTP server password."
+        },
+        "SMTP_FROM": {
+            "description": "Provide SMTP server sender's email address."
+        },
+        "DATABASE_URL": {
+            "description": "Provide Hosted Database URL."
+        },
+        "APP_URL": {
+            "description": "Provide public root URL of the Enterprise SaaS installation, replace <HEROKU_APP_NAME> with the app name.",
+            "value": "https://<HEROKU_APP_NAME>.herokuapp.com"
+        },
+        "SVIX_URL": {
+            "description": "Provide SVIX URL."
+        },
+        "SVIX_API_KEY": {
+            "description": "Provide SVIX API key."
+        }
+    },
+    "success_url": "/"
 }
