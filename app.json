@@ -1,0 +1,18 @@
+{
+    "name": "boxyhq",
+    "description": "The Open Source Next.js Enterprise SaaS Starter Kit. Next.js based SaaS starter kit that saves you months of development by starting you off with all the features that are the same in every product, so you can focus on what makes your app unique.",
+    "repository": "https://github.com/boxyhq/saas-starter-kit",
+    "env": {
+        "NEXTAUTH_URL": {},
+        "NEXTAUTH_SECRET": {},
+        "SMTP_HOST": {},
+        "SMTP_PORT": {},
+        "SMTP_USER": {},
+        "SMTP_PASSWORD": {},
+        "SMTP_FROM": {},
+        "DATABASE_URL": {},
+        "APP_URL": {},
+        "SVIX_URL": {},
+        "SVIX_API_KEY": {}
+    }
+}
