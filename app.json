@@ -39,10 +39,12 @@
             "value": "https://<HEROKU_APP_NAME>.herokuapp.com"
         },
         "SVIX_URL": {
-            "description": "SVIX URL."
+            "description": "SVIX URL.",
+            "required": false
         },
         "SVIX_API_KEY": {
-            "description": "SVIX API key."
+            "description": "SVIX API key.",
+            "required": false
         }
     },
     "success_url": "/"
