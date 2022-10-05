@@ -31,6 +31,7 @@ Next.js based SaaS starter kit that saves you months of development by starting 
 
 [![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new)
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## Getting Started
 

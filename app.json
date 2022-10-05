@@ -1,0 +1,51 @@
+{
+    "name": "BoxyHQ Enterprise SaaS Starter Kit",
+    "description": "The Open Source Next.js Enterprise SaaS Starter Kit. Next.js based SaaS starter kit that saves you months of development by starting you off with all the features that are the same in every product, so you can focus on what makes your app unique.",
+    "repository": "https://github.com/boxyhq/saas-starter-kit",
+    "logo": "https://boxyhq.com/img/logo.png",
+    "keywords": [
+        "saas",
+        "starter",
+        "kit",
+        "enterprise"
+    ],
+    "env": {
+        "NEXTAUTH_URL": {
+            "description": "Next.js authentication URL."
+        },
+        "NEXTAUTH_SECRET": {
+            "description": "Next.js authentication secret."
+        },
+        "SMTP_HOST": {
+            "description": "SMTP server host name."
+        },
+        "SMTP_PORT": {
+            "description": "SMTP server port number."
+        },
+        "SMTP_USER": {
+            "description": "SMTP server username."
+        },
+        "SMTP_PASSWORD": {
+            "description": "SMTP server password."
+        },
+        "SMTP_FROM": {
+            "description": "SMTP server sender's email address."
+        },
+        "DATABASE_URL": {
+            "description": "Hosted Database URL."
+        },
+        "APP_URL": {
+            "description": "Public root URL of the Enterprise SaaS installation, replace <HEROKU_APP_NAME> with the app name.",
+            "value": "https://<HEROKU_APP_NAME>.herokuapp.com"
+        },
+        "SVIX_URL": {
+            "description": "SVIX URL.",
+            "required": false
+        },
+        "SVIX_API_KEY": {
+            "description": "SVIX API key.",
+            "required": false
+        }
+    },
+    "success_url": "/"
+}
