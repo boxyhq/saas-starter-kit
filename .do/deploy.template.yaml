@@ -1,5 +1,5 @@
 spec:
-  name: saas-starter-kit
+  name: BoxyHQ Enterprise SaaS Starter Kit
   services:
   - name: web
     git:
