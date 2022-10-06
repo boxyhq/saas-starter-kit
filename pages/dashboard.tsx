@@ -2,16 +2,20 @@ import { useSession } from "next-auth/react";
 
 import type { NextPageWithLayout } from "types";
 import { Card } from "@/components/ui";
+import { useTranslation } from "next-i18next";
 
 const Dashboard: NextPageWithLayout = () => {
   const { data: session } = useSession();
+  const { t } = useTranslation("dashboard");
 
   return (
     <Card heading="Dashboard">
       <Card.Body>
         <div className="p-3">
           <p className="text-sm">
-            {`Hi, ${session?.user.name} You have logged in using ${session?.user.email}`}
+            {`${t("hi")}, ${session?.user.name} ${t("logged-in-using")} ${
+              session?.user.email
+            }`}
           </p>
         </div>
       </Card.Body>
