@@ -16,6 +16,8 @@ import { AuthLayout } from "@/components/layouts";
 import { InputWithLabel } from "@/components/ui";
 import { getParsedCookie } from "@/lib/cookie";
 import env from "@/lib/env";
+import { FcGoogle } from "react-icons/fc"
+import { FaGithub } from "react-icons/fa"
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -104,12 +106,15 @@ const Login: NextPageWithLayout<
               &nbsp;Continue with SAML SSO
             </a>
           </Link>
-          <Link href="/auth/magic-link">
-            <a className="btn btn-outline w-full">&nbsp;Sign in with Google</a>
-          </Link>
-          <Link href="/auth/magic-link">
-            <a className="btn btn-outline w-full">&nbsp;Sign in with Github</a>
-          </Link>
+          <div className="divider">or</div>
+          <Button className="btn-wide w-full">
+            <FcGoogle />
+            &nbsp;Sign in with Google
+          </Button>
+          <Button className="btn-wide w-full">
+            <FaGithub />
+            &nbsp;Sign in with Github
+          </Button>
         </div>
       </div>
       <p className="text-center text-sm text-gray-600">

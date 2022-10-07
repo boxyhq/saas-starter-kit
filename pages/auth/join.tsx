@@ -2,6 +2,7 @@ import type { ReactElement } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
+import { Button } from "react-daisyui";
 import Link from "next/link";
 
 import type { NextPageWithLayout } from "types";
@@ -10,6 +11,9 @@ import { inferSSRProps } from "@/lib/inferSSRProps";
 import { getParsedCookie } from "@/lib/cookie";
 import JoinWithInvitation from "@/components/interfaces/Auth/JoinWithInvitation";
 import Join from "@/components/interfaces/Auth/Join";
+import { FcGoogle } from "react-icons/fc"
+import { FaGithub } from "react-icons/fa"
+
 
 const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   inviteToken,
@@ -32,12 +36,14 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
         )}
       </div>
       <div className="divider">or sign up with</div>
-      <Link href="/auth/magic-link">
-        <a className="btn btn-outline w-full">&nbsp;Google</a>
-      </Link>
-      <Link href="/auth/magic-link">
-        <a className="btn btn-outline w-full">&nbsp;Github</a>
-      </Link>
+      <Button className="btn-wide w-full">
+        <FcGoogle />
+        &nbsp;Google
+      </Button>
+      <Button className="btn-wide w-full">
+        <FaGithub />
+        &nbsp;Github
+      </Button>
       <p className="text-center text-sm text-gray-600">
         Already have an account?
         <Link href="/auth/login">
