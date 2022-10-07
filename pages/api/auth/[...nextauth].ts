@@ -1,5 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
+import GitHubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -89,6 +91,7 @@ export const authOptions: NextAuthOptions = {
         return user;
       },
     }),
+
     EmailProvider({
       server: {
         host: env.smtp.host,
@@ -99,6 +102,16 @@ export const authOptions: NextAuthOptions = {
         },
       },
       from: env.smtp.from,
+    }),
+
+    GitHubProvider({
+      clientId: env.github.clientId,
+      clientSecret: env.github.clientSecret,
+    }),
+
+    GoogleProvider({
+      clientId: env.google.clientId,
+      clientSecret: env.google.clientSecret,
     }),
   ],
   pages: {

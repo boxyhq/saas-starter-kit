@@ -107,11 +107,11 @@ const Login: NextPageWithLayout<
             </a>
           </Link>
           <div className="divider">or</div>
-          <Button className="btn-wide w-full">
+          <Button className="btn-wide w-full" onClick={() => signIn()}>
             <FcGoogle />
             &nbsp;Sign in with Google
           </Button>
-          <Button className="btn-wide w-full">
+          <Button className="btn-wide w-full" onClick={() => signIn()}>
             <FaGithub />
             &nbsp;Sign in with Github
           </Button>
