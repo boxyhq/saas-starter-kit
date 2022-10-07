@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
 import { Button } from "react-daisyui";
@@ -36,14 +36,18 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
         )}
       </div>
       <div className="divider">or sign up with</div>
-      <Button className="btn-wide w-full">
-        <FcGoogle />
-        &nbsp;Google
-      </Button>
-      <Button className="btn-wide w-full">
-        <FaGithub />
-        &nbsp;Github
-      </Button>
+      <Link href="/api/auth/*">
+        <a className="btn btn-outline w-full" onClick={() => signIn()}>
+          <FcGoogle />
+          &nbsp;Google
+        </a>
+      </Link>
+      <Link href="/api/auth/*">
+        <a className="btn btn-outline w-full" onClick={() => signIn()}>
+          <FaGithub />
+          &nbsp;Github
+        </a>
+      </Link>
       <p className="text-center text-sm text-gray-600">
         Already have an account?
         <Link href="/auth/login">
