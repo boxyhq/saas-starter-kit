@@ -104,6 +104,12 @@ const Login: NextPageWithLayout<
               &nbsp;Continue with SAML SSO
             </a>
           </Link>
+          <Link href="/auth/magic-link">
+            <a className="btn btn-outline w-full">&nbsp;Sign in with Google</a>
+          </Link>
+          <Link href="/auth/magic-link">
+            <a className="btn btn-outline w-full">&nbsp;Sign in with Github</a>
+          </Link>
         </div>
       </div>
       <p className="text-center text-sm text-gray-600">

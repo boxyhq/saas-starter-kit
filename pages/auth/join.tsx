@@ -31,6 +31,13 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
           <Join />
         )}
       </div>
+      <div className="divider">or sign up with</div>
+      <Link href="/auth/magic-link">
+        <a className="btn btn-outline w-full">&nbsp;Google</a>
+      </Link>
+      <Link href="/auth/magic-link">
+        <a className="btn btn-outline w-full">&nbsp;Github</a>
+      </Link>
       <p className="text-center text-sm text-gray-600">
         Already have an account?
         <Link href="/auth/login">
