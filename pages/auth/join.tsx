@@ -36,13 +36,13 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
         )}
       </div>
       <div className="divider">or sign up with</div>
-      <Link href="/api/auth/*">
+      <Link href="/api/auth/signin">
         <a className="btn btn-outline w-full" onClick={() => signIn()}>
           <FcGoogle />
           &nbsp;Google
         </a>
       </Link>
-      <Link href="/api/auth/*">
+      <Link href="/api/auth/signin">
         <a className="btn btn-outline w-full" onClick={() => signIn()}>
           <FaGithub />
           &nbsp;Github

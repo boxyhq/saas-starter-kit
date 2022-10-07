@@ -107,13 +107,13 @@ const Login: NextPageWithLayout<
             </a>
           </Link>
           <div className="divider">or</div>
-          <Link href="/api/auth/*">
+          <Link href="/api/auth/signin">
             <a className="btn btn-outline w-full" onClick={() => signIn()}>
               <FcGoogle />
               &nbsp;Sign in with Google
             </a>
           </Link>
-          <Link href="/api/auth/*">
+          <Link href="/api/auth/signin">
             <a className="btn btn-outline w-full" onClick={() => signIn()}>
               <FaGithub />
               &nbsp;Sign in with Github
