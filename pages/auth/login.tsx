@@ -108,13 +108,25 @@ const Login: NextPageWithLayout<
           </Link>
           <div className="divider">or</div>
           <Link href="/api/auth/signin">
-            <a className="btn btn-outline w-full" onClick={() => signIn()}>
+            <a
+              className="btn btn-outline w-full"
+              onClick={(e) => {
+                e.preventDefault();
+                signIn("google");
+              }}
+            >
               <FcGoogle />
               &nbsp;Sign in with Google
             </a>
           </Link>
           <Link href="/api/auth/signin">
-            <a className="btn btn-outline w-full" onClick={() => signIn()}>
+            <a
+              className="btn btn-outline w-full"
+              onClick={(e) => {
+                e.preventDefault();
+                signIn("github");
+              }}
+            >
               <FaGithub />
               &nbsp;Sign in with Github
             </a>

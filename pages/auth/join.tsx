@@ -37,13 +37,25 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
       </div>
       <div className="divider">or sign up with</div>
       <Link href="/api/auth/signin">
-        <a className="btn btn-outline w-full" onClick={() => signIn()}>
+        <a
+          className="btn btn-outline w-full"
+          onClick={(e) => {
+            e.preventDefault();
+            signIn("google");
+          }}
+        >
           <FcGoogle />
           &nbsp;Google
         </a>
       </Link>
       <Link href="/api/auth/signin">
-        <a className="btn btn-outline w-full" onClick={() => signIn()}>
+        <a
+          className="btn btn-outline w-full"
+          onClick={(e) => {
+            e.preventDefault();
+            signIn("github");
+          }}
+        >
           <FaGithub />
           &nbsp;Github
         </a>
