@@ -6,7 +6,7 @@ import { useTranslation } from "next-i18next";
 
 const Dashboard: NextPageWithLayout = () => {
   const { data: session } = useSession();
-  const { t } = useTranslation("dashboard");
+  const { t } = useTranslation("common");
 
   return (
     <Card heading="Dashboard">
