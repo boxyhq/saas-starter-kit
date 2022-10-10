@@ -128,7 +128,7 @@ const Login: NextPageWithLayout<
               }}
             >
               <FaGithub />
-              &nbsp;Sign in with Github
+              &nbsp;Sign in with GitHub
             </a>
           </Link>
         </div>

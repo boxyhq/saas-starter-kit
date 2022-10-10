@@ -57,7 +57,7 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
           }}
         >
           <FaGithub />
-          &nbsp;Github
+          &nbsp;GitHub
         </a>
       </Link>
       <p className="text-center text-sm text-gray-600">
