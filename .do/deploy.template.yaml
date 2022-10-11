@@ -1,0 +1,24 @@
+spec:
+  name: BoxyHQ Enterprise SaaS Starter Kit
+  services:
+  - name: web
+    git:
+      branch: main
+      repo_clone_url: https://github.com/boxyhq/saas-starter-kit.git
+    envs:
+    - key: NEXTAUTH_URL
+    - key: NEXTAUTH_SECRET
+      type: SECRET
+    - key: SMTP_HOST
+    - key: SMTP_PORT
+    - key: SMTP_USER
+    - key: SMTP_PASSWORD
+      type: SECRET
+    - key: SMTP_FROM
+    - key: DATABASE_URL
+      scope: RUN_TIME
+    - key: APP_URL
+      value: ${APP_URL}
+    - key: SVIX_URL
+    - key: SVIX_API_KEY
+      type: SECRET
