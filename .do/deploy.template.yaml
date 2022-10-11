@@ -1,0 +1,21 @@
+spec:
+  name: saas-starter-kit
+  services:
+  - name: web
+    git:
+      branch: main
+      repo_clone_url: https://github.com/boxyhq/saas-starter-kit.git
+    envs:
+    - key: NEXTAUTH_URL
+      value: ${APP_URL}
+    - key: APP_URL
+      value: ${APP_URL}
+    - key: NEXTAUTH_SECRET
+    - key: SMTP_HOST
+    - key: SMTP_PORT
+    - key: SMTP_USER
+    - key: SMTP_PASSWORD
+    - key: SMTP_FROM
+    - key: DATABASE_URL
+    - key: SVIX_URL
+    - key: SVIX_API_KEY

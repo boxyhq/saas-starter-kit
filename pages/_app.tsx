@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
-
+import { appWithTranslation } from "next-i18next";
 import type { AppPropsWithLayout } from "types";
 import { AccountLayout } from "@/components/layouts";
 import app from "@/lib/app";
@@ -27,4 +27,4 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   );
 }
 
-export default MyApp;
+export default appWithTranslation<never>(MyApp);
