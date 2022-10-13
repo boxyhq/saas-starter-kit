@@ -11,7 +11,8 @@
     "check-lint": "eslint . --ext ts --ext tsx --ext js",
     "format": "prettier --write .",
     "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@boxyhq/saml-jackson": "^1.2.1",
@@ -44,6 +45,7 @@
     "zod": "^3.17.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.27.1",
     "@tailwindcss/forms": "^0.5.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/node": "17.0.22",
