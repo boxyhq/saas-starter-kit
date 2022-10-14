@@ -48,6 +48,7 @@ Please follow these simple steps to get a local copy up and running.
 - Node.js (Version: >=15.x <17)
 - PostgreSQL
 - NPM
+- Docker compose
 
 ### Development
 
@@ -84,10 +85,16 @@ cp .env.example .env
 #### 5. Set up database schema
 
 ```bash
+docker-compose up -d
+```
+
+#### 6. Set up database schema
+
+```bash
 npx prisma db push
 ```
 
-#### 6. Start the server
+#### 7. Start the server
 
 In a development environment:
 
@@ -95,7 +102,7 @@ In a development environment:
 npm run dev
 ```
 
-#### 7. Start the Prisma Studio
+#### 8. Start the Prisma Studio
 
 Prisma Studio is a visual editor for the data in your database.
 
