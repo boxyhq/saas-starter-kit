@@ -4,7 +4,7 @@ import { createUser, getUser } from "models/user";
 import { createTeam, isTeamExists } from "models/team";
 import { slugify } from "@/lib/common";
 import { hashPassword } from "@/lib/auth";
-import { sendEmail } from "@/lib/email/sendEmail";
+import { sendWelcomeEmail } from "@/lib/email/sendWelcomeEmail";
 
 export default async function handler(
   req: NextApiRequest,
@@ -71,11 +71,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       slug,
     });
 
-    await sendEmail({
-      to: email,
-      subject: "Welcome to BoxyHQ",
-      html: `<p> Welcome ${name}<p>`,
-    });
+    await sendWelcomeEmail(name, email, team);
   }
 
   return res.status(200).json({ data: user, error: null });
