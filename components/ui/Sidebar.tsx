@@ -3,6 +3,7 @@ import {
   UserIcon,
   ArrowLeftOnRectangleIcon,
   UsersIcon,
+  KeyIcon
 } from "@heroicons/react/24/solid";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -88,6 +89,12 @@ export default function Sidebar() {
                   text="Account"
                   icon={UserIcon}
                   active={router.pathname === "/account"}
+                />
+                <NavItem
+                    href="/update-password"
+                    text="Update Password"
+                    icon={KeyIcon}
+                    active={router.pathname === "/update-password"}
                 />
                 <NavItem
                   href="#"
