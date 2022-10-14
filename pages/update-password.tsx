@@ -1,14 +1,21 @@
 import { inferSSRProps } from "@/lib/inferSSRProps";
 import { NextPageWithLayout } from "types";
-import { getServerSideProps } from "./account";
 import { useFormik } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
+import { Card, InputWithLabel } from "@/components/ui";
+import { Button } from "react-daisyui";
+import { GetServerSidePropsContext } from "next";
+import { getSession } from "@/lib/session";
+import { getUserBySession } from "models/user";
+import { verifyPassword } from "@/lib/auth";
+import { useRouter } from "next/router";
 
 const UpdatePassword: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
     user,
 }) => {
+    const router = useRouter();
 
     const formik = useFormik({
         initialValues: {
@@ -18,13 +25,20 @@ const UpdatePassword: NextPageWithLayout<inferSSRProps<typeof getServerSideProps
         },
         validationSchema: Yup.object().shape({
             currentPassword: Yup.string().required(),
-            newPassword: Yup.string().required(),
-            confirmationPassword: Yup.string().required()
+            newPassword: Yup.string().required('Required'),
+            confirmationPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], "Passwords don't match!")
+            .required('Required')
         }),
         onSubmit: async (values) => {
             const { confirmationPassword } = values;
+            const currentPasswordIsValid = await verifyPassword(formik.values.currentPassword, String(user?.password));
 
-            const response = await axios.patch("/api/users/:id", {
+            if (!currentPasswordIsValid) {
+                toast.error("Wrong current password");
+                return;
+            }
+            
+            const response = await axios.patch(`/api/users`, {
                 password: confirmationPassword
             });
 
@@ -36,13 +50,76 @@ const UpdatePassword: NextPageWithLayout<inferSSRProps<typeof getServerSideProps
 
             if (data) {
                 toast.success("Successfully updated");
+                router.reload();
             }
         },
     });
 
     return (
-            <>Update</>
+            <>
+            <form onSubmit={formik.handleSubmit}>
+                <Card heading="Update Password">
+                    <Card.Body className="px-3 py-3">
+                        <div className="flex flex-col space-y-6">
+                            <InputWithLabel
+                                type="password"
+                                label="Current password"
+                                name="currentPassword"
+                                placeholder="Type your current"
+                                value={formik.values.currentPassword}
+                                error={formik.touched.currentPassword ? formik.errors.currentPassword : undefined}
+                                onChange={formik.handleChange}
+                            />
+                            <InputWithLabel
+                                type="password"
+                                label="New password"
+                                name="newPassword"
+                                placeholder="Type your new password"
+                                value={formik.values.newPassword}
+                                error={formik.touched.newPassword ? formik.errors.newPassword : undefined}
+                                onChange={formik.handleChange}
+                            />
+                            <InputWithLabel
+                                type="password"
+                                label="Confirm password"
+                                name="confirmationPassword"
+                                placeholder="Confirm your password"
+                                value={formik.values.confirmationPassword}
+                                error={formik.touched.confirmationPassword ? formik.errors.confirmationPassword : undefined}
+                                onChange={formik.handleChange}
+                            />
+                        </div>
+                        <Card.Footer>
+                            <div className="flex justify-end">
+                                <Button
+                                    type="submit"
+                                    color="primary"
+                                    loading={formik.isSubmitting}
+                                    active={formik.dirty}
+                                    disabled={!formik.isValid}
+                                >
+                                    Save Changes
+                                </Button>
+                            </div>
+                        </Card.Footer>
+                    </Card.Body>
+                </Card>
+            </form>
+            </>
     )
 }
+
+export const getServerSideProps = async (
+        context: GetServerSidePropsContext
+) => {
+    const session = await getSession(context.req, context.res);
+    const user = await getUserBySession(session);
+
+    return {
+        props: {
+            user,
+        },
+    };
+};
 
 export default UpdatePassword;
