@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
-import { hashPassword } from "@/lib/auth";
+import { hashPassword, verifyPassword } from "@/lib/auth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,11 +39,34 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
-  const { password } = req.body;
+  const { confirmationPassword, currentPassword, newPassword } = req.body;
   let infoToUpdate = {};
 
-  if (password) {
-    const hash = await hashPassword(password);
+  if (currentPassword) {
+    const user = await prisma.user.findFirst({
+      where: { id: session?.user.id },
+    });
+
+    const currentPasswordIsValid = await verifyPassword(
+      currentPassword,
+      String(user?.password)
+    );
+    const confirmPasswordAndNewPasswordAreEqual =
+      confirmationPassword === newPassword;
+
+    if (!currentPasswordIsValid)
+      return res
+        .status(400)
+        .json({ data: null, error: { message: "Wrong current password" } });
+    if (!confirmPasswordAndNewPasswordAreEqual)
+      return res.status(400).json({
+        data: null,
+        error: {
+          message: "New password and confirmation password don't match",
+        },
+      });
+
+    const hash = await hashPassword(confirmationPassword);
     infoToUpdate = { password: hash };
   }
 
