@@ -1,9 +1,9 @@
 import {
   HomeIcon,
   UserIcon,
-  LogoutIcon,
-  CollectionIcon,
-} from "@heroicons/react/solid";
+  ArrowLeftOnRectangleIcon,
+  UsersIcon,
+} from "@heroicons/react/24/solid";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -66,7 +66,7 @@ export default function Sidebar() {
                   <NavItem
                     href="/teams"
                     text="Teams"
-                    icon={CollectionIcon}
+                    icon={UsersIcon}
                     active={router.pathname === "/teams"}
                   />
                 </li>
@@ -76,7 +76,7 @@ export default function Sidebar() {
                   <NavItem
                     href="javascript:void(0);"
                     text={team.name}
-                    icon={UserIcon}
+                    icon={UsersIcon}
                     active={false}
                   />
                   <TeamNav slug={slug} />
@@ -92,7 +92,7 @@ export default function Sidebar() {
                 <NavItem
                   href="#"
                   text="Logout"
-                  icon={LogoutIcon}
+                  icon={ArrowLeftOnRectangleIcon}
                   onClick={() => signOut()}
                   active={false}
                 />
