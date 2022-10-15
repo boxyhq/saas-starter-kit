@@ -105,15 +105,17 @@ npx prisma studio
 
 #### 8. Testing
 
-We are using [Playwright](https://playwright.dev/) to execute E2E tests. Add all tests inside `/tests` folder. Update `playwright.config.ts` to change playwright configuration.
+We are using [Playwright](https://playwright.dev/) to execute E2E tests. Add all tests inside `/tests` folder.
 
-- To install/update browser drivers and playwright dependencies, run the following command.(Mainly for first time set-up)
+Update `playwright.config.ts` to change playwright configuration.
+
+##### Install Playwright dependencies
 
 ```bash
 npm run playwright:update
 ```
 
-- To run all E2E tests.
+##### Run E2E tests
 
 ```bash
 npm run test:e2e
