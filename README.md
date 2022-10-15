@@ -82,7 +82,9 @@ Duplicate `.env.example` to `.env`.
 cp .env.example .env
 ```
 
-#### 5. Set up database schema
+#### 5. Create database (Optional)
+
+You can use a docker-compose database or your any database you want
 
 ```bash
 docker-compose up -d
