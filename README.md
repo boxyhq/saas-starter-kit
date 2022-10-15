@@ -84,7 +84,7 @@ cp .env.example .env
 
 #### 5. Create database (Optional)
 
-You can use a docker-compose database or your any database you want
+To make the process of installing dependencies easier, we offer a `docker-compose.yml` with a Postgres container.
 
 ```bash
 docker-compose up -d
