@@ -103,6 +103,26 @@ Prisma Studio is a visual editor for the data in your database.
 npx prisma studio
 ```
 
+#### 8. Testing
+
+We are using [Playwright](https://playwright.dev/) to execute E2E tests. Add all tests inside `/tests` folder.
+
+Update `playwright.config.ts` to change playwright configuration.
+
+##### Install Playwright dependencies
+
+```bash
+npm run playwright:update
+```
+
+##### Run E2E tests
+
+```bash
+npm run test:e2e
+```
+
+_Note: HTML test report is generated inside the `report` folder. Currently suported browsers for test execution `chromium` and `firefox`_
+
 ## Features
 
 - Create account

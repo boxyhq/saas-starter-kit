@@ -12,6 +12,8 @@
     "format": "prettier --write .",
     "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
     "prepare": "husky install",
+    "playwright:update": "playwright install && playwright install-deps",
+    "test:e2e": "playwright test",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --env=jsdom"
@@ -47,6 +49,7 @@
     "zod": "^3.17.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.27.1",
     "@tailwindcss/forms": "^0.5.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
