@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { createEvent } from "@/lib/svix";
 import { Team } from "@prisma/client";
 
 export const createTeam = async (param: {
@@ -37,6 +38,8 @@ export const addTeamMember = async (
   userId: string,
   role: string
 ) => {
+  createEvent("member.created", "Member created");
+
   return await prisma.teamMember.create({
     data: {
       userId,
@@ -47,6 +50,8 @@ export const addTeamMember = async (
 };
 
 export const removeTeamMember = async (teamId: string, userId: string) => {
+  createEvent("member.removed", "Member removed");
+
   return await prisma.teamMember.delete({
     where: {
       teamId_userId: {
