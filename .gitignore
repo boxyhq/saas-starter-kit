@@ -44,3 +44,6 @@ yarn-error.log*
 
 # Tests
 /report
+
+# eslint
+.eslintcache
