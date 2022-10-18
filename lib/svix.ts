@@ -1,3 +1,4 @@
+import { Invitation, TeamMember } from "@prisma/client";
 import { Svix, EndpointIn } from "svix";
 
 import env from "./env";
@@ -32,9 +33,24 @@ export const deleteWebhook = async (appId: string, endpointId: string) => {
   return await svix.endpoint.delete(appId, endpointId);
 };
 
-export const createEvent = async (name: string, description: string) => {
-  return await svix.eventType.create({
-    name: name,
-    description: description,
+export const sendInvitationEvent = async (
+  appId: string,
+  eventType: string,
+  invitation: Invitation
+) => {
+  return await svix.message.create(appId, {
+    eventType: eventType,
+    payload: invitation,
+  });
+};
+
+export const sendMemberEvent = async (
+  appId: string,
+  eventType: string,
+  member: TeamMember
+) => {
+  return await svix.message.create(appId, {
+    eventType: eventType,
+    payload: member,
   });
 };

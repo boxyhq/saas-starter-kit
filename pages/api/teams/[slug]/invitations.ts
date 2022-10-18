@@ -9,6 +9,7 @@ import {
 } from "models/invitation";
 import { addTeamMember, getTeam, isTeamMember } from "models/team";
 import { sendTeamInviteEmail } from "@/lib/email/sendTeamInviteEmail";
+import { sendInvitationEvent, sendMemberEvent } from "@/lib/svix";
 
 export default async function handler(
   req: NextApiRequest,
@@ -57,6 +58,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     email,
     role,
   });
+
+  await sendInvitationEvent(team.id, "invitation.created", invitation);
 
   await sendTeamInviteEmail(team, invitation);
 
@@ -114,6 +117,8 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteInvitation({ id });
 
+  await sendInvitationEvent(team.id, "invitation.removed", invitation);
+
   return res.status(200).json({ data: {}, error: null });
 };
 
@@ -126,7 +131,13 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const invitation = await getInvitation({ token: inviteToken as string });
 
-  await addTeamMember(invitation.team.id, userId, invitation.role);
+  const teamMember = await addTeamMember(
+    invitation.team.id,
+    userId,
+    invitation.role
+  );
+
+  await sendMemberEvent(invitation.team.id, "member.created", teamMember);
 
   await deleteInvitation({ token: inviteToken as string });
 
