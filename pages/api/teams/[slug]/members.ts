@@ -11,7 +11,7 @@ import {
 import { User } from "next-auth";
 import { Team, TeamMember } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { sendMemberEvent } from "@/lib/svix";
+import { sendEvent } from "@/lib/svix";
 
 export default async function handler(
   req: NextApiRequest,
@@ -81,7 +81,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const teamMember = await removeTeamMember(team.id, memberId);
 
-  await sendMemberEvent(team.id, "member.removed", teamMember);
+  await sendEvent(team.id, "member.removed", teamMember);
 
   return res.status(200).json({ data: {}, error: null });
 };

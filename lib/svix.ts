@@ -33,24 +33,13 @@ export const deleteWebhook = async (appId: string, endpointId: string) => {
   return await svix.endpoint.delete(appId, endpointId);
 };
 
-export const sendInvitationEvent = async (
+export const sendEvent = async (
   appId: string,
   eventType: string,
-  invitation: Invitation
+  payload: any
 ) => {
   return await svix.message.create(appId, {
     eventType: eventType,
-    payload: invitation,
-  });
-};
-
-export const sendMemberEvent = async (
-  appId: string,
-  eventType: string,
-  member: TeamMember
-) => {
-  return await svix.message.create(appId, {
-    eventType: eventType,
-    payload: member,
+    payload: payload,
   });
 };
