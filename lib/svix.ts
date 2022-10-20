@@ -1,4 +1,3 @@
-import { Invitation, TeamMember } from "@prisma/client";
 import { Svix, EndpointIn } from "svix";
 
 import env from "./env";
