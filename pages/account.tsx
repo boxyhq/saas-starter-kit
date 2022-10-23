@@ -10,6 +10,7 @@ import { inferSSRProps } from "@/lib/inferSSRProps";
 import { getSession } from "@/lib/session";
 import { Card, InputWithLabel } from "@/components/ui";
 import { getUserBySession } from "models/user";
+import UpdatePassword from "../components/interfaces/UpdatePassword";
 
 const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   user,
@@ -83,6 +84,8 @@ const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
           </Card.Footer>
         </Card>
       </form>
+
+      <UpdatePassword />
     </>
   );
 };

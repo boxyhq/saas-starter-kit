@@ -1,19 +1,13 @@
-import { inferSSRProps } from "@/lib/inferSSRProps";
-import { ApiResponse, NextPageWithLayout } from "types";
+import { ApiResponse } from "types";
 import { useFormik } from "formik";
 import axios, { AxiosError } from "axios";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Card, InputWithLabel } from "@/components/ui";
 import { Button } from "react-daisyui";
-import { GetServerSidePropsContext } from "next";
-import { getSession } from "@/lib/session";
-import { getUserBySession } from "models/user";
 import { useRouter } from "next/router";
 
-const UpdatePassword: NextPageWithLayout<
-  inferSSRProps<typeof getServerSideProps>
-> = () => {
+const UpdatePassword = () => {
   const router = useRouter();
 
   const formik = useFormik({
@@ -110,7 +104,7 @@ const UpdatePassword: NextPageWithLayout<
                 active={formik.dirty}
                 disabled={!formik.isValid}
               >
-                Save Changes
+                Change password
               </Button>
             </div>
           </Card.Footer>
@@ -118,19 +112,6 @@ const UpdatePassword: NextPageWithLayout<
       </form>
     </>
   );
-};
-
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const session = await getSession(context.req, context.res);
-  const user = await getUserBySession(session);
-
-  return {
-    props: {
-      user,
-    },
-  };
 };
 
 export default UpdatePassword;
