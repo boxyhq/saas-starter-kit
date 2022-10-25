@@ -3,6 +3,7 @@ import {
   UserIcon,
   ArrowLeftOnRectangleIcon,
   UsersIcon,
+  KeyIcon,
 } from "@heroicons/react/24/solid";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
