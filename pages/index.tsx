@@ -1,9 +1,15 @@
+import { useRouter } from "next/router";
 import { ReactElement } from "react";
 import { Button, Card, Checkbox, Hero, Link, Navbar } from "react-daisyui";
 
 import { NextPageWithLayout } from "types";
 
 const Home: NextPageWithLayout = () => {
+  const router = useRouter();
+
+  const openSignUpPage = () => {
+    router.push("/auth/join");
+  };
 
   return (
     <div className="bg-base-100">
@@ -24,7 +30,7 @@ const Home: NextPageWithLayout = () => {
             <p className="py-6">
               Next.js based Enterprise SaaS starter kit that saves you months of development.
             </p>
-            <Button color="primary">Get Started</Button>
+            <Button color="primary" onClick={() => openSignUpPage()}>Get Started</Button>
           </div>
         </Hero.Content>
       </Hero>
