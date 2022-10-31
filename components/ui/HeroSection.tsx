@@ -13,7 +13,7 @@ const HeroSection = ({ }) => {
             <Hero.Content>
                 <img
                     src="https://boxyhq.com/img/home-hero.svg"
-                    className="max-w-sm rounded-lg shadow-2xl"
+                    className="max-w-sm rounded-lg"
                 />
                 <div>
                     <h1 className="text-5xl font-bold">BoxyHQ Enterprise SaaS Starter Kit</h1>
