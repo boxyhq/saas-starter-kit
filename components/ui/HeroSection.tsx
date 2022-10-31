@@ -11,6 +11,10 @@ const HeroSection = ({ }) => {
     return (
         <Hero>
             <Hero.Content>
+                <img
+                    src="https://boxyhq.com/img/home-hero.svg"
+                    className="hidden md:block max-w-sm rounded-lg"
+                />
                 <div>
                     <h1 className="text-5xl font-bold">BoxyHQ Enterprise SaaS Starter Kit</h1>
                     <p className="py-6">
