@@ -3,6 +3,7 @@ import { Link, Navbar } from "react-daisyui";
 import FeatureSection  from "@/components/ui/FeatureSection";
 import HeroSection from "@/components/ui/HeroSection";
 import PricingSection from "@/components/ui/PricingSection";
+import FAQSection from "@/components/ui/FAQSection";
 
 import { NextPageWithLayout } from "types";
 
@@ -18,6 +19,7 @@ const Home: NextPageWithLayout = () => {
       <HeroSection/>
       <FeatureSection/>
       <PricingSection/>
+      <FAQSection/>
     </div>
   );
 };

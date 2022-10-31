@@ -15,7 +15,7 @@ const PricingSection = ({ }) => {
         <Card className="border-none">
             <Card.Body className="items-center text-center">
                 <Card.Title tag="h2" className="normal-case text-4xl font-bold">Pricing</Card.Title>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {
                         pricing.map((price) => {
                             return (
