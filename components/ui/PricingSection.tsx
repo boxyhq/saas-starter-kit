@@ -1,13 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Card } from "react-daisyui";
+import Spinner from "./Spinner";
 
 const PricingSection = ({ }) => {
     const [pricing, setPricing] = useState<any[]>([]);
+    const [loading, isLoading] = useState(true);
 
     useEffect(() => {
         axios.get(`/api/info/pricing`).then((pricing) => {
             setPricing(pricing.data);
+            isLoading(false);
         })
     },[]);
 
@@ -15,6 +18,7 @@ const PricingSection = ({ }) => {
         <Card className="border-none">
             <Card.Body className="items-center text-center">
                 <Card.Title tag="h2" className="normal-case text-4xl font-bold">Pricing</Card.Title>
+                { loading && <Spinner/>}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {
                         pricing.map((price) => {
