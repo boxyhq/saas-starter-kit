@@ -1,25 +1,13 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { Card } from "react-daisyui"
-import Spinner from "./Spinner";
+import FAQs from "data/faq.json";
 
 const FAQSection = ({ }) => {
-    const [FAQs, setFAQs] = useState<any[]>([]);
-    const [loading, isLoading] = useState(true);
-
-    useEffect(() => {
-        axios.get("/api/info/faqs").then((FAQs) => {
-            setFAQs(FAQs.data);
-            isLoading(false);
-        })
-    }, []);
 
     return (
         <div>
             <Card className="border-none">
                 <Card.Body className="items-center">
                     <Card.Title tag="h2" className="normal-case text-4xl font-bold">Frequently Asked Questions</Card.Title>
-                    { loading && <Spinner/>}
                     <div className="grid grid-cols-1 text-xl">
                         {
                             FAQs.map((FAQ) => {

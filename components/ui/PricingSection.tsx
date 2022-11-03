@@ -1,27 +1,15 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { Button, Card, Checkbox } from "react-daisyui";
-import Spinner from "./Spinner";
+import pricing from "data/pricing.json";
 
 const PricingSection = ({ }) => {
-    const [pricing, setPricing] = useState<any[]>([]);
-    const [loading, isLoading] = useState(true);
-
-    useEffect(() => {
-        axios.get(`/api/info/pricing`).then((pricing) => {
-            setPricing(pricing.data);
-            isLoading(false);
-        })
-    }, []);
 
     return (
         <Card className="border-none">
             <Card.Body className="items-center text-center">
                 <Card.Title tag="h2" className="normal-case text-4xl font-bold">Pricing</Card.Title>
-                {loading && <Spinner />}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {
-                        pricing.map((price) => {
+                        pricing.map((price: any) => {
                             return (
                                 <div>
                                     <Card>
@@ -33,7 +21,7 @@ const PricingSection = ({ }) => {
                                                 price.benefits.map((benefit: any) => {
                                                     return (
                                                         <div>
-                                                            <Checkbox checked color="primary" className="m-2" size="xs"/>
+                                                            <Checkbox checked color="primary" className="m-2" size="xs" />
                                                             {benefit}
                                                         </div>
                                                     )
