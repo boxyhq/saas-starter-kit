@@ -14,8 +14,8 @@ const FAQSection = ({ }) => {
                                 return (
                                     <Card className="border-none">
                                         <Card.Body className="items-left">
-                                        <Card.Title tag="h2" >Q. {FAQ.question}</Card.Title>
-                                        <p>A. {FAQ.answer}</p>
+                                            <Card.Title tag="h2" >Q. {FAQ.question}</Card.Title>
+                                            <p>A. {FAQ.answer}</p>
                                         </Card.Body>
                                     </Card>
                                 )
