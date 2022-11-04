@@ -1,25 +1,39 @@
-import { ReactElement } from "react";
-import { Link, Navbar } from "react-daisyui";
-import FeatureSection  from "@/components/ui/FeatureSection";
-import HeroSection from "@/components/ui/HeroSection";
-import PricingSection from "@/components/ui/PricingSection";
-import FAQSection from "@/components/ui/FAQSection";
+import type { NextPageWithLayout } from "types";
+import type { ReactElement } from "react";
+import Link from "next/link";
 
-import { NextPageWithLayout } from "types";
+import FeatureSection from "@/components/ui/landing/FeatureSection";
+import HeroSection from "@/components/ui/landing/HeroSection";
+import PricingSection from "@/components/ui/landing/PricingSection";
+import FAQSection from "@/components/ui/landing/FAQSection";
 
 const Home: NextPageWithLayout = () => {
   return (
-    <div className="bg-base-100">
-      <Navbar>
-        <img className="w-10" src="https://boxyhq.com/img/logo.png" alt="BoxyHQ" />
-        <Link className="text-xl normal-case font-bold p-2" color="ghost" href="/">
-          BoxyHQ
-        </Link>
-      </Navbar>
-      <HeroSection/>
-      <FeatureSection/>
-      <PricingSection/>
-      <FAQSection/>
+    <div className="container mx-auto">
+      <div className="navbar bg-base-100">
+        <div className="flex-1">
+          <Link href="/">
+            <a className="btn-ghost btn text-xl normal-case">BoxyHQ</a>
+          </Link>
+        </div>
+        <div className="flex-none">
+          <ul className="menu menu-horizontal p-0">
+            <li>
+              <a>Sign up</a>
+            </li>
+            <li>
+              <a>Item 3</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <HeroSection />
+      <div className="divider"></div>
+      <FeatureSection />
+      <div className="divider"></div>
+      <PricingSection />
+      <div className="divider"></div>
+      <FAQSection />
     </div>
   );
 };
