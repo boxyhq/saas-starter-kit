@@ -1,7 +1,7 @@
 import { Button, Card, Checkbox } from "react-daisyui";
 import pricing from "data/pricing.json";
 
-const PricingSection = ({ }) => {
+const PricingSection = () => {
 
     return (
         <Card className="border-none">
@@ -9,9 +9,9 @@ const PricingSection = ({ }) => {
                 <Card.Title tag="h2" className="normal-case text-4xl font-bold">Pricing</Card.Title>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {
-                        pricing.map((price: any) => {
+                        pricing.map((price: any, index) => {
                             return (
-                                <div>
+                                <div key={index}>
                                     <Card>
                                         <Card.Body className="items-center">
                                             <Card.Title tag="h2">{price.currency} {price.amount}/{price.duration}</Card.Title>
@@ -20,7 +20,7 @@ const PricingSection = ({ }) => {
                                             {
                                                 price.benefits.map((benefit: any) => {
                                                     return (
-                                                        <div>
+                                                        <div key={index}>
                                                             <Checkbox checked color="primary" className="m-2" size="xs" />
                                                             {benefit}
                                                         </div>

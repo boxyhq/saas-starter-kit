@@ -1,7 +1,7 @@
 import { Card } from "react-daisyui"
 import FAQs from "data/faq.json";
 
-const FAQSection = ({ }) => {
+const FAQSection = () => {
 
     return (
         <div>
@@ -10,9 +10,9 @@ const FAQSection = ({ }) => {
                     <Card.Title tag="h2" className="normal-case text-4xl font-bold">Frequently Asked Questions</Card.Title>
                     <div className="grid grid-cols-1 text-xl">
                         {
-                            FAQs.map((FAQ) => {
+                            FAQs.map((FAQ, index) => {
                                 return (
-                                    <Card className="border-none">
+                                    <Card key={index} className="border-none">
                                         <Card.Body className="items-left">
                                             <Card.Title tag="h2" >Q. {FAQ.question}</Card.Title>
                                             <p>A. {FAQ.answer}</p>

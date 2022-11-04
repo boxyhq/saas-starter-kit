@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Button, Hero } from "react-daisyui";
 
-const HeroSection = ({ }) => {
+const HeroSection = () => {
     const router = useRouter();
 
     const openSignUpPage = () => {
