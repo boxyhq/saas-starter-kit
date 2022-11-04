@@ -1,0 +1,35 @@
+[
+    {
+        "name": "Create account"
+    },
+    {
+        "name": "Sign in with Email and Password"
+    },
+    {
+        "name": "Sign in with Magic link"
+    },
+    {
+        "name": "Sign in with SAML SSO"
+    },
+    {
+        "name": "Directory Sync (SCIM)"
+    },
+    {
+        "name": "Update account"
+    },
+    {
+        "name": "Invite users to the team"
+    },
+    {
+        "name": "Manage team members"
+    },
+    {
+        "name": "Update team settings"
+    },
+    {
+        "name": "Webhooks & Events"
+    },
+    {
+        "name": "Create team"
+    }
+]

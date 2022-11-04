@@ -1,0 +1,36 @@
+[
+    {
+        "amount": "30k",
+        "currency": "USD",
+        "duration": "month",
+        "description": "Free forever.",
+        "benefits": [
+            "Up to 20 users.",
+            "Free storage upto 1GB",
+            "Lifetime validity"
+        ]
+    },
+    {
+        "amount": "120k",
+        "currency": "USD",
+        "duration": "month",
+        "description": "Trial period upto 30 days.",
+        "benefits": [
+            "Up to 500 users.",
+            "Storage upto 50GB",
+            "24*7 support"
+        ]
+    },
+    {
+        "amount": "350k",
+        "currency": "USD",
+        "duration": "month",
+        "description": "For enterprise solutions",
+        "benefits": [
+            "Up to 1000 users.",
+            "Storage upto 100GB",
+            "24*7 support",
+            "Data backups"
+        ]
+    }
+]
