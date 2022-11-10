@@ -1,10 +1,15 @@
+import { useTranslation } from "next-i18next";
+
 import features from "data/features.json";
 
 const FeatureSection = () => {
+  const { t } = useTranslation("common");
   return (
     <section className="py-6">
       <div className="flex flex-col justify-center space-y-6">
-        <h2 className="text-center text-4xl font-bold normal-case">Features</h2>
+        <h2 className="text-center text-4xl font-bold normal-case">
+          {t("features")}
+        </h2>
         <p className="text-center text-xl">
           Lorem Ipsum is simply dummy text of the printing and typesetting
           industry.

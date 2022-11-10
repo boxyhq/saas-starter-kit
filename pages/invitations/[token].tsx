@@ -1,5 +1,7 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import type { ReactElement } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
@@ -15,6 +17,7 @@ import { Loading, Error } from "@/components/ui";
 const AcceptTeamInvitation: NextPageWithLayout = () => {
   const { status } = useSession();
   const router = useRouter();
+  const { t } = useTranslation("common");
 
   const { token } = router.query;
 
@@ -52,11 +55,13 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
     <>
       <div className="rounded-md bg-white p-6 shadow-sm">
         <div className="flex flex-col items-center space-y-3">
-          <h2 className="font-bold">{`${invitation.team.name} is inviting you to join their team.`}</h2>
+          <h2 className="font-bold">{`${invitation.team.name} ${t(
+            "team-invite"
+          )}`}</h2>
           <h3 className="text-center">
             {status === "authenticated"
-              ? "You can accept the invitation to join the team by clicking the button below."
-              : "To continue, you must either create a new account or login to an existing account."}
+              ? t("accept-invite")
+              : t("invite-create-account")}
           </h3>
           {status === "unauthenticated" ? (
             <>
@@ -68,7 +73,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                   router.push(`/auth/join`);
                 }}
               >
-                Create a new account
+                {t("create-a-new-account")}
               </Button>
               <Button
                 color="secondary"
@@ -78,12 +83,12 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                   router.push(`/auth/login`);
                 }}
               >
-                Login using an existing account
+                {t("login")}
               </Button>
             </>
           ) : (
             <Button onClick={acceptInvitation} fullWidth color="primary">
-              Accept invitation
+              {t("accept-invitation")}
             </Button>
           )}
         </div>
@@ -106,7 +111,7 @@ AcceptTeamInvitation.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res, query } = context;
+  const { req, res, query, locale }: GetServerSidePropsContext = context;
   const { token } = query;
 
   setCookie(
@@ -125,7 +130,9 @@ export const getServerSideProps = async (
   );
 
   return {
-    props: {},
+    props: {
+      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
+    },
   };
 };
 

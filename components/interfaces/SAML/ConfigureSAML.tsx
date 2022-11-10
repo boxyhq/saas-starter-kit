@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { Button, Textarea, Modal } from "react-daisyui";
 import toast from "react-hot-toast";
-
+import { useTranslation } from "next-i18next";
 import type { SAMLConfig } from "@boxyhq/saml-jackson";
 import type { ApiResponse } from "types";
 import { Team } from "@prisma/client";
@@ -19,6 +19,7 @@ const ConfigureSAML = ({
   team: Team;
 }) => {
   const { mutateSamlConfig } = useSAMLConfig(team.slug);
+  const { t } = useTranslation("common");
 
   const formik = useFormik({
     initialValues: {
@@ -45,7 +46,7 @@ const ConfigureSAML = ({
       }
 
       if (samlConfig) {
-        toast.success("SAML Config updated successfully.");
+        toast.success(t("saml-config-updated"));
       }
 
       mutateSamlConfig();
@@ -59,10 +60,7 @@ const ConfigureSAML = ({
         <Modal.Header className="font-bold">Configure SAML SSO</Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">
-            <p>
-              Fill out the information below to set up SAML authentication for
-              added security.
-            </p>
+            <p>{t("setup-saml-auth")}</p>
             <div className="flex justify-between space-x-3">
               <Textarea
                 name="metadata"
@@ -83,7 +81,7 @@ const ConfigureSAML = ({
             loading={formik.isSubmitting}
             active={formik.dirty}
           >
-            Save Changes
+            {t("save-changes")}
           </Button>
           <Button
             type="button"
@@ -92,7 +90,7 @@ const ConfigureSAML = ({
               setVisible(!visible);
             }}
           >
-            Close
+            {t("close")}
           </Button>
         </Modal.Actions>
       </form>

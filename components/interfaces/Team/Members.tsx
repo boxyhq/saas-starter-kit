@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "react-daisyui";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import { useTranslation } from "next-i18next";
 import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
 import { Team, TeamMember } from "@prisma/client";
 import useTeamMembers from "hooks/useTeamMembers";
@@ -14,6 +14,7 @@ const Members = ({ team }: { team: Team }) => {
   const { isLoading, isError, members, mutateTeamMembers } = useTeamMembers(
     team.slug
   );
+  const { t } = useTranslation("common");
 
   if (isLoading || !members) {
     return <Loading />;
@@ -41,20 +42,20 @@ const Members = ({ team }: { team: Team }) => {
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Name
+                {t("name")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Email
+                {t("email")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Role
+                {t("role")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Created At
+                {t("created-at")}
               </th>
               {isTeamOwner(session.user, members) && members.length > 1 && (
                 <th scope="col" className="px-6 py-3">
-                  Action
+                  {t("action")}
                 </th>
               )}
             </tr>
@@ -87,7 +88,7 @@ const Members = ({ team }: { team: Team }) => {
                             removeTeamMember(member);
                           }}
                         >
-                          Remove
+                          {t("remove")}
                         </Button>
                       )}
                     </td>

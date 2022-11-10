@@ -7,6 +7,8 @@ import type {
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { deleteCookie } from "cookies-next";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import type { NextPageWithLayout } from "types";
 import { AuthLayout } from "@/components/layouts";
@@ -17,6 +19,7 @@ const Organizations: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ teams }) => {
   const router = useRouter();
+  const { t } = useTranslation("common");
   const { status } = useSession();
 
   if (status === "unauthenticated") {
@@ -25,7 +28,7 @@ const Organizations: NextPageWithLayout<
 
   useEffect(() => {
     if (teams === null) {
-      toast.error("You do not have any active team.");
+      toast.error(t("no-active-team"));
       return;
     }
 
@@ -35,7 +38,7 @@ const Organizations: NextPageWithLayout<
   return (
     <>
       <div className="mb-6 flex w-1/2 flex-col items-center gap-4 p-3">
-        <h3>Choose your team</h3>
+        <h3>{t("choose-team")}</h3>
         <div className="w-3/5 rounded bg-white dark:border dark:border-gray-700 dark:bg-gray-800 sm:max-w-md md:mt-0 xl:p-0"></div>
       </div>
     </>
@@ -49,7 +52,7 @@ Organizations.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res } = context;
+  const { req, res, locale }: GetServerSidePropsContext = context;
 
   const session = await getSession(req, res);
 
@@ -57,6 +60,7 @@ export const getServerSideProps = async (
 
   return {
     props: {
+      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
       teams: await getTeams(session?.user.id as string),
     },
   };

@@ -5,6 +5,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Button } from "react-daisyui";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import { inferSSRProps } from "@/lib/inferSSRProps";
 import { getSession } from "@/lib/session";
@@ -15,6 +17,8 @@ import UpdatePassword from "../components/interfaces/UpdatePassword";
 const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   user,
 }) => {
+  const { t } = useTranslation("common");
+
   const formik = useFormik({
     initialValues: {
       name: user?.name,
@@ -39,7 +43,7 @@ const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
       }
 
       if (data) {
-        toast.success("Successfully updated");
+        toast.success(t("successfully-updated"));
       }
     },
   });
@@ -54,7 +58,7 @@ const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
                 type="text"
                 label="Name"
                 name="name"
-                placeholder="Your name"
+                placeholder={t("your-name")}
                 value={formik.values.name}
                 error={formik.touched.name ? formik.errors.name : undefined}
                 onChange={formik.handleChange}
@@ -63,7 +67,7 @@ const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
                 type="email"
                 label="Email"
                 name="email"
-                placeholder="Your email"
+                placeholder={t("your-email")}
                 value={formik.values.email}
                 error={formik.touched.email ? formik.errors.email : undefined}
                 onChange={formik.handleChange}
@@ -78,7 +82,7 @@ const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
                 loading={formik.isSubmitting}
                 active={formik.dirty}
               >
-                Save Changes
+                {t("save-changes")}
               </Button>
             </div>
           </Card.Footer>
@@ -96,8 +100,11 @@ export const getServerSideProps = async (
   const session = await getSession(context.req, context.res);
   const user = await getUserBySession(session);
 
+  const { locale }: GetServerSidePropsContext = context;
+
   return {
     props: {
+      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
       user,
     },
   };

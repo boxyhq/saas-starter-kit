@@ -1,13 +1,17 @@
 import { Button, Card } from "react-daisyui";
 import { CheckIcon } from "@heroicons/react/20/solid";
+import { useTranslation } from "next-i18next";
 
 import plans from "data/pricing.json";
 
 const PricingSection = () => {
+  const { t } = useTranslation("common");
   return (
     <section className="py-6">
       <div className="flex flex-col justify-center space-y-6">
-        <h2 className="text-center text-4xl font-bold normal-case">Pricing</h2>
+        <h2 className="text-center text-4xl font-bold normal-case">
+          {t("pricing")}
+        </h2>
         <p className="text-center text-xl">
           Lorem Ipsum is simply dummy text of the printing and typesetting
           industry.
@@ -37,7 +41,7 @@ const PricingSection = () => {
                   </Card.Body>
                   <Card.Actions className="justify-center">
                     <Button color="primary" className="w-full rounded-md">
-                      Buy Now
+                      {t("buy-now")}
                     </Button>
                   </Card.Actions>
                 </Card>
