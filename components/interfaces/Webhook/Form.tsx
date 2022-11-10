@@ -3,7 +3,7 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Modal, Button } from "react-daisyui";
-
+import { useTranslation } from "next-i18next";
 import type { WebookFormSchema } from "types";
 import { InputWithLabel } from "@/components/ui";
 import EventTypes from "./EventTypes";
@@ -30,13 +30,17 @@ const Form = ({
     onSubmit,
   });
 
+  const { t } = useTranslation("common");
+
   return (
     <Modal open={visible}>
       <form onSubmit={formik.handleSubmit} method="POST">
-        <Modal.Header className="font-bold">Edit Webhook Endpoint</Modal.Header>
+        <Modal.Header className="font-bold">
+          {t("edit-webhook-endpoint")}
+        </Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">
-            <p>Create webhook to listen to events from app.</p>
+            <p>{t("webhook-create-desc")}</p>
             <div className="flex flex-col space-y-2">
               <InputWithLabel
                 name="name"
@@ -58,11 +62,10 @@ const Form = ({
               <div className="divider"></div>
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text">Events to send</span>
+                  <span className="label-text">{t("events-to-send")}</span>
                 </label>
                 <p className="ml-1 mb-3 text-sm font-normal text-gray-500">
-                  You can choose which events are sent to which endpoint. By
-                  default, all messages are sent to all endpoints.
+                  {t("events-description")}
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   <EventTypes
@@ -81,7 +84,7 @@ const Form = ({
             loading={formik.isSubmitting}
             active={formik.dirty}
           >
-            Create Webhook
+            {t("create-webhook")}
           </Button>
           <Button
             type="button"
@@ -91,7 +94,7 @@ const Form = ({
               formik.resetForm();
             }}
           >
-            Close
+            {t("close")}
           </Button>
         </Modal.Actions>
       </form>

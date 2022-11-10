@@ -2,6 +2,8 @@ import type { NextPageWithLayout } from "types";
 import { useState } from "react";
 import { Button } from "react-daisyui";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import { Loading, Error } from "@/components/ui";
 import { TeamTab, Members } from "@/components/interfaces/Team";
@@ -11,9 +13,11 @@ import {
 } from "@/components/interfaces/Invitation";
 
 import useTeam from "hooks/useTeam";
+import { GetServerSidePropsContext } from "next";
 
 const TeamMembers: NextPageWithLayout = () => {
   const router = useRouter();
+  const { t } = useTranslation("common");
   const { slug } = router.query;
 
   const [visible, setVisible] = useState(false);
@@ -41,7 +45,7 @@ const TeamMembers: NextPageWithLayout = () => {
             setVisible(!visible);
           }}
         >
-          Add Member
+          {t("add-member")}
         </Button>
       </div>
       <Members team={team} />
@@ -50,5 +54,13 @@ const TeamMembers: NextPageWithLayout = () => {
     </>
   );
 };
+
+export async function getServerSideProps({ locale }: GetServerSidePropsContext) {
+  return {
+    props: {
+      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
+    },
+  };
+}
 
 export default TeamMembers;

@@ -1,13 +1,15 @@
 import { Card } from "react-daisyui";
+import { useTranslation } from "next-i18next";
 
 import faqs from "data/faq.json";
 
 const FAQSection = () => {
+  const { t } = useTranslation("common");
   return (
     <section className="py-6">
       <div className="flex flex-col justify-center space-y-6">
         <h2 className="text-center text-4xl font-bold normal-case">
-          Frequently asked questions
+          {t("frequently-asked")}
         </h2>
         <p className="text-center text-xl">
           Lorem Ipsum is simply dummy text of the printing and typesetting

@@ -1,13 +1,17 @@
 import type { NextPageWithLayout } from "types";
 import type { ReactElement } from "react";
 import Link from "next/link";
-
+import { useTranslation } from "next-i18next";
 import FeatureSection from "@/components/ui/landing/FeatureSection";
 import HeroSection from "@/components/ui/landing/HeroSection";
 import PricingSection from "@/components/ui/landing/PricingSection";
 import FAQSection from "@/components/ui/landing/FAQSection";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { GetServerSidePropsContext } from "next";
 
 const Home: NextPageWithLayout = () => {
+  const { t } = useTranslation("common");
+
   return (
     <div className="container mx-auto">
       <div className="navbar bg-base-100">
@@ -19,10 +23,10 @@ const Home: NextPageWithLayout = () => {
         <div className="flex-none">
           <ul className="menu menu-horizontal p-0">
             <li>
-              <a>Sign up</a>
+              <a>{t("sign-up")}</a>
             </li>
             <li>
-              <a>Item 3</a>
+              <a>{t("item-3")}</a>
             </li>
           </ul>
         </div>
@@ -37,6 +41,15 @@ const Home: NextPageWithLayout = () => {
     </div>
   );
 };
+
+export async function getStaticProps({ locale }: GetServerSidePropsContext) {
+  return {
+    props: {
+      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
+      // Will be passed to the page component as props
+    },
+  };
+}
 
 Home.getLayout = function getLayout(page: ReactElement) {
   return <>{page}</>;

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "react-daisyui";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import { useTranslation } from "next-i18next";
 import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
 import useTeams from "hooks/useTeams";
 import { Team } from "@prisma/client";
@@ -10,7 +10,7 @@ import { ApiResponse } from "types";
 
 const Teams = () => {
   const { isLoading, isError, teams, mutateTeams } = useTeams();
-
+  const { t } = useTranslation("common");
   if (isLoading) {
     return <Loading />;
   }
@@ -31,7 +31,7 @@ const Teams = () => {
       return;
     }
 
-    toast.success("You have left the team successfully.");
+    toast.success(t("leave-team-success"));
 
     mutateTeams();
   };
@@ -43,16 +43,16 @@ const Teams = () => {
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Name
+                {t("name")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Members
+                {t("members")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Created At
+                {t("created-at")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Actions
+                {t("actions")}
               </th>
             </tr>
           </thead>
@@ -86,7 +86,7 @@ const Teams = () => {
                           leaveTeam(team);
                         }}
                       >
-                        Leave Team
+                        {t("leave-team")}
                       </Button>
                     </td>
                   </tr>

@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Modal, Button, Input } from "react-daisyui";
+import { useTranslation } from "next-i18next";
 
 import type { ApiResponse } from "types";
 import type { Team } from "@prisma/client";
@@ -17,6 +18,7 @@ const CreateTeam = ({
   setVisible: (visible: boolean) => void;
 }) => {
   const { mutateTeams } = useTeams();
+  const { t } = useTranslation("common");
 
   const formik = useFormik({
     initialValues: {
@@ -40,7 +42,7 @@ const CreateTeam = ({
       }
 
       if (invitation) {
-        toast.success("Team created successfully.");
+        toast.success(t("team-created"));
       }
 
       mutateTeams();
@@ -55,10 +57,7 @@ const CreateTeam = ({
         <Modal.Header className="font-bold">Create Team</Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">
-            <p>
-              Members of a team have access to specific areas, such as a new
-              release or a new application feature.
-            </p>
+            <p>{t("members-of-a-team")}</p>
             <div className="flex justify-between space-x-3">
               <Input
                 name="name"
@@ -77,7 +76,7 @@ const CreateTeam = ({
             loading={formik.isSubmitting}
             active={formik.dirty}
           >
-            Create Team
+            {t("create-team")}
           </Button>
           <Button
             type="button"
@@ -86,7 +85,7 @@ const CreateTeam = ({
               setVisible(!visible);
             }}
           >
-            Close
+            {t("close")}
           </Button>
         </Modal.Actions>
       </form>

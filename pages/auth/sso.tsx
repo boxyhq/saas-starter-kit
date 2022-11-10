@@ -6,14 +6,19 @@ import * as Yup from "yup";
 import axios from "axios";
 import { Button } from "react-daisyui";
 import Link from "next/link";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import type { NextPageWithLayout, ApiResponse } from "types";
 import { AuthLayout } from "@/components/layouts";
 import { InputWithLabel } from "@/components/ui";
+import { GetServerSidePropsContext } from "next";
 
 const SSO: NextPageWithLayout = () => {
   const { status } = useSession();
   const router = useRouter();
+
+  const { t } = useTranslation("common");
 
   // SSO callback has query paramters called code and state.
   const { code, state } = router.query;
@@ -89,19 +94,19 @@ const SSO: NextPageWithLayout = () => {
               active={formik.dirty}
               fullWidth
             >
-              Continue with SAML SSO
+              {t("continue-with-saml-sso")}
             </Button>
           </div>
         </form>
         <div className="divider"></div>
         <div className="space-y-3">
           <Link href="/auth/login">
-            <a className="btn btn-outline w-full">
-              &nbsp;Sign in with Password
+            <a className="btn-outline btn w-full">
+              &nbsp;{t("sign-in-with-password")}
             </a>
           </Link>
           <Link href="/auth/magic-link">
-            <a className="btn btn-outline w-full">&nbsp;Sign in with Email</a>
+            <a className="btn-outline btn w-full">&nbsp;{t("sign-in-with-email")}</a>
           </Link>
         </div>
       </div>
@@ -119,5 +124,13 @@ SSO.getLayout = function getLayout(page: ReactElement) {
     </AuthLayout>
   );
 };
+
+export async function getStaticProps({ locale }: GetServerSidePropsContext) {
+  return {
+    props: {
+      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
+    },
+  };
+}
 
 export default SSO;

@@ -6,9 +6,11 @@ import toast from "react-hot-toast";
 import { Card, InputWithLabel } from "@/components/ui";
 import { Button } from "react-daisyui";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 const UpdatePassword = () => {
   const router = useRouter();
+  const { t } = useTranslation("common");
 
   const formik = useFormik({
     initialValues: {
@@ -36,7 +38,7 @@ const UpdatePassword = () => {
         const { data } = response.data;
 
         if (data) {
-          toast.success("Successfully updated");
+          toast.success(t("successfully-updated"));
           router.reload();
         }
       } catch (error: unknown | AxiosError) {
@@ -104,7 +106,7 @@ const UpdatePassword = () => {
                 active={formik.dirty}
                 disabled={!formik.isValid}
               >
-                Change password
+                {t("change-password")}
               </Button>
             </div>
           </Card.Footer>

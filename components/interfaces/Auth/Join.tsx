@@ -4,13 +4,14 @@ import { Button } from "react-daisyui";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import axios from "axios";
-
+import { useTranslation } from "next-i18next";
 import type { User } from "@prisma/client";
 import type { ApiResponse } from "types";
 import { InputWithLabel } from "@/components/ui";
 
 const Join = () => {
   const router = useRouter();
+  const { t } = useTranslation("common");
 
   const formik = useFormik({
     initialValues: {
@@ -45,7 +46,7 @@ const Join = () => {
       }
 
       if (user) {
-        toast.success("Successfully joined");
+        toast.success(t("successfully-joined"));
         router.push("/auth/login");
       }
     },
@@ -99,12 +100,9 @@ const Join = () => {
           active={formik.dirty}
           fullWidth
         >
-          Create Account
+          {t("create-account")}
         </Button>
-        <p className="text-sm">
-          Signing up signifies that you have read and agree to the Terms of
-          Service and our Privacy Policy.
-        </p>
+        <p className="text-sm">{t("sign-up-message")}</p>
       </div>
     </form>
   );

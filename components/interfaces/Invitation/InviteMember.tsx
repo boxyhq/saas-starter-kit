@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Modal, Button, Input } from "react-daisyui";
-
+import { useTranslation } from "next-i18next";
 import type { Invitation, Team } from "@prisma/client";
 import type { ApiResponse } from "types";
 import { availableRoles } from "@/lib/roles";
@@ -20,6 +20,7 @@ const InviteMember = ({
   team: Team;
 }) => {
   const { mutateInvitation } = useInvitations(team.slug);
+  const { t } = useTranslation("common");
 
   const formik = useFormik({
     initialValues: {
@@ -48,7 +49,7 @@ const InviteMember = ({
       }
 
       if (invitation) {
-        toast.success("Invitation sent!");
+        toast.success(t("invitation-sent"));
       }
 
       mutateInvitation();
@@ -60,10 +61,12 @@ const InviteMember = ({
   return (
     <Modal open={visible}>
       <form onSubmit={formik.handleSubmit} method="POST">
-        <Modal.Header className="font-bold">Invite New Member</Modal.Header>
+        <Modal.Header className="font-bold">
+          {t("invite-new-member")}
+        </Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">
-            <p>Invite new member by email to join your organization.</p>
+            <p>{t("invite-member-message")}</p>
             <div className="flex justify-between space-x-3">
               <Input
                 name="email"
@@ -74,7 +77,7 @@ const InviteMember = ({
                 required
               />
               <select
-                className="select select-bordered flex-grow"
+                className="select-bordered select flex-grow"
                 name="role"
                 onChange={formik.handleChange}
                 required
@@ -95,7 +98,7 @@ const InviteMember = ({
             loading={formik.isSubmitting}
             active={formik.dirty}
           >
-            Send Invite
+            {t("send-invite")}
           </Button>
           <Button
             type="button"
@@ -104,7 +107,7 @@ const InviteMember = ({
               setVisible(!visible);
             }}
           >
-            Close
+            {t("close")}
           </Button>
         </Modal.Actions>
       </form>

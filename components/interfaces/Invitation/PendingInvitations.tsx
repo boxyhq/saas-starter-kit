@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "react-daisyui";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import { useTranslation } from "next-i18next";
 import { Card, LetterAvatar, Loading, Error } from "@/components/ui";
 import { Invitation, Team } from "@prisma/client";
 import useInvitations from "hooks/useInvitations";
@@ -12,6 +12,8 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   const { isLoading, isError, invitations, mutateInvitation } = useInvitations(
     team.slug
   );
+
+  const { t } = useTranslation("common");
 
   if (isLoading || !invitations) {
     return <Loading />;
@@ -38,7 +40,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
 
     if (response.data) {
       mutateInvitation();
-      toast.success("Invitation deleted");
+      toast.success(t("invitation-deleted"));
     }
   };
 
@@ -53,16 +55,16 @@ const PendingInvitations = ({ team }: { team: Team }) => {
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3" colSpan={2}>
-                Email
+                {t("email")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Role
+                {t("role")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Created At
+                {t("created-at")}
               </th>
               <th scope="col" className="px-6 py-3">
-                Action
+                {t("action")}
               </th>
             </tr>
           </thead>
@@ -92,7 +94,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
                         deleteInvitation(invitation);
                       }}
                     >
-                      Remove
+                      {t("remove")}
                     </Button>
                   </td>
                 </tr>

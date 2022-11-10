@@ -2,6 +2,8 @@ import type { NextPageWithLayout } from "types";
 import { useState } from "react";
 import { Button } from "react-daisyui";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import { Loading, Error } from "@/components/ui";
 import { Card } from "@/components/ui";
@@ -9,10 +11,12 @@ import { TeamTab } from "@/components/interfaces/Team";
 import { ConfigureSAML } from "@/components/interfaces/SAML";
 import useSAMLConfig from "hooks/useSAMLConfig";
 import useTeam from "hooks/useTeam";
+import { GetServerSidePropsContext } from "next";
 
 const TeamSSO: NextPageWithLayout = () => {
   const router = useRouter();
   const { slug } = router.query;
+  const { t } = useTranslation("common");
 
   const [visible, setVisible] = useState(false);
 
@@ -36,31 +40,26 @@ const TeamSSO: NextPageWithLayout = () => {
       <Card heading="SAML Single Sign-On">
         <Card.Body className="px-3 py-3">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-sm">
-              Allow team members to login using an Identity Provider.
-            </p>
+            <p className="text-sm">{t("allow-team")}</p>
             <Button
               size="sm"
               onClick={() => setVisible(!visible)}
               variant="outline"
               color="secondary"
             >
-              Configure
+              {t("configure")}
             </Button>
           </div>
           {samlConfigExists && (
             <div className="flex flex-col justify-between space-y-2 border-t text-sm">
-              <p className="mt-3 text-sm">
-                Identity Provider will ask you for the following information to
-                configure your SAML app.
-              </p>
+              <p className="mt-3 text-sm">{t("identity-provider")}</p>
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text">Entity ID</span>
+                  <span className="label-text">{t("entity-id")}</span>
                 </label>
                 <input
                   type="text"
-                  className="input input-bordered w-full"
+                  className="input-bordered input w-full"
                   defaultValue={samlConfig.issuer}
                 />
               </div>
@@ -70,7 +69,7 @@ const TeamSSO: NextPageWithLayout = () => {
                 </label>
                 <input
                   type="text"
-                  className="input input-bordered w-full"
+                  className="input-bordered input w-full"
                   defaultValue={samlConfig.acs}
                 />
               </div>
@@ -82,5 +81,13 @@ const TeamSSO: NextPageWithLayout = () => {
     </>
   );
 };
+
+export async function getServerSideProps({ locale }: GetServerSidePropsContext) {
+  return {
+    props: {
+      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
+    },
+  };
+}
 
 export default TeamSSO;
