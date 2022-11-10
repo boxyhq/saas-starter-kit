@@ -145,6 +145,7 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Manage team members
 - Update team settings
 - Webhooks & Events
+- Internationalization
 
 ## Coming Soon
 
@@ -153,7 +154,6 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Dark mode
 - Mobile-first UI
 - Billing & subscriptions
-- Internationalization
 - Roles and Permissions
 
 ## Contributing
