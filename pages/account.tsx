@@ -1,94 +1,22 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
-import toast from "react-hot-toast";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import axios from "axios";
-import { Button } from "react-daisyui";
-import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import { inferSSRProps } from "@/lib/inferSSRProps";
 import { getSession } from "@/lib/session";
-import { Card, InputWithLabel } from "@/components/ui";
 import { getUserBySession } from "models/user";
-import UpdatePassword from "../components/interfaces/UpdatePassword";
+import { inferSSRProps } from "@/lib/inferSSRProps";
+import { UpdateAccount, UpdatePassword } from "@/components/interfaces/Account";
 
 const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   user,
 }) => {
-  const { t } = useTranslation("common");
-
-  const formik = useFormik({
-    initialValues: {
-      name: user?.name,
-      email: user?.email,
-    },
-    validationSchema: Yup.object().shape({
-      name: Yup.string().required(),
-      email: Yup.string().required(),
-    }),
-    onSubmit: async (values) => {
-      const { name, email } = values;
-
-      const response = await axios.put("/api/users", {
-        name,
-        email,
-      });
-
-      const { data, error } = response.data;
-
-      if (error) {
-        toast.error(error.message);
-      }
-
-      if (data) {
-        toast.success(t("successfully-updated"));
-      }
-    },
-  });
+  if (!user) {
+    return null;
+  }
 
   return (
     <>
-      <form onSubmit={formik.handleSubmit}>
-        <Card heading="Account">
-          <Card.Body className="px-3 py-3">
-            <div className="flex flex-col space-y-6">
-              <InputWithLabel
-                type="text"
-                label="Name"
-                name="name"
-                placeholder={t("your-name")}
-                value={formik.values.name}
-                error={formik.touched.name ? formik.errors.name : undefined}
-                onChange={formik.handleChange}
-              />
-              <InputWithLabel
-                type="email"
-                label="Email"
-                name="email"
-                placeholder={t("your-email")}
-                value={formik.values.email}
-                error={formik.touched.email ? formik.errors.email : undefined}
-                onChange={formik.handleChange}
-              />
-            </div>
-          </Card.Body>
-          <Card.Footer>
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                color="primary"
-                loading={formik.isSubmitting}
-                active={formik.dirty}
-              >
-                {t("save-changes")}
-              </Button>
-            </div>
-          </Card.Footer>
-        </Card>
-      </form>
-
+      <UpdateAccount user={user} />
       <UpdatePassword />
     </>
   );
