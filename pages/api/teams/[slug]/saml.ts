@@ -89,17 +89,15 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const samlConfig = await apiController.config({
+    const connection = await apiController.createSAMLConnection({
       encodedRawMetadata,
       defaultRedirectUrl: env.saml.callback,
       redirectUrl: env.saml.callback,
       tenant: team.id,
       product: env.product,
-      name: team.name,
-      description: "",
     });
 
-    return res.status(200).json({ data: samlConfig, error: null });
+    return res.status(200).json({ data: connection, error: null });
   } catch (error: any) {
     const { message } = error;
 

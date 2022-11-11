@@ -24,7 +24,7 @@ const SSO: NextPageWithLayout = () => {
   const { code, state } = router.query;
 
   if (status === "authenticated") {
-    router.push("/");
+    router.push("/dashboard");
   }
 
   // Handle the SAML SSO callback (ACS)
@@ -106,7 +106,9 @@ const SSO: NextPageWithLayout = () => {
             </a>
           </Link>
           <Link href="/auth/magic-link">
-            <a className="btn-outline btn w-full">&nbsp;{t("sign-in-with-email")}</a>
+            <a className="btn-outline btn w-full">
+              &nbsp;{t("sign-in-with-email")}
+            </a>
           </Link>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import type { OAuthReqBody } from "@boxyhq/saml-jackson";
+import type { OAuthReq } from "@boxyhq/saml-jackson";
 import jackson from "@/lib/jackson";
 import env from "@/lib/env";
 import { prisma } from "@/lib/prisma";
@@ -60,14 +60,12 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  const params = {
+  const response = await oauthController.authorize({
     tenant: team.id,
     product: env.product,
     redirect_uri: env.saml.callback,
     state: "some-random-state",
-  } as OAuthReqBody;
-
-  const response = await oauthController.authorize(params);
+  } as OAuthReq);
 
   return res.status(200).json({ data: response, error: null });
 };
