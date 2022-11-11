@@ -4,7 +4,8 @@ import axios from "axios";
 import { Button, Textarea, Modal } from "react-daisyui";
 import toast from "react-hot-toast";
 import { useTranslation } from "next-i18next";
-import type { SAMLConfig } from "@boxyhq/saml-jackson";
+import type { SAMLSSORecord } from "@boxyhq/saml-jackson";
+
 import type { ApiResponse } from "types";
 import { Team } from "@prisma/client";
 import useSAMLConfig from "hooks/useSAMLConfig";
@@ -31,7 +32,7 @@ const ConfigureSAML = ({
     onSubmit: async (values) => {
       const { metadata } = values;
 
-      const response = await axios.post<ApiResponse<SAMLConfig>>(
+      const response = await axios.post<ApiResponse<SAMLSSORecord>>(
         `/api/teams/${team.slug}/saml`,
         {
           encodedRawMetadata: Buffer.from(metadata).toString("base64"),

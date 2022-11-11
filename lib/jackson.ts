@@ -1,9 +1,8 @@
 import jackson, {
   DirectorySync,
-  IAPIController,
+  IConnectionAPIController,
   IOAuthController,
   JacksonOption,
-  SAMLConfig,
 } from "@boxyhq/saml-jackson";
 
 import env from "./env";
@@ -20,7 +19,7 @@ const opts = {
   openid: {},
 } as JacksonOption;
 
-let apiController: IAPIController;
+let apiController: IConnectionAPIController;
 let oauthController: IOAuthController;
 let directorySync: DirectorySync;
 
@@ -49,5 +48,3 @@ export default async function init() {
     directorySync,
   };
 }
-
-export type { SAMLConfig };
