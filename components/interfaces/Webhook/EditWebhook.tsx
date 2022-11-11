@@ -3,7 +3,7 @@ import type { FormikHelpers } from "formik";
 import React from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-
+import { useTranslation } from "next-i18next";
 import type { WebookFormSchema } from "types";
 import type { ApiResponse } from "types";
 import type { Team } from "@prisma/client";
@@ -24,7 +24,7 @@ const EditWebhook = ({
   endpoint: EndpointOut;
 }) => {
   const { isLoading, isError, webhook } = useWebhook(team.slug, endpoint.id);
-
+  const { t } = useTranslation("common");
   const { mutateWebhooks } = useWebhooks(team.slug);
 
   if (isLoading || !webhook) {
@@ -54,7 +54,7 @@ const EditWebhook = ({
     }
 
     if (webhooks) {
-      toast.success("Webhook created successfully.");
+      toast.success(t("webhook-created"));
     }
 
     mutateWebhooks();

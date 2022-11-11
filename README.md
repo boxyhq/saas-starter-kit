@@ -48,6 +48,7 @@ Please follow these simple steps to get a local copy up and running.
 - Node.js (Version: >=15.x <17)
 - PostgreSQL
 - NPM
+- Docker compose
 
 ### Development
 
@@ -81,13 +82,21 @@ Duplicate `.env.example` to `.env`.
 cp .env.example .env
 ```
 
-#### 5. Set up database schema
+#### 5. Create database (Optional)
+
+To make the process of installing dependencies easier, we offer a `docker-compose.yml` with a Postgres container.
+
+```bash
+docker-compose up -d
+```
+
+#### 6. Set up database schema
 
 ```bash
 npx prisma db push
 ```
 
-#### 6. Start the server
+#### 7. Start the server
 
 In a development environment:
 
@@ -95,13 +104,33 @@ In a development environment:
 npm run dev
 ```
 
-#### 7. Start the Prisma Studio
+#### 8. Start the Prisma Studio
 
 Prisma Studio is a visual editor for the data in your database.
 
 ```bash
 npx prisma studio
 ```
+
+#### 8. Testing
+
+We are using [Playwright](https://playwright.dev/) to execute E2E tests. Add all tests inside `/tests` folder.
+
+Update `playwright.config.ts` to change playwright configuration.
+
+##### Install Playwright dependencies
+
+```bash
+npm run playwright:update
+```
+
+##### Run E2E tests
+
+```bash
+npm run test:e2e
+```
+
+_Note: HTML test report is generated inside the `report` folder. Currently suported browsers for test execution `chromium` and `firefox`_
 
 ## Features
 
@@ -118,6 +147,7 @@ npx prisma studio
 - Manage team members
 - Update team settings
 - Webhooks & Events
+- Internationalization
 
 ## Coming Soon
 
@@ -126,7 +156,6 @@ npx prisma studio
 - Dark mode
 - Mobile-first UI
 - Billing & subscriptions
-- Internationalization
 - Roles and Permissions
 
 ## Contributing

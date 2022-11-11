@@ -1,4 +1,4 @@
-import { ArrowSmRightIcon } from "@heroicons/react/solid";
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
 
 import { teamNavigations } from "@/lib/teams";
@@ -20,7 +20,7 @@ const TeamNav = ({ slug }: { slug: string }) => {
             text={menu.name}
             active={menu.active}
             key={menu.href}
-            icon={ArrowSmRightIcon}
+            icon={ArrowRightIcon}
           />
         );
       })}

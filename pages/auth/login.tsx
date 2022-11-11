@@ -5,6 +5,8 @@ import type {
   InferGetServerSidePropsType,
 } from "next";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -24,6 +26,7 @@ const Login: NextPageWithLayout<
 > = ({ csrfToken, redirectAfterSignIn }) => {
   const { status } = useSession();
   const router = useRouter();
+  const { t } = useTranslation("common");
 
   if (status === "authenticated") {
     router.push(redirectAfterSignIn);
@@ -52,7 +55,7 @@ const Login: NextPageWithLayout<
       formik.resetForm();
 
       if (!response?.ok) {
-        toast.error("There was a problem with your login.");
+        toast.error(t("login-error"));
         return;
       }
     },
@@ -92,18 +95,18 @@ const Login: NextPageWithLayout<
               active={formik.dirty}
               fullWidth
             >
-              Sign in
+              {t("sign-in")}
             </Button>
           </div>
         </form>
         <div className="divider"></div>
         <div className="space-y-3">
           <Link href="/auth/magic-link">
-            <a className="btn btn-outline w-full">&nbsp;Sign in with Email</a>
+            <a className="btn-outline btn w-full">&nbsp;{t("sign-in-with-email")}</a>
           </Link>
           <Link href="/auth/sso">
-            <a className="btn btn-outline w-full">
-              &nbsp;Continue with SAML SSO
+            <a className="btn-outline btn w-full">
+              &nbsp;{t("continue-with-saml-sso")}
             </a>
           </Link>
           <div className="divider">or</div>
@@ -130,10 +133,10 @@ const Login: NextPageWithLayout<
         </div>
       </div>
       <p className="text-center text-sm text-gray-600">
-        Don`t have an account?
+        {t("dont-have-an-account")}
         <Link href="/auth/join">
           <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;create a free account
+            &nbsp;{t("create-a-free-account")}
           </a>
         </Link>
       </p>
@@ -152,12 +155,13 @@ Login.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res } = context;
+  const { req, res, locale }: GetServerSidePropsContext = context;
 
   const cookieParsed = getParsedCookie(req, res);
 
   return {
     props: {
+      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
       csrfToken: await getCsrfToken(context),
       redirectAfterSignIn: cookieParsed.url ?? env.redirectAfterSignIn,
     },

@@ -2,7 +2,7 @@ import type { FormikHelpers } from "formik";
 import React from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-
+import { useTranslation } from "next-i18next";
 import type { ApiResponse } from "types";
 import type { Team } from "@prisma/client";
 import useWebhooks from "hooks/useWebhooks";
@@ -19,6 +19,7 @@ const CreateWebhook = ({
   team: Team;
 }) => {
   const { mutateWebhooks } = useWebhooks(team.slug);
+  const { t } = useTranslation("common");
 
   const onSubmit = async (
     values: WebookFormSchema,
@@ -39,7 +40,7 @@ const CreateWebhook = ({
     }
 
     if (webhooks) {
-      toast.success("Webhook created successfully.");
+      toast.success(t("webhook-created"));
     }
 
     mutateWebhooks();

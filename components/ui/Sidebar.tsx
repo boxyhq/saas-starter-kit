@@ -1,11 +1,13 @@
 import {
   HomeIcon,
   UserIcon,
-  LogoutIcon,
-  CollectionIcon,
-} from "@heroicons/react/solid";
+  ArrowLeftOnRectangleIcon,
+  UsersIcon,
+  KeyIcon,
+} from "@heroicons/react/24/solid";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 import NavItem from "./NavItem";
 import TeamNav from "../interfaces/Team/TeamNav";
@@ -13,6 +15,7 @@ import useTeam from "hooks/useTeam";
 
 export default function Sidebar() {
   const router = useRouter();
+  const { t } = useTranslation("common");
 
   const slug = router.query.slug as string;
 
@@ -31,7 +34,7 @@ export default function Sidebar() {
                 <li>
                   <form action="#" method="GET" className="lg:hidden">
                     <label htmlFor="mobile-search" className="sr-only">
-                      Search
+                      {t("search")}
                     </label>
                     <div className="relative">
                       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -66,7 +69,7 @@ export default function Sidebar() {
                   <NavItem
                     href="/teams"
                     text="Teams"
-                    icon={CollectionIcon}
+                    icon={UsersIcon}
                     active={router.pathname === "/teams"}
                   />
                 </li>
@@ -76,7 +79,7 @@ export default function Sidebar() {
                   <NavItem
                     href="javascript:void(0);"
                     text={team.name}
-                    icon={UserIcon}
+                    icon={UsersIcon}
                     active={false}
                   />
                   <TeamNav slug={slug} />
@@ -92,7 +95,7 @@ export default function Sidebar() {
                 <NavItem
                   href="#"
                   text="Logout"
-                  icon={LogoutIcon}
+                  icon={ArrowLeftOnRectangleIcon}
                   onClick={() => signOut()}
                   active={false}
                 />

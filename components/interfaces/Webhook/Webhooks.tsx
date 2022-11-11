@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "react-daisyui";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import { useTranslation } from "next-i18next";
 import { Card, Error, Loading } from "@/components/ui";
 import { Team } from "@prisma/client";
 import useWebhooks from "hooks/useWebhooks";
@@ -12,6 +12,8 @@ import EditWebhook from "./EditWebhook";
 const Webhooks = ({ team }: { team: Team }) => {
   const [visible, setVisible] = React.useState(false);
   const [endpoint, setEndpoint] = React.useState<EndpointOut | null>(null);
+
+  const { t } = useTranslation("common");
 
   const { isLoading, isError, webhooks, mutateWebhooks } = useWebhooks(
     team.slug
@@ -41,7 +43,7 @@ const Webhooks = ({ team }: { team: Team }) => {
 
     mutateWebhooks();
 
-    toast.success("Webhook deleted successfully.");
+    toast.success(t("webhook-deleted"));
   };
 
   return (
@@ -52,16 +54,16 @@ const Webhooks = ({ team }: { team: Team }) => {
             <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
-                  Name
+                  {t("name")}
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  URL
+                  {t("url")}
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Created At
+                  {t("created-at")}
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Action
+                  t{"action"}
                 </th>
               </tr>
             </thead>
@@ -85,7 +87,7 @@ const Webhooks = ({ team }: { team: Team }) => {
                             setVisible(!visible);
                           }}
                         >
-                          Edit
+                          {t("edit")}
                         </Button>
                         <Button
                           size="sm"
@@ -94,7 +96,7 @@ const Webhooks = ({ team }: { team: Team }) => {
                             deleteWebhook(webhook);
                           }}
                         >
-                          Remove
+                          {t("remove")}
                         </Button>
                       </div>
                     </td>

@@ -31,3 +31,14 @@ export const listWebhooks = async (appId: string) => {
 export const deleteWebhook = async (appId: string, endpointId: string) => {
   return await svix.endpoint.delete(appId, endpointId);
 };
+
+export const sendEvent = async (
+  appId: string,
+  eventType: string,
+  payload: any
+) => {
+  return await svix.message.create(appId, {
+    eventType: eventType,
+    payload: payload,
+  });
+};

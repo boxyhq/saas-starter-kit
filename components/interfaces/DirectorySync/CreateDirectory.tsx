@@ -4,7 +4,7 @@ import axios from "axios";
 import { Button, Modal } from "react-daisyui";
 import toast from "react-hot-toast";
 import useSWR from "swr";
-
+import { useTranslation } from "next-i18next";
 import type { Directory } from "@boxyhq/saml-jackson";
 import type { ApiResponse } from "types";
 import { Team } from "@prisma/client";
@@ -23,6 +23,7 @@ const CreateDirectory = ({
 }) => {
   const { data } = useSWR("/api/idp", fetcher);
   const { mutateDirectory } = useDirectory(team.slug as string);
+  const { t } = useTranslation("common");
 
   const formik = useFormik({
     initialValues: {
@@ -52,7 +53,7 @@ const CreateDirectory = ({
       }
 
       if (directory) {
-        toast.success("Directory connection successfully.");
+        toast.success(t("directory-connection-created"));
       }
 
       mutateDirectory();
@@ -70,14 +71,11 @@ const CreateDirectory = ({
     <Modal open={visible}>
       <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header className="font-bold">
-          Create Directory Connection
+          {t("create-directory-connection")}
         </Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-2">
-            <p>
-              Automatically provision and de-provision users with your directory
-              provider.
-            </p>
+            <p>{t("create-directory-message")}</p>
             <InputWithLabel
               name="name"
               onChange={formik.handleChange}
@@ -87,11 +85,13 @@ const CreateDirectory = ({
             />
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Directory Sync Provider</span>
+                <span className="label-text">
+                  {t("directory-sync-provider")}
+                </span>
                 <span className="label-text-alt"></span>
               </label>
               <select
-                className="select select-bordered flex-grow"
+                className="select-bordered select flex-grow"
                 name="provider"
                 onChange={formik.handleChange}
                 value={formik.values.provider}
@@ -113,7 +113,7 @@ const CreateDirectory = ({
             loading={formik.isSubmitting}
             active={formik.dirty}
           >
-            Create Directory
+            {t("create-directory")}
           </Button>
           <Button
             type="button"
@@ -122,7 +122,7 @@ const CreateDirectory = ({
               setVisible(!visible);
             }}
           >
-            Close
+            {t("close")}
           </Button>
         </Modal.Actions>
       </form>

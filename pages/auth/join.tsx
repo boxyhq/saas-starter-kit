@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
 import { Button } from "react-daisyui";
 import Link from "next/link";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import type { NextPageWithLayout } from "types";
 import { AuthLayout } from "@/components/layouts";
@@ -21,6 +23,7 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 }) => {
   const { status } = useSession();
   const router = useRouter();
+  const { t } = useTranslation("common");
 
   if (status === "authenticated") {
     router.push("/");
@@ -57,10 +60,10 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
         &nbsp;GitHub
       </Button>
       <p className="text-center text-sm text-gray-600">
-        Already have an account?
+        {t("already-have-an-account")}
         <Link href="/auth/login">
           <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;sign in
+            &nbsp;{t("sign-in")}
           </a>
         </Link>
       </p>
@@ -82,12 +85,13 @@ Signup.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res } = context;
+  const { req, res, locale }: GetServerSidePropsContext = context;
 
   const cookieParsed = getParsedCookie(req, res);
 
   return {
     props: {
+      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
       inviteToken: cookieParsed.token,
       next: cookieParsed.url ?? "/auth/login",
     },

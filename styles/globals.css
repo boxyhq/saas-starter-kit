@@ -29,7 +29,7 @@ a {
   }
 
   .btn {
-    @apply min-h-8 h-10 rounded normal-case;
+    @apply rounded normal-case;
   }
 
   .btn-primary {

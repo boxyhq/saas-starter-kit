@@ -41,3 +41,9 @@ yarn-error.log*
 .sentryclirc
 
 .env
+
+# Tests
+/report
+
+# eslint
+.eslintcache
