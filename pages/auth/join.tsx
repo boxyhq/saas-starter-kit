@@ -1,8 +1,7 @@
 import type { ReactElement } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
-import { Button } from "react-daisyui";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -13,9 +12,8 @@ import { inferSSRProps } from "@/lib/inferSSRProps";
 import { getParsedCookie } from "@/lib/cookie";
 import JoinWithInvitation from "@/components/interfaces/Auth/JoinWithInvitation";
 import Join from "@/components/interfaces/Auth/Join";
-import { FcGoogle } from "react-icons/fc"
-import { FaGithub } from "react-icons/fa"
-
+import GithubButton from "@/components/interfaces/Auth/GithubButton";
+import GoogleButton from "@/components/interfaces/Auth/GoogleButton";
 
 const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   inviteToken,
@@ -37,28 +35,13 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
         ) : (
           <Join />
         )}
+        <div className="divider">or</div>
+        <div className="space-y-3">
+          <GithubButton />
+          <GoogleButton />
+        </div>
       </div>
-      <div className="divider">or sign up with</div>
-      <Button
-        className="btn btn-outline w-full"
-        onClick={(e) => {
-          e.preventDefault();
-          signIn("google");
-        }}
-      >
-        <FcGoogle />
-        &nbsp;Google
-      </Button>
-      <Button
-        className="btn btn-outline w-full"
-        onClick={(e) => {
-          e.preventDefault();
-          signIn("github");
-        }}
-      >
-        <FaGithub />
-        &nbsp;GitHub
-      </Button>
+
       <p className="text-center text-sm text-gray-600">
         {t("already-have-an-account")}
         <Link href="/auth/login">

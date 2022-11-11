@@ -3,7 +3,6 @@ import * as Yup from "yup";
 import { Button } from "react-daisyui";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { useTranslation } from "next-i18next";
 import type { User } from "@prisma/client";
 import type { ApiResponse } from "types";
@@ -33,32 +32,22 @@ const JoinWithInvitation = ({
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const { name, email } = values;
-
-      const response = await axios.post<ApiResponse<User>>("/api/auth/join", {
-        name,
-        email,
-        inviteToken,
+      const response = await fetch("/api/auth/join", {
+        method: "POST",
+        body: JSON.stringify(values),
       });
 
-      const { data: user, error } = response.data;
-
-      formik.resetForm();
+      const { error }: ApiResponse<User> = await response.json();
 
       if (error) {
         toast.error(error.message);
         return;
       }
 
-      if (user) {
-        toast.success(t("successfully-joined"));
+      formik.resetForm();
+      toast.success(t("successfully-joined"));
 
-        if (next) {
-          router.push(next);
-        }
-
-        router.push("/auth/login");
-      }
+      return next ? router.push(next) : router.push("/auth/login");
     },
   });
 

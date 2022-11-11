@@ -18,8 +18,8 @@ import { AuthLayout } from "@/components/layouts";
 import { InputWithLabel } from "@/components/ui";
 import { getParsedCookie } from "@/lib/cookie";
 import env from "@/lib/env";
-import { FcGoogle } from "react-icons/fc"
-import { FaGithub } from "react-icons/fa"
+import GithubButton from "@/components/interfaces/Auth/GithubButton";
+import GoogleButton from "@/components/interfaces/Auth/GoogleButton";
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -102,7 +102,9 @@ const Login: NextPageWithLayout<
         <div className="divider"></div>
         <div className="space-y-3">
           <Link href="/auth/magic-link">
-            <a className="btn-outline btn w-full">&nbsp;{t("sign-in-with-email")}</a>
+            <a className="btn-outline btn w-full">
+              &nbsp;{t("sign-in-with-email")}
+            </a>
           </Link>
           <Link href="/auth/sso">
             <a className="btn-outline btn w-full">
@@ -110,26 +112,8 @@ const Login: NextPageWithLayout<
             </a>
           </Link>
           <div className="divider">or</div>
-          <Button
-              className="btn btn-outline w-full"
-              onClick={(e) => {
-                e.preventDefault();
-                signIn("google");
-              }}
-          >
-              <FcGoogle />
-              &nbsp;Sign in with Google
-          </Button>
-          <Button
-            className="btn btn-outline w-full"
-            onClick={(e) => {
-              e.preventDefault();
-              signIn("github");
-            }}
-          >
-            <FaGithub />
-              &nbsp;Sign in with GitHub
-          </Button>
+          <GithubButton />
+          <GoogleButton />
         </div>
       </div>
       <p className="text-center text-sm text-gray-600">
