@@ -1,9 +1,11 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, Account, User } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
+import GitHubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
-
 import type { OAuthTokenReq } from "@boxyhq/saml-jackson";
+
 import { prisma } from "@/lib/prisma";
 import env from "@/lib/env";
 import jackson from "@/lib/jackson";
@@ -11,9 +13,12 @@ import { createUser, getUser } from "models/user";
 import { addTeamMember, getTeam } from "models/team";
 import { hashPassword, verifyPassword } from "@/lib/auth";
 import { createRandomString } from "@/lib/common";
+import { getAccount } from "models/account";
+
+const adapter = PrismaAdapter(prisma);
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter,
   providers: [
     CredentialsProvider({
       id: "credentials",
@@ -89,6 +94,7 @@ export const authOptions: NextAuthOptions = {
         return user;
       },
     }),
+
     EmailProvider({
       server: {
         host: env.smtp.host,
@@ -100,6 +106,16 @@ export const authOptions: NextAuthOptions = {
       },
       from: env.smtp.from,
     }),
+
+    GitHubProvider({
+      clientId: env.github.clientId,
+      clientSecret: env.github.clientSecret,
+    }),
+
+    GoogleProvider({
+      clientId: env.google.clientId,
+      clientSecret: env.google.clientSecret,
+    }),
   ],
   pages: {
     signIn: "/auth/login",
@@ -110,12 +126,43 @@ export const authOptions: NextAuthOptions = {
   },
   secret: env.nextAuth.secret,
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account, profile }) {
       if (!user.email) {
         return false;
       }
 
-      return (await getUser({ email: user.email })) ? true : false;
+      if (account.provider === "email" || account.provider === "credentials") {
+        return true;
+      }
+
+      if (account.provider != "github" && account.provider != "google") {
+        return false;
+      }
+
+      // TODO: We should check if email is verified here before linking account
+
+      const existingUser = await getUser({ email: user.email });
+
+      if (!existingUser) {
+        // Create user account if it doesn't exist
+        const newUser = await createUser({
+          name: `${profile.name}`,
+          email: `${profile.email}`,
+        });
+
+        await linkAccount(newUser, account);
+      } else {
+        // User account already exists, check if it's linked to the account
+        const linkedAccount = await getAccount({ userId: existingUser.id });
+
+        if (linkedAccount) {
+          return true;
+        }
+
+        await linkAccount(existingUser, account);
+      }
+
+      return true;
     },
 
     async session({ session, token }) {
@@ -129,3 +176,15 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default NextAuth(authOptions);
+
+const linkAccount = async (user: User, account: Account) => {
+  return await adapter.linkAccount({
+    providerAccountId: account.providerAccountId,
+    userId: user.id,
+    provider: account.provider,
+    type: "oauth",
+    scope: account.scope,
+    token_type: account.token_type,
+    access_token: account.access_token,
+  });
+};

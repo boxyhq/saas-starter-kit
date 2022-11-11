@@ -18,6 +18,8 @@ import { AuthLayout } from "@/components/layouts";
 import { InputWithLabel } from "@/components/ui";
 import { getParsedCookie } from "@/lib/cookie";
 import env from "@/lib/env";
+import GithubButton from "@/components/interfaces/Auth/GithubButton";
+import GoogleButton from "@/components/interfaces/Auth/GoogleButton";
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -100,13 +102,18 @@ const Login: NextPageWithLayout<
         <div className="divider"></div>
         <div className="space-y-3">
           <Link href="/auth/magic-link">
-            <a className="btn-outline btn w-full">&nbsp;{t("sign-in-with-email")}</a>
+            <a className="btn-outline btn w-full">
+              &nbsp;{t("sign-in-with-email")}
+            </a>
           </Link>
           <Link href="/auth/sso">
             <a className="btn-outline btn w-full">
               &nbsp;{t("continue-with-saml-sso")}
             </a>
           </Link>
+          <div className="divider">or</div>
+          <GithubButton />
+          <GoogleButton />
         </div>
       </div>
       <p className="text-center text-sm text-gray-600">

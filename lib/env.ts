@@ -31,6 +31,18 @@ const env = {
     url: `${process.env.SVIX_URL}`,
     apiKey: `${process.env.SVIX_API_KEY}`,
   },
+
+  //Social login: Github
+  github: {
+    clientId: `${process.env.GITHUB_CLIENT_ID}`,
+    clientSecret: `${process.env.GITHUB_CLIENT_SECRET}`,
+  },
+
+  //Social login: Google
+  google: {
+    clientId: `${process.env.GOOGLE_CLIENT_ID}`,
+    clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,
+  },
 };
 
 export default env;

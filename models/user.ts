@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export const createUser = async (param: {
   name: string;
   email: string;
-  password: string;
+  password?: string;
 }) => {
   const { name, email, password } = param;
 

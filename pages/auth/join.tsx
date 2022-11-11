@@ -12,6 +12,8 @@ import { inferSSRProps } from "@/lib/inferSSRProps";
 import { getParsedCookie } from "@/lib/cookie";
 import JoinWithInvitation from "@/components/interfaces/Auth/JoinWithInvitation";
 import Join from "@/components/interfaces/Auth/Join";
+import GithubButton from "@/components/interfaces/Auth/GithubButton";
+import GoogleButton from "@/components/interfaces/Auth/GoogleButton";
 
 const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   inviteToken,
@@ -33,7 +35,13 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
         ) : (
           <Join />
         )}
+        <div className="divider">or</div>
+        <div className="space-y-3">
+          <GithubButton />
+          <GoogleButton />
+        </div>
       </div>
+
       <p className="text-center text-sm text-gray-600">
         {t("already-have-an-account")}
         <Link href="/auth/login">
