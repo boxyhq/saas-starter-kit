@@ -10,7 +10,7 @@
     <a href="https://discord.gg/uyb7pYt4Pa"><img src="https://img.shields.io/discord/877585485235630130" alt="Discord"></a>
 </p>
 
-The Open Source Next.js Enterprise SaaS Starter Kit.
+The Open Source Next.js SaaS boilerplate for Enterprise SaaS app development.
 
 Next.js based SaaS starter kit that saves you months of development by starting you off with all the features that are the same in every product, so you can focus on what makes your app unique.
 
