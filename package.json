@@ -47,7 +47,7 @@
     "uuid": "8.3.2",
     "yup": "0.32.11",
     "zod": "3.19.1",
-    "react-icons": "4.4.0"
+    "react-icons": "4.7.1"
   },
   "devDependencies": {
     "@playwright/test": "1.27.1",
