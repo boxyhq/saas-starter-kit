@@ -17,12 +17,11 @@ import type { NextPageWithLayout } from 'types';
 
 const DirectorySync: NextPageWithLayout = () => {
   const router = useRouter();
-  const { slug } = router.query;
+  const { slug } = router.query as { slug: string };
 
   const [visible, setVisible] = useState(false);
-
-  const { isLoading, isError, team } = useTeam(slug as string);
-  const { directory } = useDirectory(slug as string);
+  const { isLoading, isError, team } = useTeam(slug);
+  const { directories } = useDirectory(slug);
   const { t } = useTranslation('common');
 
   if (isLoading || !team) {
@@ -32,6 +31,9 @@ const DirectorySync: NextPageWithLayout = () => {
   if (isError) {
     return <Error />;
   }
+
+  const directory =
+    directories && directories.length > 0 ? directories[0] : null;
 
   return (
     <>

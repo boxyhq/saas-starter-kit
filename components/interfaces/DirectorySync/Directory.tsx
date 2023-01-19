@@ -4,8 +4,8 @@ import useDirectory from 'hooks/useDirectory';
 import { useTranslation } from 'next-i18next';
 
 const Directory = ({ team }: { team: Team }) => {
-  const { isLoading, isError, directory } = useDirectory(team.slug as string);
   const { t } = useTranslation('common');
+  const { isLoading, isError, directories } = useDirectory(team.slug);
 
   if (isLoading) {
     return <Loading />;
@@ -15,9 +15,11 @@ const Directory = ({ team }: { team: Team }) => {
     return <Error />;
   }
 
-  if (!directory) {
+  if (directories && directories.length === 0) {
     return null;
   }
+
+  const directory = directories[0];
 
   return (
     <div className="flex flex-col justify-between space-y-2 border-t text-sm">

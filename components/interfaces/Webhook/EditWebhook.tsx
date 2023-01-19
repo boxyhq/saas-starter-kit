@@ -44,7 +44,11 @@ const EditWebhook = ({
 
     const response = await axios.put<ApiResponse>(
       `/api/teams/${team.slug}/webhooks/${endpoint.id}`,
-      { name, url, eventTypes }
+      {
+        name,
+        url,
+        eventTypes,
+      }
     );
 
     const { data: webhooks, error } = response.data;

@@ -30,7 +30,11 @@ const CreateWebhook = ({
 
     const response = await axios.post<ApiResponse>(
       `/api/teams/${team.slug}/webhooks`,
-      { name, url, eventTypes }
+      {
+        name,
+        url,
+        eventTypes,
+      }
     );
 
     const { data: webhooks, error } = response.data;
