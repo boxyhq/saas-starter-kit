@@ -9,6 +9,7 @@ import type { Invitation, Team } from "@prisma/client";
 import type { ApiResponse } from "types";
 import { availableRoles } from "@/lib/roles";
 import useInvitations from "hooks/useInvitations";
+import { getAxiosError } from "@/lib/common";
 
 const InviteMember = ({
   visible,
@@ -25,36 +26,31 @@ const InviteMember = ({
   const formik = useFormik({
     initialValues: {
       email: "",
-      role: "member",
+      role: availableRoles[0].id,
     },
     validationSchema: Yup.object().shape({
       email: Yup.string().email().required(),
-      role: Yup.string().required(),
+      role: Yup.string()
+        .required()
+        .oneOf(availableRoles.map((r) => r.id)),
     }),
     onSubmit: async (values) => {
-      const { email, role } = values;
+      try {
+        await axios.post<ApiResponse<Invitation>>(
+          `/api/teams/${team.slug}/invitations`,
+          {
+            ...values,
+          }
+        );
 
-      const response = await axios.post<ApiResponse<Invitation>>(
-        `/api/teams/${team.slug}/invitations`,
-        {
-          email,
-          role,
-        }
-      );
-
-      const { data: invitation, error } = response.data;
-
-      if (error) {
-        toast.error(error.message);
-      }
-
-      if (invitation) {
         toast.success(t("invitation-sent"));
-      }
 
-      mutateInvitation();
-      setVisible(false);
-      formik.resetForm();
+        mutateInvitation();
+        setVisible(false);
+        formik.resetForm();
+      } catch (error: any) {
+        toast.error(getAxiosError(error));
+      }
     },
   });
 
@@ -82,7 +78,7 @@ const InviteMember = ({
                 onChange={formik.handleChange}
                 required
               >
-                {availableRoles.map((role: any) => (
+                {availableRoles.map((role) => (
                   <option value={role.id} key={role.id}>
                     {role.name}
                   </option>

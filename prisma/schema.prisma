@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  OWNER
+  MEMBER
+}
+
 model Account {
   id                String  @id @default(uuid())
   userId            String
@@ -63,7 +69,7 @@ model Team {
   name        String
   slug        String   @unique
   domain      String?  @unique
-  defaultRole String   @default("member")
+  defaultRole Role     @default(MEMBER)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
 
@@ -75,7 +81,7 @@ model TeamMember {
   id        String   @id @default(uuid())
   teamId    String
   userId    String
-  role      String   @default("member")
+  role      Role     @default(MEMBER)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
@@ -89,7 +95,7 @@ model Invitation {
   id        String   @id @default(uuid())
   teamId    String
   email     String
-  role      String   @default("member")
+  role      Role     @default(MEMBER)
   token     String   @unique
   expires   DateTime
   invitedBy String

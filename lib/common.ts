@@ -30,3 +30,11 @@ export const extractAuthToken = (req: NextApiRequest): string | null => {
 
   return authHeader ? authHeader.split(" ")[1] : null;
 };
+
+export const getAxiosError = (error: any): string => {
+  if (error.response) {
+    return error.response.data.error.message;
+  }
+
+  return error.message;
+};

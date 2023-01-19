@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { prisma } from "@/lib/prisma";
+import { Role } from "@prisma/client";
 
 export const getInvitations = async (teamId: string) => {
   return await prisma.invitation.findMany({
@@ -25,7 +26,7 @@ export const createInvitation = async (param: {
   teamId: string;
   invitedBy: string;
   email: string;
-  role: string;
+  role: Role;
 }) => {
   const { teamId, invitedBy, email, role } = param;
 

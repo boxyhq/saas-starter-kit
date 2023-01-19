@@ -7,6 +7,8 @@ import { useTranslation } from "next-i18next";
 import type { User } from "@prisma/client";
 import type { ApiResponse } from "types";
 import { InputWithLabel } from "@/components/ui";
+import axios from "axios";
+import { getAxiosError } from "@/lib/common";
 
 const Join = () => {
   const router = useRouter();
@@ -26,21 +28,17 @@ const Join = () => {
       team: Yup.string().required().min(3),
     }),
     onSubmit: async (values) => {
-      const response = await fetch("/api/auth/join", {
-        method: "POST",
-        body: JSON.stringify(values),
-      });
+      try {
+        await axios.post<ApiResponse<User>>("/api/auth/join", {
+          ...values,
+        });
 
-      const { error }: ApiResponse<User> = await response.json();
-
-      if (error) {
-        toast.error(error.message);
-        return;
+        formik.resetForm();
+        toast.success(t("successfully-joined"));
+        router.push("/auth/login");
+      } catch (error: any) {
+        toast.error(getAxiosError(error));
       }
-
-      formik.resetForm();
-      toast.success(t("successfully-joined"));
-      router.push("/auth/login");
     },
   });
 
