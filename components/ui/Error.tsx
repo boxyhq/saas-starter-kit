@@ -1,10 +1,10 @@
-import { useTranslation } from "next-i18next";
+import { useTranslation } from 'next-i18next';
 
 const Error = () => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   return (
     <div>
-      <p>{t("unknown-error")}</p>
+      <p>{t('unknown-error')}</p>
     </div>
   );
 };

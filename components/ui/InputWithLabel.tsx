@@ -1,8 +1,8 @@
-import { Input } from "react-daisyui";
+import { Input } from 'react-daisyui';
 
 const InputWithLabel = ({
   label,
-  type = "text",
+  type = 'text',
   error,
   descriptionText,
   ...props
@@ -10,7 +10,7 @@ const InputWithLabel = ({
   const classes = Array<string>();
 
   if (error) {
-    classes.push("input-error");
+    classes.push('input-error');
   }
 
   return (
@@ -18,10 +18,10 @@ const InputWithLabel = ({
       <label className="label">
         <span className="label-text">{label}</span>
       </label>
-      <Input className={classes.join(" ")} {...props} type={type} />
+      <Input className={classes.join(' ')} {...props} type={type} />
       {(error || descriptionText) && (
         <label className="label">
-          <span className={`label-text-alt ${error ? "text-red-500" : ""}`}>
+          <span className={`label-text-alt ${error ? 'text-red-500' : ''}`}>
             {error || descriptionText}
           </span>
         </label>

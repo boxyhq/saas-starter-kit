@@ -1,14 +1,14 @@
-import React from "react";
-import toast from "react-hot-toast";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { Button } from "react-daisyui";
-import { useRouter } from "next/router";
-import axios from "axios";
-
-import { Team } from "@prisma/client";
-import type { ApiResponse } from "types";
-import { Card, InputWithLabel } from "@/components/ui";
+import { Card, InputWithLabel } from '@/components/ui';
+import { getAxiosError } from '@/lib/common';
+import { Team } from '@prisma/client';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { Button } from 'react-daisyui';
+import toast from 'react-hot-toast';
+import type { ApiResponse } from 'types';
+import * as Yup from 'yup';
 
 const TeamSettings = ({ team }: { team: Team }) => {
   const router = useRouter();
@@ -20,33 +20,28 @@ const TeamSettings = ({ team }: { team: Team }) => {
       domain: team.domain,
     },
     validationSchema: Yup.object().shape({
-      name: Yup.string().required("Name is required"),
-      slug: Yup.string().required("Slug is required"),
+      name: Yup.string().required('Name is required'),
+      slug: Yup.string().required('Slug is required'),
       domain: Yup.string().nullable(),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const { name, slug, domain } = values;
+      try {
+        const response = await axios.put<ApiResponse<Team>>(
+          `/api/teams/${team.slug}`,
+          {
+            ...values,
+          }
+        );
 
-      const response = await axios.put<ApiResponse<Team>>(
-        `/api/teams/${team.slug}`,
-        {
-          name,
-          slug,
-          domain,
+        const { data: teamUpdated } = response.data;
+
+        if (teamUpdated) {
+          toast.success('Successfully updated!');
+          return router.push(`/teams/${teamUpdated.slug}/settings`);
         }
-      );
-
-      const { data: updatedTeam, error } = response.data;
-
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
-
-      if (updatedTeam) {
-        toast.success("Successfully updated!");
-        return router.push(`/teams/${updatedTeam.slug}/settings`);
+      } catch (error: any) {
+        toast.error(getAxiosError(error));
       }
     },
   });
@@ -77,7 +72,7 @@ const TeamSettings = ({ team }: { team: Team }) => {
                 name="domain"
                 label="Domain"
                 descriptionText="Domain name for the team"
-                value={formik.values.domain ? formik.values.domain : ""}
+                value={formik.values.domain ? formik.values.domain : ''}
                 onChange={formik.handleChange}
                 error={formik.errors.domain}
               />

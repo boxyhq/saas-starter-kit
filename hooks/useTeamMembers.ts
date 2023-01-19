@@ -1,8 +1,7 @@
-import useSWR, { mutate } from "swr";
-
-import type { ApiResponse } from "types";
-import fetcher from "@/lib/fetcher";
-import type { TeamMember, User } from "@prisma/client";
+import fetcher from '@/lib/fetcher';
+import type { TeamMember, User } from '@prisma/client';
+import useSWR, { mutate } from 'swr';
+import type { ApiResponse } from 'types';
 
 type TeamMemberWithUser = TeamMember & { user: User };
 

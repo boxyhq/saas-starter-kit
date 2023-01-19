@@ -1,19 +1,20 @@
-import type { EndpointOut } from "svix";
-import React from "react";
-import { Button } from "react-daisyui";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { useTranslation } from "next-i18next";
-import { Card, Error, Loading } from "@/components/ui";
-import { Team } from "@prisma/client";
-import useWebhooks from "hooks/useWebhooks";
-import EditWebhook from "./EditWebhook";
+import { Card, Error, Loading } from '@/components/ui';
+import { Team } from '@prisma/client';
+import axios from 'axios';
+import useWebhooks from 'hooks/useWebhooks';
+import { useTranslation } from 'next-i18next';
+import React from 'react';
+import { Button } from 'react-daisyui';
+import toast from 'react-hot-toast';
+import type { EndpointOut } from 'svix';
+
+import EditWebhook from './EditWebhook';
 
 const Webhooks = ({ team }: { team: Team }) => {
   const [visible, setVisible] = React.useState(false);
   const [endpoint, setEndpoint] = React.useState<EndpointOut | null>(null);
 
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   const { isLoading, isError, webhooks, mutateWebhooks } = useWebhooks(
     team.slug
@@ -43,7 +44,7 @@ const Webhooks = ({ team }: { team: Team }) => {
 
     mutateWebhooks();
 
-    toast.success(t("webhook-deleted"));
+    toast.success(t('webhook-deleted'));
   };
 
   return (
@@ -54,16 +55,16 @@ const Webhooks = ({ team }: { team: Team }) => {
             <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
-                  {t("name")}
+                  {t('name')}
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  {t("url")}
+                  {t('url')}
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  {t("created-at")}
+                  {t('created-at')}
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  t{"action"}
+                  t{'action'}
                 </th>
               </tr>
             </thead>
@@ -76,7 +77,9 @@ const Webhooks = ({ team }: { team: Team }) => {
                   >
                     <td className="px-6 py-3">{webhook.description}</td>
                     <td className="px-6 py-3">{webhook.url}</td>
-                    <td className="px-6 py-3">{webhook.createdAt}</td>
+                    <td className="px-6 py-3">
+                      {webhook.createdAt.toISOString()}
+                    </td>
                     <td className="px-6 py-3">
                       <div className="flex space-x-2">
                         <Button
@@ -87,7 +90,7 @@ const Webhooks = ({ team }: { team: Team }) => {
                             setVisible(!visible);
                           }}
                         >
-                          {t("edit")}
+                          {t('edit')}
                         </Button>
                         <Button
                           size="sm"
@@ -96,7 +99,7 @@ const Webhooks = ({ team }: { team: Team }) => {
                             deleteWebhook(webhook);
                           }}
                         >
-                          {t("remove")}
+                          {t('remove')}
                         </Button>
                       </div>
                     </td>

@@ -1,23 +1,22 @@
-import type { NextPageWithLayout } from "types";
-import type { GetServerSidePropsContext } from "next";
-import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import type { ReactElement } from "react";
-import toast from "react-hot-toast";
-import { useRouter } from "next/router";
-import { setCookie } from "cookies-next";
-import { useSession } from "next-auth/react";
-import { Button } from "react-daisyui";
-
-import { AuthLayout } from "@/components/layouts";
-import axios from "axios";
-import useInvitation from "hooks/useInvitation";
-import { Loading, Error } from "@/components/ui";
+import { AuthLayout } from '@/components/layouts';
+import { Error, Loading } from '@/components/ui';
+import axios from 'axios';
+import { setCookie } from 'cookies-next';
+import useInvitation from 'hooks/useInvitation';
+import type { GetServerSidePropsContext } from 'next';
+import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import type { ReactElement } from 'react';
+import { Button } from 'react-daisyui';
+import toast from 'react-hot-toast';
+import type { NextPageWithLayout } from 'types';
 
 const AcceptTeamInvitation: NextPageWithLayout = () => {
   const { status } = useSession();
   const router = useRouter();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   const { token } = router.query;
 
@@ -47,7 +46,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
     }
 
     if (data) {
-      router.push("/teams/switch");
+      router.push('/teams/switch');
     }
   };
 
@@ -56,14 +55,14 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
       <div className="rounded-md bg-white p-6 shadow-sm">
         <div className="flex flex-col items-center space-y-3">
           <h2 className="font-bold">{`${invitation.team.name} ${t(
-            "team-invite"
+            'team-invite'
           )}`}</h2>
           <h3 className="text-center">
-            {status === "authenticated"
-              ? t("accept-invite")
-              : t("invite-create-account")}
+            {status === 'authenticated'
+              ? t('accept-invite')
+              : t('invite-create-account')}
           </h3>
-          {status === "unauthenticated" ? (
+          {status === 'unauthenticated' ? (
             <>
               <Button
                 color="secondary"
@@ -73,7 +72,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                   router.push(`/auth/join`);
                 }}
               >
-                {t("create-a-new-account")}
+                {t('create-a-new-account')}
               </Button>
               <Button
                 color="secondary"
@@ -83,12 +82,12 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                   router.push(`/auth/login`);
                 }}
               >
-                {t("login")}
+                {t('login')}
               </Button>
             </>
           ) : (
             <Button onClick={acceptInvitation} fullWidth color="primary">
-              {t("accept-invitation")}
+              {t('accept-invitation')}
             </Button>
           )}
         </div>
@@ -115,7 +114,7 @@ export const getServerSideProps = async (
   const { token } = query;
 
   setCookie(
-    "pending-invite",
+    'pending-invite',
     {
       token,
       url: context.resolvedUrl,
@@ -125,13 +124,13 @@ export const getServerSideProps = async (
       res,
       maxAge: 60 * 6 * 24,
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: 'lax',
     }
   );
 
   return {
     props: {
-      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
+      ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
     },
   };
 };

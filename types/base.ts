@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from '@prisma/client';
 
 export type ApiError = {
   code?: string;
@@ -11,7 +11,7 @@ export type ApiResponse<T = unknown> = {
   error: ApiError | null;
 };
 
-export type Role = "owner" | "member";
+export type Role = 'owner' | 'member';
 
 export type SPSAMLConfig = {
   issuer: string;

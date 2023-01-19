@@ -1,5 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getInvitation } from "models/invitation";
+import { getInvitation } from 'models/invitation';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,10 +9,10 @@ export default async function handler(
 
   try {
     switch (method) {
-      case "GET":
+      case 'GET':
         return await handleGET(req, res);
       default:
-        res.setHeader("Allow", "GET");
+        res.setHeader('Allow', 'GET');
         res.status(405).json({
           error: { message: `Method ${method} Not Allowed` },
         });

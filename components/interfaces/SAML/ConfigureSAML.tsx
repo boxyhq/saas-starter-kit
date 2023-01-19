@@ -1,14 +1,14 @@
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import axios from "axios";
-import { Button, Textarea, Modal } from "react-daisyui";
-import toast from "react-hot-toast";
-import { useTranslation } from "next-i18next";
-import type { SAMLSSORecord } from "@boxyhq/saml-jackson";
-
-import type { ApiResponse } from "types";
-import { Team } from "@prisma/client";
-import useSAMLConfig from "hooks/useSAMLConfig";
+import { getAxiosError } from '@/lib/common';
+import type { SAMLSSORecord } from '@boxyhq/saml-jackson';
+import { Team } from '@prisma/client';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import useSAMLConfig from 'hooks/useSAMLConfig';
+import { useTranslation } from 'next-i18next';
+import { Button, Modal, Textarea } from 'react-daisyui';
+import toast from 'react-hot-toast';
+import type { ApiResponse } from 'types';
+import * as Yup from 'yup';
 
 const ConfigureSAML = ({
   visible,
@@ -20,11 +20,11 @@ const ConfigureSAML = ({
   team: Team;
 }) => {
   const { mutateSamlConfig } = useSAMLConfig(team.slug);
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   const formik = useFormik({
     initialValues: {
-      metadata: "",
+      metadata: '',
     },
     validationSchema: Yup.object().shape({
       metadata: Yup.string().required(),
@@ -32,26 +32,24 @@ const ConfigureSAML = ({
     onSubmit: async (values) => {
       const { metadata } = values;
 
-      const response = await axios.post<ApiResponse<SAMLSSORecord>>(
-        `/api/teams/${team.slug}/saml`,
-        {
-          encodedRawMetadata: Buffer.from(metadata).toString("base64"),
+      try {
+        const response = await axios.post<ApiResponse<SAMLSSORecord>>(
+          `/api/teams/${team.slug}/saml`,
+          {
+            encodedRawMetadata: Buffer.from(metadata).toString('base64'),
+          }
+        );
+
+        const { data: connectionCreated } = response.data;
+
+        if (connectionCreated) {
+          toast.success(t('saml-config-updated'));
+          mutateSamlConfig();
+          setVisible(false);
         }
-      );
-
-      const { data: samlConfig, error } = response.data;
-
-      if (error) {
-        toast.error(error.message);
-        return;
+      } catch (error: any) {
+        toast.error(getAxiosError(error));
       }
-
-      if (samlConfig) {
-        toast.success(t("saml-config-updated"));
-      }
-
-      mutateSamlConfig();
-      setVisible(false);
     },
   });
 
@@ -61,7 +59,7 @@ const ConfigureSAML = ({
         <Modal.Header className="font-bold">Configure SAML SSO</Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">
-            <p>{t("setup-saml-auth")}</p>
+            <p>{t('setup-saml-auth')}</p>
             <div className="flex justify-between space-x-3">
               <Textarea
                 name="metadata"
@@ -82,7 +80,7 @@ const ConfigureSAML = ({
             loading={formik.isSubmitting}
             active={formik.dirty}
           >
-            {t("save-changes")}
+            {t('save-changes')}
           </Button>
           <Button
             type="button"
@@ -91,7 +89,7 @@ const ConfigureSAML = ({
               setVisible(!visible);
             }}
           >
-            {t("close")}
+            {t('close')}
           </Button>
         </Modal.Actions>
       </form>

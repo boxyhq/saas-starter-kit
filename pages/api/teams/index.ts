@@ -1,8 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-
-import { getSession } from "@/lib/session";
-import { createTeam, getTeams, isTeamExists } from "models/team";
-import { slugify } from "@/lib/common";
+import { slugify } from '@/lib/common';
+import { getSession } from '@/lib/session';
+import { createTeam, getTeams, isTeamExists } from 'models/team';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,12 +10,12 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
-    case "GET":
+    case 'GET':
       return handleGET(req, res);
-    case "POST":
+    case 'POST':
       return handlePOST(req, res);
     default:
-      res.setHeader("Allow", ["GET", "POST"]);
+      res.setHeader('Allow', ['GET', 'POST']);
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
@@ -44,7 +43,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json({
       data: null,
       error: {
-        message: "A team with the name already exists.",
+        message: 'A team with the name already exists.',
       },
     });
   }

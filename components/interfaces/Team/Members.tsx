@@ -1,28 +1,32 @@
-import { useSession } from "next-auth/react";
-import { Button } from "react-daisyui";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { useTranslation } from "next-i18next";
-import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
-import { Team, TeamMember } from "@prisma/client";
-import useTeamMembers from "hooks/useTeamMembers";
-import { isTeamAdmin } from "@/lib/teams";
-import { availableRoles } from "@/lib/roles";
+import { Card, Error, LetterAvatar, Loading } from '@/components/ui';
+import { availableRoles } from '@/lib/roles';
+import { isTeamAdmin } from '@/lib/teams';
+import { Team, TeamMember } from '@prisma/client';
+import axios from 'axios';
+import useTeamMembers from 'hooks/useTeamMembers';
+import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import { Button } from 'react-daisyui';
+import toast from 'react-hot-toast';
 
 const Members = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   const { isLoading, isError, members, mutateTeamMembers } = useTeamMembers(
     team.slug
   );
 
-  if (isLoading || !members) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError || !session) {
     return <Error />;
+  }
+
+  if (!members) {
+    return null;
   }
 
   const removeTeamMember = async (member: TeamMember) => {
@@ -34,7 +38,7 @@ const Members = ({ team }: { team: Team }) => {
 
     mutateTeamMembers();
 
-    toast.success("Deleted the member successfully.");
+    toast.success('Deleted the member successfully.');
   };
 
   const isAdmin = isTeamAdmin(session.user, members);
@@ -54,17 +58,17 @@ const Members = ({ team }: { team: Team }) => {
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                {t("name")}
+                {t('name')}
               </th>
               <th scope="col" className="px-6 py-3">
-                {t("email")}
+                {t('email')}
               </th>
               <th scope="col" className="px-6 py-3">
-                {t("role")}
+                {t('role')}
               </th>
               {isAdmin && (
                 <th scope="col" className="px-6 py-3">
-                  {t("action")}
+                  {t('action')}
                 </th>
               )}
             </tr>
@@ -99,7 +103,7 @@ const Members = ({ team }: { team: Team }) => {
                           removeTeamMember(member);
                         }}
                       >
-                        {t("remove")}
+                        {t('remove')}
                       </Button>
                     </td>
                   )}
@@ -126,7 +130,7 @@ const UpdateRoleDropdown = ({
       role,
     });
 
-    toast.success("Updated the role successfully.");
+    toast.success('Updated the role successfully.');
   };
 
   return (

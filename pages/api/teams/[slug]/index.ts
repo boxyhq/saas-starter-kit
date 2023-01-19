@@ -1,13 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-
-import { getSession } from "@/lib/session";
+import { getSession } from '@/lib/session';
 import {
   deleteTeam,
   getTeam,
   isTeamMember,
   isTeamOwner,
   updateTeam,
-} from "models/team";
+} from 'models/team';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,14 +15,14 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
-    case "GET":
+    case 'GET':
       return handleGET(req, res);
-    case "PUT":
+    case 'PUT':
       return handlePUT(req, res);
-    case "DELETE":
+    case 'DELETE':
       return handleDELETE(req, res);
     default:
-      res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
+      res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
@@ -43,7 +42,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await isTeamMember(userId, team.id))) {
     return res.status(400).json({
       data: null,
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 

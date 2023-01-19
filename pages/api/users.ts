@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/session";
+import { prisma } from '@/lib/prisma';
+import { getSession } from '@/lib/session';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,10 +9,10 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
-    case "PUT":
+    case 'PUT':
       return await handlePUT(req, res);
     default:
-      res.setHeader("Allow", "PUT");
+      res.setHeader('Allow', 'PUT');
       res.status(405).json({
         error: { message: `Method ${method} Not Allowed` },
       });
@@ -25,7 +25,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({ error: { message: "Unauthorized" } });
+    return res.status(401).json({ error: { message: 'Unauthorized' } });
   }
 
   const user = await prisma.user.update({

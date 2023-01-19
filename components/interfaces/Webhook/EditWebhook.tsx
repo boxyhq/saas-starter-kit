@@ -1,16 +1,17 @@
-import type { EndpointOut } from "svix";
-import type { FormikHelpers } from "formik";
-import React from "react";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { useTranslation } from "next-i18next";
-import type { WebookFormSchema } from "types";
-import type { ApiResponse } from "types";
-import type { Team } from "@prisma/client";
-import ModalForm from "./Form";
-import useWebhook from "hooks/useWebhook";
-import useWebhooks from "hooks/useWebhooks";
-import { Error, Loading } from "@/components/ui";
+import { Error, Loading } from '@/components/ui';
+import type { Team } from '@prisma/client';
+import axios from 'axios';
+import type { FormikHelpers } from 'formik';
+import useWebhook from 'hooks/useWebhook';
+import useWebhooks from 'hooks/useWebhooks';
+import { useTranslation } from 'next-i18next';
+import React from 'react';
+import toast from 'react-hot-toast';
+import type { EndpointOut } from 'svix';
+import type { WebookFormSchema } from 'types';
+import type { ApiResponse } from 'types';
+
+import ModalForm from './Form';
 
 const EditWebhook = ({
   visible,
@@ -24,7 +25,7 @@ const EditWebhook = ({
   endpoint: EndpointOut;
 }) => {
   const { isLoading, isError, webhook } = useWebhook(team.slug, endpoint.id);
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const { mutateWebhooks } = useWebhooks(team.slug);
 
   if (isLoading || !webhook) {
@@ -43,7 +44,11 @@ const EditWebhook = ({
 
     const response = await axios.put<ApiResponse>(
       `/api/teams/${team.slug}/webhooks/${endpoint.id}`,
-      { name, url, eventTypes }
+      {
+        name,
+        url,
+        eventTypes,
+      }
     );
 
     const { data: webhooks, error } = response.data;
@@ -54,7 +59,7 @@ const EditWebhook = ({
     }
 
     if (webhooks) {
-      toast.success(t("webhook-created"));
+      toast.success(t('webhook-created'));
     }
 
     mutateWebhooks();

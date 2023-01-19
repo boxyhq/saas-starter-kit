@@ -1,15 +1,15 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "@/lib/session";
+import { sendTeamInviteEmail } from '@/lib/email/sendTeamInviteEmail';
+import { prisma } from '@/lib/prisma';
+import { getSession } from '@/lib/session';
+import { sendEvent } from '@/lib/svix';
 import {
   createInvitation,
-  getInvitations,
-  getInvitation,
   deleteInvitation,
-} from "models/invitation";
-import { addTeamMember, getTeam, isTeamAdmin } from "models/team";
-import { sendTeamInviteEmail } from "@/lib/email/sendTeamInviteEmail";
-import { sendEvent } from "@/lib/svix";
-import { prisma } from "@/lib/prisma";
+  getInvitation,
+  getInvitations,
+} from 'models/invitation';
+import { addTeamMember, getTeam, isTeamAdmin } from 'models/team';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,16 +18,16 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
-    case "GET":
+    case 'GET':
       return await handleGET(req, res);
-    case "POST":
+    case 'POST':
       return await handlePOST(req, res);
-    case "PUT":
+    case 'PUT':
       return await handlePUT(req, res);
-    case "DELETE":
+    case 'DELETE':
       return await handleDELETE(req, res);
     default:
-      res.setHeader("Allow", "GET, POST, PUT, DELETE");
+      res.setHeader('Allow', 'GET, POST, PUT, DELETE');
       res.status(405).json({
         error: { message: `Method ${method} Not Allowed` },
       });
@@ -46,7 +46,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamAdmin(userId, team.id))) {
     return res.status(400).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -59,7 +59,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (invitationExists) {
     return res.status(400).json({
-      error: { message: "An invitation already exists for this email." },
+      error: { message: 'An invitation already exists for this email.' },
     });
   }
 
@@ -70,7 +70,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     role,
   });
 
-  await sendEvent(team.id, "invitation.created", invitation);
+  await sendEvent(team.id, 'invitation.created', invitation);
 
   await sendTeamInviteEmail(team, invitation);
 
@@ -88,7 +88,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamAdmin(userId, team?.id))) {
     return res.status(400).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -109,7 +109,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamAdmin(userId, team?.id))) {
     return res.status(400).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -125,7 +125,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteInvitation({ id });
 
-  await sendEvent(team.id, "invitation.removed", invitation);
+  await sendEvent(team.id, 'invitation.removed', invitation);
 
   return res.status(200).json({ data: {} });
 };
@@ -145,7 +145,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     invitation.role
   );
 
-  await sendEvent(invitation.team.id, "member.created", teamMember);
+  await sendEvent(invitation.team.id, 'member.created', teamMember);
 
   await deleteInvitation({ token: inviteToken });
 

@@ -1,13 +1,13 @@
-import toast from "react-hot-toast";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import axios from "axios";
-import { Button } from "react-daisyui";
-import { useTranslation } from "next-i18next";
-import { getAxiosError } from "@/lib/common";
-import type { ApiResponse } from "types";
-import { Card, InputWithLabel } from "@/components/ui";
-import { User } from "@prisma/client";
+import { Card, InputWithLabel } from '@/components/ui';
+import { getAxiosError } from '@/lib/common';
+import { User } from '@prisma/client';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import { useTranslation } from 'next-i18next';
+import { Button } from 'react-daisyui';
+import toast from 'react-hot-toast';
+import type { ApiResponse } from 'types';
+import * as Yup from 'yup';
 
 const schema = Yup.object().shape({
   name: Yup.string().required(),
@@ -15,7 +15,7 @@ const schema = Yup.object().shape({
 });
 
 const UpdateAccount = ({ user }: { user: User }) => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   const formik = useFormik({
     initialValues: {
@@ -25,11 +25,11 @@ const UpdateAccount = ({ user }: { user: User }) => {
     validationSchema: schema,
     onSubmit: async (values) => {
       try {
-        await axios.put<ApiResponse<User>>("/api/users", {
+        await axios.put<ApiResponse<User>>('/api/users', {
           ...values,
         });
 
-        toast.success(t("successfully-updated"));
+        toast.success(t('successfully-updated'));
       } catch (error) {
         toast.error(getAxiosError(error));
       }
@@ -45,7 +45,7 @@ const UpdateAccount = ({ user }: { user: User }) => {
               type="text"
               label="Name"
               name="name"
-              placeholder={t("your-name")}
+              placeholder={t('your-name')}
               value={formik.values.name}
               error={formik.touched.name ? formik.errors.name : undefined}
               onChange={formik.handleChange}
@@ -54,7 +54,7 @@ const UpdateAccount = ({ user }: { user: User }) => {
               type="email"
               label="Email"
               name="email"
-              placeholder={t("your-email")}
+              placeholder={t('your-email')}
               value={formik.values.email}
               error={formik.touched.email ? formik.errors.email : undefined}
               onChange={formik.handleChange}
@@ -70,7 +70,7 @@ const UpdateAccount = ({ user }: { user: User }) => {
               disabled={!formik.dirty || !formik.isValid}
               size="sm"
             >
-              {t("save-changes")}
+              {t('save-changes')}
             </Button>
           </div>
         </Card.Footer>

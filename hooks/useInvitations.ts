@@ -1,8 +1,7 @@
-import useSWR, { mutate } from "swr";
-
-import fetcher from "@/lib/fetcher";
-import { ApiResponse } from "types";
-import { Invitation } from "@prisma/client";
+import fetcher from '@/lib/fetcher';
+import { Invitation } from '@prisma/client';
+import useSWR, { mutate } from 'swr';
+import { ApiResponse } from 'types';
 
 const useInvitations = (slug: string) => {
   const url = `/api/teams/${slug}/invitations`;

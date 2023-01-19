@@ -1,6 +1,5 @@
-import type { User } from "next-auth";
-
-import { Role, TeamMember } from "@prisma/client";
+import { Role, TeamMember } from '@prisma/client';
+import type { User } from 'next-auth';
 
 export const isTeamAdmin = (user: User, members: TeamMember[]) => {
   return (
@@ -15,34 +14,34 @@ export const isTeamAdmin = (user: User, members: TeamMember[]) => {
 export const teamNavigations = (slug: string, activeTab: string) => {
   return [
     {
-      name: "Members",
+      name: 'Members',
       href: `/teams/${slug}/members`,
-      active: activeTab === "members",
+      active: activeTab === 'members',
     },
     {
-      name: "Settings",
+      name: 'Settings',
       href: `/teams/${slug}/settings`,
-      active: activeTab === "settings",
+      active: activeTab === 'settings',
     },
     {
-      name: "SAML SSO",
+      name: 'SAML SSO',
       href: `/teams/${slug}/saml`,
-      active: activeTab === "saml",
+      active: activeTab === 'saml',
     },
     {
-      name: "Directory Sync (SCIM)",
+      name: 'Directory Sync (SCIM)',
       href: `/teams/${slug}/directory-sync`,
-      active: activeTab === "directory-sync",
+      active: activeTab === 'directory-sync',
     },
     {
-      name: "Audit Logs",
+      name: 'Audit Logs',
       href: `/teams/${slug}/audit-logs`,
-      active: activeTab === "audit-logs",
+      active: activeTab === 'audit-logs',
     },
     {
-      name: "Webhooks",
+      name: 'Webhooks',
       href: `/teams/${slug}/webhooks`,
-      active: activeTab === "webhooks",
+      active: activeTab === 'webhooks',
     },
   ];
 };

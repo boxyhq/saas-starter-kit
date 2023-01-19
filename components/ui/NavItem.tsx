@@ -1,5 +1,5 @@
-import NextLink from "next/link";
-import classNames from "classnames";
+import classNames from 'classnames';
+import NextLink from 'next/link';
 
 const NavItem = ({
   href,
@@ -22,8 +22,8 @@ const NavItem = ({
         href={href}
         onClick={onClick}
         className={classNames(
-          active ? "bg-gray-100" : "",
-          "flex items-center rounded-lg p-2 text-sm font-semibold text-gray-900 hover:bg-gray-100"
+          active ? 'bg-gray-100' : '',
+          'flex items-center rounded-lg p-2 text-sm font-semibold text-gray-900 hover:bg-gray-100'
         )}
       >
         <Icon className="h-5 w-5" />

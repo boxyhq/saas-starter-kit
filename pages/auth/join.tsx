@@ -1,19 +1,18 @@
-import type { ReactElement } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { GetServerSidePropsContext } from "next";
-import Link from "next/link";
-import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-
-import type { NextPageWithLayout } from "types";
-import { AuthLayout } from "@/components/layouts";
-import { inferSSRProps } from "@/lib/inferSSRProps";
-import { getParsedCookie } from "@/lib/cookie";
-import JoinWithInvitation from "@/components/interfaces/Auth/JoinWithInvitation";
-import Join from "@/components/interfaces/Auth/Join";
-import GithubButton from "@/components/interfaces/Auth/GithubButton";
-import GoogleButton from "@/components/interfaces/Auth/GoogleButton";
+import GithubButton from '@/components/interfaces/Auth/GithubButton';
+import GoogleButton from '@/components/interfaces/Auth/GoogleButton';
+import Join from '@/components/interfaces/Auth/Join';
+import JoinWithInvitation from '@/components/interfaces/Auth/JoinWithInvitation';
+import { AuthLayout } from '@/components/layouts';
+import { getParsedCookie } from '@/lib/cookie';
+import { inferSSRProps } from '@/lib/inferSSRProps';
+import { GetServerSidePropsContext } from 'next';
+import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import type { ReactElement } from 'react';
+import type { NextPageWithLayout } from 'types';
 
 const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   inviteToken,
@@ -21,10 +20,10 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 }) => {
   const { status } = useSession();
   const router = useRouter();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
-  if (status === "authenticated") {
-    router.push("/");
+  if (status === 'authenticated') {
+    router.push('/');
   }
 
   return (
@@ -43,10 +42,10 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
       </div>
 
       <p className="text-center text-sm text-gray-600">
-        {t("already-have-an-account")}
+        {t('already-have-an-account')}
         <Link href="/auth/login">
           <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;{t("sign-in")}
+            &nbsp;{t('sign-in')}
           </a>
         </Link>
       </p>
@@ -74,9 +73,9 @@ export const getServerSideProps = async (
 
   return {
     props: {
-      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
+      ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       inviteToken: cookieParsed.token,
-      next: cookieParsed.url ?? "/auth/login",
+      next: cookieParsed.url ?? '/auth/login',
     },
   };
 };

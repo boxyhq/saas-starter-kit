@@ -1,16 +1,16 @@
-import type { NextPageWithLayout } from "types";
-import type { ReactElement } from "react";
-import Link from "next/link";
-import { useTranslation } from "next-i18next";
-import FeatureSection from "@/components/ui/landing/FeatureSection";
-import HeroSection from "@/components/ui/landing/HeroSection";
-import PricingSection from "@/components/ui/landing/PricingSection";
-import FAQSection from "@/components/ui/landing/FAQSection";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { GetServerSidePropsContext } from "next";
+import FAQSection from '@/components/ui/landing/FAQSection';
+import FeatureSection from '@/components/ui/landing/FeatureSection';
+import HeroSection from '@/components/ui/landing/HeroSection';
+import PricingSection from '@/components/ui/landing/PricingSection';
+import { GetServerSidePropsContext } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
+import type { ReactElement } from 'react';
+import type { NextPageWithLayout } from 'types';
 
 const Home: NextPageWithLayout = () => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   return (
     <div className="container mx-auto">
@@ -23,10 +23,10 @@ const Home: NextPageWithLayout = () => {
         <div className="flex-none">
           <ul className="menu menu-horizontal p-0">
             <li>
-              <a>{t("sign-up")}</a>
+              <a>{t('sign-up')}</a>
             </li>
             <li>
-              <a>{t("item-3")}</a>
+              <a>{t('item-3')}</a>
             </li>
           </ul>
         </div>
@@ -45,7 +45,7 @@ const Home: NextPageWithLayout = () => {
 export async function getStaticProps({ locale }: GetServerSidePropsContext) {
   return {
     props: {
-      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
+      ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       // Will be passed to the page component as props
     },
   };

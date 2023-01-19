@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
-import { Team, Role } from "@prisma/client";
+import { prisma } from '@/lib/prisma';
+import { Role, Team } from '@prisma/client';
 
 export const createTeam = async (param: {
   userId: string;

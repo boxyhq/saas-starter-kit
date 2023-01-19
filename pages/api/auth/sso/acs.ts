@@ -1,6 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-
-import jackson from "@/lib/jackson";
+import jackson from '@/lib/jackson';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,10 +8,10 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
-    case "POST":
+    case 'POST':
       return await handlePOST(req, res);
     default:
-      res.setHeader("Allow", "POST");
+      res.setHeader('Allow', 'POST');
       res.status(405).json({
         error: { message: `Method ${method} Not Allowed` },
       });
@@ -31,7 +30,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!redirect_url) {
     return res.status(400).json({
-      error: { message: "No redirect URL found." },
+      error: { message: 'No redirect URL found.' },
     });
   }
 

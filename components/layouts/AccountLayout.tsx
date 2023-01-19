@@ -1,7 +1,6 @@
-import React from "react";
-
-import { Sidebar, Navbar, Error, Loading } from "@/components/ui";
-import useTeams from "hooks/useTeams";
+import { Error, Loading, Navbar, Sidebar } from '@/components/ui';
+import useTeams from 'hooks/useTeams';
+import React from 'react';
 
 export default function AccountLayout({
   children,

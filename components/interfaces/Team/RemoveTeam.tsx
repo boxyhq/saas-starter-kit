@@ -1,20 +1,20 @@
-import React from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { Button } from "react-daisyui";
-import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
-import { Team } from "@prisma/client";
-import { Card } from "@/components/ui";
+import { Card } from '@/components/ui';
+import { Team } from '@prisma/client';
+import axios from 'axios';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { Button } from 'react-daisyui';
+import toast from 'react-hot-toast';
 
 const RemoveTeam = ({ team }: { team: Team }) => {
   const router = useRouter();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const [loading, setLoading] = React.useState(false);
 
   const removeTeam = async () => {
     const confirm = window.confirm(
-      "Are you sure you want to remove this team? This action cannot be undone."
+      'Are you sure you want to remove this team? This action cannot be undone.'
     );
 
     if (!confirm) return;
@@ -33,8 +33,8 @@ const RemoveTeam = ({ team }: { team: Team }) => {
     }
 
     if (data) {
-      toast.success("Team removed successfully!");
-      return router.push("/teams");
+      toast.success('Team removed successfully!');
+      return router.push('/teams');
     }
   };
 
@@ -42,7 +42,7 @@ const RemoveTeam = ({ team }: { team: Team }) => {
     <Card heading="Remove Team">
       <Card.Body className="px-3 py-3">
         <div className="space-y-3">
-          <p className="text-sm">{t("remove-team-warning")}</p>
+          <p className="text-sm">{t('remove-team-warning')}</p>
           <Button
             color="error"
             size="sm"
@@ -50,7 +50,7 @@ const RemoveTeam = ({ team }: { team: Team }) => {
             loading={loading}
             className="text-white"
           >
-            {t("remove-team")}
+            {t('remove-team')}
           </Button>
         </div>
       </Card.Body>

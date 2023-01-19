@@ -1,6 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-
-import jackson from "@/lib/jackson";
+import jackson from '@/lib/jackson';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,5 +8,5 @@ export default async function handler(
   const { directorySync } = await jackson();
 
   // List of directory sync providers
-  res.status(200).json({ data: directorySync.providers(), error: null });
+  res.status(200).json({ data: directorySync.providers() });
 }

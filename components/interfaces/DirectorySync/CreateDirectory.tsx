@@ -1,16 +1,16 @@
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import axios from "axios";
-import { Button, Modal } from "react-daisyui";
-import toast from "react-hot-toast";
-import useSWR from "swr";
-import { useTranslation } from "next-i18next";
-import type { Directory } from "@boxyhq/saml-jackson";
-import type { ApiResponse } from "types";
-import { Team } from "@prisma/client";
-import fetcher from "@/lib/fetcher";
-import { InputWithLabel, Loading } from "@/components/ui";
-import useDirectory from "hooks/useDirectory";
+import { InputWithLabel, Loading } from '@/components/ui';
+import fetcher from '@/lib/fetcher';
+import type { Directory } from '@boxyhq/saml-jackson';
+import { Team } from '@prisma/client';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import useDirectory from 'hooks/useDirectory';
+import { useTranslation } from 'next-i18next';
+import { Button, Modal } from 'react-daisyui';
+import toast from 'react-hot-toast';
+import useSWR from 'swr';
+import type { ApiResponse } from 'types';
+import * as Yup from 'yup';
 
 const CreateDirectory = ({
   visible,
@@ -21,14 +21,14 @@ const CreateDirectory = ({
   setVisible: (visible: boolean) => void;
   team: Team;
 }) => {
-  const { t } = useTranslation("common");
-  const { data } = useSWR("/api/idp", fetcher);
+  const { t } = useTranslation('common');
+  const { data } = useSWR('/api/idp', fetcher);
   const { mutateDirectory } = useDirectory(team.slug as string);
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      provider: "generic-scim-v2",
+      name: '',
+      provider: 'generic-scim-v2',
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
@@ -53,7 +53,7 @@ const CreateDirectory = ({
       }
 
       if (directory) {
-        toast.success(t("directory-connection-created"));
+        toast.success(t('directory-connection-created'));
       }
 
       mutateDirectory();
@@ -71,11 +71,11 @@ const CreateDirectory = ({
     <Modal open={visible}>
       <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header className="font-bold">
-          {t("create-directory-connection")}
+          {t('create-directory-connection')}
         </Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-2">
-            <p>{t("create-directory-message")}</p>
+            <p>{t('create-directory-message')}</p>
             <InputWithLabel
               name="name"
               onChange={formik.handleChange}
@@ -86,7 +86,7 @@ const CreateDirectory = ({
             <div className="form-control w-full">
               <label className="label">
                 <span className="label-text">
-                  {t("directory-sync-provider")}
+                  {t('directory-sync-provider')}
                 </span>
                 <span className="label-text-alt"></span>
               </label>
@@ -113,7 +113,7 @@ const CreateDirectory = ({
             loading={formik.isSubmitting}
             active={formik.dirty}
           >
-            {t("create-directory")}
+            {t('create-directory')}
           </Button>
           <Button
             type="button"
@@ -122,7 +122,7 @@ const CreateDirectory = ({
               setVisible(!visible);
             }}
           >
-            {t("close")}
+            {t('close')}
           </Button>
         </Modal.Actions>
       </form>

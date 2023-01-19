@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const Card = (props: { heading: string; children: React.ReactNode }) => {
   const { heading, children } = props;
