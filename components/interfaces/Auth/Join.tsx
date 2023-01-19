@@ -1,25 +1,25 @@
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { Button } from "react-daisyui";
-import toast from "react-hot-toast";
-import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
-import type { User } from "@prisma/client";
-import type { ApiResponse } from "types";
-import { InputWithLabel } from "@/components/ui";
-import axios from "axios";
-import { getAxiosError } from "@/lib/common";
+import { InputWithLabel } from '@/components/ui';
+import { getAxiosError } from '@/lib/common';
+import type { User } from '@prisma/client';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import { Button } from 'react-daisyui';
+import toast from 'react-hot-toast';
+import type { ApiResponse } from 'types';
+import * as Yup from 'yup';
 
 const Join = () => {
   const router = useRouter();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      email: "",
-      password: "",
-      team: "",
+      name: '',
+      email: '',
+      password: '',
+      team: '',
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
@@ -29,13 +29,13 @@ const Join = () => {
     }),
     onSubmit: async (values) => {
       try {
-        await axios.post<ApiResponse<User>>("/api/auth/join", {
+        await axios.post<ApiResponse<User>>('/api/auth/join', {
           ...values,
         });
 
         formik.resetForm();
-        toast.success(t("successfully-joined"));
-        router.push("/auth/login");
+        toast.success(t('successfully-joined'));
+        router.push('/auth/login');
       } catch (error: any) {
         toast.error(getAxiosError(error));
       }
@@ -90,9 +90,9 @@ const Join = () => {
           active={formik.dirty}
           fullWidth
         >
-          {t("create-account")}
+          {t('create-account')}
         </Button>
-        <p className="text-sm">{t("sign-up-message")}</p>
+        <p className="text-sm">{t('sign-up-message')}</p>
       </div>
     </form>
   );

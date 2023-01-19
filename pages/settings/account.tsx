@@ -1,10 +1,10 @@
-import type { NextPageWithLayout } from "types";
-import type { GetServerSidePropsContext } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { getSession } from "@/lib/session";
-import { getUserBySession } from "models/user";
-import { inferSSRProps } from "@/lib/inferSSRProps";
-import { UpdateAccount } from "@/components/interfaces/Account";
+import { UpdateAccount } from '@/components/interfaces/Account';
+import { inferSSRProps } from '@/lib/inferSSRProps';
+import { getSession } from '@/lib/session';
+import { getUserBySession } from 'models/user';
+import type { GetServerSidePropsContext } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import type { NextPageWithLayout } from 'types';
 
 const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   user,
@@ -26,7 +26,7 @@ export const getServerSideProps = async (
 
   return {
     props: {
-      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
+      ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       user,
     },
   };

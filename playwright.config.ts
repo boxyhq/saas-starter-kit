@@ -1,33 +1,34 @@
-import { devices, PlaywrightTestConfig } from "@playwright/test";
+import { PlaywrightTestConfig, devices } from '@playwright/test';
+
 const config: PlaywrightTestConfig = {
   projects: [
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
     },
     {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
     },
   ],
   reporter: [
     [
-      "html",
+      'html',
       {
-        outputFolder: "report",
-        open: "never",
+        outputFolder: 'report',
+        open: 'never',
       },
     ],
   ],
   webServer: {
-    command: "npm run start",
-    url: "http://localhost:4002",
+    command: 'npm run start',
+    url: 'http://localhost:4002',
   },
   use: {
     headless: true,
     ignoreHTTPSErrors: true,
-    baseURL: "http://localhost:4002",
-    video: "off",
+    baseURL: 'http://localhost:4002',
+    video: 'off',
   },
 };
 export default config;

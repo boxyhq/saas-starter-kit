@@ -1,20 +1,19 @@
-import type { NextPageWithLayout } from "types";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { Button } from "react-daisyui";
-import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-
-import { Card } from "@/components/ui";
-import { Loading, Error } from "@/components/ui";
-import { TeamTab } from "@/components/interfaces/Team";
-import useTeam from "hooks/useTeam";
 import {
   CreateDirectory,
   Directory,
-} from "@/components/interfaces/DirectorySync";
-import useDirectory from "hooks/useDirectory";
-import { GetServerSidePropsContext } from "next";
+} from '@/components/interfaces/DirectorySync';
+import { TeamTab } from '@/components/interfaces/Team';
+import { Card } from '@/components/ui';
+import { Error, Loading } from '@/components/ui';
+import useDirectory from 'hooks/useDirectory';
+import useTeam from 'hooks/useTeam';
+import { GetServerSidePropsContext } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { Button } from 'react-daisyui';
+import type { NextPageWithLayout } from 'types';
 
 const DirectorySync: NextPageWithLayout = () => {
   const router = useRouter();
@@ -24,7 +23,7 @@ const DirectorySync: NextPageWithLayout = () => {
 
   const { isLoading, isError, team } = useTeam(slug as string);
   const { directory } = useDirectory(slug as string);
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   if (isLoading || !team) {
     return <Loading />;
@@ -41,7 +40,7 @@ const DirectorySync: NextPageWithLayout = () => {
       <Card heading="Directory Sync">
         <Card.Body className="px-3 py-3">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-sm">{t("provision")}</p>
+            <p className="text-sm">{t('provision')}</p>
             {directory === null ? (
               <Button
                 size="sm"
@@ -49,7 +48,7 @@ const DirectorySync: NextPageWithLayout = () => {
                 variant="outline"
                 color="secondary"
               >
-                {t("enable")}
+                {t('enable')}
               </Button>
             ) : (
               <Button
@@ -59,7 +58,7 @@ const DirectorySync: NextPageWithLayout = () => {
                 color="error"
                 disabled
               >
-                {t("remove")}
+                {t('remove')}
               </Button>
             )}
           </div>
@@ -71,10 +70,12 @@ const DirectorySync: NextPageWithLayout = () => {
   );
 };
 
-export async function getServerSideProps({ locale }: GetServerSidePropsContext) {
+export async function getServerSideProps({
+  locale,
+}: GetServerSidePropsContext) {
   return {
     props: {
-      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
+      ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
     },
   };
 }

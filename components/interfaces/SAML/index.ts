@@ -1,1 +1,1 @@
-export { default as ConfigureSAML } from "./ConfigureSAML";
+export { default as ConfigureSAML } from './ConfigureSAML';

@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 type TableProps = {
   body: JSX.Element | JSX.Element[];
@@ -29,12 +29,12 @@ type ThProps = {
 };
 
 const Th: React.FC<ThProps> = ({ children, className, style }) => {
-  const classes = ["px-6 py-3 text-left"];
+  const classes = ['px-6 py-3 text-left'];
 
   if (className) classes.push(className);
 
   return (
-    <th className={classes.join(" ")} style={style}>
+    <th className={classes.join(' ')} style={style}>
       <span>{children}</span>
     </th>
   );

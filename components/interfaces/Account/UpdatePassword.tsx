@@ -1,11 +1,11 @@
-import { useFormik } from "formik";
-import axios from "axios";
-import * as Yup from "yup";
-import toast from "react-hot-toast";
-import { Button } from "react-daisyui";
-import { useTranslation } from "next-i18next";
-import { Card, InputWithLabel } from "@/components/ui";
-import { getAxiosError } from "@/lib/common";
+import { Card, InputWithLabel } from '@/components/ui';
+import { getAxiosError } from '@/lib/common';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import { useTranslation } from 'next-i18next';
+import { Button } from 'react-daisyui';
+import toast from 'react-hot-toast';
+import * as Yup from 'yup';
 
 const schema = Yup.object().shape({
   currentPassword: Yup.string().required(),
@@ -13,19 +13,19 @@ const schema = Yup.object().shape({
 });
 
 const UpdatePassword = () => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   const formik = useFormik({
     initialValues: {
-      currentPassword: "",
-      newPassword: "",
+      currentPassword: '',
+      newPassword: '',
     },
     validationSchema: schema,
     onSubmit: async (values) => {
       try {
         await axios.put(`/api/password`, values);
 
-        toast.success(t("successfully-updated"));
+        toast.success(t('successfully-updated'));
         formik.resetForm();
       } catch (error: any) {
         toast.error(getAxiosError(error));
@@ -76,7 +76,7 @@ const UpdatePassword = () => {
                 disabled={!formik.dirty || !formik.isValid}
                 size="sm"
               >
-                {t("change-password")}
+                {t('change-password')}
               </Button>
             </div>
           </Card.Footer>

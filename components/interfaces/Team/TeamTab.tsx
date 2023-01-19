@@ -1,8 +1,7 @@
-import Link from "next/link";
-import classNames from "classnames";
-
-import type { Team } from "@prisma/client";
-import { teamNavigations } from "@/lib/teams";
+import { teamNavigations } from '@/lib/teams';
+import type { Team } from '@prisma/client';
+import classNames from 'classnames';
+import Link from 'next/link';
 
 const TeamTab = ({ activeTab, team }: { activeTab: string; team: Team }) => {
   const navigations = teamNavigations(team.slug, activeTab);
@@ -18,10 +17,10 @@ const TeamTab = ({ activeTab, team }: { activeTab: string; team: Team }) => {
             <Link href={menu.href} key={menu.href}>
               <a
                 className={classNames(
-                  "inline-flex items-center border-b-2 py-4 text-sm font-medium",
+                  'inline-flex items-center border-b-2 py-4 text-sm font-medium',
                   menu.active
-                    ? "border-gray-900 text-gray-700"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    ? 'border-gray-900 text-gray-700'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 )}
               >
                 {menu.name}

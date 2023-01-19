@@ -1,18 +1,18 @@
-import NextAuth, { NextAuthOptions, Account, User } from "next-auth";
-import EmailProvider from "next-auth/providers/email";
-import GitHubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import CredentialsProvider from "next-auth/providers/credentials";
-import type { OAuthTokenReq } from "@boxyhq/saml-jackson";
-import { prisma } from "@/lib/prisma";
-import env from "@/lib/env";
-import jackson from "@/lib/jackson";
-import { createUser, getUser } from "models/user";
-import { addTeamMember, getTeam } from "models/team";
-import { hashPassword, verifyPassword } from "@/lib/auth";
-import { createRandomString } from "@/lib/common";
-import { getAccount } from "models/account";
+import { hashPassword, verifyPassword } from '@/lib/auth';
+import { createRandomString } from '@/lib/common';
+import env from '@/lib/env';
+import jackson from '@/lib/jackson';
+import { prisma } from '@/lib/prisma';
+import type { OAuthTokenReq } from '@boxyhq/saml-jackson';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { getAccount } from 'models/account';
+import { addTeamMember, getTeam } from 'models/team';
+import { createUser, getUser } from 'models/user';
+import NextAuth, { Account, NextAuthOptions, User } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import EmailProvider from 'next-auth/providers/email';
+import GitHubProvider from 'next-auth/providers/github';
+import GoogleProvider from 'next-auth/providers/google';
 
 const adapter = PrismaAdapter(prisma);
 
@@ -20,14 +20,14 @@ export const authOptions: NextAuthOptions = {
   adapter,
   providers: [
     CredentialsProvider({
-      id: "credentials",
+      id: 'credentials',
       credentials: {
-        email: { type: "email" },
-        password: { type: "password" },
+        email: { type: 'email' },
+        password: { type: 'password' },
       },
       async authorize(credentials, req) {
         if (!credentials) {
-          throw new Error("No credentials found.");
+          throw new Error('No credentials found.');
         }
 
         const email = credentials?.email as string;
@@ -54,23 +54,23 @@ export const authOptions: NextAuthOptions = {
     }),
 
     CredentialsProvider({
-      id: "saml-sso",
+      id: 'saml-sso',
       credentials: {
-        code: { type: "text" },
-        state: { type: "text" },
+        code: { type: 'text' },
+        state: { type: 'text' },
       },
       async authorize(credentials) {
         const code = credentials?.code;
 
         if (!code) {
-          throw new Error("No code found.");
+          throw new Error('No code found.');
         }
 
         const { oauthController } = await jackson();
 
         const { access_token } = await oauthController.token({
-          client_id: "dummy",
-          client_secret: "dummy",
+          client_id: 'dummy',
+          client_secret: 'dummy',
           code,
           redirect_uri: env.saml.callback,
         } as OAuthTokenReq);
@@ -120,24 +120,24 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/auth/login",
-    verifyRequest: "/auth/verify-request",
+    signIn: '/auth/login',
+    verifyRequest: '/auth/verify-request',
   },
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   secret: env.nextAuth.secret,
   callbacks: {
     async signIn({ user, account, profile }) {
       if (
-        account.provider === "email" ||
-        account.provider === "credentials" ||
-        account.provider === "saml-sso"
+        account.provider === 'email' ||
+        account.provider === 'credentials' ||
+        account.provider === 'saml-sso'
       ) {
         return true;
       }
 
-      if (account.provider != "github" && account.provider != "google") {
+      if (account.provider != 'github' && account.provider != 'google') {
         return false;
       }
 
@@ -188,7 +188,7 @@ const linkAccount = async (user: User, account: Account) => {
     providerAccountId: account.providerAccountId,
     userId: user.id,
     provider: account.provider,
-    type: "oauth",
+    type: 'oauth',
     scope: account.scope,
     token_type: account.token_type,
     access_token: account.access_token,

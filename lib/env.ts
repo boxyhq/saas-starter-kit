@@ -1,13 +1,13 @@
 const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
-  product: "boxyhq",
-  redirectAfterSignIn: "/teams/switch",
+  product: 'boxyhq',
+  redirectAfterSignIn: '/teams/switch',
 
   // SAML Jackson configuration
   saml: {
-    issuer: "https://saml.boxyhq.com",
-    path: "/api/auth/sso/acs",
+    issuer: 'https://saml.boxyhq.com',
+    path: '/api/auth/sso/acs',
     callback: `${process.env.APP_URL}/auth/sso`,
     acs: `${process.env.APP_URL}/api/auth/sso/acs`,
   },

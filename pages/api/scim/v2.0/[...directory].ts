@@ -1,15 +1,15 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { hashPassword } from '@/lib/auth';
+import { createRandomString, extractAuthToken } from '@/lib/common';
+import jackson from '@/lib/jackson';
+import { prisma } from '@/lib/prisma';
 import type {
-  DirectorySyncRequest,
   DirectorySyncEvent,
-} from "@boxyhq/saml-jackson";
-import jackson from "@/lib/jackson";
-import { createRandomString, extractAuthToken } from "@/lib/common";
-import { deleteUser, getUser } from "models/user";
-import { addTeamMember } from "models/team";
-import { prisma } from "@/lib/prisma";
-import { hashPassword } from "@/lib/auth";
-import { Role } from "@prisma/client";
+  DirectorySyncRequest,
+} from '@boxyhq/saml-jackson';
+import { Role } from '@prisma/client';
+import { addTeamMember } from 'models/team';
+import { deleteUser, getUser } from 'models/user';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,7 +28,7 @@ export default async function handler(
     body: body ? JSON.parse(body) : undefined,
     directoryId,
     resourceId,
-    resourceType: path === "Users" ? "users" : "groups",
+    resourceType: path === 'Users' ? 'users' : 'groups',
     apiSecret: extractAuthToken(req),
     query: {
       count: req.query.count ? parseInt(req.query.count as string) : undefined,
@@ -52,7 +52,7 @@ const handleEvents = async (event: DirectorySyncEvent) => {
   const { event: action, tenant: teamId, data } = event;
 
   // User has been created
-  if (action === "user.created" && "email" in data) {
+  if (action === 'user.created' && 'email' in data) {
     const user = await prisma.user.upsert({
       where: {
         email: data.email,
@@ -71,7 +71,7 @@ const handleEvents = async (event: DirectorySyncEvent) => {
   }
 
   // User has been updated
-  if (action === "user.updated" && "email" in data) {
+  if (action === 'user.updated' && 'email' in data) {
     if (data.active === true) {
       const user = await prisma.user.upsert({
         where: {
@@ -104,7 +104,7 @@ const handleEvents = async (event: DirectorySyncEvent) => {
   }
 
   // User has been removed
-  if (action === "user.deleted" && "email" in data) {
+  if (action === 'user.deleted' && 'email' in data) {
     await deleteUser({ email: data.email });
   }
 };

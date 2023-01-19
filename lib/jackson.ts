@@ -1,19 +1,19 @@
 import jackson, {
-  IDirectorySyncController,
   IConnectionAPIController,
+  IDirectorySyncController,
   IOAuthController,
   JacksonOption,
-} from "@boxyhq/saml-jackson";
+} from '@boxyhq/saml-jackson';
 
-import env from "./env";
+import env from './env';
 
 const opts = {
   externalUrl: env.appUrl,
   samlPath: env.saml.path,
   samlAudience: env.saml.issuer,
   db: {
-    engine: "sql",
-    type: "postgres",
+    engine: 'sql',
+    type: 'postgres',
     url: env.databaseUrl,
   },
   openid: {},

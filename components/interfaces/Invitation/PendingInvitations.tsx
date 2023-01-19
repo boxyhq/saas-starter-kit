@@ -1,19 +1,19 @@
-import React from "react";
-import { Button } from "react-daisyui";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { useTranslation } from "next-i18next";
-import { Card, LetterAvatar, Loading, Error } from "@/components/ui";
-import { Invitation, Team } from "@prisma/client";
-import useInvitations from "hooks/useInvitations";
-import { ApiResponse } from "types";
+import { Card, Error, LetterAvatar, Loading } from '@/components/ui';
+import { Invitation, Team } from '@prisma/client';
+import axios from 'axios';
+import useInvitations from 'hooks/useInvitations';
+import { useTranslation } from 'next-i18next';
+import React from 'react';
+import { Button } from 'react-daisyui';
+import toast from 'react-hot-toast';
+import { ApiResponse } from 'types';
 
 const PendingInvitations = ({ team }: { team: Team }) => {
   const { isLoading, isError, invitations, mutateInvitation } = useInvitations(
     team.slug
   );
 
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   if (isLoading || !invitations) {
     return <Loading />;
@@ -40,7 +40,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
 
     if (response.data) {
       mutateInvitation();
-      toast.success(t("invitation-deleted"));
+      toast.success(t('invitation-deleted'));
     }
   };
 
@@ -55,16 +55,16 @@ const PendingInvitations = ({ team }: { team: Team }) => {
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3" colSpan={2}>
-                {t("email")}
+                {t('email')}
               </th>
               <th scope="col" className="px-6 py-3">
-                {t("role")}
+                {t('role')}
               </th>
               <th scope="col" className="px-6 py-3">
-                {t("created-at")}
+                {t('created-at')}
               </th>
               <th scope="col" className="px-6 py-3">
-                {t("action")}
+                {t('action')}
               </th>
             </tr>
           </thead>
@@ -94,7 +94,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
                         deleteInvitation(invitation);
                       }}
                     >
-                      {t("remove")}
+                      {t('remove')}
                     </Button>
                   </td>
                 </tr>

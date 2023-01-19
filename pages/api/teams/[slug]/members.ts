@@ -1,15 +1,15 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "@/lib/session";
+import { prisma } from '@/lib/prisma';
+import { getSession } from '@/lib/session';
+import { sendEvent } from '@/lib/svix';
+import { Role } from '@prisma/client';
 import {
   getTeam,
-  isTeamMember,
   getTeamMembers,
-  removeTeamMember,
   isTeamAdmin,
-} from "models/team";
-import { Role } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
-import { sendEvent } from "@/lib/svix";
+  isTeamMember,
+  removeTeamMember,
+} from 'models/team';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,16 +18,16 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
-    case "GET":
+    case 'GET':
       return await handleGET(req, res);
-    case "DELETE":
+    case 'DELETE':
       return await handleDELETE(req, res);
-    case "PUT":
+    case 'PUT':
       return await handlePUT(req, res);
-    case "PATCH":
+    case 'PATCH':
       return await handlePATCH(req, res);
     default:
-      res.setHeader("Allow", "GET, DELETE, PUT, PATCH");
+      res.setHeader('Allow', 'GET, DELETE, PUT, PATCH');
       res.status(405).json({
         error: { message: `Method ${method} Not Allowed` },
       });
@@ -42,7 +42,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!session) {
     return res.status(400).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -51,7 +51,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamMember(userId, team.id))) {
     return res.status(200).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -69,7 +69,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!session) {
     return res.status(400).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -77,13 +77,13 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamAdmin(session.user.id, team.id))) {
     return res.status(400).json({
-      error: { message: "You are not allowed to perform this action." },
+      error: { message: 'You are not allowed to perform this action.' },
     });
   }
 
   const teamMember = await removeTeamMember(team.id, memberId);
 
-  await sendEvent(team.id, "member.removed", teamMember);
+  await sendEvent(team.id, 'member.removed', teamMember);
 
   return res.status(200).json({ data: {} });
 };
@@ -96,7 +96,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!session) {
     return res.status(400).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -105,7 +105,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamMember(userId, team.id))) {
     return res.status(400).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -118,7 +118,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (totalTeamOwners <= 1) {
     return res.status(400).json({
-      error: { message: "A team should have at least one owner." },
+      error: { message: 'A team should have at least one owner.' },
     });
   }
 
@@ -136,7 +136,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!session) {
     return res.status(400).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -145,7 +145,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamAdmin(userId, team.id))) {
     return res.status(400).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 

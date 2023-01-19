@@ -1,10 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-
-import { createUser, getUser } from "models/user";
-import { createTeam, isTeamExists } from "models/team";
-import { slugify } from "@/lib/common";
-import { hashPassword } from "@/lib/auth";
-import { sendWelcomeEmail } from "@/lib/email/sendWelcomeEmail";
+import { hashPassword } from '@/lib/auth';
+import { slugify } from '@/lib/common';
+import { sendWelcomeEmail } from '@/lib/email/sendWelcomeEmail';
+import { createTeam, isTeamExists } from 'models/team';
+import { createUser, getUser } from 'models/user';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,10 +12,10 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
-    case "POST":
+    case 'POST':
       return await handlePOST(req, res);
     default:
-      res.setHeader("Allow", "POST");
+      res.setHeader('Allow', 'POST');
       res.status(405).json({
         error: { message: `Method ${method} Not Allowed` },
       });
@@ -33,7 +32,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({
       error: {
         message:
-          "An user with this email already exists or the email was invalid.",
+          'An user with this email already exists or the email was invalid.',
       },
     });
   }
@@ -47,7 +46,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     if (nameCollisions > 0) {
       return res.status(400).json({
         error: {
-          message: "A team with this name already exists in our database.",
+          message: 'A team with this name already exists in our database.',
         },
       });
     }

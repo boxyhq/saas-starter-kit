@@ -41,19 +41,20 @@
     "react-daisyui": "2.4.1",
     "react-dom": "18.0.0",
     "react-hot-toast": "2.2.0",
+    "react-icons": "4.7.1",
     "superjson": "1.9.1",
     "svix": "0.67.0",
     "swr": "2.0.0",
     "uuid": "8.3.2",
     "yup": "0.32.11",
-    "zod": "3.19.1",
-    "react-icons": "4.7.1"
+    "zod": "3.19.1"
   },
   "devDependencies": {
     "@playwright/test": "1.27.1",
     "@tailwindcss/forms": "0.5.3",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "13.4.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/bcryptjs": "2.4.2",
     "@types/jest": "29.2.3",
     "@types/mocha": "10.0.1",

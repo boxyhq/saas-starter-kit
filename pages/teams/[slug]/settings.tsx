@@ -1,14 +1,14 @@
-import { useRouter } from "next/router";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import useTeam from "hooks/useTeam";
 import {
-  TeamTab,
   RemoveTeam,
   TeamSettings,
-} from "@/components/interfaces/Team";
-import { Error, Loading } from "@/components/ui";
-import type { NextPageWithLayout } from "types";
-import type { GetServerSidePropsContext } from "next";
+  TeamTab,
+} from '@/components/interfaces/Team';
+import { Error, Loading } from '@/components/ui';
+import useTeam from 'hooks/useTeam';
+import type { GetServerSidePropsContext } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import type { NextPageWithLayout } from 'types';
 
 const Settings: NextPageWithLayout = () => {
   const router = useRouter();
@@ -39,7 +39,7 @@ export async function getServerSideProps({
 }: GetServerSidePropsContext) {
   return {
     props: {
-      ...(locale ? await serverSideTranslations(locale, ["common"]) : {}),
+      ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
     },
   };
 }

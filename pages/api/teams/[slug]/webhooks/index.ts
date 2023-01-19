@@ -1,14 +1,13 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { EndpointIn } from "svix";
-
-import { getSession } from "@/lib/session";
-import { getTeam, isTeamMember } from "models/team";
+import { getSession } from '@/lib/session';
 import {
-  findOrCreateApp,
   createWebhook,
-  listWebhooks,
   deleteWebhook,
-} from "@/lib/svix";
+  findOrCreateApp,
+  listWebhooks,
+} from '@/lib/svix';
+import { getTeam, isTeamMember } from 'models/team';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { EndpointIn } from 'svix';
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,14 +16,14 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
-    case "POST":
+    case 'POST':
       return handlePOST(req, res);
-    case "GET":
+    case 'GET':
       return handleGET(req, res);
-    case "DELETE":
+    case 'DELETE':
       return handleDELETE(req, res);
     default:
-      res.setHeader("Allow", ["POST", "GET", "DELETE"]);
+      res.setHeader('Allow', ['POST', 'GET', 'DELETE']);
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
@@ -45,7 +44,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await isTeamMember(userId, team?.id))) {
     return res.status(200).json({
       data: null,
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -60,7 +59,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   };
 
   if (eventTypes.length > 0) {
-    data["filterTypes"] = eventTypes;
+    data['filterTypes'] = eventTypes;
   }
 
   const endpoint = await createWebhook(app.id, data);
@@ -80,7 +79,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await isTeamMember(userId, team?.id))) {
     return res.status(200).json({
       data: null,
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -104,7 +103,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await isTeamMember(userId, team?.id))) {
     return res.status(200).json({
       data: null,
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -113,7 +112,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   if (app.uid != team.id) {
     return res.status(200).json({
       data: null,
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 

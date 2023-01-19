@@ -1,9 +1,8 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-
-import env from "@/lib/env";
-import jackson from "@/lib/jackson";
-import { getSession } from "@/lib/session";
-import { getTeam, isTeamMember } from "models/team";
+import env from '@/lib/env';
+import jackson from '@/lib/jackson';
+import { getSession } from '@/lib/session';
+import { getTeam, isTeamMember } from 'models/team';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,12 +11,12 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
-    case "GET":
+    case 'GET':
       return await handleGET(req, res);
-    case "POST":
+    case 'POST':
       return await handlePOST(req, res);
     default:
-      res.setHeader("Allow", "GET, POST");
+      res.setHeader('Allow', 'GET, POST');
       res.status(405).json({
         error: { message: `Method ${method} Not Allowed` },
       });
@@ -32,7 +31,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!session) {
     return res.status(401).json({
-      error: { message: "Unauthorized." },
+      error: { message: 'Unauthorized.' },
     });
   }
 
@@ -40,7 +39,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamMember(session.user.id, team.id))) {
     return res.status(400).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -75,7 +74,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!session) {
     return res.status(401).json({
-      error: { message: "Unauthorized." },
+      error: { message: 'Unauthorized.' },
     });
   }
 
@@ -83,7 +82,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamMember(session.user.id, team.id))) {
     return res.status(400).json({
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 

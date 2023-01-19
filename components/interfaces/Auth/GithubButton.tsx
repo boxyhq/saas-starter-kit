@@ -1,13 +1,13 @@
-import { Button } from "react-daisyui";
-import { signIn } from "next-auth/react";
+import { signIn } from 'next-auth/react';
+import { Button } from 'react-daisyui';
 
 const GithubButton = () => {
   return (
     <Button
       className="btn-outline w-full"
       onClick={() => {
-        signIn("github", {
-          callbackUrl: "/dashboard",
+        signIn('github', {
+          callbackUrl: '/dashboard',
         });
       }}
     >

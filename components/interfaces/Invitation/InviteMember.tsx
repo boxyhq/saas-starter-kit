@@ -1,15 +1,15 @@
-import React from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { Modal, Button, Input } from "react-daisyui";
-import { useTranslation } from "next-i18next";
-import type { Invitation, Team } from "@prisma/client";
-import type { ApiResponse } from "types";
-import { availableRoles } from "@/lib/roles";
-import useInvitations from "hooks/useInvitations";
-import { getAxiosError } from "@/lib/common";
+import { getAxiosError } from '@/lib/common';
+import { availableRoles } from '@/lib/roles';
+import type { Invitation, Team } from '@prisma/client';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import useInvitations from 'hooks/useInvitations';
+import { useTranslation } from 'next-i18next';
+import React from 'react';
+import { Button, Input, Modal } from 'react-daisyui';
+import toast from 'react-hot-toast';
+import type { ApiResponse } from 'types';
+import * as Yup from 'yup';
 
 const InviteMember = ({
   visible,
@@ -21,11 +21,11 @@ const InviteMember = ({
   team: Team;
 }) => {
   const { mutateInvitation } = useInvitations(team.slug);
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   const formik = useFormik({
     initialValues: {
-      email: "",
+      email: '',
       role: availableRoles[0].id,
     },
     validationSchema: Yup.object().shape({
@@ -43,7 +43,7 @@ const InviteMember = ({
           }
         );
 
-        toast.success(t("invitation-sent"));
+        toast.success(t('invitation-sent'));
 
         mutateInvitation();
         setVisible(false);
@@ -58,11 +58,11 @@ const InviteMember = ({
     <Modal open={visible}>
       <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header className="font-bold">
-          {t("invite-new-member")}
+          {t('invite-new-member')}
         </Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">
-            <p>{t("invite-member-message")}</p>
+            <p>{t('invite-member-message')}</p>
             <div className="flex justify-between space-x-3">
               <Input
                 name="email"
@@ -94,7 +94,7 @@ const InviteMember = ({
             loading={formik.isSubmitting}
             active={formik.dirty}
           >
-            {t("send-invite")}
+            {t('send-invite')}
           </Button>
           <Button
             type="button"
@@ -103,7 +103,7 @@ const InviteMember = ({
               setVisible(!visible);
             }}
           >
-            {t("close")}
+            {t('close')}
           </Button>
         </Modal.Actions>
       </form>

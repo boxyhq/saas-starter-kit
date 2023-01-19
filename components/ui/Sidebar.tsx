@@ -1,21 +1,21 @@
 import {
-  HomeIcon,
-  UserIcon,
   ArrowLeftOnRectangleIcon,
-  UsersIcon,
+  HomeIcon,
   KeyIcon,
-} from "@heroicons/react/24/solid";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
+  UserIcon,
+  UsersIcon,
+} from '@heroicons/react/24/solid';
+import useTeam from 'hooks/useTeam';
+import { signOut } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 
-import NavItem from "./NavItem";
-import TeamNav from "../interfaces/Team/TeamNav";
-import useTeam from "hooks/useTeam";
+import TeamNav from '../interfaces/Team/TeamNav';
+import NavItem from './NavItem';
 
 export default function Sidebar() {
   const router = useRouter();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   const slug = router.query.slug as string;
 
@@ -34,7 +34,7 @@ export default function Sidebar() {
                 <li>
                   <form action="#" method="GET" className="lg:hidden">
                     <label htmlFor="mobile-search" className="sr-only">
-                      {t("search")}
+                      {t('search')}
                     </label>
                     <div className="relative">
                       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -62,7 +62,7 @@ export default function Sidebar() {
                     href="/dashboard"
                     text="Dashboard"
                     icon={HomeIcon}
-                    active={router.pathname === "/dashboard"}
+                    active={router.pathname === '/dashboard'}
                   />
                 </li>
                 <li>
@@ -70,7 +70,7 @@ export default function Sidebar() {
                     href="/teams"
                     text="Teams"
                     icon={UsersIcon}
-                    active={router.pathname === "/teams"}
+                    active={router.pathname === '/teams'}
                   />
                 </li>
               </ul>
@@ -90,13 +90,13 @@ export default function Sidebar() {
                   href="/settings/account"
                   text="Account"
                   icon={UserIcon}
-                  active={router.pathname === "/settings/account"}
+                  active={router.pathname === '/settings/account'}
                 />
                 <NavItem
                   href="/settings/password"
                   text="Password"
                   icon={KeyIcon}
-                  active={router.pathname === "/settings/password"}
+                  active={router.pathname === '/settings/password'}
                 />
                 <NavItem
                   href="#"

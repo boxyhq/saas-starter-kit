@@ -1,9 +1,8 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { EndpointIn } from "svix";
-
-import { getSession } from "@/lib/session";
-import { getTeam, isTeamMember } from "models/team";
-import { findOrCreateApp, updateWebhook, findWebhook } from "@/lib/svix";
+import { getSession } from '@/lib/session';
+import { findOrCreateApp, findWebhook, updateWebhook } from '@/lib/svix';
+import { getTeam, isTeamMember } from 'models/team';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { EndpointIn } from 'svix';
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,12 +11,12 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
-    case "GET":
+    case 'GET':
       return handleGET(req, res);
-    case "PUT":
+    case 'PUT':
       return handlePUT(req, res);
     default:
-      res.setHeader("Allow", ["GET", "PUT"]);
+      res.setHeader('Allow', ['GET', 'PUT']);
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
@@ -37,7 +36,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await isTeamMember(userId, team?.id))) {
     return res.status(200).json({
       data: null,
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -61,7 +60,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await isTeamMember(userId, team?.id))) {
     return res.status(200).json({
       data: null,
-      error: { message: "Bad request." },
+      error: { message: 'Bad request.' },
     });
   }
 
@@ -74,7 +73,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   };
 
   if (eventTypes.length > 0) {
-    data["filterTypes"] = eventTypes;
+    data['filterTypes'] = eventTypes;
   }
 
   const webhook = await updateWebhook(app.id, endpointId as string, data);

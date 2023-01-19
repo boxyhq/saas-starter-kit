@@ -5,31 +5,31 @@ module.exports = {
     node: true,
   },
   extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "next/core-web-vitals",
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+    'next/core-web-vitals',
   ],
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: "latest",
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
-  plugins: ["react", "@typescript-eslint"],
+  plugins: ['react', '@typescript-eslint'],
   rules: {
-    "@typescript-eslint/no-explicit-any": "off",
+    '@typescript-eslint/no-explicit-any': 'off',
   },
   settings: {
     react: {
-      version: "detect",
+      version: 'detect',
     },
   },
   overrides: [
     {
-      files: ["*.js"],
+      files: ['*.js'],
     },
   ],
 };

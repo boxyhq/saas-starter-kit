@@ -1,7 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/session";
-import { hashPassword, verifyPassword } from "@/lib/auth";
+import { hashPassword, verifyPassword } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+import { getSession } from '@/lib/session';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,10 +10,10 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
-    case "PUT":
+    case 'PUT':
       return await handlePUT(req, res);
     default:
-      res.setHeader("Allow", "PUT");
+      res.setHeader('Allow', 'PUT');
       res.status(405).json({
         error: { message: `Method ${method} Not Allowed` },
       });
@@ -24,7 +24,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({ error: { message: "Unauthorized" } });
+    return res.status(401).json({ error: { message: 'Unauthorized' } });
   }
 
   const { currentPassword, newPassword } = req.body as {
@@ -39,7 +39,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await verifyPassword(currentPassword, user.password))) {
     return res
       .status(400)
-      .json({ error: { message: "Your current password is incorrect" } });
+      .json({ error: { message: 'Your current password is incorrect' } });
   }
 
   await prisma.user.update({
