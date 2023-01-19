@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
+import { hashPassword, verifyPassword } from "@/lib/auth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,17 +21,30 @@ export default async function handler(
 }
 
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name } = req.body;
-
   const session = await getSession(req, res);
 
   if (!session) {
     return res.status(401).json({ error: { message: "Unauthorized" } });
   }
 
-  const user = await prisma.user.update({
+  const { currentPassword, newPassword } = req.body as {
+    currentPassword: string;
+    newPassword: string;
+  };
+
+  const user = await prisma.user.findFirstOrThrow({
     where: { id: session.user.id },
-    data: { name },
+  });
+
+  if (!(await verifyPassword(currentPassword, user.password))) {
+    return res
+      .status(400)
+      .json({ error: { message: "Your current password is incorrect" } });
+  }
+
+  await prisma.user.update({
+    where: { id: session.user.id },
+    data: { password: await hashPassword(newPassword) },
   });
 
   return res.status(200).json({ data: user });

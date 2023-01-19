@@ -23,6 +23,12 @@ a {
   box-sizing: border-box;
 }
 
+@layer base {
+  input {
+    @apply rounded !important;
+  }
+}
+
 @layer components {
   #__next {
     @apply h-full;
@@ -30,14 +36,6 @@ a {
 
   .btn {
     @apply rounded normal-case;
-  }
-
-  .btn-primary {
-    @apply text-white;
-  }
-
-  .btn-error {
-    @apply text-white;
   }
 
   .modal-box {

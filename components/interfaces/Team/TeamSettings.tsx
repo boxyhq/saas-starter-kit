@@ -15,9 +15,9 @@ const TeamSettings = ({ team }: { team: Team }) => {
 
   const formik = useFormik({
     initialValues: {
-      name: team?.name,
-      slug: team?.slug,
-      domain: team?.domain,
+      name: team.name,
+      slug: team.slug,
+      domain: team.domain,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Name is required"),
@@ -89,7 +89,9 @@ const TeamSettings = ({ team }: { team: Team }) => {
                 type="submit"
                 color="primary"
                 loading={formik.isSubmitting}
-                active={formik.dirty}
+                disabled={!formik.isValid || !formik.dirty}
+                className="text-white"
+                size="sm"
               >
                 Save Changes
               </Button>

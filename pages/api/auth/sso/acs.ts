@@ -10,25 +10,30 @@ export default async function handler(
 
   switch (method) {
     case "POST":
-      return handlePOST(req, res);
+      return await handlePOST(req, res);
     default:
-      res.setHeader("Allow", ["POST"]);
+      res.setHeader("Allow", "POST");
       res.status(405).json({
-        data: null,
         error: { message: `Method ${method} Not Allowed` },
       });
   }
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { RelayState, SAMLResponse } = req.body;
-
   const { oauthController } = await jackson();
+
+  const { RelayState, SAMLResponse } = req.body;
 
   const { redirect_url } = await oauthController.samlResponse({
     RelayState,
     SAMLResponse,
   });
 
-  res.redirect(302, redirect_url as string);
+  if (!redirect_url) {
+    return res.status(400).json({
+      error: { message: "No redirect URL found." },
+    });
+  }
+
+  res.redirect(302, redirect_url);
 };

@@ -87,10 +87,16 @@ export default function Sidebar() {
               )}
               <div className="space-y-2 pt-2">
                 <NavItem
-                  href="/account"
+                  href="/settings/account"
                   text="Account"
                   icon={UserIcon}
-                  active={router.pathname === "/account"}
+                  active={router.pathname === "/settings/account"}
+                />
+                <NavItem
+                  href="/settings/password"
+                  text="Password"
+                  icon={KeyIcon}
+                  active={router.pathname === "/settings/password"}
                 />
                 <NavItem
                   href="#"

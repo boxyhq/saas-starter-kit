@@ -1,19 +1,15 @@
 import { useFormik } from "formik";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Button } from "react-daisyui";
 import { useTranslation } from "next-i18next";
-
-import type { ApiResponse } from "types";
 import { Card, InputWithLabel } from "@/components/ui";
+import { getAxiosError } from "@/lib/common";
 
 const schema = Yup.object().shape({
   currentPassword: Yup.string().required(),
-  newPassword: Yup.string().required("Required"),
-  confirmationPassword: Yup.string()
-    .oneOf([Yup.ref("newPassword"), null], "Passwords don't match!")
-    .required("Required"),
+  newPassword: Yup.string().required().min(7),
 });
 
 const UpdatePassword = () => {
@@ -23,21 +19,16 @@ const UpdatePassword = () => {
     initialValues: {
       currentPassword: "",
       newPassword: "",
-      confirmationPassword: "",
     },
     validationSchema: schema,
     onSubmit: async (values) => {
       try {
-        const { data } = await axios.patch(`/api/users`, values);
+        await axios.put(`/api/password`, values);
 
-        if (data) {
-          toast.success(t("successfully-updated"));
-        }
-      } catch (error: unknown | AxiosError) {
-        if (axios.isAxiosError(error)) {
-          const err = error as AxiosError<ApiResponse>;
-          toast.error(String(err?.response?.data.error?.message));
-        }
+        toast.success(t("successfully-updated"));
+        formik.resetForm();
+      } catch (error: any) {
+        toast.error(getAxiosError(error));
       }
     },
   });
@@ -45,14 +36,14 @@ const UpdatePassword = () => {
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
-        <Card heading="Update Password">
-          <Card.Body className="p-5">
-            <div className="flex flex-col space-y-6">
+        <Card heading="Password">
+          <Card.Body className="p-4">
+            <div className="flex flex-col space-y-3">
               <InputWithLabel
                 type="password"
                 label="Current password"
                 name="currentPassword"
-                placeholder="Type your current"
+                placeholder="Current password"
                 value={formik.values.currentPassword}
                 error={
                   formik.touched.currentPassword
@@ -65,24 +56,11 @@ const UpdatePassword = () => {
                 type="password"
                 label="New password"
                 name="newPassword"
-                placeholder="Type your new password"
+                placeholder="New password"
                 value={formik.values.newPassword}
                 error={
                   formik.touched.newPassword
                     ? formik.errors.newPassword
-                    : undefined
-                }
-                onChange={formik.handleChange}
-              />
-              <InputWithLabel
-                type="password"
-                label="Confirm password"
-                name="confirmationPassword"
-                placeholder="Confirm your password"
-                value={formik.values.confirmationPassword}
-                error={
-                  formik.touched.confirmationPassword
-                    ? formik.errors.confirmationPassword
                     : undefined
                 }
                 onChange={formik.handleChange}
@@ -95,8 +73,8 @@ const UpdatePassword = () => {
                 type="submit"
                 color="primary"
                 loading={formik.isSubmitting}
-                active={formik.dirty}
-                disabled={!formik.isValid}
+                disabled={!formik.dirty || !formik.isValid}
+                size="sm"
               >
                 {t("change-password")}
               </Button>

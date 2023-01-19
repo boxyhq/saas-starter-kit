@@ -13,6 +13,12 @@ const RemoveTeam = ({ team }: { team: Team }) => {
   const [loading, setLoading] = React.useState(false);
 
   const removeTeam = async () => {
+    const confirm = window.confirm(
+      "Are you sure you want to remove this team? This action cannot be undone."
+    );
+
+    if (!confirm) return;
+
     setLoading(true);
 
     const response = await axios.delete(`/api/teams/${team.slug}`);
@@ -42,6 +48,7 @@ const RemoveTeam = ({ team }: { team: Team }) => {
             size="sm"
             onClick={removeTeam}
             loading={loading}
+            className="text-white"
           >
             {t("remove-team")}
           </Button>
