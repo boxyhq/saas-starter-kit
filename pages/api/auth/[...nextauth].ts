@@ -5,7 +5,6 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { OAuthTokenReq } from "@boxyhq/saml-jackson";
-
 import { prisma } from "@/lib/prisma";
 import env from "@/lib/env";
 import jackson from "@/lib/jackson";
@@ -58,10 +57,14 @@ export const authOptions: NextAuthOptions = {
       id: "saml-sso",
       credentials: {
         code: { type: "text" },
-        state: { type: "state" },
+        state: { type: "text" },
       },
       async authorize(credentials) {
         const code = credentials?.code;
+
+        if (!code) {
+          throw new Error("No code found.");
+        }
 
         const { oauthController } = await jackson();
 
@@ -73,7 +76,6 @@ export const authOptions: NextAuthOptions = {
         } as OAuthTokenReq);
 
         const profile = await oauthController.userInfo(access_token);
-
         let user = await getUser({ email: profile.email });
 
         if (user === null) {
@@ -127,15 +129,19 @@ export const authOptions: NextAuthOptions = {
   secret: env.nextAuth.secret,
   callbacks: {
     async signIn({ user, account, profile }) {
-      if (!user.email) {
-        return false;
-      }
-
-      if (account.provider === "email" || account.provider === "credentials") {
+      if (
+        account.provider === "email" ||
+        account.provider === "credentials" ||
+        account.provider === "saml-sso"
+      ) {
         return true;
       }
 
       if (account.provider != "github" && account.provider != "google") {
+        return false;
+      }
+
+      if (!user.email) {
         return false;
       }
 

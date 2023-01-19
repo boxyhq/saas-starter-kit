@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { Button } from "react-daisyui";
 import { useTranslation } from "next-i18next";
-
+import { getAxiosError } from "@/lib/common";
 import type { ApiResponse } from "types";
 import { Card, InputWithLabel } from "@/components/ui";
 import { User } from "@prisma/client";
@@ -19,34 +19,28 @@ const UpdateAccount = ({ user }: { user: User }) => {
 
   const formik = useFormik({
     initialValues: {
-      name: user?.name,
-      email: user?.email,
+      name: user.name,
+      email: user.email,
     },
     validationSchema: schema,
     onSubmit: async (values) => {
-      const { name, email } = values;
+      try {
+        await axios.put<ApiResponse<User>>("/api/users", {
+          ...values,
+        });
 
-      const response = await axios.put<ApiResponse<User>>("/api/users", {
-        name,
-        email,
-      });
-
-      const { error } = response.data;
-
-      if (error) {
-        toast.error(error.message);
-        return;
+        toast.success(t("successfully-updated"));
+      } catch (error) {
+        toast.error(getAxiosError(error));
       }
-
-      toast.success(t("successfully-updated"));
     },
   });
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Card heading="Update Account">
-        <Card.Body className="p-5">
-          <div className="flex flex-col space-y-3">
+      <Card heading="Your Profile">
+        <Card.Body className="p-4">
+          <div className="flex flex-col space-y-2">
             <InputWithLabel
               type="text"
               label="Name"
@@ -73,7 +67,8 @@ const UpdateAccount = ({ user }: { user: User }) => {
               type="submit"
               color="primary"
               loading={formik.isSubmitting}
-              active={formik.dirty}
+              disabled={!formik.dirty || !formik.isValid}
+              size="sm"
             >
               {t("save-changes")}
             </Button>

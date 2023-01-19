@@ -1,11 +1,10 @@
 import type { NextPageWithLayout } from "types";
 import type { GetServerSidePropsContext } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-
 import { getSession } from "@/lib/session";
 import { getUserBySession } from "models/user";
 import { inferSSRProps } from "@/lib/inferSSRProps";
-import { UpdateAccount, UpdatePassword } from "@/components/interfaces/Account";
+import { UpdateAccount } from "@/components/interfaces/Account";
 
 const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   user,
@@ -14,12 +13,7 @@ const Account: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
     return null;
   }
 
-  return (
-    <>
-      <UpdateAccount user={user} />
-      <UpdatePassword />
-    </>
-  );
+  return <UpdateAccount user={user} />;
 };
 
 export const getServerSideProps = async (
