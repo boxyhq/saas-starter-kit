@@ -8,6 +8,8 @@ import type { User } from "@prisma/client";
 import type { ApiResponse } from "types";
 import { InputWithLabel, Loading, Error } from "@/components/ui";
 import useInvitation from "hooks/useInvitation";
+import axios from "axios";
+import { getAxiosError } from "@/lib/common";
 
 const JoinWithInvitation = ({
   inviteToken,
@@ -25,29 +27,27 @@ const JoinWithInvitation = ({
     initialValues: {
       name: "",
       email: invitation?.email,
+      password: "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
+      password: Yup.string().required().min(7),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const response = await fetch("/api/auth/join", {
-        method: "POST",
-        body: JSON.stringify(values),
-      });
+      try {
+        await axios.post<ApiResponse<User>>("/api/auth/join", {
+          ...values,
+        });
 
-      const { error }: ApiResponse<User> = await response.json();
+        formik.resetForm();
+        toast.success(t("successfully-joined"));
 
-      if (error) {
-        toast.error(error.message);
-        return;
+        return next ? router.push(next) : router.push("/auth/login");
+      } catch (error: any) {
+        toast.error(getAxiosError(error));
       }
-
-      formik.resetForm();
-      toast.success(t("successfully-joined"));
-
-      return next ? router.push(next) : router.push("/auth/login");
     },
   });
 
@@ -77,6 +77,15 @@ const JoinWithInvitation = ({
         placeholder="jackson@boxyhq.com"
         value={formik.values.email}
         error={formik.touched.email ? formik.errors.email : undefined}
+        onChange={formik.handleChange}
+      />
+      <InputWithLabel
+        type="password"
+        label="Password"
+        name="password"
+        placeholder="Password"
+        value={formik.values.password}
+        error={formik.touched.password ? formik.errors.password : undefined}
         onChange={formik.handleChange}
       />
       <Button

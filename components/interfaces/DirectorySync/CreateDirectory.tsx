@@ -21,9 +21,9 @@ const CreateDirectory = ({
   setVisible: (visible: boolean) => void;
   team: Team;
 }) => {
+  const { t } = useTranslation("common");
   const { data } = useSWR("/api/idp", fetcher);
   const { mutateDirectory } = useDirectory(team.slug as string);
-  const { t } = useTranslation("common");
 
   const formik = useFormik({
     initialValues: {

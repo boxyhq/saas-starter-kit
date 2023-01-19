@@ -7,10 +7,13 @@ import fetcher from "@/lib/fetcher";
 const useTeam = (slug: string | undefined) => {
   const url = `/api/teams/${slug}`;
 
-  const { data, error } = useSWR<ApiResponse<Team>>(slug ? url : null, fetcher);
+  const { data, error, isLoading } = useSWR<ApiResponse<Team>>(
+    slug ? url : null,
+    fetcher
+  );
 
   return {
-    isLoading: !error && !data,
+    isLoading,
     isError: error,
     team: data?.data,
   };

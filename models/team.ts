@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { Team } from "@prisma/client";
+import { Team, Role } from "@prisma/client";
 
 export const createTeam = async (param: {
   userId: string;
@@ -15,7 +15,7 @@ export const createTeam = async (param: {
     },
   });
 
-  await addTeamMember(team.id, userId, "owner");
+  await addTeamMember(team.id, userId, Role.OWNER);
 
   return team;
 };
@@ -35,7 +35,7 @@ export const deleteTeam = async (key: { id: string } | { slug: string }) => {
 export const addTeamMember = async (
   teamId: string,
   userId: string,
-  role: string
+  role: Role
 ) => {
   return await prisma.teamMember.create({
     data: {
@@ -74,27 +74,44 @@ export const getTeams = async (userId: string) => {
   });
 };
 
+// Check if the user is a member of the team
 export async function isTeamMember(userId: string, teamId: string) {
-  return (await prisma.teamMember.findFirstOrThrow({
+  const teamMember = await prisma.teamMember.findFirstOrThrow({
     where: {
       userId,
       teamId,
     },
-  }))
-    ? true
-    : false;
+  });
+
+  return (
+    teamMember.role === Role.MEMBER ||
+    teamMember.role === Role.OWNER ||
+    teamMember.role === Role.ADMIN
+  );
 }
 
+// Check if the user is an owner of the team
 export async function isTeamOwner(userId: string, teamId: string) {
-  return (await prisma.teamMember.findFirstOrThrow({
+  const teamMember = await prisma.teamMember.findFirstOrThrow({
     where: {
       userId,
       teamId,
-      role: "owner",
     },
-  }))
-    ? true
-    : false;
+  });
+
+  return teamMember.role === Role.OWNER;
+}
+
+// Check if the user is an admin or owner of the team
+export async function isTeamAdmin(userId: string, teamId: string) {
+  const teamMember = await prisma.teamMember.findFirstOrThrow({
+    where: {
+      userId,
+      teamId,
+    },
+  });
+
+  return teamMember.role === Role.ADMIN || teamMember.role === Role.OWNER;
 }
 
 export const getTeamMembers = async (slug: string) => {

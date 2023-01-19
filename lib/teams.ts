@@ -1,13 +1,15 @@
 import type { User } from "next-auth";
 
-import type { TeamMember } from "@prisma/client";
+import { Role, TeamMember } from "@prisma/client";
 
-export const isTeamOwner = (user: User, members: TeamMember[]) => {
-  const owner = members.filter(
-    (member) => member.userId === user.id && member.role === "owner"
+export const isTeamAdmin = (user: User, members: TeamMember[]) => {
+  return (
+    members.filter(
+      (member) =>
+        member.userId === user.id &&
+        (member.role === Role.ADMIN || member.role === Role.OWNER)
+    ).length > 0
   );
-
-  return owner.length > 0;
 };
 
 export const teamNavigations = (slug: string, activeTab: string) => {

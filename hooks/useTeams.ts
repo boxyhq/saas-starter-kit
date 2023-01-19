@@ -6,7 +6,7 @@ import fetcher from "@/lib/fetcher";
 const useTeams = () => {
   const url = `/api/teams`;
 
-  const { data, error } = useSWR<ApiResponse<TeamWithMemberCount[]>>(
+  const { data, error, isLoading } = useSWR<ApiResponse<TeamWithMemberCount[]>>(
     url,
     fetcher
   );
@@ -16,7 +16,7 @@ const useTeams = () => {
   };
 
   return {
-    isLoading: !error && !data,
+    isLoading,
     isError: error,
     teams: data?.data,
     mutateTeams,
