@@ -7,6 +7,7 @@ import { Card, Error, LetterAvatar, Loading } from "@/components/ui";
 import useTeams from "hooks/useTeams";
 import { Team } from "@prisma/client";
 import { ApiResponse } from "types";
+import { getAxiosError } from "@/lib/common";
 
 const Teams = () => {
   const { isLoading, isError, teams, mutateTeams } = useTeams();
@@ -20,20 +21,13 @@ const Teams = () => {
   }
 
   const leaveTeam = async (team: Team) => {
-    const response = await axios.put<ApiResponse>(
-      `/api/teams/${team.slug}/members`
-    );
-
-    const { error } = response.data;
-
-    if (error) {
-      toast.error(error.message);
-      return;
+    try {
+      await axios.put<ApiResponse>(`/api/teams/${team.slug}/members`);
+      toast.success(t("leave-team-success"));
+      mutateTeams();
+    } catch (error: any) {
+      toast.error(getAxiosError(error));
     }
-
-    toast.success(t("leave-team-success"));
-
-    mutateTeams();
   };
 
   return (

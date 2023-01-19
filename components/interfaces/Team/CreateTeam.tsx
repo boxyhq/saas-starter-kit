@@ -5,10 +5,10 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { Modal, Button, Input } from "react-daisyui";
 import { useTranslation } from "next-i18next";
-
 import type { ApiResponse } from "types";
 import type { Team } from "@prisma/client";
 import useTeams from "hooks/useTeams";
+import { getAxiosError } from "@/lib/common";
 
 const CreateTeam = ({
   visible,
@@ -17,8 +17,8 @@ const CreateTeam = ({
   visible: boolean;
   setVisible: (visible: boolean) => void;
 }) => {
-  const { mutateTeams } = useTeams();
   const { t } = useTranslation("common");
+  const { mutateTeams } = useTeams();
 
   const formik = useFormik({
     initialValues: {
@@ -28,26 +28,22 @@ const CreateTeam = ({
       name: Yup.string().required(),
     }),
     onSubmit: async (values) => {
-      const { name } = values;
+      try {
+        const response = await axios.post<ApiResponse<Team>>("/api/teams/", {
+          ...values,
+        });
 
-      const response = await axios.post<ApiResponse<Team>>(`/api/teams`, {
-        name,
-      });
+        const { data: teamCreated } = response.data;
 
-      const { data: invitation, error } = response.data;
-
-      if (error) {
-        toast.error(error.message);
-        return;
+        if (teamCreated) {
+          toast.success(t("team-created"));
+          mutateTeams();
+          formik.resetForm();
+          setVisible(false);
+        }
+      } catch (error: any) {
+        toast.error(getAxiosError(error));
       }
-
-      if (invitation) {
-        toast.success(t("team-created"));
-      }
-
-      mutateTeams();
-      formik.resetForm();
-      setVisible(false);
     },
   });
 
@@ -64,7 +60,7 @@ const CreateTeam = ({
                 className="flex-grow"
                 onChange={formik.handleChange}
                 value={formik.values.name}
-                placeholder="Eg: operations, backend-team, frontend"
+                placeholder="Team name"
               />
             </div>
           </div>

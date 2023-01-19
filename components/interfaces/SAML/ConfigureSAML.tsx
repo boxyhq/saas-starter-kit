@@ -5,10 +5,10 @@ import { Button, Textarea, Modal } from "react-daisyui";
 import toast from "react-hot-toast";
 import { useTranslation } from "next-i18next";
 import type { SAMLSSORecord } from "@boxyhq/saml-jackson";
-
 import type { ApiResponse } from "types";
 import { Team } from "@prisma/client";
 import useSAMLConfig from "hooks/useSAMLConfig";
+import { getAxiosError } from "@/lib/common";
 
 const ConfigureSAML = ({
   visible,
@@ -32,26 +32,24 @@ const ConfigureSAML = ({
     onSubmit: async (values) => {
       const { metadata } = values;
 
-      const response = await axios.post<ApiResponse<SAMLSSORecord>>(
-        `/api/teams/${team.slug}/saml`,
-        {
-          encodedRawMetadata: Buffer.from(metadata).toString("base64"),
+      try {
+        const response = await axios.post<ApiResponse<SAMLSSORecord>>(
+          `/api/teams/${team.slug}/saml`,
+          {
+            encodedRawMetadata: Buffer.from(metadata).toString("base64"),
+          }
+        );
+
+        const { data: connectionCreated } = response.data;
+
+        if (connectionCreated) {
+          toast.success(t("saml-config-updated"));
+          mutateSamlConfig();
+          setVisible(false);
         }
-      );
-
-      const { data: samlConfig, error } = response.data;
-
-      if (error) {
-        toast.error(error.message);
-        return;
+      } catch (error: any) {
+        toast.error(getAxiosError(error));
       }
-
-      if (samlConfig) {
-        toast.success(t("saml-config-updated"));
-      }
-
-      mutateSamlConfig();
-      setVisible(false);
     },
   });
 

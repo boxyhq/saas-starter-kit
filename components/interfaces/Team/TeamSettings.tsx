@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { Button } from "react-daisyui";
 import { useRouter } from "next/router";
 import axios from "axios";
-
+import { getAxiosError } from "@/lib/common";
 import { Team } from "@prisma/client";
 import type { ApiResponse } from "types";
 import { Card, InputWithLabel } from "@/components/ui";
@@ -26,27 +26,22 @@ const TeamSettings = ({ team }: { team: Team }) => {
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const { name, slug, domain } = values;
+      try {
+        const response = await axios.put<ApiResponse<Team>>(
+          `/api/teams/${team.slug}`,
+          {
+            ...values,
+          }
+        );
 
-      const response = await axios.put<ApiResponse<Team>>(
-        `/api/teams/${team.slug}`,
-        {
-          name,
-          slug,
-          domain,
+        const { data: teamUpdated } = response.data;
+
+        if (teamUpdated) {
+          toast.success("Successfully updated!");
+          return router.push(`/teams/${teamUpdated.slug}/settings`);
         }
-      );
-
-      const { data: updatedTeam, error } = response.data;
-
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
-
-      if (updatedTeam) {
-        toast.success("Successfully updated!");
-        return router.push(`/teams/${updatedTeam.slug}/settings`);
+      } catch (error: any) {
+        toast.error(getAxiosError(error));
       }
     },
   });

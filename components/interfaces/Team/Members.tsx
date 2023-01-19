@@ -17,12 +17,16 @@ const Members = ({ team }: { team: Team }) => {
     team.slug
   );
 
-  if (isLoading || !members) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError || !session) {
     return <Error />;
+  }
+
+  if (!members) {
+    return null;
   }
 
   const removeTeamMember = async (member: TeamMember) => {

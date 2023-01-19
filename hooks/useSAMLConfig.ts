@@ -1,6 +1,5 @@
 import useSWR, { mutate } from "swr";
 import type { SAMLSSORecord } from "@boxyhq/saml-jackson";
-
 import type { ApiResponse, SPSAMLConfig } from "types";
 import fetcher from "@/lib/fetcher";
 

@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-
 import type {
   DirectorySyncRequest,
-  HTTPMethod,
   DirectorySyncEvent,
 } from "@boxyhq/saml-jackson";
 import jackson from "@/lib/jackson";
@@ -11,6 +9,7 @@ import { deleteUser, getUser } from "models/user";
 import { addTeamMember } from "models/team";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
+import { Role } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -25,7 +24,7 @@ export default async function handler(
 
   // Handle the SCIM API requests
   const request: DirectorySyncRequest = {
-    method: method as HTTPMethod,
+    method: method as string,
     body: body ? JSON.parse(body) : undefined,
     directoryId,
     resourceId,
@@ -68,7 +67,7 @@ const handleEvents = async (event: DirectorySyncEvent) => {
       },
     });
 
-    await addTeamMember(teamId, user.id, "member");
+    await addTeamMember(teamId, user.id, Role.MEMBER);
   }
 
   // User has been updated
@@ -88,7 +87,7 @@ const handleEvents = async (event: DirectorySyncEvent) => {
         },
       });
 
-      await addTeamMember(teamId, user.id, "member");
+      await addTeamMember(teamId, user.id, Role.MEMBER);
 
       return;
     }

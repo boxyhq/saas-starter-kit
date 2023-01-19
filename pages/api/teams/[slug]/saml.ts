@@ -24,6 +24,7 @@ export default async function handler(
   }
 }
 
+// Get the SAML connection for the team.
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query as { slug: string };
 
@@ -46,18 +47,18 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const { apiController } = await jackson();
 
   try {
-    const samlConfig = await apiController.getConfig({
+    const connections = await apiController.getConnections({
       tenant: team.id,
       product: env.product,
     });
 
-    const config = {
-      config: samlConfig,
+    const connection = {
+      config: connections.length > 0 ? connections[0] : [],
       issuer: env.saml.issuer,
       acs: env.saml.acs,
     };
 
-    return res.json({ data: config });
+    return res.json({ data: connection });
   } catch (error: any) {
     const { message } = error;
 
@@ -65,9 +66,10 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
+// Create a SAML connection for the team.
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { encodedRawMetadata } = req.body;
   const { slug } = req.query as { slug: string };
+  const { encodedRawMetadata } = req.body;
 
   const session = await getSession(req, res);
 
@@ -96,7 +98,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       product: env.product,
     });
 
-    return res.json({ data: connection });
+    return res.status(201).json({ data: connection });
   } catch (error: any) {
     const { message } = error;
 

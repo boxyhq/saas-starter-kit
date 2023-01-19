@@ -9,5 +9,5 @@ export default async function handler(
   const { directorySync } = await jackson();
 
   // List of directory sync providers
-  res.status(200).json({ data: directorySync.providers(), error: null });
+  res.status(200).json({ data: directorySync.providers() });
 }
