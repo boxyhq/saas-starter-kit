@@ -7,7 +7,7 @@ import fetcher from "@/lib/fetcher";
 const useSAMLConfig = (slug: string | undefined) => {
   const url = `/api/teams/${slug}/saml`;
 
-  const { data, error } = useSWR<
+  const { data, error, isLoading } = useSWR<
     ApiResponse<SPSAMLConfig & { config: SAMLSSORecord }>
   >(slug ? url : null, fetcher);
 
@@ -16,7 +16,7 @@ const useSAMLConfig = (slug: string | undefined) => {
   };
 
   return {
-    isLoading: !error && !data,
+    isLoading,
     isError: error,
     samlConfig: data?.data,
     mutateSamlConfig,

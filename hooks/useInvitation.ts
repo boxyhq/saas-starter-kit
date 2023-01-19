@@ -7,13 +7,12 @@ import { Invitation, Team } from "@prisma/client";
 const useInvitation = (token: string) => {
   const url = `/api/invitations/${token}`;
 
-  const { data, error } = useSWR<ApiResponse<Invitation & { team: Team }>>(
-    token ? url : null,
-    fetcher
-  );
+  const { data, error, isLoading } = useSWR<
+    ApiResponse<Invitation & { team: Team }>
+  >(token ? url : null, fetcher);
 
   return {
-    isLoading: !error && !data,
+    isLoading,
     isError: error,
     invitation: data?.data,
   };

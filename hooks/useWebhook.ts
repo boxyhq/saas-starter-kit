@@ -7,7 +7,7 @@ import fetcher from "@/lib/fetcher";
 const useWebhook = (slug: string, endpointId: string | null) => {
   const url = `/api/teams/${slug}/webhooks/${endpointId}`;
 
-  const { data, error } = useSWR<ApiResponse<EndpointOut>>(
+  const { data, error, isLoading } = useSWR<ApiResponse<EndpointOut>>(
     slug ? url : null,
     fetcher
   );
@@ -17,7 +17,7 @@ const useWebhook = (slug: string, endpointId: string | null) => {
   };
 
   return {
-    isLoading: !error && !data,
+    isLoading,
     isError: error,
     webhook: data?.data,
     mutateWebhook,

@@ -9,7 +9,7 @@ type TeamMemberWithUser = TeamMember & { user: User };
 const useTeamMembers = (slug: string) => {
   const url = `/api/teams/${slug}/members`;
 
-  const { data, error } = useSWR<ApiResponse<TeamMemberWithUser[]>>(
+  const { data, error, isLoading } = useSWR<ApiResponse<TeamMemberWithUser[]>>(
     url,
     fetcher
   );
@@ -19,7 +19,7 @@ const useTeamMembers = (slug: string) => {
   };
 
   return {
-    isLoading: !error && !data,
+    isLoading,
     isError: error,
     members: data?.data,
     mutateTeamMembers,

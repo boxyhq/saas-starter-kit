@@ -7,7 +7,7 @@ import { Directory } from "@boxyhq/saml-jackson";
 const useDirectory = (slug: string) => {
   const url = `/api/teams/${slug}/directory-sync`;
 
-  const { data, error } = useSWR<ApiResponse<Directory>>(
+  const { data, error, isLoading } = useSWR<ApiResponse<Directory>>(
     slug ? url : null,
     fetcher
   );
@@ -17,7 +17,7 @@ const useDirectory = (slug: string) => {
   };
 
   return {
-    isLoading: !error && !data,
+    isLoading,
     isError: error,
     directory: data?.data,
     mutateDirectory,
