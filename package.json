@@ -70,7 +70,7 @@
     "eslint-plugin-react": "7.32.2",
     "husky": "8.0.2",
     "jest": "29.3.1",
-    "jest-environment-jsdom": "29.3.1",
+    "jest-environment-jsdom": "29.4.1",
     "lint-staged": "13.1.0",
     "postcss": "8.4.19",
     "prettier": "2.7.1",
