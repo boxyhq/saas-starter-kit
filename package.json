@@ -33,7 +33,7 @@
     "formik": "2.2.9",
     "moment": "2.29.4",
     "next": "12.2.0",
-    "next-auth": "4.10.3",
+    "next-auth": "4.18.10",
     "next-i18next": "12.1.0",
     "next-transpile-modules": "9.0.0",
     "nodemailer": "6.7.8",
