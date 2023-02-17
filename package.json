@@ -32,7 +32,7 @@
     "cookies-next": "2.1.1",
     "formik": "2.2.9",
     "moment": "2.29.4",
-    "next-auth": "4.12.0",
+    "next-auth": "4.18.10",
     "next": "12.3.4",
     "next-i18next": "12.1.0",
     "next-transpile-modules": "9.0.0",
