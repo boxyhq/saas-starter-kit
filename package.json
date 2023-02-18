@@ -40,7 +40,7 @@
     "react": "18.2.0",
     "react-daisyui": "2.4.1",
     "react-dom": "18.2.0",
-    "react-hot-toast": "2.2.0",
+    "react-hot-toast": "2.4.0",
     "react-icons": "4.7.1",
     "superjson": "1.12.2",
     "svix": "0.67.0",
