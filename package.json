@@ -24,7 +24,7 @@
     "@hookform/resolvers": "2.9.10",
     "@next-auth/prisma-adapter": "1.0.5",
     "@prisma/client": "4.9.0",
-    "@tailwindcss/typography": "0.5.4",
+    "@tailwindcss/typography": "0.5.9",
     "axios": "0.27.2",
     "babel-plugin-superjson-next": "0.4.3",
     "bcryptjs": "2.4.3",
