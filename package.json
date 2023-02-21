@@ -28,7 +28,7 @@
     "axios": "0.27.2",
     "babel-plugin-superjson-next": "0.4.3",
     "bcryptjs": "2.4.3",
-    "classnames": "2.3.1",
+    "classnames": "2.3.2",
     "cookies-next": "2.1.1",
     "formik": "2.2.9",
     "moment": "2.29.4",
