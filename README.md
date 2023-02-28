@@ -160,15 +160,22 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 
 ## Contributing
 
-Contributions make the open-source community a fantastic place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+Thanks for taking the time to contribute! Contributions make the open-source community a fantastic place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+
+Please try to create bug reports that are:
+
+- _Reproducible._ Include steps to reproduce the problem.
+- _Specific._ Include as much detail as possible: which version, what environment, etc.
+- _Unique._ Do not duplicate existing opened issues.
+- _Scoped to a Single Bug._ One bug per report.
 
 [Contributing Guide](https://github.com/boxyhq/saas-starter-kit/blob/main/CONTRIBUTING.md)
 
 ## Community
 
 - [Discord](https://discord.gg/uyb7pYt4Pa) (For live discussion with the Community and BoxyHQ team)
-- [GitHub](https://github.com/boxyhq/saas-starter-kit/issues) (Bug reports, Contributions)
 - [Twitter](https://twitter.com/BoxyHQ) (Get the news fast)
+- [GitHub Issues](https://github.com/boxyhq/saas-starter-kit/issues) (Bug reports, Contributions)
 
 ## License
 
