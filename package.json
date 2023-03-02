@@ -21,7 +21,7 @@
   "dependencies": {
     "@heroicons/react": "2.0.16",
     "@boxyhq/saml-jackson": "1.7.5",
-    "@hookform/resolvers": "2.9.10",
+    "@hookform/resolvers": "2.9.11",
     "@next-auth/prisma-adapter": "1.0.5",
     "@prisma/client": "4.10.0",
     "@tailwindcss/typography": "0.5.9",
