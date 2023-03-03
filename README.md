@@ -52,8 +52,6 @@ Please follow these simple steps to get a local copy up and running.
 
 ### Development
 
-Please follow these simple steps to get a local copy up and running.
-
 #### 1. Setup
 
 Clone or fork this GitHub repository
