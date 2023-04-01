@@ -37,6 +37,7 @@
     "next-i18next": "12.1.0",
     "next-transpile-modules": "9.0.0",
     "nodemailer": "6.7.8",
+    "openssl": "^2.0.0",
     "react": "18.2.0",
     "react-daisyui": "2.4.1",
     "react-dom": "18.0.0",

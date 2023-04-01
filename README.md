@@ -1,5 +1,7 @@
 # Enterprise SaaS Starter Kit
 
+![saas-starter-kit-poster](/public/saas-starter-kit-poster.png)
+
 :warning: **This repository is still in an early stage of development.**
 
 <p>
