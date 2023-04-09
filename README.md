@@ -175,8 +175,8 @@ Please try to create bug reports that are:
 
 ## Community
 
-- [Discord](https://discord.gg/uyb7pYt4Pa) (For live discussion with the Community and BoxyHQ team)
-- [Twitter](https://twitter.com/BoxyHQ) (Get the news fast)
+- [Discord](https://discord.gg/uyb7pYt4Pa) (For live discussion with the Open-Source Community and BoxyHQ team)
+- [Twitter](https://twitter.com/BoxyHQ) (Follow us)
 - [GitHub Issues](https://github.com/boxyhq/saas-starter-kit/issues) (Bug reports, Contributions)
 
 ## License
