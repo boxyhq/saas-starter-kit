@@ -1,4 +1,5 @@
 # Enterprise SaaS Starter Kit
+#### Here's what you get out of the box, see images below 👇👇👇
 
 ![saas-starter-kit-poster](/public/saas-starter-kit-poster.png)
 
@@ -177,7 +178,7 @@ Please try to create bug reports that are:
 
 - [Discord](https://discord.gg/uyb7pYt4Pa) (For live discussion with the Open-Source Community and BoxyHQ team)
 - [Twitter](https://twitter.com/BoxyHQ) (Follow us)
-- [GitHub Issues](https://github.com/boxyhq/saas-starter-kit/issues) (Bug reports, Contributions)
+- [GitHub Issues](https://github.com/boxyhq/saas-starter-kit/issues) (Contributions, report issues and product ideas)
 
 ## License
 
