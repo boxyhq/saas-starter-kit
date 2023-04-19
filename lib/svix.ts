@@ -40,8 +40,8 @@ export const sendEvent = async (
   return await svix.message.create(appId, {
     eventType: eventType,
     payload: {
-      ...payload,
       event: eventType,
+      data: payload,
     },
   });
 };
