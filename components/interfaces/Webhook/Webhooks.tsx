@@ -78,7 +78,7 @@ const Webhooks = ({ team }: { team: Team }) => {
                     <td className="px-6 py-3">{webhook.description}</td>
                     <td className="px-6 py-3">{webhook.url}</td>
                     <td className="px-6 py-3">
-                      {webhook.createdAt.toISOString()}
+                      {webhook.createdAt.toLocaleString()}
                     </td>
                     <td className="px-6 py-3">
                       <div className="flex space-x-2">
