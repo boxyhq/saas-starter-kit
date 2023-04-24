@@ -31,9 +31,3 @@ export type WebookFormSchema = {
   url: string;
   eventTypes: string[];
 };
-
-type MemberInvitationEvent =
-  | 'member.invitation.created'
-  | 'member.invitation.deleted';
-
-export type EventType = MemberInvitationEvent;

@@ -2,7 +2,6 @@ import type { Team } from '@prisma/client';
 import { Client, Event } from '@retracedhq/retraced';
 import type { CRUD } from '@retracedhq/retraced';
 import { User } from 'next-auth';
-import type { EventType } from 'types';
 
 import env from './env';
 
@@ -11,14 +10,6 @@ const retraced = new Client({
   apiKey: env.retraced.apiKey,
   projectId: env.retraced.projectId,
 });
-
-type Request = {
-  action: EventType;
-  user: User;
-  team: Team;
-  crud: CRUD;
-  // target: Target;
-};
 
 export const reportEvent = async (request: Request) => {
   const { action, user, team, crud } = request;
@@ -37,4 +28,26 @@ export const reportEvent = async (request: Request) => {
   };
 
   return await retraced.reportEvent(event);
+};
+
+export type EventType =
+  | 'member.invitation.created'
+  | 'member.invitation.deleted'
+  | 'connection.saml.created'
+  | 'connection.dsync.created'
+  | 'webhook.created'
+  | 'webhook.deleted'
+  | 'webhook.updated'
+  | 'team.created'
+  | 'team.updated'
+  | 'team.deleted'
+  | 'member.removed'
+  | 'member.updated';
+
+type Request = {
+  action: EventType;
+  user: User;
+  team: Team;
+  crud: CRUD;
+  // target: Target;
 };
