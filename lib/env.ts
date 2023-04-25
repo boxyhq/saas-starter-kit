@@ -46,7 +46,7 @@ const env = {
 
   // Retraced configuration
   retraced: {
-    url: `${process.env.RETRACED_URL}/auditlog`,
+    url: `${process.env.NEXT_PUBLIC_RETRACED_URL}/auditlog`,
     apiKey: `${process.env.RETRACED_API_KEY}`,
     projectId: `${process.env.RETRACED_PROJECT_ID}`,
   },

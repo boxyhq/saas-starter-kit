@@ -1,34 +1,9 @@
 import type { Team } from '@prisma/client';
-import { Client, Event } from '@retracedhq/retraced';
-import type { CRUD } from '@retracedhq/retraced';
-import { User } from 'next-auth';
+import { Client } from '@retracedhq/retraced';
+import type { CRUD, Event } from '@retracedhq/retraced';
+import type { User } from 'next-auth';
 
 import env from './env';
-
-const retraced = new Client({
-  endpoint: env.retraced.url,
-  apiKey: env.retraced.apiKey,
-  projectId: env.retraced.projectId,
-});
-
-export const reportEvent = async (request: Request) => {
-  const { action, user, team, crud } = request;
-
-  const event: Event = {
-    action,
-    crud,
-    group: {
-      id: team.id,
-      name: team.name,
-    },
-    actor: {
-      id: user.id,
-      name: user.name as string,
-    },
-  };
-
-  return await retraced.reportEvent(event);
-};
 
 export type EventType =
   | 'member.invitation.created'
@@ -50,4 +25,29 @@ type Request = {
   team: Team;
   crud: CRUD;
   // target: Target;
+};
+
+export const retracedClient = new Client({
+  endpoint: env.retraced.url,
+  apiKey: env.retraced.apiKey,
+  projectId: env.retraced.projectId,
+});
+
+export const reportEvent = async (request: Request) => {
+  const { action, user, team, crud } = request;
+
+  const event: Event = {
+    action,
+    crud,
+    group: {
+      id: team.id,
+      name: team.name,
+    },
+    actor: {
+      id: user.id,
+      name: user.name as string,
+    },
+  };
+
+  return await retracedClient.reportEvent(event);
 };
