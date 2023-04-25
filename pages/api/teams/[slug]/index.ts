@@ -1,4 +1,4 @@
-import { reportEvent } from '@/lib/retraced';
+import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import {
   deleteTeam,
@@ -77,7 +77,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     domain: req.body.domain,
   });
 
-  await reportEvent({
+  await sendAudit({
     action: 'team.updated',
     crud: 'u',
     user: session.user,
@@ -110,7 +110,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteTeam({ slug });
 
-  await reportEvent({
+  await sendAudit({
     action: 'team.deleted',
     crud: 'd',
     user: session.user,

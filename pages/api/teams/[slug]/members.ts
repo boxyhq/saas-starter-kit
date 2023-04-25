@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { reportEvent } from '@/lib/retraced';
+import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import { sendEvent } from '@/lib/svix';
 import { Role } from '@prisma/client';
@@ -86,7 +86,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await sendEvent(team.id, 'member.removed', teamMember);
 
-  await reportEvent({
+  await sendAudit({
     action: 'member.removed',
     crud: 'd',
     user: session.user,
@@ -169,7 +169,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  await reportEvent({
+  await sendAudit({
     action: 'member.updated',
     crud: 'u',
     user: session.user,

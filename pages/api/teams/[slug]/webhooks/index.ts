@@ -1,4 +1,4 @@
-import { reportEvent } from '@/lib/retraced';
+import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import {
   createWebhook,
@@ -70,7 +70,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const endpoint = await createWebhook(app.id, data);
 
-  await reportEvent({
+  await sendAudit({
     action: 'webhook.created',
     crud: 'c',
     user: session.user,
@@ -136,7 +136,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteWebhook(app.id, webhookId);
 
-  await reportEvent({
+  await sendAudit({
     action: 'webhook.deleted',
     crud: 'd',
     user: session.user,

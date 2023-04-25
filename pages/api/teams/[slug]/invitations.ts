@@ -1,6 +1,6 @@
 import { sendTeamInviteEmail } from '@/lib/email/sendTeamInviteEmail';
 import { prisma } from '@/lib/prisma';
-import { reportEvent } from '@/lib/retraced';
+import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import { sendEvent } from '@/lib/svix';
 import {
@@ -80,7 +80,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await sendTeamInviteEmail(team, invitation);
 
-  await reportEvent({
+  await sendAudit({
     action: 'member.invitation.created',
     crud: 'c',
     user: session.user,
@@ -148,7 +148,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteInvitation({ id });
 
-  await reportEvent({
+  await sendAudit({
     action: 'member.invitation.deleted',
     crud: 'd',
     user: session.user,

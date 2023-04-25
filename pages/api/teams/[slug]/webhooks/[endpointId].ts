@@ -1,4 +1,4 @@
-import { reportEvent } from '@/lib/retraced';
+import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp, findWebhook, updateWebhook } from '@/lib/svix';
 import { getTeam, isTeamMember } from 'models/team';
@@ -84,7 +84,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const webhook = await updateWebhook(app.id, endpointId as string, data);
 
-  await reportEvent({
+  await sendAudit({
     action: 'webhook.updated',
     crud: 'u',
     user: session.user,

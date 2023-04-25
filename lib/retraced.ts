@@ -33,7 +33,7 @@ export const retracedClient = new Client({
   projectId: env.retraced.projectId,
 });
 
-export const reportEvent = async (request: Request) => {
+export const sendAudit = async (request: Request) => {
   const { action, user, team, crud } = request;
 
   const event: Event = {

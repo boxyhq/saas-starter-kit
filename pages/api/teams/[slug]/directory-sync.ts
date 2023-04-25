@@ -1,6 +1,6 @@
 import env from '@/lib/env';
 import jackson from '@/lib/jackson';
-import { reportEvent } from '@/lib/retraced';
+import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import { getTeam, isTeamMember } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -85,7 +85,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     product: env.product,
   });
 
-  await reportEvent({
+  await sendAudit({
     action: 'connection.dsync.created',
     crud: 'c',
     user: session.user,
