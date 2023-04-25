@@ -16,11 +16,18 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
+    "noImplicitAny": false,
     "paths": {
       "@/lib/*": ["lib/*"],
       "@/components/*": ["components/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-auth.d.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    },
+    "require": ["tsconfig-paths/register"]
+  }
 }
