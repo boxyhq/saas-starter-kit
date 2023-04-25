@@ -23,11 +23,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-auth.d.ts"],
-  "exclude": ["node_modules"],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS"
-    },
-    "require": ["tsconfig-paths/register"]
-  }
+  "exclude": ["node_modules"]
 }

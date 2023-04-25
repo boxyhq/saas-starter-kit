@@ -138,7 +138,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await reportEvent({
     action: 'webhook.deleted',
-    crud: 'c',
+    crud: 'd',
     user: session.user,
     team,
   });
