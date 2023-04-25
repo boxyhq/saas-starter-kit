@@ -6,18 +6,18 @@ import type { User } from 'next-auth';
 import env from './env';
 
 export type EventType =
-  | 'member.invitation.created'
-  | 'member.invitation.deleted'
-  | 'connection.saml.created'
-  | 'connection.dsync.created'
-  | 'webhook.created'
-  | 'webhook.deleted'
-  | 'webhook.updated'
-  | 'team.created'
-  | 'team.updated'
-  | 'team.deleted'
-  | 'member.removed'
-  | 'member.updated';
+  | 'member.invitation.create'
+  | 'member.invitation.delete'
+  | 'connection.saml.create'
+  | 'connection.dsync.create'
+  | 'webhook.create'
+  | 'webhook.delete'
+  | 'webhook.update'
+  | 'team.create'
+  | 'team.update'
+  | 'team.delete'
+  | 'member.remove'
+  | 'member.update';
 
 type Request = {
   action: EventType;

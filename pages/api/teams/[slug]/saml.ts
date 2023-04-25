@@ -99,7 +99,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     await sendAudit({
-      action: 'connection.saml.created',
+      action: 'connection.saml.create',
       crud: 'c',
       user: session.user,
       team,
