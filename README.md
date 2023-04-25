@@ -1,4 +1,5 @@
 # Enterprise SaaS Starter Kit
+
 #### Here's what you get out of the box, see images below 👇👇👇
 
 ![saas-starter-kit-poster](/public/saas-starter-kit-poster.png)
@@ -151,15 +152,15 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Update team settings
 - Webhooks & Events
 - Internationalization
+- Audit logs
 
 ## Coming Soon
 
-- Audit logs
+- Billing & subscriptions
+- Roles and Permissions
 - Unit and integration tests
 - Dark mode
 - Mobile-first UI
-- Billing & subscriptions
-- Roles and Permissions
 
 ## Contributing
 
