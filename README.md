@@ -30,6 +30,7 @@ Next.js based SaaS starter kit that saves you months of development by starting 
 - [TypeScript](https://www.typescriptlang.org)
 - [SAML Jackson](https://github.com/boxyhq/jackson) (Provides SAML SSO, Directory Sync)
 - [Svix](https://www.svix.com/) (Provides Webhook Orchestration)
+- [Retraced](https://github.com/retracedhq/retraced) (Provides Audit Logs Service)
 
 ## Deployment
 
