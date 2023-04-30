@@ -29,6 +29,7 @@ const RetracedEventsBrowser = dynamic<RetracedEventsBrowserProps>(
 
 const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   auditLogToken,
+  retracedHost,
 }) => {
   const router = useRouter();
   const { slug } = router.query;
@@ -51,7 +52,7 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
       <Card heading="Audit Logs">
         <Card.Body>
           <RetracedEventsBrowser
-            host={`${env.retraced.url}/viewer/v1`}
+            host={`${retracedHost}/viewer/v1`}
             auditLogToken={auditLogToken}
             header="Audit Logs"
           />
@@ -95,6 +96,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       auditLogToken,
+      retracedHost: env.retraced.url,
     },
   };
 }
