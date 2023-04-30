@@ -34,6 +34,10 @@ export const retracedClient = new Client({
 });
 
 export const sendAudit = async (request: Request) => {
+  if (!env.retraced.apiKey || !env.retraced.projectId || !env.retraced.url) {
+    return;
+  }
+
   const { action, user, team, crud } = request;
 
   const event: Event = {
