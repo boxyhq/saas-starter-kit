@@ -8,16 +8,16 @@ import env from './env';
 export type EventType =
   | 'member.invitation.create'
   | 'member.invitation.delete'
-  | 'connection.saml.create'
-  | 'connection.dsync.create'
+  | 'member.remove'
+  | 'member.update'
+  | 'sso.connection.create'
+  | 'dsync.connection.create'
   | 'webhook.create'
   | 'webhook.delete'
   | 'webhook.update'
   | 'team.create'
   | 'team.update'
-  | 'team.delete'
-  | 'member.remove'
-  | 'member.update';
+  | 'team.delete';
 
 type Request = {
   action: EventType;

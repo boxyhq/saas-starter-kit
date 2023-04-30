@@ -86,7 +86,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   await sendAudit({
-    action: 'connection.dsync.create',
+    action: 'dsync.connection.create',
     crud: 'c',
     user: session.user,
     team,
