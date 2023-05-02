@@ -63,7 +63,7 @@
     "@types/react": "18.0.25",
     "@types/uuid": "9.0.1",
     "@typescript-eslint/eslint-plugin": "5.42.0",
-    "@typescript-eslint/parser": "5.57.0",
+    "@typescript-eslint/parser": "5.59.2",
     "eslint": "8.37.0",
     "eslint-config-next": "12.3.1",
     "eslint-config-prettier": "8.6.0",
