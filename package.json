@@ -45,7 +45,7 @@
     "superjson": "1.12.2",
     "svix": "0.81.0",
     "swr": "2.1.0",
-    "uuid": "8.3.2",
+    "uuid": "9.0.0",
     "yup": "0.32.11",
     "zod": "3.21.4"
   },
@@ -61,7 +61,7 @@
     "@types/node": "18.14.2",
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.25",
-    "@types/uuid": "8.3.4",
+    "@types/uuid": "9.0.1",
     "@typescript-eslint/eslint-plugin": "5.42.0",
     "@typescript-eslint/parser": "5.57.0",
     "eslint": "8.37.0",
