@@ -1,10 +1,16 @@
 import { useTranslation } from 'next-i18next';
 
-const Error = () => {
+interface ErrorProps {
+  message?: string;
+}
+
+const Error = (props: ErrorProps) => {
+  const { message } = props;
   const { t } = useTranslation('common');
+
   return (
     <div>
-      <p>{t('unknown-error')}</p>
+      <p>{message || t('unknown-error')}</p>
     </div>
   );
 };

@@ -27,14 +27,28 @@ type Request = {
   // target: Target;
 };
 
-export const retracedClient = new Client({
-  endpoint: env.retraced.url,
-  apiKey: env.retraced.apiKey,
-  projectId: env.retraced.projectId,
-});
+let retracedClient: Client;
+
+const getRetracedClient = () => {
+  if (!env.retraced.apiKey || !env.retraced.projectId || !env.retraced.url) {
+    return;
+  }
+
+  if (!retracedClient) {
+    retracedClient = new Client({
+      endpoint: env.retraced.url,
+      apiKey: env.retraced.apiKey,
+      projectId: env.retraced.projectId,
+    });
+  }
+
+  return retracedClient;
+};
 
 export const sendAudit = async (request: Request) => {
-  if (!env.retraced.apiKey || !env.retraced.projectId || !env.retraced.url) {
+  const retracedClient = getRetracedClient();
+
+  if (!retracedClient) {
     return;
   }
 
@@ -54,4 +68,14 @@ export const sendAudit = async (request: Request) => {
   };
 
   return await retracedClient.reportEvent(event);
+};
+
+export const getViewerToken = async (groupId: string, actorId: string) => {
+  const retracedClient = getRetracedClient();
+
+  if (!retracedClient) {
+    return;
+  }
+
+  return await retracedClient.getViewerToken(groupId, actorId, true);
 };

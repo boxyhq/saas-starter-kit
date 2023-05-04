@@ -3,7 +3,7 @@ import { Card } from '@/components/ui';
 import { Error, Loading } from '@/components/ui';
 import env from '@/lib/env';
 import { inferSSRProps } from '@/lib/inferSSRProps';
-import { retracedClient } from '@/lib/retraced';
+import { getViewerToken } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import useTeam from 'hooks/useTeam';
 import { getTeam, isTeamAdmin, isTeamMember } from 'models/team';
@@ -43,6 +43,12 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 
   if (isError) {
     return <Error />;
+  }
+
+  if (!auditLogToken) {
+    return (
+      <Error message="Error getting audit log token. Please check your configuration." />
+    );
   }
 
   return (
@@ -86,16 +92,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  const auditLogToken = await retracedClient.getViewerToken(
-    team.id,
-    session.user.id,
-    true
-  );
-
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
-      auditLogToken,
+      auditLogToken: await getViewerToken(team.id, session.user.id),
       retracedHost: env.retraced.url,
     },
   };
