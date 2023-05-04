@@ -16,7 +16,9 @@
 
 The Open Source Next.js SaaS boilerplate for Enterprise SaaS app development.
 
-Please check out the [Enterprise-ready Saas Starter Kit](https://boxyhq.com/blog/enterprise-ready-saas-starter-kit) blog where we go a little deeper on the subject to help you get started.
+## Additional Resources
+
+Video - [Live Discord Community Call Demo: Build a SaaS Application with BoxyHQ's SaaS Starter Kit](https://www.youtube.com/watch?v=oxbEHmhTYQo) <br> Blog - [Enterprise-ready Saas Starter Kit](https://boxyhq.com/blog/enterprise-ready-saas-starter-kit)
 
 Next.js based SaaS starter kit that saves you months of development by starting you off with all the features that are the same in every product, so you can focus on what makes your app unique.
 
