@@ -65,6 +65,7 @@ export const sendAudit = async (request: Request) => {
       id: user.id,
       name: user.name as string,
     },
+    created: new Date(),
   };
 
   return await retracedClient.reportEvent(event);
