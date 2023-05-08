@@ -77,7 +77,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     domain: req.body.domain,
   });
 
-  await sendAudit({
+  sendAudit({
     action: 'team.update',
     crud: 'u',
     user: session.user,
@@ -110,7 +110,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteTeam({ slug });
 
-  await sendAudit({
+  sendAudit({
     action: 'team.delete',
     crud: 'd',
     user: session.user,

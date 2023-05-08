@@ -98,7 +98,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       product: env.product,
     });
 
-    await sendAudit({
+    sendAudit({
       action: 'sso.connection.create',
       crud: 'c',
       user: session.user,

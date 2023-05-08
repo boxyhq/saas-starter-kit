@@ -86,7 +86,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await sendEvent(team.id, 'member.removed', teamMember);
 
-  await sendAudit({
+  sendAudit({
     action: 'member.remove',
     crud: 'd',
     user: session.user,
@@ -169,7 +169,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  await sendAudit({
+  sendAudit({
     action: 'member.update',
     crud: 'u',
     user: session.user,

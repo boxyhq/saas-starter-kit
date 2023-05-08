@@ -80,7 +80,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await sendTeamInviteEmail(team, invitation);
 
-  await sendAudit({
+  sendAudit({
     action: 'member.invitation.create',
     crud: 'c',
     user: session.user,
@@ -148,7 +148,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteInvitation({ id });
 
-  await sendAudit({
+  sendAudit({
     action: 'member.invitation.delete',
     crud: 'd',
     user: session.user,

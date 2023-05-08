@@ -84,7 +84,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const webhook = await updateWebhook(app.id, endpointId as string, data);
 
-  await sendAudit({
+  sendAudit({
     action: 'webhook.update',
     crud: 'u',
     user: session.user,

@@ -70,7 +70,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const endpoint = await createWebhook(app.id, data);
 
-  await sendAudit({
+  sendAudit({
     action: 'webhook.create',
     crud: 'c',
     user: session.user,
@@ -136,7 +136,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteWebhook(app.id, webhookId);
 
-  await sendAudit({
+  sendAudit({
     action: 'webhook.delete',
     crud: 'd',
     user: session.user,
