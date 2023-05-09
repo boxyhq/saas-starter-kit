@@ -1,5 +1,6 @@
 import env from '@/lib/env';
 import jackson from '@/lib/jackson';
+import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import { getTeam, isTeamMember } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -95,6 +96,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       redirectUrl: env.saml.callback,
       tenant: team.id,
       product: env.product,
+    });
+
+    sendAudit({
+      action: 'sso.connection.create',
+      crud: 'c',
+      user: session.user,
+      team,
     });
 
     return res.status(201).json({ data: connection });

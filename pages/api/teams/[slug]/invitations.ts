@@ -1,5 +1,6 @@
 import { sendTeamInviteEmail } from '@/lib/email/sendTeamInviteEmail';
 import { prisma } from '@/lib/prisma';
+import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import { sendEvent } from '@/lib/svix';
 import {
@@ -40,11 +41,16 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query as { slug: string };
 
   const session = await getSession(req, res);
-  const userId = session?.user?.id as string;
+
+  if (!session) {
+    return res.status(401).json({
+      error: { message: 'Unauthorized.' },
+    });
+  }
 
   const team = await getTeam({ slug });
 
-  if (!(await isTeamAdmin(userId, team.id))) {
+  if (!(await isTeamAdmin(session.user.id, team.id))) {
     return res.status(400).json({
       error: { message: 'Bad request.' },
     });
@@ -65,7 +71,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const invitation = await createInvitation({
     teamId: team.id,
-    invitedBy: userId,
+    invitedBy: session.user.id,
     email,
     role,
   });
@@ -73,6 +79,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   await sendEvent(team.id, 'invitation.created', invitation);
 
   await sendTeamInviteEmail(team, invitation);
+
+  sendAudit({
+    action: 'member.invitation.create',
+    crud: 'c',
+    user: session.user,
+    team,
+  });
 
   return res.status(200).json({ data: invitation });
 };
@@ -82,11 +95,16 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query as { slug: string };
 
   const session = await getSession(req, res);
-  const userId = session?.user?.id as string;
+
+  if (!session) {
+    return res.status(401).json({
+      error: { message: 'Unauthorized.' },
+    });
+  }
 
   const team = await getTeam({ slug });
 
-  if (!(await isTeamAdmin(userId, team?.id))) {
+  if (!(await isTeamAdmin(session.user.id, team?.id))) {
     return res.status(400).json({
       error: { message: 'Bad request.' },
     });
@@ -103,11 +121,16 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query as { slug: string };
 
   const session = await getSession(req, res);
-  const userId = session?.user?.id as string;
+
+  if (!session) {
+    return res.status(401).json({
+      error: { message: 'Unauthorized.' },
+    });
+  }
 
   const team = await getTeam({ slug });
 
-  if (!(await isTeamAdmin(userId, team?.id))) {
+  if (!(await isTeamAdmin(session.user.id, team?.id))) {
     return res.status(400).json({
       error: { message: 'Bad request.' },
     });
@@ -115,7 +138,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const invitation = await getInvitation({ id });
 
-  if (invitation.invitedBy != userId || invitation.teamId != team.id) {
+  if (invitation.invitedBy != session.user.id || invitation.teamId != team.id) {
     return res.status(400).json({
       error: {
         message: "You don't have permission to delete this invitation.",
@@ -124,6 +147,13 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   await deleteInvitation({ id });
+
+  sendAudit({
+    action: 'member.invitation.delete',
+    crud: 'd',
+    user: session.user,
+    team,
+  });
 
   await sendEvent(team.id, 'invitation.removed', invitation);
 
