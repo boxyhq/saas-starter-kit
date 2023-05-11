@@ -23,7 +23,7 @@
     "@heroicons/react": "2.0.17",
     "@hookform/resolvers": "2.9.11",
     "@next-auth/prisma-adapter": "1.0.5",
-    "@prisma/client": "4.11.0",
+    "@prisma/client": "4.13.0",
     "@retracedhq/logs-viewer": "2.4.6",
     "@retracedhq/retraced": "0.6.3",
     "@tailwindcss/typography": "0.5.9",
