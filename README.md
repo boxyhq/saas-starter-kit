@@ -1,4 +1,5 @@
 # Enterprise SaaS Starter Kit
+
 #### Here's what you get out of the box, see images below 👇👇👇
 
 ![saas-starter-kit-poster](/public/saas-starter-kit-poster.png)
@@ -31,6 +32,7 @@ Next.js based SaaS starter kit that saves you months of development by starting 
 - [TypeScript](https://www.typescriptlang.org)
 - [SAML Jackson](https://github.com/boxyhq/jackson) (Provides SAML SSO, Directory Sync)
 - [Svix](https://www.svix.com/) (Provides Webhook Orchestration)
+- [Retraced](https://github.com/retracedhq/retraced) (Provides Audit Logs Service)
 
 ## Deployment
 
@@ -153,15 +155,15 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Update team settings
 - Webhooks & Events
 - Internationalization
+- Audit logs
 
 ## Coming Soon
 
-- Audit logs
+- Billing & subscriptions
+- Roles and Permissions
 - Unit and integration tests
 - Dark mode
 - Mobile-first UI
-- Billing & subscriptions
-- Roles and Permissions
 
 ## Contributing
 

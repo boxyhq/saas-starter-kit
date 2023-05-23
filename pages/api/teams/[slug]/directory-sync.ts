@@ -1,5 +1,6 @@
 import env from '@/lib/env';
 import jackson from '@/lib/jackson';
+import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import { getTeam, isTeamMember } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -61,11 +62,16 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { directorySync } = await jackson();
 
   const session = await getSession(req, res);
-  const userId = session?.user?.id as string;
+
+  if (!session) {
+    return res.status(401).json({
+      error: { message: 'Unauthorized.' },
+    });
+  }
 
   const team = await getTeam({ slug: slug as string });
 
-  if (!(await isTeamMember(userId, team?.id))) {
+  if (!(await isTeamMember(session.user.id, team?.id))) {
     return res.status(400).json({
       data: null,
       error: { message: 'Bad request.' },
@@ -77,6 +83,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     type: provider,
     tenant: team.id,
     product: env.product,
+  });
+
+  sendAudit({
+    action: 'dsync.connection.create',
+    crud: 'c',
+    user: session.user,
+    team,
   });
 
   return res.status(201).json({ data, error });
