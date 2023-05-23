@@ -5,17 +5,17 @@ import { NextApiHandler } from 'next';
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: { message: 'Method not allowed' } });
+    return res.status(405).json({ error: { message: 'method not allowed' } });
   }
 
   const { token, password } = req.body;
 
   if (!token) {
-    return res.status(422).json({ error: { message: 'Missing token' } });
+    return res.status(422).json({ error: { message: 'missing token' } });
   }
 
   if (!password || !validatePassword(password)) {
-    return res.status(422).json({ error: { message: 'Invalid password' } });
+    return res.status(422).json({ error: { message: 'invalid password' } });
   }
 
   const passwordReset = await prisma.passwordReset.findUnique({
@@ -23,17 +23,15 @@ const handler: NextApiHandler = async (req, res) => {
   });
 
   if (!passwordReset) {
-    return res
-      .status(422)
-      .json({
-        error: { message: 'Password reset token not found or expired' },
-      });
+    return res.status(422).json({
+      error: { message: 'password reset token not found or expired' },
+    });
   }
 
   if (passwordReset.expiresAt < new Date()) {
     return res
       .status(422)
-      .json({ error: { message: 'Password reset token has expired' } });
+      .json({ error: { message: 'password reset token has expired' } });
   }
 
   const hashedPassword = await hashPassword(password);
@@ -50,7 +48,7 @@ const handler: NextApiHandler = async (req, res) => {
     }),
   ]);
 
-  res.status(200).json({ message: 'Password updated successfully' });
+  res.status(200).json({ message: 'password updated successfully' });
 };
 
 export default handler;
