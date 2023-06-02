@@ -123,6 +123,13 @@ const Login: NextPageWithLayout<
           </a>
         </Link>
       </p>
+      <p className="text-center text-sm text-gray-600">
+        <Link href="/auth/forgot-password">
+          <a className="font-medium text-indigo-600 hover:text-indigo-500">
+            &nbsp;{t('forgot-password')}
+          </a>
+        </Link>
+      </p>
     </>
   );
 };

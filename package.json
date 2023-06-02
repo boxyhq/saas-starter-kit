@@ -27,6 +27,7 @@
     "@retracedhq/logs-viewer": "2.4.6",
     "@retracedhq/retraced": "0.6.3",
     "@tailwindcss/typography": "0.5.9",
+    "autoprefixer": "10.4.14",
     "axios": "1.4.0",
     "babel-plugin-superjson-next": "0.4.5",
     "bcryptjs": "2.4.3",
@@ -49,8 +50,8 @@
     "react-i18next": "12.2.2",
     "react-icons": "4.8.0",
     "superjson": "1.12.3",
-    "swr": "2.1.5",
     "svix": "0.83.1",
+    "swr": "2.1.5",
     "uuid": "9.0.0",
     "yup": "0.32.11",
     "zod": "3.21.4"

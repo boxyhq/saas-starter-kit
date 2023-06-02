@@ -85,16 +85,16 @@ const ForgotPassword: NextPageWithLayout<
               active={formik.dirty}
               fullWidth
             >
-              {t('Email Password Reset Link')}
+              {t('email-password-reset-link')}
             </Button>
           </div>
         </form>
       </div>
       <p className="text-center text-sm text-gray-600">
-        {t('Already have an account? ')}
+        {t('already-have-an-account')}
         <Link href="/auth/login">
           <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;{t('Sign In')}
+            &nbsp;{t('sign-in')}
           </a>
         </Link>
       </p>

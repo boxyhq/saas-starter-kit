@@ -41,11 +41,12 @@ export const ResetPasswordForm = () => {
         if (response.ok) {
           formik.resetForm();
           router.push('/auth/login');
-          toast.success(t('password-reset-link-sent'), {
+          toast.success(t('password-updated'), {
             position: 'top-center',
           });
         } else {
-          toast.error(t('login-error'), {
+          const responseBody = await response.json();
+          toast.error(t(responseBody.error.message), {
             position: 'top-center',
           });
         }
