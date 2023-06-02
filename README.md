@@ -182,7 +182,7 @@ Please try to create bug reports that are:
 
 - [Discord](https://discord.gg/uyb7pYt4Pa) (For live discussion with the Open-Source Community and BoxyHQ team)
 - [Twitter](https://twitter.com/BoxyHQ) (Follow us)
-- [Youtube](https://www.youtube.com/@boxyhq)Please subscribe to be notified of new content
+- [Youtube](https://www.youtube.com/@boxyhq)(Watch community events and tutorials)
 - [GitHub Issues](https://github.com/boxyhq/saas-starter-kit/issues) (Contributions, report issues and product ideas)
 
 ## License
