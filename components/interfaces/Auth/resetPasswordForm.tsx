@@ -31,7 +31,7 @@ export const ResetPasswordForm = () => {
       const { password } = values;
 
       try {
-        var response = await fetch('/api/auth/reset-password', {
+        const response = await fetch('/api/auth/reset-password', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
