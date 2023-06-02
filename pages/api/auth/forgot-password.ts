@@ -45,7 +45,7 @@ const handler: NextApiHandler = async (req, res) => {
     },
   });
   try {
-    await sendPasswordResetEmail(email, token);
+    await sendPasswordResetEmail(email, encodeURIComponent(token));
     res.status(200).json({ message: 'Password reset email sent' });
   } catch (err) {
     console.error(err);

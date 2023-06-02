@@ -20,7 +20,7 @@ export const createRandomString = (length = 6) => {
 export function generatePasswordResetToken(length = 64): string {
   const tokenBytes = lib.WordArray.random(length);
   const tokenBase64 = enc.Base64.stringify(tokenBytes);
-  return encodeURIComponent(tokenBase64);
+  return tokenBase64;
 }
 
 export const slugify = (text: string) => {
