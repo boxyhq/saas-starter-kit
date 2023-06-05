@@ -107,3 +107,13 @@ model Invitation {
 
   @@unique([teamId, email])
 }
+
+
+model PasswordReset {
+  id            Int      @id @default(autoincrement())
+  email         String
+  token         String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  expiresAt     DateTime
+}
