@@ -1,7 +1,9 @@
 import { AuthLayout } from '@/components/layouts';
 import { InputWithLabel } from '@/components/ui';
+import { getAxiosError } from '@/lib/common';
 import { getParsedCookie } from '@/lib/cookie';
 import env from '@/lib/env';
+import axios from 'axios';
 import { useFormik } from 'formik';
 import type {
   GetServerSidePropsContext,
@@ -15,7 +17,7 @@ import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
-import type { NextPageWithLayout } from 'types';
+import type { ApiResponse, NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
 
 const ForgotPassword: NextPageWithLayout<
@@ -37,27 +39,15 @@ const ForgotPassword: NextPageWithLayout<
       email: Yup.string().required().email(),
     }),
     onSubmit: async (values) => {
-      const { email } = values;
+      try {
+        await axios.post<ApiResponse>('/api/auth/forgot-password', {
+          ...values,
+        });
 
-      const response = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-        }),
-      });
-
-      if (response.ok) {
         formik.resetForm();
-        toast.success(t('password-reset-link-sent'), {
-          position: 'top-center',
-        });
-      } else {
-        toast.error(t('login-error'), {
-          position: 'top-center',
-        });
+        toast.success(t('password-reset-link-sent'));
+      } catch (error: any) {
+        toast.error(getAxiosError(error));
       }
     },
   });
@@ -103,14 +93,7 @@ const ForgotPassword: NextPageWithLayout<
 };
 
 ForgotPassword.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <AuthLayout
-      heading="Verify your email"
-      description="Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one."
-    >
-      {page}
-    </AuthLayout>
-  );
+  return <AuthLayout heading="Reset Password">{page}</AuthLayout>;
 };
 
 export const getServerSideProps = async (
