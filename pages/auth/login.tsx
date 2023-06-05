@@ -85,6 +85,13 @@ const Login: NextPageWithLayout<
               }
               onChange={formik.handleChange}
             />
+            <p className="text-sm text-gray-600 text-right">
+              <Link href="/auth/forgot-password">
+                <a className="font-medium text-indigo-600 hover:text-indigo-500">
+                  {t('forgot-password')}
+                </a>
+              </Link>
+            </p>
           </div>
           <div className="mt-4">
             <Button
@@ -120,13 +127,6 @@ const Login: NextPageWithLayout<
         <Link href="/auth/join">
           <a className="font-medium text-indigo-600 hover:text-indigo-500">
             &nbsp;{t('create-a-free-account')}
-          </a>
-        </Link>
-      </p>
-      <p className="text-center text-sm text-gray-600">
-        <Link href="/auth/forgot-password">
-          <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;{t('forgot-password')}
           </a>
         </Link>
       </p>
