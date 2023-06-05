@@ -1,15 +1,13 @@
 import { AuthLayout } from '@/components/layouts';
 import { InputWithLabel } from '@/components/ui';
 import { getAxiosError } from '@/lib/common';
-import { getParsedCookie } from '@/lib/cookie';
-import env from '@/lib/env';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
-import { getCsrfToken, signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
@@ -22,13 +20,13 @@ import * as Yup from 'yup';
 
 const ForgotPassword: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ csrfToken, redirectAfterSignIn }) => {
+> = () => {
   const { status } = useSession();
   const router = useRouter();
   const { t } = useTranslation('common');
 
   if (status === 'authenticated') {
-    router.push(redirectAfterSignIn);
+    router.push('/dashboard');
   }
 
   const formik = useFormik({
@@ -99,15 +97,11 @@ ForgotPassword.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res, locale }: GetServerSidePropsContext = context;
-
-  const cookieParsed = getParsedCookie(req, res);
+  const { locale }: GetServerSidePropsContext = context;
 
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
-      csrfToken: await getCsrfToken(context),
-      redirectAfterSignIn: cookieParsed.url ?? env.redirectAfterSignIn,
     },
   };
 };
