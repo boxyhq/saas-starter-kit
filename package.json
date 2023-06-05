@@ -34,7 +34,7 @@
     "classnames": "2.3.2",
     "cookies-next": "2.1.1",
     "crypto-js": "4.1.1",
-    "daisyui": "3.0.0",
+    "daisyui": "^2.52.0",
     "formik": "2.2.9",
     "i18next": "22.4.15",
     "moment": "2.29.4",
@@ -50,8 +50,8 @@
     "react-i18next": "12.2.2",
     "react-icons": "4.8.0",
     "superjson": "1.12.3",
-    "swr": "2.1.5",
     "svix": "0.84.1",
+    "swr": "2.1.5",
     "uuid": "9.0.0",
     "yup": "0.32.11",
     "zod": "3.21.4"
