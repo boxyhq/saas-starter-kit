@@ -11,11 +11,15 @@ const handler: NextApiHandler = async (req, res) => {
   const { token, password } = req.body;
 
   if (!token) {
-    return res.status(422).json({ error: { message: 'missing token' } });
+    return res
+      .status(422)
+      .json({ error: { message: `Password reset token is required` } });
   }
 
   if (!password || !validatePassword(password)) {
-    return res.status(422).json({ error: { message: 'invalid password' } });
+    return res
+      .status(422)
+      .json({ error: { message: `Password does not meet requirements` } });
   }
 
   const passwordReset = await prisma.passwordReset.findUnique({
@@ -24,14 +28,20 @@ const handler: NextApiHandler = async (req, res) => {
 
   if (!passwordReset) {
     return res.status(422).json({
-      error: { message: 'password reset token not found or expired' },
+      error: {
+        message: `Invalid password reset token. Please request a new one.`,
+      },
     });
   }
 
   if (passwordReset.expiresAt < new Date()) {
     return res
       .status(422)
-      .json({ error: { message: 'password reset token has expired' } });
+      .json({
+        error: {
+          message: `Password reset token has expired. Please request a new one.`,
+        },
+      });
   }
 
   const hashedPassword = await hashPassword(password);
@@ -48,7 +58,7 @@ const handler: NextApiHandler = async (req, res) => {
     }),
   ]);
 
-  res.status(200).json({ message: 'password updated successfully' });
+  res.status(200).json({ message: `Password reset successfully` });
 };
 
 export default handler;
