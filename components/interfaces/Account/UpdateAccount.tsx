@@ -21,6 +21,7 @@ const UpdateAccount = ({ user }: { user: User }) => {
     initialValues: {
       name: user.name,
       email: user.email,
+      image: user.image
     },
     validationSchema: schema,
     onSubmit: async (values) => {
