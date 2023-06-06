@@ -20,12 +20,11 @@ const schema = Yup.object().shape({
       'Only JPG, PNG, and GIF files are allowed',
       (value) => {
         if (value) {
-          const fileType = value.type;
-          return (
-            fileType === 'image/jpeg' ||
-            fileType === 'image/png' ||
-            fileType === 'image/gif'
-          );
+          const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+          const base64Parts = value.split(';base64,');
+          const mimeType = base64Parts[0].split(':')[1];
+          const fileExtension = mimeType.split('/')[1];
+          return allowedExtensions.includes(fileExtension.toLowerCase());
         }
         return true; // If no file is selected, consider it valid
       }
