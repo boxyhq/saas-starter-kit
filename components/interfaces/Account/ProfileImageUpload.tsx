@@ -21,16 +21,21 @@ const ProfileImageUpload = ({ formik }) => {
         Add a profile picture
       </label>
       <div className="">
-        <div className="relative w-40 h-40 mb-4">
-          {formik.values.image && (
+        <div className="relative w-36 h-36 mb-4">
+          {formik.values.image ? (
             <img
               src={formik.values.image}
-              className="w-40 h-40 rounded-full absolute m-auto shadow"
+              className="w-36 h-36 rounded-full absolute m-auto shadow"
               alt=""
+            />
+          ) : (
+            <img
+              src="https://www.pngkey.com/png/detail/121-1219231_user-default-profile.png"
+              className="w-36 h-36 rounded-full absolute m-auto shadow"
+              alt="Default Image"
             />
           )}
         </div>
-
         <div className="">
           <input
             type="file"
