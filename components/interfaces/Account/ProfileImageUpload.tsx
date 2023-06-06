@@ -16,33 +16,34 @@ const ProfileImageUpload = ({ formik }) => {
   };
 
   return (
-    <div className="mb-4">
-      <label className="line-clamp-3 tracking-wide block mb-2 text-gray-700">
+    <div>
+      <label className="line-clamp-3 tracking-wide block mb-2 text-gray-700 text-sm">
         Add a cover image
       </label>
-      <div className="flex flex-col mb-8">
-        <div>
+      <div className="">
+        <div className="relative w-40 h-40 mb-4">
           {formik.values.image && (
             <img
               src={formik.values.image}
-              className="max-h-56 max-w-[224px] bg-gray-50 mr-8"
+              className="w-40 h-40 rounded-full absolute m-auto shadow"
               alt=""
             />
           )}
         </div>
-        <div className="flex-1">
+
+        <div className="">
           <input
             type="file"
             id="cover_image"
             className="sr-only"
             ref={imageInputRef}
-            onChange={(e)=> handleImageChange(e)}
+            onChange={(e) => handleImageChange(e)}
           />
           <label
-            className="bg-skin-base capitalize py-2 px-4 leading-6 border inline-flex flex-row justify-center items-center no-underline rounded-md font-semibold cursor-pointer transition duration-200 ease-in-out shadow-sm shadow-gray-100"
+            className="px-4 py-1 uppercase text-xs font-medium leading-6 border inline-flex flex-row justify-center items-center no-underline rounded-md cursor-pointer transition duration-200 ease-in-out shadow-sm shadow-gray-100"
             htmlFor="cover_image"
           >
-            change
+            select new photo
           </label>
           {formik.touched.image && formik.errors.image && (
             <div className="text-red-500">{formik.errors.image}</div>
