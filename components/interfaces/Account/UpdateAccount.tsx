@@ -8,10 +8,28 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
+import ProfileImageUpload from './ProfileImageUpload';
 
 const schema = Yup.object().shape({
   name: Yup.string().required(),
   email: Yup.string().required(),
+  image: Yup.mixed()
+    .required('Please select an image')
+    .test(
+      'fileFormat',
+      'Only JPG, PNG, and GIF files are allowed',
+      (value) => {
+        if (value) {
+          const fileType = value.type;
+          return (
+            fileType === 'image/jpeg' ||
+            fileType === 'image/png' ||
+            fileType === 'image/gif'
+          );
+        }
+        return true; // If no file is selected, consider it valid
+      }
+    ),
 });
 
 const UpdateAccount = ({ user }: { user: User }) => {
@@ -26,6 +44,7 @@ const UpdateAccount = ({ user }: { user: User }) => {
     validationSchema: schema,
     onSubmit: async (values) => {
       try {
+        console.log(values)
         await axios.put<ApiResponse<User>>('/api/users', {
           ...values,
         });
@@ -42,6 +61,7 @@ const UpdateAccount = ({ user }: { user: User }) => {
       <Card heading="Your Profile">
         <Card.Body className="p-4">
           <div className="flex flex-col space-y-2">
+            <ProfileImageUpload formik={formik} />
             <InputWithLabel
               type="text"
               label="Name"
