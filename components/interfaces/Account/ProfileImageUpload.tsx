@@ -18,7 +18,7 @@ const ProfileImageUpload = ({ formik }) => {
   return (
     <div>
       <label className="line-clamp-3 tracking-wide block mb-2 text-gray-700 text-sm">
-        Add a cover image
+        Add a profile picture
       </label>
       <div className="">
         <div className="relative w-40 h-40 mb-4">
