@@ -36,7 +36,7 @@ const ProfileImageUpload = ({ formik }) => {
             />
           )}
         </div>
-        <div className="">
+        <div>
           <input
             type="file"
             id="cover_image"
