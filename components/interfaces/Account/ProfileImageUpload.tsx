@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useRef } from 'react';
+import Image from 'next/image';
 
 const ProfileImageUpload = ({ formik }) => {
   const imageInputRef = useRef(null);
@@ -29,10 +30,12 @@ const ProfileImageUpload = ({ formik }) => {
               alt=""
             />
           ) : (
-            <img
-              src="https://www.pngkey.com/png/detail/121-1219231_user-default-profile.png"
+            <Image
+              src="/user-default-profile.jpeg"
               className="w-36 h-36 rounded-full absolute m-auto shadow"
               alt="Default Image"
+              width={144} 
+              height={144}
             />
           )}
         </div>
