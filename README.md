@@ -147,6 +147,7 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Sign in with SAML SSO
 - Sign in with Google [[Setting up Google OAuth](https://support.google.com/cloud/answer/6158849?hl=en)]
 - Sign in with Github [[Creating a Github OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)]
+- Admin Dashboard
 - Directory Sync (SCIM)
 - Update account
 - Create team
