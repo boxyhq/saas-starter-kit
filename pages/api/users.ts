@@ -27,7 +27,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!session) {
     return res.status(401).json({ error: { message: 'Unauthorized' } });
   }
-  console.log(name, image);
+
   const user = await prisma.user.update({
     where: { id: session.user.id },
     data: { name, image },

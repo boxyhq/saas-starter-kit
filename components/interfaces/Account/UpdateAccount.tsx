@@ -43,7 +43,6 @@ const UpdateAccount = ({ user }: { user: User }) => {
     validationSchema: schema,
     onSubmit: async (values) => {
       try {
-        console.log(values)
         await axios.put<ApiResponse<User>>('/api/users', {
           ...values,
         });
