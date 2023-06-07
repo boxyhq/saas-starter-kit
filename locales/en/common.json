@@ -93,5 +93,7 @@
   "email-password-reset-link": "Email Password Reset Link",
   "reset-password": "Reset Password",
   "forgot-password": "Forgot Your Password?",
-  "password-updated":"Password updated successfully."
+  "password-updated":"Password updated successfully.",
+  "new-photo": "Select New Photo",
+  "add-profile-picture":"Add a profile picture"
 }

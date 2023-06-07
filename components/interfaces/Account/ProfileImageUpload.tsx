@@ -1,7 +1,9 @@
 import React, { ChangeEvent, useRef } from 'react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 const ProfileImageUpload = ({ formik }) => {
+  const { t } = useTranslation('common');
   const imageInputRef = useRef(null);
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -19,7 +21,7 @@ const ProfileImageUpload = ({ formik }) => {
   return (
     <div>
       <label className="line-clamp-3 tracking-wide block mb-2 text-gray-700 text-sm">
-        Add a profile picture
+        {t('add-profile-picture')}
       </label>
       <div className="">
         <div className="relative w-36 h-36 mb-4">
@@ -51,7 +53,7 @@ const ProfileImageUpload = ({ formik }) => {
             className="px-4 py-1 uppercase text-xs font-medium leading-6 border inline-flex flex-row justify-center items-center no-underline rounded-md cursor-pointer transition duration-200 ease-in-out shadow-sm shadow-gray-100"
             htmlFor="cover_image"
           >
-            select new photo
+            {t('new-photo')}
           </label>
           {formik.touched.image && formik.errors.image && (
             <div className="text-red-500">{formik.errors.image}</div>
