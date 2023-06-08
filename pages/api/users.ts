@@ -20,7 +20,7 @@ export default async function handler(
 }
 
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name } = req.body;
+  const { name, image } = req.body;
 
   const session = await getSession(req, res);
 
@@ -30,7 +30,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const user = await prisma.user.update({
     where: { id: session.user.id },
-    data: { name },
+    data: { name, image },
   });
 
   return res.status(200).json({ data: user });
