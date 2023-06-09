@@ -105,6 +105,16 @@ const Login: NextPageWithLayout<
             </Button>
           </div>
         </form>
+        <div className="mt-4">
+          <Link href="/auth/forgot-password">
+            <Button
+              color="secondary"
+              fullWidth
+            >
+              {t('forgot-password')}
+            </Button>
+          </Link>
+        </div>
         <div className="divider"></div>
         <div className="space-y-3">
           <Link href="/auth/magic-link">
