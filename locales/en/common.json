@@ -105,5 +105,7 @@
   "directory-sync": "Directory Sync",
   "audit-logs-menu": "Audit Logs",
   "webhooks": "Webhooks",
-  "api-keys": "API Keys"
+  "api-keys": "API Keys",
+  "team": "Team",
+  "team-name": "Team Name",
 }
