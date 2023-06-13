@@ -6,7 +6,6 @@ import {
   UsersIcon,
 } from '@heroicons/react/24/outline';
 import useTeam from 'hooks/useTeam';
-import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 
