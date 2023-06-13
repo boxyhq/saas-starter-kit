@@ -34,13 +34,13 @@ export const teamNavigations = (slug: string, activeTab: string) => {
       icon: UserPlusIcon,
     },
     {
-      name: 'SAML SSO',
+      name: 'Single Sign-On',
       href: `/teams/${slug}/saml`,
       active: activeTab === 'saml',
       icon: ShieldExclamationIcon,
     },
     {
-      name: 'Directory Sync (SCIM)',
+      name: 'Directory Sync',
       href: `/teams/${slug}/directory-sync`,
       active: activeTab === 'directory-sync',
       icon: UserPlusIcon,
