@@ -1,4 +1,5 @@
 import app from '@/lib/app';
+import { signOut } from 'next-auth/react';
 
 export default function Navbar() {
   return (
@@ -42,6 +43,14 @@ export default function Navbar() {
             >
               <span className="self-center whitespace-nowrap">{app.name}</span>
             </a>
+          </div>
+          <div>
+            <button
+              className="px-2 py-1 text-sm font-semibold"
+              onClick={() => signOut()}
+            >
+              Sign Out
+            </button>
           </div>
         </div>
       </div>
