@@ -12,36 +12,35 @@ import { useRouter } from 'next/router';
 import TeamNav from '../interfaces/Team/TeamNav';
 import NavItem from './NavItem';
 
-const navigation = [
-  {
-    name: 'Dashboard',
-    href: '/dashboard',
-    icon: HomeIcon,
-  },
-  {
-    name: 'Teams',
-    href: '/teams',
-    icon: UsersIcon,
-  },
-  {
-    name: 'Account',
-    href: '/settings/account',
-    icon: UserCircleIcon,
-  },
-  {
-    name: 'Password',
-    href: '/settings/password',
-    icon: LockClosedIcon,
-  },
-];
-
 export default function Sidebar() {
   const router = useRouter();
   const { t } = useTranslation('common');
 
-  const slug = router.query.slug as string;
-
+  const { slug } = router.query as { slug: string };
   const { team } = useTeam(slug);
+
+  const navigation = [
+    {
+      name: t('dashboard'),
+      href: '/dashboard',
+      icon: HomeIcon,
+    },
+    {
+      name: t('teams'),
+      href: '/teams',
+      icon: UsersIcon,
+    },
+    {
+      name: t('account'),
+      href: '/settings/account',
+      icon: UserCircleIcon,
+    },
+    {
+      name: t('password'),
+      href: '/settings/password',
+      icon: LockClosedIcon,
+    },
+  ];
 
   return (
     <>
@@ -66,7 +65,7 @@ export default function Sidebar() {
               </ul>
               {team && (
                 <div className="space-y-2 pt-2">
-                  <span className='p-2 text-sm font-semibold flex gap-2'>
+                  <span className="p-2 text-sm font-semibold flex gap-2">
                     <HashtagIcon className="h-5 w-5" />
                     {team.name}
                   </span>
