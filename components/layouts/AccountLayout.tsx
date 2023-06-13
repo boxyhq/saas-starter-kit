@@ -1,22 +1,11 @@
-import { Error, Loading, Navbar, Sidebar } from '@/components/ui';
-import useTeams from 'hooks/useTeams';
+import { Navbar, Sidebar } from '@/components/ui';
 import React from 'react';
 
-export default function AccountLayout({
-  children,
-}: {
+interface AccountLayoutProps {
   children: React.ReactNode;
-}) {
-  const { isLoading, isError, teams } = useTeams();
+}
 
-  if (isLoading || !teams) {
-    return <Loading />;
-  }
-
-  if (isError) {
-    return <Error />;
-  }
-
+export default function AccountLayout({ children }: AccountLayoutProps) {
   return (
     <>
       <Navbar />
