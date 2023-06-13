@@ -37,8 +37,6 @@ const DirectorySync: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{team.name}</h3>
-      <TeamTab team={team} activeTab="directory-sync" />
       <Card heading="Directory Sync">
         <Card.Body className="px-3 py-3">
           <div className="mb-3 flex items-center justify-between">

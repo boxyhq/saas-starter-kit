@@ -33,8 +33,6 @@ const TeamSSO: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{team.name}</h3>
-      <TeamTab team={team} activeTab="saml" />
       <Card heading="SAML Single Sign-On">
         <Card.Body className="px-3 py-3">
           <div className="mb-3 flex items-center justify-between">
