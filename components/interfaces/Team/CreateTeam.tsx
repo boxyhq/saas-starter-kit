@@ -60,7 +60,7 @@ const CreateTeam = ({
                 className="flex-grow"
                 onChange={formik.handleChange}
                 value={formik.values.name}
-                placeholder="Team name"
+                placeholder={t('team-name')}
               />
             </div>
           </div>

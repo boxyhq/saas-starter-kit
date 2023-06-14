@@ -1,4 +1,4 @@
-import { ResetPasswordForm } from '@/components/interfaces/Auth/resetPasswordForm';
+import { ResetPasswordForm } from '@/components/interfaces/Auth';
 import { AuthLayout } from '@/components/layouts';
 import type {
   GetServerSidePropsContext,
@@ -16,16 +16,15 @@ const ResetPasswordPage: NextPageWithLayout<
   const { status } = useSession();
   const router = useRouter();
 
-  if (status === 'authenticated') {
-    router.push('/dashboard');
-  }
-
   return <ResetPasswordForm />;
 };
 
 ResetPasswordPage.getLayout = function getLayout(page: ReactElement) {
   return (
-    <AuthLayout heading="Reset Password" description="Enter new password">
+    <AuthLayout
+      heading="Reset Password"
+      description="Enter new password"
+    >
       {page}
     </AuthLayout>
   );

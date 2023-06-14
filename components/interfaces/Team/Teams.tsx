@@ -12,6 +12,7 @@ import { ApiResponse } from 'types';
 const Teams = () => {
   const { isLoading, isError, teams, mutateTeams } = useTeams();
   const { t } = useTranslation('common');
+
   if (isLoading) {
     return <Loading />;
   }

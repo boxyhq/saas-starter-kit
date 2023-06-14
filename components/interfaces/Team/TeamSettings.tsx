@@ -3,6 +3,7 @@ import { getAxiosError } from '@/lib/common';
 import { Team } from '@prisma/client';
 import axios from 'axios';
 import { useFormik } from 'formik';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Button } from 'react-daisyui';
@@ -12,6 +13,7 @@ import * as Yup from 'yup';
 
 const TeamSettings = ({ team }: { team: Team }) => {
   const router = useRouter();
+  const { t } = useTranslation('common');
 
   const formik = useFormik({
     initialValues: {
@@ -37,7 +39,7 @@ const TeamSettings = ({ team }: { team: Team }) => {
         const { data: teamUpdated } = response.data;
 
         if (teamUpdated) {
-          toast.success('Successfully updated!');
+          toast.success(t('successfully-updated'));
           return router.push(`/teams/${teamUpdated.slug}/settings`);
         }
       } catch (error: any) {
@@ -49,29 +51,29 @@ const TeamSettings = ({ team }: { team: Team }) => {
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
-        <Card heading="Team Settings">
+        <Card heading={t('team-settings')}>
           <Card.Body className="px-3 py-3">
             <div className="flex flex-col">
               <InputWithLabel
                 name="name"
-                label="Display name"
-                descriptionText="A human-friendly name for the team"
+                label={t('team-name')}
+                descriptionText={t('team-name')}
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 error={formik.errors.name}
               />
               <InputWithLabel
                 name="slug"
-                label="Team slug"
-                descriptionText="A unique ID used to identify this team"
+                label={t('team-slug')}
+                descriptionText={t('team-slug-description')}
                 value={formik.values.slug}
                 onChange={formik.handleChange}
                 error={formik.errors.slug}
               />
               <InputWithLabel
                 name="domain"
-                label="Domain"
-                descriptionText="Domain name for the team"
+                label={t('team-domain')}
+                descriptionText={t('team-domain')}
                 value={formik.values.domain ? formik.values.domain : ''}
                 onChange={formik.handleChange}
                 error={formik.errors.domain}
@@ -88,7 +90,7 @@ const TeamSettings = ({ team }: { team: Team }) => {
                 className="text-white"
                 size="sm"
               >
-                Save Changes
+                {t('save-changes')}
               </Button>
             </div>
           </Card.Footer>

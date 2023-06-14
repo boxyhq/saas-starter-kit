@@ -1,4 +1,3 @@
-import { TeamTab } from '@/components/interfaces/Team';
 import { CreateWebhook, Webhooks } from '@/components/interfaces/Webhook';
 import { Error, Loading } from '@/components/ui';
 import useTeam from 'hooks/useTeam';

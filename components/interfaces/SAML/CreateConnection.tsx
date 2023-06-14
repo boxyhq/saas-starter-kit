@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 
-const ConfigureSAML = ({
+const CreateConnection = ({
   visible,
   setVisible,
   team,
@@ -56,7 +56,9 @@ const ConfigureSAML = ({
   return (
     <Modal open={visible}>
       <form onSubmit={formik.handleSubmit} method="POST">
-        <Modal.Header className="font-bold">Configure SAML SSO</Modal.Header>
+        <Modal.Header className="font-bold">
+          {t('configure-singlesignon')}
+        </Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">
             <p>{t('setup-saml-auth')}</p>
@@ -67,7 +69,7 @@ const ConfigureSAML = ({
                 onChange={formik.handleChange}
                 value={formik.values.metadata}
                 rows={6}
-                placeholder="Copy and paste Metadata XML here."
+                placeholder={t('copy-paste-metadata')}
                 required
               />
             </div>
@@ -97,4 +99,4 @@ const ConfigureSAML = ({
   );
 };
 
-export default ConfigureSAML;
+export default CreateConnection;

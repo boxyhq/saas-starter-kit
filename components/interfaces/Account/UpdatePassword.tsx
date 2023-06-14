@@ -36,14 +36,14 @@ const UpdatePassword = () => {
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
-        <Card heading="Password">
+        <Card heading={t('update-password')}>
           <Card.Body className="p-4">
             <div className="flex flex-col space-y-3">
               <InputWithLabel
                 type="password"
-                label="Current password"
+                label={t('current-password')}
                 name="currentPassword"
-                placeholder="Current password"
+                placeholder={t('current-password')}
                 value={formik.values.currentPassword}
                 error={
                   formik.touched.currentPassword
@@ -54,9 +54,9 @@ const UpdatePassword = () => {
               />
               <InputWithLabel
                 type="password"
-                label="New password"
+                label={t('new-password')}
                 name="newPassword"
-                placeholder="New password"
+                placeholder={t('new-password')}
                 value={formik.values.newPassword}
                 error={
                   formik.touched.newPassword

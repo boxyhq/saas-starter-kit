@@ -8,6 +8,7 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
+
 import ProfileImageUpload from './ProfileImageUpload';
 
 const schema = Yup.object().shape({
@@ -15,20 +16,16 @@ const schema = Yup.object().shape({
   email: Yup.string().required(),
   image: Yup.mixed()
     .required('Please select an image')
-    .test(
-      'fileFormat',
-      'Only JPG, PNG, and GIF files are allowed',
-      (value) => {
-        if (value) {
-          const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-          const base64Parts = value.split(';base64,');
-          const mimeType = base64Parts[0].split(':')[1];
-          const fileExtension = mimeType.split('/')[1];
-          return allowedExtensions.includes(fileExtension.toLowerCase());
-        }
-        return true; // If no file is selected, consider it valid
+    .test('fileFormat', 'Only JPG, PNG, and GIF files are allowed', (value) => {
+      if (value) {
+        const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        const base64Parts = value.split(';base64,');
+        const mimeType = base64Parts[0].split(':')[1];
+        const fileExtension = mimeType.split('/')[1];
+        return allowedExtensions.includes(fileExtension.toLowerCase());
       }
-    ),
+      return true; // If no file is selected, consider it valid
+    }),
 });
 
 const UpdateAccount = ({ user }: { user: User }) => {
@@ -38,7 +35,7 @@ const UpdateAccount = ({ user }: { user: User }) => {
     initialValues: {
       name: user.name,
       email: user.email,
-      image: user.image
+      image: user.image,
     },
     validationSchema: schema,
     onSubmit: async (values) => {
@@ -56,13 +53,13 @@ const UpdateAccount = ({ user }: { user: User }) => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Card heading="Your Profile">
+      <Card heading={t('update-account')}>
         <Card.Body className="p-4">
           <div className="flex flex-col space-y-2">
             <ProfileImageUpload formik={formik} />
             <InputWithLabel
               type="text"
-              label="Name"
+              label={t('name')}
               name="name"
               placeholder={t('your-name')}
               value={formik.values.name}
@@ -71,7 +68,7 @@ const UpdateAccount = ({ user }: { user: User }) => {
             />
             <InputWithLabel
               type="email"
-              label="Email"
+              label={t('email')}
               name="email"
               placeholder={t('your-email')}
               value={formik.values.email}

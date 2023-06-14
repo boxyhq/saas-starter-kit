@@ -1,5 +1,6 @@
 import app from '@/lib/app';
 import { signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function Navbar() {
   return (
@@ -37,12 +38,13 @@ export default function Navbar() {
                 />
               </svg>
             </button>
-            <a
-              href="/"
-              className="flex items-center text-xl font-bold lg:ml-2.5"
-            >
-              <span className="self-center whitespace-nowrap">{app.name}</span>
-            </a>
+            <div className="flex items-center text-xl font-bold lg:ml-2.5">
+              <Link href="/">
+                <span className="self-center whitespace-nowrap">
+                  {app.name}
+                </span>
+              </Link>
+            </div>
           </div>
           <div>
             <button

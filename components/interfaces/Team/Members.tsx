@@ -1,5 +1,4 @@
 import { Card, Error, LetterAvatar, Loading } from '@/components/ui';
-import { availableRoles } from '@/lib/roles';
 import { isTeamAdmin } from '@/lib/teams';
 import { Team, TeamMember } from '@prisma/client';
 import axios from 'axios';
@@ -8,6 +7,8 @@ import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
+
+import UpdateMemberRole from './UpdateMemberRole';
 
 const Members = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
@@ -38,7 +39,7 @@ const Members = ({ team }: { team: Team }) => {
 
     mutateTeamMembers();
 
-    toast.success('Deleted the member successfully.');
+    toast.success(t('member-deleted'));
   };
 
   const isAdmin = isTeamAdmin(session.user, members);
@@ -52,7 +53,7 @@ const Members = ({ team }: { team: Team }) => {
   };
 
   return (
-    <Card heading="Team Members">
+    <Card heading={t('team-members')}>
       <Card.Body>
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
@@ -89,7 +90,7 @@ const Members = ({ team }: { team: Team }) => {
                   <td className="px-6 py-3">{member.user.email}</td>
                   <td className="px-6 py-3">
                     {canUpdateRole(member) ? (
-                      <UpdateRoleDropdown team={team} member={member} />
+                      <UpdateMemberRole team={team} member={member} />
                     ) : (
                       <span>{member.role}</span>
                     )}
@@ -114,36 +115,6 @@ const Members = ({ team }: { team: Team }) => {
         </table>
       </Card.Body>
     </Card>
-  );
-};
-
-const UpdateRoleDropdown = ({
-  team,
-  member,
-}: {
-  team: Team;
-  member: TeamMember;
-}) => {
-  const updateRole = async (member: TeamMember, role: string) => {
-    await axios.patch(`/api/teams/${team.slug}/members`, {
-      memberId: member.userId,
-      role,
-    });
-
-    toast.success('Updated the role successfully.');
-  };
-
-  return (
-    <select
-      className="rounded-md text-sm"
-      onChange={(e) => updateRole(member, e.target.value)}
-    >
-      {availableRoles.map((role) => (
-        <option value={role.id} key={role.id} selected={role.id == member.role}>
-          {role.id}
-        </option>
-      ))}
-    </select>
   );
 };
 

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { ApiResponse } from 'types';
 import * as Yup from 'yup';
 
-export const ResetPasswordForm = () => {
+const ResetPasswordForm = () => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const router = useRouter();
   const { t } = useTranslation('common');
@@ -53,18 +53,18 @@ export const ResetPasswordForm = () => {
         <div className="space-y-2">
           <InputWithLabel
             type="password"
-            label="New Password"
+            label={t('new-password')}
             name="password"
-            placeholder="New Password"
+            placeholder={t('new-password')}
             value={formik.values.password}
             error={formik.touched.password ? formik.errors.password : undefined}
             onChange={formik.handleChange}
           />
           <InputWithLabel
             type="password"
-            label="Confirm Password"
+            label={t('confirm-password')}
             name="confirmPassword"
-            placeholder="Confirm Password"
+            placeholder={t('confirm-password')}
             value={formik.values.confirmPassword}
             error={
               formik.touched.confirmPassword
@@ -82,10 +82,12 @@ export const ResetPasswordForm = () => {
             active={formik.dirty}
             fullWidth
           >
-            Reset Password
+            {t('reset-password')}
           </Button>
         </div>
       </form>
     </div>
   );
 };
+
+export default ResetPasswordForm;

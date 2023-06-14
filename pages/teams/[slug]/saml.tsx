@@ -1,5 +1,4 @@
-import { ConfigureSAML } from '@/components/interfaces/SAML';
-import { TeamTab } from '@/components/interfaces/Team';
+import { CreateConnection } from '@/components/interfaces/SAML';
 import { Error, Loading } from '@/components/ui';
 import { Card } from '@/components/ui';
 import useSAMLConfig from 'hooks/useSAMLConfig';
@@ -13,11 +12,12 @@ import { Button } from 'react-daisyui';
 import type { NextPageWithLayout } from 'types';
 
 const TeamSSO: NextPageWithLayout = () => {
-  const { t } = useTranslation('common');
   const router = useRouter();
+  const { t } = useTranslation('common');
+  const [visible, setVisible] = useState(false);
+
   const { slug } = router.query as { slug: string };
 
-  const [visible, setVisible] = useState(false);
   const { isLoading, isError, team } = useTeam(slug);
   const { samlConfig } = useSAMLConfig(slug);
 
@@ -33,7 +33,7 @@ const TeamSSO: NextPageWithLayout = () => {
 
   return (
     <>
-      <Card heading="SAML Single Sign-On">
+      <Card heading={t('configure-singlesignon')}>
         <Card.Body className="px-3 py-3">
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm">{t('allow-team')}</p>
@@ -61,7 +61,7 @@ const TeamSSO: NextPageWithLayout = () => {
               </div>
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text">ACS URL</span>
+                  <span className="label-text">{t('acs-url')}</span>
                 </label>
                 <input
                   type="text"
@@ -73,7 +73,7 @@ const TeamSSO: NextPageWithLayout = () => {
           )}
         </Card.Body>
       </Card>
-      <ConfigureSAML team={team} visible={visible} setVisible={setVisible} />
+      <CreateConnection team={team} visible={visible} setVisible={setVisible} />
     </>
   );
 };

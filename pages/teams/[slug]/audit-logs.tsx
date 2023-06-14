@@ -1,4 +1,3 @@
-import { TeamTab } from '@/components/interfaces/Team';
 import { Card } from '@/components/ui';
 import { Error, Loading } from '@/components/ui';
 import env from '@/lib/env';
