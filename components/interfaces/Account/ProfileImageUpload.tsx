@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useRef } from 'react';
 import Image from 'next/image';
+import React, { ChangeEvent, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const ProfileImageUpload = ({ formik }) => {
@@ -8,12 +8,15 @@ const ProfileImageUpload = ({ formik }) => {
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+
     if (file) {
       const reader = new FileReader();
+
       reader.onloadend = () => {
         const base64String = reader.result;
         formik.setFieldValue('image', base64String);
       };
+
       reader.readAsDataURL(file);
     }
   };
@@ -35,8 +38,8 @@ const ProfileImageUpload = ({ formik }) => {
             <Image
               src="/user-default-profile.jpeg"
               className="w-36 h-36 rounded-full absolute m-auto shadow"
-              alt="Default Image"
-              width={144} 
+              alt=""
+              width={144}
               height={144}
             />
           )}
