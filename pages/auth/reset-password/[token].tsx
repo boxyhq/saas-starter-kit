@@ -1,4 +1,4 @@
-import { ResetPasswordForm } from '@/components/interfaces/Auth/resetPasswordForm';
+import { ResetPasswordForm } from '@/components/interfaces/Auth';
 import { AuthLayout } from '@/components/layouts';
 import type {
   GetServerSidePropsContext,
@@ -8,7 +8,6 @@ import { useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
-import { useTranslation } from 'react-i18next';
 import type { NextPageWithLayout } from 'types';
 
 const ResetPasswordPage: NextPageWithLayout<
@@ -21,12 +20,10 @@ const ResetPasswordPage: NextPageWithLayout<
 };
 
 ResetPasswordPage.getLayout = function getLayout(page: ReactElement) {
-  const { t } = useTranslation('common');
-
   return (
     <AuthLayout
-      heading={t('reset-password')}
-      description={t('enter-new-password')}
+      heading="Reset Password"
+      description="Enter new password"
     >
       {page}
     </AuthLayout>

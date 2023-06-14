@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { ApiResponse } from 'types';
 import * as Yup from 'yup';
 
-export const ResetPasswordForm = () => {
+const ResetPasswordForm = () => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const router = useRouter();
   const { t } = useTranslation('common');
@@ -89,3 +89,5 @@ export const ResetPasswordForm = () => {
     </div>
   );
 };
+
+export default ResetPasswordForm;
