@@ -84,7 +84,6 @@ const UpdateAccount = ({ user }: { user: User }) => {
               color="primary"
               loading={formik.isSubmitting}
               disabled={!formik.dirty || !formik.isValid}
-              size="sm"
             >
               {t('save-changes')}
             </Button>

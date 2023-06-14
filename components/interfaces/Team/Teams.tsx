@@ -75,7 +75,6 @@ const Teams = () => {
                     </td>
                     <td className="px-6 py-3">
                       <Button
-                        size="sm"
                         variant="outline"
                         onClick={() => {
                           leaveTeam(team);

@@ -38,7 +38,6 @@ const TeamSSO: NextPageWithLayout = () => {
           <div className="mb-3 flex items-center justify-between">
             <p>{t('allow-team')}</p>
             <Button
-              size="sm"
               onClick={() => setVisible(!visible)}
               variant="outline"
               color="secondary"

@@ -45,7 +45,6 @@ const RemoveTeam = ({ team }: { team: Team }) => {
           <p className="text-sm">{t('remove-team-warning')}</p>
           <Button
             color="error"
-            size="sm"
             onClick={removeTeam}
             loading={loading}
             className="text-white"

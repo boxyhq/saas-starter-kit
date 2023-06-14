@@ -74,7 +74,6 @@ const UpdatePassword = () => {
                 color="primary"
                 loading={formik.isSubmitting}
                 disabled={!formik.dirty || !formik.isValid}
-                size="sm"
               >
                 {t('change-password')}
               </Button>

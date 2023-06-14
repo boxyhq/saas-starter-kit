@@ -88,7 +88,6 @@ const TeamSettings = ({ team }: { team: Team }) => {
                 loading={formik.isSubmitting}
                 disabled={!formik.isValid || !formik.dirty}
                 className="text-white"
-                size="sm"
               >
                 {t('save-changes')}
               </Button>

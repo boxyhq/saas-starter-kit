@@ -42,7 +42,6 @@ const DirectorySync: NextPageWithLayout = () => {
             <p className="text-sm">{t('provision')}</p>
             {directory === null ? (
               <Button
-                size="sm"
                 onClick={() => setVisible(!visible)}
                 variant="outline"
                 color="secondary"
@@ -51,7 +50,6 @@ const DirectorySync: NextPageWithLayout = () => {
               </Button>
             ) : (
               <Button
-                size="sm"
                 onClick={() => setVisible(!visible)}
                 variant="outline"
                 color="error"

@@ -98,7 +98,6 @@ const Members = ({ team }: { team: Team }) => {
                   {canRemoveMember(member) && (
                     <td className="px-6 py-3">
                       <Button
-                        size="sm"
                         variant="outline"
                         onClick={() => {
                           removeTeamMember(member);
