@@ -17,7 +17,6 @@ const AllTeams: NextPageWithLayout = () => {
         <h4>{t('all-teams')}</h4>
         <Button
           color="primary"
-          className="text-white"
           onClick={() => {
             setVisible(!visible);
           }}
