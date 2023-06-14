@@ -47,9 +47,9 @@ const Join = () => {
       <div className="space-y-1">
         <InputWithLabel
           type="text"
-          label="Name"
+          label={t('name')}
           name="name"
-          placeholder="Your name"
+          placeholder={t('your-name')}
           value={formik.values.name}
           error={formik.touched.name ? formik.errors.name : undefined}
           onChange={formik.handleChange}
@@ -65,18 +65,18 @@ const Join = () => {
         />
         <InputWithLabel
           type="email"
-          label="Email"
+          label={t('email')}
           name="email"
-          placeholder="jackson@boxyhq.com"
+          placeholder={t('email-placeholder')}
           value={formik.values.email}
           error={formik.touched.email ? formik.errors.email : undefined}
           onChange={formik.handleChange}
         />
         <InputWithLabel
           type="password"
-          label="Password"
+          label={t('password')}
           name="password"
-          placeholder="Password"
+          placeholder={t('password')}
           value={formik.values.password}
           error={formik.touched.password ? formik.errors.password : undefined}
           onChange={formik.handleChange}

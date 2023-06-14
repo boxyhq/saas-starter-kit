@@ -80,8 +80,8 @@ const CreateDirectory = ({
               name="name"
               onChange={formik.handleChange}
               value={formik.values.name}
-              placeholder="Example Directory"
-              label="Directory Name"
+              placeholder={t('directory-name-placeholder')}
+              label={t('directory-name')}
             />
             <div className="form-control w-full">
               <label className="label">
