@@ -2,15 +2,15 @@ import { InputWithLabel } from '@/components/ui';
 import { getAxiosError } from '@/lib/common';
 import axios from 'axios';
 import { useFormik } from 'formik';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'next-i18next';
 import { ApiResponse } from 'types';
 import * as Yup from 'yup';
 
-const ResetPasswordForm = () => {
+const ResetPassword = () => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const router = useRouter();
   const { t } = useTranslation('common');
@@ -90,4 +90,4 @@ const ResetPasswordForm = () => {
   );
 };
 
-export default ResetPasswordForm;
+export default ResetPassword;

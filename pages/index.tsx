@@ -1,7 +1,7 @@
-import FAQSection from '@/components/ui/landing/FAQSection';
-import FeatureSection from '@/components/ui/landing/FeatureSection';
-import HeroSection from '@/components/ui/landing/HeroSection';
-import PricingSection from '@/components/ui/landing/PricingSection';
+import FAQSection from '@/components/defaultLanding/FAQSection';
+import FeatureSection from '@/components/defaultLanding/FeatureSection';
+import HeroSection from '@/components/defaultLanding/HeroSection';
+import PricingSection from '@/components/defaultLanding/PricingSection';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
