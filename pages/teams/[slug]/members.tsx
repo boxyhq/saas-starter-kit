@@ -2,7 +2,7 @@ import {
   InviteMember,
   PendingInvitations,
 } from '@/components/interfaces/Invitation';
-import { Members, TeamTab } from '@/components/interfaces/Team';
+import { Members } from '@/components/interfaces/Team';
 import { Error, Loading } from '@/components/ui';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
