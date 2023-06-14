@@ -38,12 +38,13 @@ export default function Navbar() {
                 />
               </svg>
             </button>
-            <Link
-              href="/"
-              className="flex items-center text-xl font-bold lg:ml-2.5"
-            >
-              <span className="self-center whitespace-nowrap">{app.name}</span>
-            </Link>
+            <div className="flex items-center text-xl font-bold lg:ml-2.5">
+              <Link href="/">
+                <span className="self-center whitespace-nowrap">
+                  {app.name}
+                </span>
+              </Link>
+            </div>
           </div>
           <div>
             <button
