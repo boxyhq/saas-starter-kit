@@ -65,7 +65,7 @@
     "@types/crypto-js": "4.1.1",
     "@types/jest": "29.2.3",
     "@types/mocha": "10.0.1",
-    "@types/node": "18.14.2",
+    "@types/node": "20.3.1",
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.2.8",
     "@types/uuid": "9.0.1",
