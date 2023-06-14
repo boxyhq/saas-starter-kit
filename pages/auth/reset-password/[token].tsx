@@ -8,6 +8,7 @@ import { useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { NextPageWithLayout } from 'types';
 
 const ResetPasswordPage: NextPageWithLayout<
@@ -16,16 +17,17 @@ const ResetPasswordPage: NextPageWithLayout<
   const { status } = useSession();
   const router = useRouter();
 
-  if (status === 'authenticated') {
-    router.push('/dashboard');
-  }
-
   return <ResetPasswordForm />;
 };
 
 ResetPasswordPage.getLayout = function getLayout(page: ReactElement) {
+  const { t } = useTranslation('common');
+
   return (
-    <AuthLayout heading="Reset Password" description="Enter new password">
+    <AuthLayout
+      heading={t('reset-password')}
+      description={t('enter-new-password')}
+    >
       {page}
     </AuthLayout>
   );
