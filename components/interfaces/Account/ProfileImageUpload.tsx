@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React, { ChangeEvent, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 const ProfileImageUpload = ({ formik }) => {
   const { t } = useTranslation('common');

@@ -119,7 +119,7 @@
   "enter-new-password": "Enter new password",
   "directory-name": "Directory Name",
   "directory-name-placeholder": "Example Directory",
-  "configure-singlesignon": "Configure Single Sign On",
+  "configure-singlesignon": "SAML Single Sign-On",
   "copy-paste-metadata": "Copy and paste Metadata XML here.",
   "members-deleted": "Members deleted successfully.",
   "team-members": "Team Members",
@@ -129,5 +129,8 @@
   "team-slug": "Team Slug",
   "team-slug-description": "A unique ID used to identify this team in URLs.",
   "team-domain": "Domain",
-  "acs-url": "ACS URL"
+  "acs-url": "ACS URL",
+  "metadata-url": "Metadata URL",
+  "metadata-xml": "Metadata XML",
+  "saml-connection-established": "Single Sign-On connection is enabled for your team."
 }

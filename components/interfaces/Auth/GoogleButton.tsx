@@ -1,6 +1,6 @@
 import { signIn } from 'next-auth/react';
 import { Button } from 'react-daisyui';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 const GoogleButton = () => {
   const { t } = useTranslation('common');

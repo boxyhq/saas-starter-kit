@@ -1,12 +1,14 @@
-import { Input } from 'react-daisyui';
+import { Input, InputProps } from 'react-daisyui';
 
-const InputWithLabel = ({
-  label,
-  type = 'text',
-  error,
-  descriptionText,
-  ...props
-}: InputProps) => {
+interface InputWithLabelProps extends InputProps {
+  label: string;
+  error?: string;
+  descriptionText?: string;
+}
+
+const InputWithLabel = (props: InputWithLabelProps) => {
+  const { label, error, descriptionText, ...rest } = props;
+
   const classes = Array<string>();
 
   if (error) {
@@ -18,7 +20,7 @@ const InputWithLabel = ({
       <label className="label">
         <span className="label-text">{label}</span>
       </label>
-      <Input className={classes.join(' ')} {...props} type={type} />
+      <Input className={classes.join(' ')} {...rest} />
       {(error || descriptionText) && (
         <label className="label">
           <span className={`label-text-alt ${error ? 'text-red-500' : ''}`}>
@@ -29,16 +31,5 @@ const InputWithLabel = ({
     </div>
   );
 };
-
-interface InputProps {
-  label: string;
-  name: string;
-  onChange?(x: React.ChangeEvent<HTMLInputElement>): void;
-  type?: string;
-  error?: string;
-  descriptionText?: string;
-  placeholder?: string;
-  value?: string;
-}
 
 export default InputWithLabel;
