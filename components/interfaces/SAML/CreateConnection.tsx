@@ -1,3 +1,4 @@
+import { InputWithLabel } from '@/components/ui';
 import { getAxiosError } from '@/lib/common';
 import type { SAMLSSORecord } from '@boxyhq/saml-jackson';
 import { Team } from '@prisma/client';
@@ -5,44 +6,63 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import useSAMLConfig from 'hooks/useSAMLConfig';
 import { useTranslation } from 'next-i18next';
-import { Button, Modal, Textarea } from 'react-daisyui';
+import { useState } from 'react';
+import { Button, Modal, Tabs, Textarea } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 
-const CreateConnection = ({
-  visible,
-  setVisible,
-  team,
-}: {
+interface CreateConnectionProps {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   team: Team;
-}) => {
+}
+
+const CreateConnection = (props: CreateConnectionProps) => {
+  const { visible, setVisible, team } = props;
+
   const { mutateSamlConfig } = useSAMLConfig(team.slug);
   const { t } = useTranslation('common');
+  const [tab, setTab] = useState(0);
+
+  const initialValues = {
+    metadataUrl: '',
+    metadataRaw: '',
+  };
+
+  const validationSchema = Yup.object().shape({
+    metadataUrl: Yup.string()
+      .url()
+      .when('tab', {
+        is: tab === 0,
+        then: Yup.string().required(),
+      }),
+    metadataRaw: Yup.string().when('tab', {
+      is: tab === 1,
+      then: Yup.string().required(),
+    }),
+  });
 
   const formik = useFormik({
-    initialValues: {
-      metadata: '',
-    },
-    validationSchema: Yup.object().shape({
-      metadata: Yup.string().required(),
-    }),
+    initialValues,
+    validationSchema,
     onSubmit: async (values) => {
-      const { metadata } = values;
+      const { metadataUrl, metadataRaw } = values;
 
       try {
         const response = await axios.post<ApiResponse<SAMLSSORecord>>(
           `/api/teams/${team.slug}/saml`,
           {
-            encodedRawMetadata: Buffer.from(metadata).toString('base64'),
+            metadataUrl,
+            encodedRawMetadata: metadataRaw
+              ? Buffer.from(metadataRaw).toString('base64')
+              : undefined,
           }
         );
 
-        const { data: connectionCreated } = response.data;
+        const { data } = response.data;
 
-        if (connectionCreated) {
+        if (data) {
           toast.success(t('saml-config-updated'));
           mutateSamlConfig();
           setVisible(false);
@@ -60,19 +80,38 @@ const CreateConnection = ({
           {t('configure-singlesignon')}
         </Modal.Header>
         <Modal.Body>
-          <div className="mt-2 flex flex-col space-y-4">
-            <p>{t('setup-saml-auth')}</p>
-            <div className="flex justify-between space-x-3">
-              <Textarea
-                name="metadata"
-                className="flex-grow"
-                onChange={formik.handleChange}
-                value={formik.values.metadata}
-                rows={6}
-                placeholder={t('copy-paste-metadata')}
-                required
-              />
-            </div>
+          <div className="mt-4 flex flex-col space-y-4">
+            <Tabs variant="bordered" size="md" value={tab} onChange={setTab}>
+              <Tabs.Tab value={0}>{t('metadata-url')}</Tabs.Tab>
+              <Tabs.Tab value={1}>{t('metadata-xml')}</Tabs.Tab>
+            </Tabs>
+
+            {tab === 0 && (
+              <div className="flex">
+                <InputWithLabel
+                  label={t('metadata-url')}
+                  name="metadataUrl"
+                  onChange={formik.handleChange}
+                  value={formik.values.metadataUrl}
+                  required={true}
+                  error={formik.errors.metadataUrl}
+                />
+              </div>
+            )}
+
+            {tab === 1 && (
+              <div className="flex">
+                <Textarea
+                  name="metadataRaw"
+                  className="flex-grow"
+                  onChange={formik.handleChange}
+                  value={formik.values.metadataRaw}
+                  rows={6}
+                  placeholder={t('copy-paste-metadata')}
+                  required
+                />
+              </div>
+            )}
           </div>
         </Modal.Body>
         <Modal.Actions>

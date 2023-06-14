@@ -69,7 +69,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 // Create a SAML connection for the team.
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query as { slug: string };
-  const { encodedRawMetadata } = req.body;
+  const { metadataUrl, encodedRawMetadata } = req.body;
 
   const session = await getSession(req, res);
 
@@ -92,6 +92,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const connection = await apiController.createSAMLConnection({
       encodedRawMetadata,
+      metadataUrl,
       defaultRedirectUrl: env.saml.callback,
       redirectUrl: env.saml.callback,
       tenant: team.id,
