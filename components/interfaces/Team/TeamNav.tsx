@@ -1,14 +1,65 @@
 import NavItem from '@/components/ui/NavItem';
-import { teamNavigations } from '@/lib/teams';
-import { ArrowRightIcon } from '@heroicons/react/24/solid';
+import {
+  Cog6ToothIcon,
+  DocumentMagnifyingGlassIcon,
+  KeyIcon,
+  PaperAirplaneIcon,
+  ShieldExclamationIcon,
+  UserPlusIcon,
+} from '@heroicons/react/24/outline';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 
 const TeamNav = ({ slug }: { slug: string }) => {
   const { route } = useRouter();
+  const { t } = useTranslation('common');
 
-  const pageKey = route.split('[slug]/');
+  const activeTab = route.split('[slug]/')[1];
 
-  const navigations = teamNavigations(slug, pageKey[1]);
+  const navigations = [
+    {
+      name: t('settings'),
+      href: `/teams/${slug}/settings`,
+      active: activeTab === 'settings',
+      icon: Cog6ToothIcon,
+    },
+    {
+      name: t('members'),
+      href: `/teams/${slug}/members`,
+      active: activeTab === 'members',
+      icon: UserPlusIcon,
+    },
+    {
+      name: t('single-sign-on'),
+      href: `/teams/${slug}/saml`,
+      active: activeTab === 'saml',
+      icon: ShieldExclamationIcon,
+    },
+    {
+      name: t('directory-sync'),
+      href: `/teams/${slug}/directory-sync`,
+      active: activeTab === 'directory-sync',
+      icon: UserPlusIcon,
+    },
+    {
+      name: t('audit-logs-menu'),
+      href: `/teams/${slug}/audit-logs`,
+      active: activeTab === 'audit-logs',
+      icon: DocumentMagnifyingGlassIcon,
+    },
+    {
+      name: t('webhooks'),
+      href: `/teams/${slug}/webhooks`,
+      active: activeTab === 'webhooks',
+      icon: PaperAirplaneIcon,
+    },
+    {
+      name: t('api-keys'),
+      href: '#',
+      active: activeTab === 'api-keys',
+      icon: KeyIcon,
+    },
+  ];
 
   return (
     <>
@@ -19,7 +70,7 @@ const TeamNav = ({ slug }: { slug: string }) => {
             text={menu.name}
             active={menu.active}
             key={menu.href}
-            icon={ArrowRightIcon}
+            icon={menu.icon}
           />
         );
       })}

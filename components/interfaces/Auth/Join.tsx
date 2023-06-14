@@ -56,9 +56,9 @@ const Join = () => {
         />
         <InputWithLabel
           type="text"
-          label="Team"
+          label={t('team')}
           name="team"
-          placeholder="Team name"
+          placeholder={t('team-name')}
           value={formik.values.team}
           error={formik.touched.team ? formik.errors.team : undefined}
           onChange={formik.handleChange}

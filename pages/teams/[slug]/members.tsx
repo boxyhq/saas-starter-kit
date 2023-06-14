@@ -32,8 +32,6 @@ const TeamMembers: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{team.name}</h3>
-      <TeamTab team={team} activeTab="members" />
       <div className="flex items-center justify-end">
         <Button
           size="sm"

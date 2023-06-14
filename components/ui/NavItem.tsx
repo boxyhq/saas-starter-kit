@@ -1,26 +1,20 @@
 import classNames from 'classnames';
 import NextLink from 'next/link';
 
-const NavItem = ({
-  href,
-  text,
-  icon,
-  active,
-  onClick,
-}: {
+interface NavItemProps {
   href: string;
   text: string;
   icon: any;
   active: boolean;
-  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
-}) => {
+}
+
+const NavItem = ({ href, text, icon, active }: NavItemProps) => {
   const Icon = icon;
 
   return (
     <NextLink href={href}>
       <a
         href={href}
-        onClick={onClick}
         className={classNames(
           active ? 'bg-gray-100' : '',
           'flex items-center rounded-lg p-2 text-sm font-semibold text-gray-900 hover:bg-gray-100'

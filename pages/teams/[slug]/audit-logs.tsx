@@ -53,8 +53,6 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{team.name}</h3>
-      <TeamTab team={team} activeTab="audit-logs" />
       <Card heading="Audit Logs">
         <Card.Body>
           <RetracedEventsBrowser

@@ -26,8 +26,6 @@ const Settings: NextPageWithLayout = () => {
 
   return (
     <>
-      <h3 className="text-2xl font-bold">{team.name}</h3>
-      <TeamTab team={team} activeTab="settings" />
       <TeamSettings team={team} />
       <RemoveTeam team={team} />
     </>
