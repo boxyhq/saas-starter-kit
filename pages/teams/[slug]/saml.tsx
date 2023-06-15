@@ -1,7 +1,7 @@
-import { CreateConnection } from '@/components/interfaces/SAML';
-import { TeamTab } from '@/components/interfaces/Team';
-import { Alert, Error, InputWithLabel, Loading } from '@/components/ui';
-import { Card } from '@/components/ui';
+import { Alert, Error, InputWithLabel, Loading } from '@/components/shared';
+import { Card } from '@/components/shared';
+import { CreateConnection } from '@/components/saml';
+import { TeamTab } from '@/components/team';
 import useSAMLConfig from 'hooks/useSAMLConfig';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
@@ -34,15 +34,12 @@ const TeamSSO: NextPageWithLayout = () => {
 
   return (
     <>
-    <TeamTab activeTab="saml" team={team} />
+      <TeamTab activeTab="saml" team={team} />
       <Card heading={t('configure-singlesignon')}>
         <Card.Body className="px-3 py-3 text-sm">
           <div className="mb-3 flex items-center justify-between">
             <p>{t('allow-team')}</p>
-            <Button
-              onClick={() => setVisible(!visible)}
-              variant="outline"
-            >
+            <Button onClick={() => setVisible(!visible)} variant="outline">
               {t('configure')}
             </Button>
           </div>

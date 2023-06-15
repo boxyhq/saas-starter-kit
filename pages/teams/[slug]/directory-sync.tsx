@@ -1,10 +1,10 @@
 import {
   CreateDirectory,
   Directory,
-} from '@/components/interfaces/DirectorySync';
-import { TeamTab } from '@/components/interfaces/Team';
-import { Card } from '@/components/ui';
-import { Error, Loading } from '@/components/ui';
+} from '@/components/directorySync';
+import { TeamTab } from '@/components/team';
+import { Card } from '@/components/shared';
+import { Error, Loading } from '@/components/shared';
 import useDirectory from 'hooks/useDirectory';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';

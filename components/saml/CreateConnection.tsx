@@ -1,4 +1,4 @@
-import { InputWithLabel } from '@/components/ui';
+import { InputWithLabel } from '@/components/shared';
 import { getAxiosError } from '@/lib/common';
 import type { SAMLSSORecord } from '@boxyhq/saml-jackson';
 import { Team } from '@prisma/client';

@@ -1,4 +1,4 @@
-import { Card, InputWithLabel } from '@/components/ui';
+import { Card, InputWithLabel } from '@/components/shared';
 import { getAxiosError } from '@/lib/common';
 import { Team } from '@prisma/client';
 import axios from 'axios';

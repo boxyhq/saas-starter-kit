@@ -1,9 +1,6 @@
-import {
-  InviteMember,
-  PendingInvitations,
-} from '@/components/interfaces/Invitation';
-import { Members, TeamTab } from '@/components/interfaces/Team';
-import { Error, Loading } from '@/components/ui';
+import { Error, Loading } from '@/components/shared';
+import { InviteMember, PendingInvitations } from '@/components/invitation';
+import { Members, TeamTab } from '@/components/team';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';

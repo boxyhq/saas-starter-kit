@@ -1,6 +1,6 @@
-import { TeamTab } from '@/components/interfaces/Team';
-import { Card } from '@/components/ui';
-import { Error, Loading } from '@/components/ui';
+import { Card } from '@/components/shared';
+import { Error, Loading } from '@/components/shared';
+import { TeamTab } from '@/components/team';
 import env from '@/lib/env';
 import { inferSSRProps } from '@/lib/inferSSRProps';
 import { getViewerToken } from '@/lib/retraced';

@@ -1,9 +1,5 @@
-import {
-  RemoveTeam,
-  TeamSettings,
-  TeamTab,
-} from '@/components/interfaces/Team';
-import { Error, Loading } from '@/components/ui';
+import { Error, Loading } from '@/components/shared';
+import { RemoveTeam, TeamSettings, TeamTab } from '@/components/team';
 import useTeam from 'hooks/useTeam';
 import type { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';

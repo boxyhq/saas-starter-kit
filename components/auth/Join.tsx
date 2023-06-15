@@ -1,4 +1,4 @@
-import { InputWithLabel } from '@/components/ui';
+import { InputWithLabel } from '@/components/shared';
 import { getAxiosError } from '@/lib/common';
 import type { User } from '@prisma/client';
 import axios from 'axios';

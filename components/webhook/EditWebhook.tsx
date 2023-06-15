@@ -1,4 +1,4 @@
-import { Error, Loading } from '@/components/ui';
+import { Error, Loading } from '@/components/shared';
 import type { Team } from '@prisma/client';
 import axios from 'axios';
 import type { FormikHelpers } from 'formik';

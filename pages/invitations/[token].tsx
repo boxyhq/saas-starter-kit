@@ -1,5 +1,5 @@
 import { AuthLayout } from '@/components/layouts';
-import { Error, Loading } from '@/components/ui';
+import { Error, Loading } from '@/components/shared';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
 import useInvitation from 'hooks/useInvitation';

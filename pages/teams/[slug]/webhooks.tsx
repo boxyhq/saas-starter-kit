@@ -1,6 +1,6 @@
-import { TeamTab } from '@/components/interfaces/Team';
-import { CreateWebhook, Webhooks } from '@/components/interfaces/Webhook';
-import { Error, Loading } from '@/components/ui';
+import { Error, Loading } from '@/components/shared';
+import { TeamTab } from '@/components/team';
+import { CreateWebhook, Webhooks } from '@/components/webhook';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
