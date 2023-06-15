@@ -1,4 +1,4 @@
-import NavItem from '@/components/ui/NavItem';
+import NavItem from '@/components/shared/NavItem';
 import {
   Cog6ToothIcon,
   DocumentMagnifyingGlassIcon,
