@@ -2,7 +2,7 @@ import {
   InviteMember,
   PendingInvitations,
 } from '@/components/interfaces/Invitation';
-import { Members } from '@/components/interfaces/Team';
+import { Members, TeamTab } from '@/components/interfaces/Team';
 import { Error, Loading } from '@/components/ui';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
@@ -32,17 +32,20 @@ const TeamMembers: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="flex items-center justify-end">
-        <Button
-          color="primary"
-          onClick={() => {
-            setVisible(!visible);
-          }}
-        >
-          {t('add-member')}
-        </Button>
+      <TeamTab activeTab="members" team={team} />
+      <div className="flex flex-col">
+        <div className="flex mt-2 justify-end">
+          <Button
+            color="primary"
+            onClick={() => {
+              setVisible(!visible);
+            }}
+          >
+            {t('add-member')}
+          </Button>
+        </div>
+        <Members team={team} />
       </div>
-      <Members team={team} />
       <PendingInvitations team={team} />
       <InviteMember visible={visible} setVisible={setVisible} team={team} />
     </>

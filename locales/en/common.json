@@ -132,5 +132,7 @@
   "acs-url": "ACS URL",
   "metadata-url": "Metadata URL",
   "metadata-xml": "Metadata XML",
-  "saml-connection-established": "Single Sign-On connection is enabled for your team."
+  "saml-connection-established": "Single Sign-On connection is enabled for your team.",
+  "products": "Products",
+  "account-info": "Account Details"
 }

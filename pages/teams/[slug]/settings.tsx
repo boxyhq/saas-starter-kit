@@ -1,6 +1,7 @@
 import {
   RemoveTeam,
   TeamSettings,
+  TeamTab,
 } from '@/components/interfaces/Team';
 import { Error, Loading } from '@/components/ui';
 import useTeam from 'hooks/useTeam';
@@ -11,9 +12,9 @@ import type { NextPageWithLayout } from 'types';
 
 const Settings: NextPageWithLayout = () => {
   const router = useRouter();
-  const { slug } = router.query;
+  const { slug } = router.query as { slug: string };
 
-  const { isLoading, isError, team } = useTeam(slug as string);
+  const { isLoading, isError, team } = useTeam(slug);
 
   if (isLoading || !team) {
     return <Loading />;
@@ -25,6 +26,7 @@ const Settings: NextPageWithLayout = () => {
 
   return (
     <>
+      <TeamTab activeTab="settings" team={team} />
       <TeamSettings team={team} />
       <RemoveTeam team={team} />
     </>

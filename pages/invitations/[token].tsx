@@ -65,7 +65,6 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
           {status === 'unauthenticated' ? (
             <>
               <Button
-                color="secondary"
                 variant="outline"
                 fullWidth
                 onClick={() => {
@@ -75,7 +74,6 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                 {t('create-a-new-account')}
               </Button>
               <Button
-                color="secondary"
                 variant="outline"
                 fullWidth
                 onClick={() => {

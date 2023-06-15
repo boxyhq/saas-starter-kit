@@ -3,15 +3,22 @@ import type { Team } from '@prisma/client';
 import classNames from 'classnames';
 import Link from 'next/link';
 
-const TeamTab = ({ activeTab, team }: { activeTab: string; team: Team }) => {
+interface TeamTabProps {
+  activeTab: string;
+  team: Team;
+  heading?: string;
+}
+
+const TeamTab = (props: TeamTabProps) => {
+  const { activeTab, team, heading } = props;
+
   const navigations = teamNavigations(team.slug, activeTab);
 
-  return <></>
-
   return (
-    <div className="mb-5">
+    <div className="flex flex-col">
+      <h2 className="text-xl font-semibold mb-2">{heading ? heading : team.name}</h2>
       <nav
-        className="-mb-px flex space-x-5 border-b border-gray-300"
+        className=" flex space-x-5 border-b border-gray-300"
         aria-label="Tabs"
       >
         {navigations.map((menu) => {

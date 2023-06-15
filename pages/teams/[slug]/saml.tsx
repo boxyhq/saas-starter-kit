@@ -1,4 +1,5 @@
 import { CreateConnection } from '@/components/interfaces/SAML';
+import { TeamTab } from '@/components/interfaces/Team';
 import { Alert, Error, InputWithLabel, Loading } from '@/components/ui';
 import { Card } from '@/components/ui';
 import useSAMLConfig from 'hooks/useSAMLConfig';
@@ -33,6 +34,7 @@ const TeamSSO: NextPageWithLayout = () => {
 
   return (
     <>
+    <TeamTab activeTab="saml" team={team} />
       <Card heading={t('configure-singlesignon')}>
         <Card.Body className="px-3 py-3 text-sm">
           <div className="mb-3 flex items-center justify-between">
@@ -40,7 +42,6 @@ const TeamSSO: NextPageWithLayout = () => {
             <Button
               onClick={() => setVisible(!visible)}
               variant="outline"
-              color="secondary"
             >
               {t('configure')}
             </Button>

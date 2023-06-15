@@ -1,3 +1,4 @@
+import { TeamTab } from '@/components/interfaces/Team';
 import { CreateWebhook, Webhooks } from '@/components/interfaces/Webhook';
 import { Error, Loading } from '@/components/ui';
 import useTeam from 'hooks/useTeam';
@@ -28,17 +29,20 @@ const WebhookList: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="flex items-center justify-end">
-        <Button
-          color="primary"
-          onClick={() => {
-            setVisible(!visible);
-          }}
-        >
-          {t('add-webhook')}
-        </Button>
+      <TeamTab activeTab="webhooks" team={team} />
+      <div className="flex flex-col">
+        <div className="flex mt-2 justify-end">
+          <Button
+            color="primary"
+            onClick={() => {
+              setVisible(!visible);
+            }}
+          >
+            {t('add-webhook')}
+          </Button>
+        </div>
+        <Webhooks team={team} />
       </div>
-      <Webhooks team={team} />
       <CreateWebhook visible={visible} setVisible={setVisible} team={team} />
     </>
   );
