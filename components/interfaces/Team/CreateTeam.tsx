@@ -50,7 +50,7 @@ const CreateTeam = ({
   return (
     <Modal open={visible}>
       <form onSubmit={formik.handleSubmit} method="POST">
-        <Modal.Header className="font-bold">Create Team</Modal.Header>
+        <Modal.Header className="font-bold">{t('create-team')}</Modal.Header>
         <Modal.Body>
           <div className="mt-2 flex flex-col space-y-4">
             <p>{t('members-of-a-team')}</p>
