@@ -1,5 +1,5 @@
 import { AuthLayout } from '@/components/layouts';
-import { InputWithLabel } from '@/components/ui';
+import { InputWithLabel } from '@/components/shared';
 import { getParsedCookie } from '@/lib/cookie';
 import env from '@/lib/env';
 import { useFormik } from 'formik';

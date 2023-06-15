@@ -1,4 +1,4 @@
-import { Card, Error, LetterAvatar, Loading } from '@/components/ui';
+import { Card, Error, LetterAvatar, Loading } from '@/components/shared';
 import { isTeamAdmin } from '@/lib/teams';
 import { Team, TeamMember } from '@prisma/client';
 import axios from 'axios';

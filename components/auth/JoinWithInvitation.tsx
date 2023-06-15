@@ -1,4 +1,4 @@
-import { Error, InputWithLabel, Loading } from '@/components/ui';
+import { Error, InputWithLabel, Loading } from '@/components/shared';
 import { getAxiosError } from '@/lib/common';
 import type { User } from '@prisma/client';
 import axios from 'axios';

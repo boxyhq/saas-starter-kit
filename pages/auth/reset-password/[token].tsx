@@ -1,4 +1,4 @@
-import { ResetPasswordForm } from '@/components/interfaces/Auth';
+import { ResetPasswordForm } from '@/components/auth';
 import { AuthLayout } from '@/components/layouts';
 import type {
   GetServerSidePropsContext,

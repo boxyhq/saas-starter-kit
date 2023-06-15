@@ -1,7 +1,7 @@
-import GithubButton from '@/components/interfaces/Auth/GithubButton';
-import GoogleButton from '@/components/interfaces/Auth/GoogleButton';
-import Join from '@/components/interfaces/Auth/Join';
-import JoinWithInvitation from '@/components/interfaces/Auth/JoinWithInvitation';
+import GithubButton from '@/components/auth/GithubButton';
+import GoogleButton from '@/components/auth/GoogleButton';
+import Join from '@/components/auth/Join';
+import JoinWithInvitation from '@/components/auth/JoinWithInvitation';
 import { AuthLayout } from '@/components/layouts';
 import { getParsedCookie } from '@/lib/cookie';
 import { inferSSRProps } from '@/lib/inferSSRProps';

@@ -1,7 +1,7 @@
-import GithubButton from '@/components/interfaces/Auth/GithubButton';
-import GoogleButton from '@/components/interfaces/Auth/GoogleButton';
+import GithubButton from '@/components/auth/GithubButton';
+import GoogleButton from '@/components/auth/GoogleButton';
 import { AuthLayout } from '@/components/layouts';
-import { InputWithLabel } from '@/components/ui';
+import { InputWithLabel } from '@/components/shared';
 import { getParsedCookie } from '@/lib/cookie';
 import env from '@/lib/env';
 import { useFormik } from 'formik';

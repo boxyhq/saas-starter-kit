@@ -1,4 +1,4 @@
-import { InputWithLabel, Loading } from '@/components/ui';
+import { InputWithLabel, Loading } from '@/components/shared';
 import fetcher from '@/lib/fetcher';
 import type { Directory } from '@boxyhq/saml-jackson';
 import { Team } from '@prisma/client';

@@ -1,4 +1,4 @@
-import { UpdatePassword } from '@/components/interfaces/Account';
+import { UpdatePassword } from '@/components/account';
 import type { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 

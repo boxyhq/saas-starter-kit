@@ -1,4 +1,4 @@
-import { Navbar, Sidebar } from '@/components/ui';
+import { Navbar, Sidebar } from '@/components/shared';
 import React from 'react';
 
 interface AccountLayoutProps {
