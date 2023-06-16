@@ -1,6 +1,16 @@
 import React from 'react';
 
-const Card = (props: { heading: string; children: React.ReactNode }) => {
+interface CardProps {
+  heading: string;
+  children: React.ReactNode;
+}
+
+interface CardBodyProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+const Card = (props: CardProps) => {
   const { heading, children } = props;
 
   return (
@@ -13,13 +23,9 @@ const Card = (props: { heading: string; children: React.ReactNode }) => {
   );
 };
 
-const Body = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
+const Body = (props: CardBodyProps) => {
+  const { children, className } = props;
+
   return <div className={`${className} bg-white`}>{children}</div>;
 };
 
