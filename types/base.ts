@@ -6,10 +6,15 @@ export type ApiError = {
   values: { [key: string]: string };
 };
 
-export type ApiResponse<T = unknown> = {
-  data: T | null;
-  error: ApiError | null;
-};
+export type ApiResponse<T = unknown> =
+  | {
+      data: T;
+      error: null;
+    }
+  | {
+      data: null;
+      error: ApiError;
+    };
 
 export type Role = 'owner' | 'member';
 
