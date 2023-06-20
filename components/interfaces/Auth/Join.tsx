@@ -67,7 +67,7 @@ const Join = () => {
           type="email"
           label="Email"
           name="email"
-          placeholder="jackson@boxyhq.com"
+          placeholder="naveen@userlens.ai"
           value={formik.values.email}
           error={formik.touched.email ? formik.errors.email : undefined}
           onChange={formik.handleChange}

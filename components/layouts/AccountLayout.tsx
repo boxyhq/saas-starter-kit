@@ -20,12 +20,14 @@ export default function AccountLayout({
   return (
     <>
       <Navbar />
-      <div className="flex overflow-hidden pt-16 h-full">
+      <div className="flex overflow-hidden pt-16">
         <Sidebar />
-        <div className="relative h-full w-full overflow-y-auto lg:ml-64">
+        <div className="relative w-full overflow-y-auto lg:ml-64">
           <main>
-            <div className="flex h-screen w-full justify-center">
-              <div className="w-3/4 px-6 py-6 ">{children}</div>
+            <div className="flex justify-center">
+              <div className="w-4/4 px-6 py-6" style={{ marginTop: "-40px" }}>
+                {children}
+              </div>
             </div>
           </main>
         </div>
@@ -33,3 +35,5 @@ export default function AccountLayout({
     </>
   );
 }
+
+

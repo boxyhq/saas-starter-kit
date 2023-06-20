@@ -2,7 +2,7 @@ import { Head, Html, Main, NextScript } from 'next/document';
 
 export default function Document() {
   return (
-    <Html lang="en" className="h-full bg-gray-100" data-theme="emerald">
+    <Html lang="en" className="h-full" style={{ backgroundColor: '#F5F5F5' }} data-theme="emerald">
       <Head />
       <body className="h-full">
         <Main />
@@ -11,3 +11,4 @@ export default function Document() {
     </Html>
   );
 }
+

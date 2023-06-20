@@ -66,12 +66,13 @@ export default function Sidebar() {
                   />
                 </li>
                 <li>
+                  
                   <NavItem
-                    href="/teams"
-                    text="Teams"
-                    icon={UsersIcon}
-                    active={router.pathname === '/teams'}
-                  />
+                  href="/source"
+                  text="Sources"
+                  icon={UserIcon}
+                  active={router.pathname === '/source'}
+                />
                 </li>
               </ul>
               {team && (
@@ -92,6 +93,7 @@ export default function Sidebar() {
                   icon={UserIcon}
                   active={router.pathname === '/settings/account'}
                 />
+                
                 <NavItem
                   href="/settings/password"
                   text="Password"
