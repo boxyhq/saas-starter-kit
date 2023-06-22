@@ -10,6 +10,7 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
+import { SwitchTheme } from '@/components/shared';
 
 const TeamSettings = ({ team }: { team: Team }) => {
   const router = useRouter();
@@ -78,6 +79,9 @@ const TeamSettings = ({ team }: { team: Team }) => {
                 onChange={formik.handleChange}
                 error={formik.errors.domain}
               />
+            </div>
+            <div>
+              <SwitchTheme />
             </div>
           </Card.Body>
           <Card.Footer>
