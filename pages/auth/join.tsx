@@ -28,7 +28,7 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 
   return (
     <>
-      <div className="rounded-md bg-white p-6 shadow-sm">
+      <div className="rounded p-6 border">
         {inviteToken ? (
           <JoinWithInvitation inviteToken={inviteToken} next={next} />
         ) : (

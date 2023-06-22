@@ -52,7 +52,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="rounded-md bg-white p-6 shadow-sm">
+      <div className="rounded p-6 border">
         <div className="flex flex-col items-center space-y-3">
           <h2 className="font-bold">{`${invitation.team.name} ${t(
             'team-invite'

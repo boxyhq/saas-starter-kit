@@ -48,7 +48,7 @@ const ResetPassword = () => {
   });
 
   return (
-    <div className="rounded-md bg-white p-6 shadow-sm">
+    <div className="rounded p-6 border">
       <form onSubmit={formik.handleSubmit}>
         <div className="space-y-2">
           <InputWithLabel
