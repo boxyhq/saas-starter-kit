@@ -1,6 +1,7 @@
 import app from '@/lib/app';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { Button } from 'react-daisyui';
 
 export default function Navbar() {
   return (
@@ -47,12 +48,9 @@ export default function Navbar() {
             </div>
           </div>
           <div>
-            <button
-              className="px-2 py-1 text-sm font-semibold"
-              onClick={() => signOut()}
-            >
+            <Button size="sm" variant="outline" onClick={() => signOut()}>
               Sign Out
-            </button>
+            </Button>
           </div>
         </div>
       </div>
