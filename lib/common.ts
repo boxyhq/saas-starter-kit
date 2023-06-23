@@ -82,3 +82,7 @@ export const validatePassword = (password: string): boolean => {
 
   return true;
 };
+
+export const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text);
+};
