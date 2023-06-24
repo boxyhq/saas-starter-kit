@@ -31,7 +31,7 @@ const Organizations: NextPageWithLayout<
       return;
     }
 
-    router.push(`/dashboard`);
+    router.push("/dashboard");
   });
 
   return (

@@ -23,7 +23,7 @@ const UpdatePassword = () => {
     validationSchema: schema,
     onSubmit: async (values) => {
       try {
-        await axios.put(`/api/password`, values);
+        await axios.put("/api/password", values);
 
         toast.success(t('successfully-updated'));
         formik.resetForm();
