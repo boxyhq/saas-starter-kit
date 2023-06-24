@@ -17,7 +17,7 @@ const handler: NextApiHandler = async (req, res) => {
   if (!email || !validateEmail(email)) {
     return res.status(422).json({
       error: {
-        message: `The e-mail address you entered is invalid`,
+        message: "The e-mail address you entered is invalid",
       },
     });
   }
@@ -29,7 +29,7 @@ const handler: NextApiHandler = async (req, res) => {
   if (!user) {
     return res.status(422).json({
       error: {
-        message: `We can't find a user with that e-mail address`,
+        message: "We can't find a user with that e-mail address",
       },
     });
   }
@@ -47,11 +47,11 @@ const handler: NextApiHandler = async (req, res) => {
   try {
     await sendPasswordResetEmail(email, encodeURIComponent(token));
 
-    res.status(200).json({ message: `Password reset e-mail sent` });
+    res.status(200).json({ message: "Password reset e-mail sent" });
   } catch (err) {
     res.status(500).json({
       error: {
-        message: `Error sending password reset e-mail. Please try again later.`,
+        message: "Error sending password reset e-mail. Please try again later.",
       },
     });
   }

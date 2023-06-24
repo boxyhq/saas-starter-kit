@@ -67,7 +67,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await isTeamOwner(session.user.id, team.id))) {
     return res.status(400).json({
       data: null,
-      error: { message: `You don't have permission to do this action.` },
+      error: { message: "You don't have permission to do this action." },
     });
   }
 
@@ -104,7 +104,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await isTeamOwner(session.user.id, team.id))) {
     return res.status(200).json({
       data: null,
-      error: { message: `You don't have permission to do this action.` },
+      error: { message: "You don't have permission to do this action." },
     });
   }
 
