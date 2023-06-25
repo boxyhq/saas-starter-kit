@@ -5,8 +5,14 @@ import jackson from '@/lib/jackson';
 import { prisma } from '@/lib/prisma';
 import type { OAuthTokenReq } from '@boxyhq/saml-jackson';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { Role } from '@prisma/client';
 import { getAccount } from 'models/account';
-import { addTeamMember, getTeam } from 'models/team';
+import {
+  addTeamMember,
+  getTeam,
+  getTeamMember,
+  updateTeamMember,
+} from 'models/team';
 import { createUser, getUser } from 'models/user';
 import NextAuth, { Account, NextAuthOptions, User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -77,6 +83,30 @@ export const authOptions: NextAuthOptions = {
 
         const profile = await oauthController.userInfo(access_token);
         let user = await getUser({ email: profile.email });
+        const roles = profile.roles || profile.groups || [];
+        let userRole: Role = Role.MEMBER;
+
+        for (let role of roles) {
+          if (env.groupPrefix) {
+            role = role.replace(env.groupPrefix, '');
+          }
+          // Owner > Admin > Member
+          if (
+            role.toUpperCase() === Role.ADMIN &&
+            userRole.toUpperCase() !== Role.OWNER.toUpperCase()
+          ) {
+            userRole = Role.ADMIN;
+            continue;
+          }
+          if (role.toUpperCase() === Role.OWNER) {
+            userRole = Role.OWNER;
+            break;
+          }
+        }
+
+        const team = await getTeam({
+          id: profile.requested.tenant,
+        });
 
         if (user === null) {
           // Create user account if it doesn't exist
@@ -86,11 +116,9 @@ export const authOptions: NextAuthOptions = {
             password: await hashPassword(createRandomString()),
           });
 
-          const team = await getTeam({
-            id: profile.requested.tenant,
-          });
-
-          await addTeamMember(team.id, user.id, team.defaultRole);
+          await addTeamMember(team.id, user.id, userRole);
+        } else {
+          await updateTeamMember(team.id, user.id, userRole);
         }
 
         return user;
@@ -145,10 +173,6 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
 
-      if (!user.email) {
-        return false;
-      }
-
       // TODO: We should check if email is verified here before linking account
 
       const existingUser = await getUser({ email: user.email });
@@ -178,6 +202,11 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token && session) {
         session.user.id = token.sub as string;
+
+        if (token.sub) {
+          const role = await getTeamMember(token.sub as string);
+          (session.user as any).role = role;
+        }
       }
 
       return session;

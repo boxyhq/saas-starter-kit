@@ -49,6 +49,24 @@ export const addTeamMember = async (
   });
 };
 
+export const updateTeamMember = async (
+  teamId: string,
+  userId: string,
+  role: Role
+) => {
+  return await prisma.teamMember.update({
+    where: {
+      teamId_userId: {
+        teamId,
+        userId,
+      },
+    },
+    data: {
+      role,
+    },
+  });
+};
+
 export const removeTeamMember = async (teamId: string, userId: string) => {
   return await prisma.teamMember.delete({
     where: {
@@ -91,6 +109,16 @@ export async function isTeamMember(userId: string, teamId: string) {
     teamMember.role === Role.OWNER ||
     teamMember.role === Role.ADMIN
   );
+}
+
+export async function getTeamMember(userId: string): Promise<string> {
+  const teamMember = await prisma.teamMember.findFirstOrThrow({
+    where: {
+      userId,
+    },
+  });
+
+  return teamMember.role;
 }
 
 // Check if the user is an owner of the team
