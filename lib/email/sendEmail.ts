@@ -2,6 +2,16 @@ import nodemailer from 'nodemailer';
 
 import env from '../env';
 
+const transporter = nodemailer.createTransport({
+  host: env.smtp.host,
+  port: env.smtp.port,
+  secure: false,
+  auth: {
+    user: env.smtp.user,
+    pass: env.smtp.password,
+  },
+});
+
 interface EmailData {
   to: string;
   subject: string;
@@ -10,16 +20,9 @@ interface EmailData {
 }
 
 export const sendEmail = async (data: EmailData) => {
-  const transporter = nodemailer.createTransport({
-    host: env.smtp.host,
-    port: env.smtp.port,
-    secure: false,
-    auth: {
-      user: env.smtp.user,
-      pass: env.smtp.password,
-    },
-  });
-
+  if (!env.smtp.host) {
+    return;
+  }
   const emailDefaults = {
     from: env.smtp.from,
   };
