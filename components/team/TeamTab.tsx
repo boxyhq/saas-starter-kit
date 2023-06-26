@@ -16,14 +16,16 @@ const TeamTab = (props: TeamTabProps) => {
 
   return (
     <div className="flex flex-col">
-      <h2 className="text-xl font-semibold mb-2">{heading ? heading : team.name}</h2>
+      <h2 className="text-xl font-semibold mb-2">
+        {heading ? heading : team.name}
+      </h2>
       <nav
         className=" flex space-x-5 border-b border-gray-300"
         aria-label="Tabs"
       >
         {navigations.map((menu) => {
           return (
-            (<Link
+            <Link
               href={menu.href}
               key={menu.href}
               className={classNames(
@@ -31,11 +33,10 @@ const TeamTab = (props: TeamTabProps) => {
                 menu.active
                   ? 'border-gray-900 text-gray-700'
                   : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-              )}>
-
+              )}
+            >
               {menu.name}
-
-            </Link>)
+            </Link>
           );
         })}
       </nav>
