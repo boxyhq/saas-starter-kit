@@ -1,7 +1,6 @@
 import { AuthLayout } from '@/components/layouts';
 import { InputWithLabel } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
-import axios from 'axios';
+import env from '@/lib/env';
 import { useFormik } from 'formik';
 import { GetServerSidePropsContext } from 'next';
 import { signIn, useSession } from 'next-auth/react';
@@ -9,40 +8,16 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { type ReactElement, useEffect } from 'react';
+import { type ReactElement } from 'react';
 import { Button } from 'react-daisyui';
-import toast from 'react-hot-toast';
-import type { ApiResponse, NextPageWithLayout } from 'types';
+import { toast } from 'react-hot-toast';
+import type { NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
 
 const SSO: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
   const { status } = useSession();
   const router = useRouter();
-
-  // SSO callback has query paramters called code and state.
-  const { code, state } = router.query;
-
-  if (status === 'authenticated') {
-    router.push('/dashboard');
-  }
-
-  // Handle the SAML SSO callback (ACS)
-  useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-
-    if (!code || !state) {
-      return;
-    }
-
-    signIn('saml-sso', {
-      code,
-      state,
-      redirect: false,
-    });
-  }, [router.isReady, code, state]);
 
   const formik = useFormik({
     initialValues: {
@@ -52,23 +27,32 @@ const SSO: NextPageWithLayout = () => {
       slug: Yup.string().required('Team slug is required'),
     }),
     onSubmit: async (values) => {
-      try {
-        const response = await axios.post<
-          ApiResponse<{ redirect_url: string }>
-        >('/api/auth/sso', {
-          ...values,
-        });
+      const response = await fetch('/api/auth/sso/verify', {
+        method: 'POST',
+        body: JSON.stringify(values),
+      });
 
-        const { data } = response.data;
+      const { data, error } = await response.json();
 
-        if (data) {
-          window.location.href = data.redirect_url;
-        }
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      if (error) {
+        toast.error(error.message);
+        return;
       }
+
+      await signIn('boxyhq-saml', undefined, {
+        tenant: data.teamId,
+        product: env.product,
+      });
     },
   });
+
+  if (status === 'loading') {
+    return null;
+  }
+
+  if (status === 'authenticated') {
+    router.push('/dashboard');
+  }
 
   return (
     <>

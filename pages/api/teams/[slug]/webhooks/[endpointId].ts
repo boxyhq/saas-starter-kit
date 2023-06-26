@@ -43,6 +43,13 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const app = await findOrCreateApp(team.name, team.id);
 
+  if (!app) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
+  }
+
   const webhook = await findWebhook(app.id, endpointId as string);
 
   return res.status(200).json({ data: webhook, error: null });
@@ -80,6 +87,13 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (eventTypes.length > 0) {
     data['filterTypes'] = eventTypes;
+  }
+
+  if (!app) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
   }
 
   const webhook = await updateWebhook(app.id, endpointId as string, data);
