@@ -63,8 +63,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Delete the member from the team
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { slug: string };
-  const { memberId } = req.body;
+  const { slug, memberId } = req.query as { slug: string; memberId: string };
 
   const session = await getSession(req, res);
 
