@@ -19,7 +19,9 @@
     "noImplicitAny": false,
     "paths": {
       "@/lib/*": ["lib/*"],
-      "@/components/*": ["components/*"]
+      "@/core/lib/*": ["core/lib/*"],
+      "@/components/*": ["components/*"],
+      "@/core/components/*": ["core/components/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-auth.d.ts"],
