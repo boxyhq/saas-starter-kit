@@ -94,8 +94,6 @@ export const authOptions: NextAuthOptions = {
   secret: env.nextAuth.secret,
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log('signIn', { user, account, profile });
-
       if (
         account?.provider === 'credentials' ||
         account?.provider === 'github' ||
@@ -108,7 +106,7 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
 
-      // Magic link
+      // Login via email (Magic Link)
       if (account?.provider === 'email') {
         const userFound = await getUser({ email: user.email });
 

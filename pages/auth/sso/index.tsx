@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { type ReactElement } from 'react';
 import { Button } from 'react-daisyui';
+import { toast } from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
 
@@ -26,8 +27,20 @@ const SSO: NextPageWithLayout = () => {
       slug: Yup.string().required('Team slug is required'),
     }),
     onSubmit: async (values) => {
+      const response = await fetch('/api/auth/sso/verify', {
+        method: 'POST',
+        body: JSON.stringify(values),
+      });
+
+      const { data, error } = await response.json();
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+
       await signIn('boxyhq-saml', undefined, {
-        tenant: '30e104dc-977e-4478-ac30-117a80e3e554',
+        tenant: data.teamId,
         product: env.product,
       });
     },

@@ -19,13 +19,12 @@ export default async function handler(
         });
     }
   } catch (err: any) {
-    // TODO: Handle error
-    console.error('authorize error:', err);
+    return res.status(500).json({ error: { message: err.message } });
   }
 }
 
 const handleAuthorize = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { oauthController } = await jackson();
+  const { oauthController, apiController } = await jackson();
 
   const requestParams = req.method === 'GET' ? req.query : req.body;
 
