@@ -94,8 +94,9 @@ export const authOptions: NextAuthOptions = {
   secret: env.nextAuth.secret,
   callbacks: {
     async signIn({ user, account, profile }) {
+      console.log('signIn', { user, account, profile });
+
       if (
-        account?.provider === 'email' ||
         account?.provider === 'credentials' ||
         account?.provider === 'github' ||
         account?.provider === 'google'
@@ -105,6 +106,17 @@ export const authOptions: NextAuthOptions = {
 
       if (!user.email) {
         return false;
+      }
+
+      // Magic link
+      if (account?.provider === 'email') {
+        const userFound = await getUser({ email: user.email });
+
+        if (!userFound) {
+          return false;
+        }
+
+        return true;
       }
 
       if (!account || !profile) {
