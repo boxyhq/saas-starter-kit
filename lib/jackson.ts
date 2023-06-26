@@ -16,6 +16,7 @@ const opts = {
     type: 'postgres',
     url: env.databaseUrl,
   },
+  idpDiscoveryPath: '/auth/sso/idp-select',
   openid: {},
 } as JacksonOption;
 

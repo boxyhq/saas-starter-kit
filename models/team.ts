@@ -40,29 +40,20 @@ export const addTeamMember = async (
   userId: string,
   role: Role
 ) => {
-  return await prisma.teamMember.create({
-    data: {
-      userId,
+  return await prisma.teamMember.upsert({
+    create: {
       teamId,
+      userId,
       role,
     },
-  });
-};
-
-export const updateTeamMember = async (
-  teamId: string,
-  userId: string,
-  role: Role
-) => {
-  return await prisma.teamMember.update({
+    update: {
+      role,
+    },
     where: {
       teamId_userId: {
         teamId,
         userId,
       },
-    },
-    data: {
-      role,
     },
   });
 };

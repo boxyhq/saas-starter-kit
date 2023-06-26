@@ -1,6 +1,6 @@
+import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import React, { ChangeEvent, useRef } from 'react';
-import { useTranslation } from 'next-i18next';
 
 const ProfileImageUpload = ({ formik }) => {
   const { t } = useTranslation('common');
@@ -41,6 +41,10 @@ const ProfileImageUpload = ({ formik }) => {
               alt=""
               width={144}
               height={144}
+              style={{
+                maxWidth: '100%',
+                height: 'auto',
+              }}
             />
           )}
         </div>

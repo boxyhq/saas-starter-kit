@@ -7,9 +7,8 @@ const env = {
   // SAML Jackson configuration
   saml: {
     issuer: 'https://saml.boxyhq.com',
-    path: '/api/auth/sso/acs',
-    callback: `${process.env.APP_URL}/auth/sso`,
-    acs: `${process.env.APP_URL}/api/auth/sso/acs`,
+    path: '/api/oauth/saml',
+    callback: `${process.env.APP_URL}`,
   },
 
   // SMTP configuration for NextAuth
