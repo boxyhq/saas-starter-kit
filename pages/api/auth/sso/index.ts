@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma';
 import type { OAuthReq } from '@boxyhq/saml-jackson';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+// TODO: Remove this endpoint
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -37,26 +39,39 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  const samlConfig = await apiController.getConfig({
+  const connections = await apiController.getConnections({
     tenant: team.id,
     product: env.product,
   });
 
-  // Check if the SAML config exists for the team
-  if (Object.keys(samlConfig).length === 0) {
+  // Check if the SSO connections exists for the team
+  if (connections.length === 0) {
     return res.status(400).json({
       error: {
-        message: 'SAML SSO is not configured for this team.',
+        message: 'SSO is not configured for this team.',
       },
     });
   }
 
-  const response = await oauthController.authorize({
-    tenant: team.id,
-    product: env.product,
-    redirect_uri: env.saml.callback,
-    state: 'some-random-state',
-  } as OAuthReq);
+  let redirectUrl = '';
 
-  return res.status(200).json({ data: response });
+  // If there are multiple SSO connections, redirect the user to the IdP selection page
+  if (connections.length > 1) {
+    redirectUrl = `/auth/sso/idp-select?teamId=${team.id}`;
+  } else {
+    const response = await oauthController.authorize({
+      tenant: team.id,
+      product: env.product,
+      redirect_uri: env.saml.callback,
+      state: 'some-random-state',
+    } as OAuthReq);
+
+    if (!response || !response.redirect_url) {
+      throw new Error('There was an error with the SSO request.');
+    }
+
+    redirectUrl = response.redirect_url;
+  }
+
+  return res.status(200).json({ data: { redirect_url: redirectUrl } });
 };
