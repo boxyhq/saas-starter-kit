@@ -5,10 +5,18 @@ import env from './env';
 const svix = new Svix(env.svix.apiKey);
 
 export const findOrCreateApp = async (name: string, uid: string) => {
+  if (!env.svix.apiKey) {
+    return;
+  }
+
   return await svix.application.getOrCreate({ name, uid });
 };
 
 export const createWebhook = async (appId: string, data: EndpointIn) => {
+  if (!env.svix.apiKey) {
+    return;
+  }
+
   return await svix.endpoint.create(appId, data);
 };
 
@@ -17,18 +25,34 @@ export const updateWebhook = async (
   endpointId: string,
   data: EndpointIn
 ) => {
+  if (!env.svix.apiKey) {
+    return;
+  }
+
   return await svix.endpoint.update(appId, endpointId, data);
 };
 
 export const findWebhook = async (appId: string, endpointId: string) => {
+  if (!env.svix.apiKey) {
+    return;
+  }
+
   return await svix.endpoint.get(appId, endpointId);
 };
 
 export const listWebhooks = async (appId: string) => {
+  if (!env.svix.apiKey) {
+    return;
+  }
+
   return await svix.endpoint.list(appId);
 };
 
 export const deleteWebhook = async (appId: string, endpointId: string) => {
+  if (!env.svix.apiKey) {
+    return;
+  }
+
   return await svix.endpoint.delete(appId, endpointId);
 };
 
@@ -37,6 +61,10 @@ export const sendEvent = async (
   eventType: string,
   payload: any
 ) => {
+  if (!env.svix.apiKey) {
+    return;
+  }
+
   return await svix.message.create(appId, {
     eventType: eventType,
     payload: {
