@@ -95,7 +95,6 @@ export const authOptions: NextAuthOptions = {
   secret: env.nextAuth.secret,
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log('signIn profile:', profile);
       if (
         account?.provider === 'credentials' ||
         account?.provider === 'github' ||
