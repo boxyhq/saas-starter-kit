@@ -40,11 +40,20 @@ export const addTeamMember = async (
   userId: string,
   role: Role
 ) => {
-  return await prisma.teamMember.create({
-    data: {
-      userId,
+  return await prisma.teamMember.upsert({
+    create: {
       teamId,
+      userId,
       role,
+    },
+    update: {
+      role,
+    },
+    where: {
+      teamId_userId: {
+        teamId,
+        userId,
+      },
     },
   });
 };
@@ -91,6 +100,20 @@ export async function isTeamMember(userId: string, teamId: string) {
     teamMember.role === Role.OWNER ||
     teamMember.role === Role.ADMIN
   );
+}
+
+export async function getTeamRoles(userId: string): Promise<string> {
+  const teamRoles = await prisma.teamMember.findMany({
+    where: {
+      userId,
+    },
+    select: {
+      teamId: true,
+      role: true,
+    },
+  });
+
+  return teamRoles;
 }
 
 // Check if the user is an owner of the team

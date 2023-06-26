@@ -51,6 +51,8 @@ const env = {
     apiKey: process.env.RETRACED_API_KEY,
     projectId: process.env.RETRACED_PROJECT_ID,
   },
+
+  groupPrefix: process.env.GROUP_PREFIX,
 };
 
 export default env;

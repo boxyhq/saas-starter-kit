@@ -15,5 +15,7 @@ declare module 'next-auth' {
     requested: {
       tenant: string;
     };
+    roles: string[];
+    groups: string[];
   }
 }
