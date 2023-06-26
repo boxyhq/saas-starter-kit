@@ -86,24 +86,21 @@ const Login: NextPageWithLayout<
         </form>
         <div className="divider"></div>
         <div className="space-y-3">
-          <Link href="/auth/login">
-            <a className="btn-outline btn w-full">
-              &nbsp;{t('sign-in-with-password')}
-            </a>
+          <Link href="/auth/login" className="btn-outline btn w-full">
+            &nbsp;{t('sign-in-with-password')}
           </Link>
-          <Link href="/auth/sso">
-            <a className="btn-outline btn w-full">
-              &nbsp;{t('continue-with-saml-sso')}
-            </a>
+          <Link href="/auth/sso" className="btn-outline btn w-full">
+            &nbsp;{t('continue-with-saml-sso')}
           </Link>
         </div>
       </div>
       <p className="text-center text-sm text-gray-600">
         {t('dont-have-an-account')}
-        <Link href="/auth/join">
-          <a className="font-medium text-indigo-600 hover:text-indigo-500">
-            &nbsp;{t('create-a-free-account')}
-          </a>
+        <Link
+          href="/auth/join"
+          className="font-medium text-indigo-600 hover:text-indigo-500"
+        >
+          &nbsp;{t('create-a-free-account')}
         </Link>
       </p>
     </>
