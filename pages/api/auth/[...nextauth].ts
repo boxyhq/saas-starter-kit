@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { Role } from '@prisma/client';
 import { getAccount } from 'models/account';
-import { addTeamMember, getTeam, getTeamMember } from 'models/team';
+import { addTeamMember, getTeam, getTeamRoles } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import NextAuth, { Account, NextAuthOptions, User } from 'next-auth';
 import BoxyHQSAMLProvider from 'next-auth/providers/boxyhq-saml';
@@ -155,8 +155,8 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.sub as string;
 
         if (token.sub) {
-          const role = await getTeamMember(token.sub as string);
-          (session.user as any).role = role;
+          const roles = await getTeamRoles(token.sub as string);
+          (session.user as any).roles = roles;
         }
       }
 

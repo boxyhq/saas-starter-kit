@@ -102,14 +102,18 @@ export async function isTeamMember(userId: string, teamId: string) {
   );
 }
 
-export async function getTeamMember(userId: string): Promise<string> {
-  const teamMember = await prisma.teamMember.findFirstOrThrow({
+export async function getTeamRoles(userId: string): Promise<string> {
+  const teamRoles = await prisma.teamMember.findMany({
     where: {
       userId,
     },
+    select: {
+      teamId: true,
+      role: true,
+    },
   });
 
-  return teamMember.role;
+  return teamRoles;
 }
 
 // Check if the user is an owner of the team
