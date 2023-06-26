@@ -70,46 +70,44 @@ const SSO: NextPageWithLayout = () => {
     },
   });
 
-  return (
-    <>
-      <div className="rounded p-6 border">
-        <form onSubmit={formik.handleSubmit}>
-          <div className="space-y-2">
-            <InputWithLabel
-              type="text"
-              label="Team slug"
-              name="slug"
-              placeholder="boxyhq"
-              value={formik.values.slug}
-              descriptionText="Contact your administrator to get your team slug"
-              error={formik.touched.slug ? formik.errors.slug : undefined}
-              onChange={formik.handleChange}
-            />
-            <Button
-              type="submit"
-              color="primary"
-              loading={formik.isSubmitting}
-              active={formik.dirty}
-              fullWidth
-            >
-              {t('continue-with-saml-sso')}
-            </Button>
-          </div>
-        </form>
-        <div className="divider"></div>
-        <div className="space-y-3">
-          <Link href="/auth/login">
-            <a className="btn-outline btn w-full">
-              {t('sign-in-with-password')}
-            </a>
-          </Link>
-          <Link href="/auth/magic-link">
-            <a className="btn-outline btn w-full">{t('sign-in-with-email')}</a>
-          </Link>
+  return <>
+    <div className="rounded p-6 border">
+      <form onSubmit={formik.handleSubmit}>
+        <div className="space-y-2">
+          <InputWithLabel
+            type="text"
+            label="Team slug"
+            name="slug"
+            placeholder="boxyhq"
+            value={formik.values.slug}
+            descriptionText="Contact your administrator to get your team slug"
+            error={formik.touched.slug ? formik.errors.slug : undefined}
+            onChange={formik.handleChange}
+          />
+          <Button
+            type="submit"
+            color="primary"
+            loading={formik.isSubmitting}
+            active={formik.dirty}
+            fullWidth
+          >
+            {t('continue-with-saml-sso')}
+          </Button>
         </div>
+      </form>
+      <div className="divider"></div>
+      <div className="space-y-3">
+        <Link href="/auth/login" className="btn-outline btn w-full">
+
+          {t('sign-in-with-password')}
+
+        </Link>
+        <Link href="/auth/magic-link" className="btn-outline btn w-full">
+          {t('sign-in-with-email')}
+        </Link>
       </div>
-    </>
-  );
+    </div>
+  </>;
 };
 
 SSO.getLayout = function getLayout(page: ReactElement) {

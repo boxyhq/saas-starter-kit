@@ -61,12 +61,12 @@ const Teams = () => {
                   >
                     <td className="px-6 py-3">
                       <Link href={`/teams/${team.slug}/members`}>
-                        <a>
-                          <div className="flex items-center justify-start space-x-2">
-                            <LetterAvatar name={team.name} />
-                            <span className="underline">{team.name}</span>
-                          </div>
-                        </a>
+
+                        <div className="flex items-center justify-start space-x-2">
+                          <LetterAvatar name={team.name} />
+                          <span className="underline">{team.name}</span>
+                        </div>
+
                       </Link>
                     </td>
                     <td className="px-6 py-3">{team._count.members}</td>
