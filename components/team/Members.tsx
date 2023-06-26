@@ -31,11 +31,9 @@ const Members = ({ team }: { team: Team }) => {
   }
 
   const removeTeamMember = async (member: TeamMember) => {
-    await axios.delete(`/api/teams/${team.slug}/members`, {
-      data: {
-        memberId: member.userId,
-      },
-    });
+    const sp = new URLSearchParams({ memberId: member.userId });
+
+    await axios.delete(`/api/teams/${team.slug}/members?${sp.toString()}`);
 
     mutateTeamMembers();
 

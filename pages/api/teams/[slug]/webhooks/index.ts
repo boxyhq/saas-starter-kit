@@ -126,8 +126,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Delete a webhook
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const slug = req.query.slug as string;
-  const { webhookId } = req.body;
+  const { slug, webhookId } = req.query as { slug: string; webhookId: string };
 
   const session = await getSession(req, res);
 
