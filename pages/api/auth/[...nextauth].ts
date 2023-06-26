@@ -4,12 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { Role } from '@prisma/client';
 import { getAccount } from 'models/account';
-import {
-  addTeamMember,
-  getTeam,
-  getTeamMember,
-  updateTeamMember,
-} from 'models/team';
+import { addTeamMember, getTeam, getTeamMember } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import NextAuth, { Account, NextAuthOptions, User } from 'next-auth';
 import BoxyHQSAMLProvider from 'next-auth/providers/boxyhq-saml';
@@ -65,11 +60,6 @@ export const authOptions: NextAuthOptions = {
       allowDangerousEmailAccountLinking: true,
       httpOptions: {
         timeout: 30000,
-      },
-      profile: (profile) => {
-        console.log('profile:', profile);
-
-        return profile;
       },
     }),
 
@@ -147,18 +137,15 @@ export const authOptions: NextAuthOptions = {
 
         await linkAccount(newUser, account);
 
-        // TODO: Check if the user is already a member of the team before adding
-        const team = await getTeam({
-          id: profile.requested.tenant,
-        });
-
-        await addTeamMember(team.id, newUser.id, team.defaultRole);
+        await linkToTeam(profile, newUser.id);
       } else {
         const linkedAccount = await getAccount({ userId: existingUser.id });
 
         if (!linkedAccount) {
           await linkAccount(existingUser, account);
         }
+
+        await linkToTeam(profile, existingUser.id);
       }
 
       return true;
@@ -180,6 +167,36 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default NextAuth(authOptions);
+
+const linkToTeam = async (profile: any, userId: string) => {
+  const team = await getTeam({
+    id: profile.requested.tenant,
+  });
+
+  // Sort out roles
+  const roles = profile.roles || profile.groups || [];
+  let userRole: Role = team.defaultRole || Role.MEMBER;
+
+  for (let role of roles) {
+    if (env.groupPrefix) {
+      role = role.replace(env.groupPrefix, '');
+    }
+    // Owner > Admin > Member
+    if (
+      role.toUpperCase() === Role.ADMIN &&
+      userRole.toUpperCase() !== Role.OWNER.toUpperCase()
+    ) {
+      userRole = Role.ADMIN;
+      continue;
+    }
+    if (role.toUpperCase() === Role.OWNER) {
+      userRole = Role.OWNER;
+      break;
+    }
+  }
+
+  await addTeamMember(team.id, userId, userRole);
+};
 
 const linkAccount = async (user: User, account: Account) => {
   return await adapter.linkAccount({
