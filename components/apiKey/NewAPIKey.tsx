@@ -130,7 +130,7 @@ const DisplayAPIKey = ({
       </Modal.Header>
       <Modal.Body>
         <div className="flex flex-col space-y-3 mt-4">
-          <InputWithLabel label="Name" name="name" defaultValue={apiKey} />
+          <InputWithLabel label="API Key" defaultValue={apiKey} />
         </div>
       </Modal.Body>
       <Modal.Actions>
