@@ -39,3 +39,11 @@ export const fetchApiKeys = async (teamId: string) => {
     },
   });
 };
+
+export const deleteApiKey = async (id: string) => {
+  return prisma.apiKey.delete({
+    where: {
+      id,
+    },
+  });
+};

@@ -13,9 +13,19 @@ interface APIKeysProps {
 const APIKeys = ({ team }: APIKeysProps) => {
   const { t } = useTranslation('common');
 
-  const { data, isLoading, error } = useSWR<{
+  // Fetch API Keys
+  const { data, isLoading, error, mutate } = useSWR<{
     data: ApiKey[];
   }>(`/api/teams/${team.slug}/api-keys`, fetcher);
+
+  // Delete API Key
+  const deleteApiKey = async (id: string) => {
+    await fetch(`/api/teams/${team.slug}/api-keys/${id}`, {
+      method: 'DELETE',
+    });
+
+    mutate();
+  };
 
   const apiKeys = data?.data ?? [];
 
@@ -59,7 +69,12 @@ const APIKeys = ({ team }: APIKeysProps) => {
                           {new Date(apiKey.createdAt).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-3">
-                          <Button size="xs" color="error" variant="outline">
+                          <Button
+                            size="xs"
+                            color="error"
+                            variant="outline"
+                            onClick={() => deleteApiKey(apiKey.id)}
+                          >
                             Remove
                           </Button>
                         </td>

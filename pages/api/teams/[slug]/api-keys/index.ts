@@ -1,6 +1,6 @@
 import { createApiKey, fetchApiKeys } from '@/core/lib/api-keys';
 import { getSession } from '@/lib/session';
-import { getTeam } from 'models/team';
+import { getTeam, hasTeamAccess } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -16,7 +16,7 @@ export default async function handler(
       case 'POST':
         return await handlePOST(req, res);
       default:
-        res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
+        res.setHeader('Allow', ['GET', 'POST']);
         res.status(405).json({
           data: null,
           error: { message: `Method ${method} Not Allowed` },
@@ -39,10 +39,14 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { slug } = req.query as { slug: string };
 
+  if (!(await hasTeamAccess({ userId: session.user.id, teamSlug: slug }))) {
+    throw new Error('You are not allowed to perform this action');
+  }
+
   const team = await getTeam({ slug });
   const apiKeys = await fetchApiKeys(team.id);
 
-  return res.status(200).json({ data: apiKeys });
+  return res.json({ data: apiKeys });
 };
 
 // Create an API key
@@ -55,6 +59,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { slug } = req.query as { slug: string };
   const { name } = JSON.parse(req.body) as { name: string };
+
+  if (!(await hasTeamAccess({ userId: session.user.id, teamSlug: slug }))) {
+    throw new Error('You are not allowed to perform this action');
+  }
 
   const team = await getTeam({ slug });
   const apiKey = await createApiKey({
