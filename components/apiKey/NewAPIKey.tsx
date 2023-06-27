@@ -1,4 +1,4 @@
-import { InputWithLabel } from '@/components/shared';
+import { InputWithCopyButton, InputWithLabel } from '@/components/shared';
 import type { Team } from '@prisma/client';
 import { useState } from 'react';
 import { Button, Modal } from 'react-daisyui';
@@ -130,7 +130,8 @@ const DisplayAPIKey = ({
       </Modal.Header>
       <Modal.Body>
         <div className="flex flex-col space-y-3 mt-4">
-          <InputWithLabel label="API Key" defaultValue={apiKey} />
+          <InputWithCopyButton label="API Key" value={apiKey} />
+          {/* <InputWithLabel label="API Key" defaultValue={apiKey} /> */}
         </div>
       </Modal.Body>
       <Modal.Actions>

@@ -11,7 +11,7 @@ const InputWithCopyButton = (props: InputWithCopyButtonProps) => {
   const { label, value, description, ...rest } = props;
 
   return (
-    <div className="form-control w-full max-w-xs">
+    <div className="form-control w-full">
       <div className="flex justify-between items-center">
         <label className="label">
           <span className="label-text">{label}</span>
@@ -19,7 +19,7 @@ const InputWithCopyButton = (props: InputWithCopyButtonProps) => {
         <CopyToClipboardButton value={value?.toString() || ''} />
       </div>
       <Input
-        className="input input-bordered w-full max-w-xs"
+        className="input input-bordered w-full"
         {...rest}
         value={value}
       />
