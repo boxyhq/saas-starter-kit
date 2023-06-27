@@ -102,7 +102,7 @@ export async function isTeamMember(userId: string, teamId: string) {
   );
 }
 
-export async function getTeamRoles(userId: string): Promise<string> {
+export async function getTeamRoles(userId: string) {
   const teamRoles = await prisma.teamMember.findMany({
     where: {
       userId,
@@ -175,25 +175,19 @@ export async function hasTeamAccess(
 ) {
   const { userId } = params;
 
+  let teamMember: TeamMember | null = null;
+
   if ('teamId' in params) {
-    const teamMember = await prisma.teamMember.findFirst({
+    teamMember = await prisma.teamMember.findFirst({
       where: {
         userId,
         teamId: params.teamId,
       },
     });
-
-    if (teamMember) {
-      return (
-        teamMember.role === Role.MEMBER ||
-        teamMember.role === Role.OWNER ||
-        teamMember.role === Role.ADMIN
-      );
-    }
   }
 
   if ('teamSlug' in params) {
-    const teamMember = await prisma.teamMember.findFirst({
+    teamMember = await prisma.teamMember.findFirst({
       where: {
         userId,
         team: {
@@ -201,14 +195,14 @@ export async function hasTeamAccess(
         },
       },
     });
+  }
 
-    if (teamMember) {
-      return (
-        teamMember.role === Role.MEMBER ||
-        teamMember.role === Role.OWNER ||
-        teamMember.role === Role.ADMIN
-      );
-    }
+  if (teamMember) {
+    return (
+      teamMember.role === Role.MEMBER ||
+      teamMember.role === Role.OWNER ||
+      teamMember.role === Role.ADMIN
+    );
   }
 
   return false;
