@@ -54,7 +54,7 @@ Please follow these simple steps to get a local copy up and running.
 
 ### Prerequisites
 
-- Node.js (Version: >=15.x <17)
+- Node.js (Version: >=18.x)
 - PostgreSQL
 - NPM
 - Docker compose
