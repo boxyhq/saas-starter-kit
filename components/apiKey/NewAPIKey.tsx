@@ -125,8 +125,7 @@ const DisplayAPIKey = ({
       <Modal.Header className="flex flex-col space-y-2">
         <h2 className="font-bold">API Key Created</h2>
         <p className="text-sm text-gray-500">
-          Save this API key somewhere safe. You won't be able to see it again
-          once you close this dialog.
+          {`Save this API key somewhere safe. You won't be able to see it again once you close this dialog.`}
         </p>
       </Modal.Header>
       <Modal.Body>

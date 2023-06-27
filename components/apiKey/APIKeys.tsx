@@ -34,7 +34,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
       method: 'DELETE',
     });
 
-    const { data, error } = (await res.json()) as ApiResponse<{}>;
+    const { data, error } = (await res.json()) as ApiResponse<null>;
 
     setSelectedApiKey(null);
     setConfirmationDialogVisible(false);
