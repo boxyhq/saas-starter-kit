@@ -9,3 +9,5 @@ export { default as InputWithLabel } from './InputWithLabel';
 export { default as Loading } from './Loading';
 export { default as Error } from './Error';
 export { default as WithLoadingAndError } from './WithLoadingAndError';
+export { default as InputWithCopyButton } from './InputWithCopyButton';
+export { default as CopyToClipboardButton } from './CopyToClipboardButton';

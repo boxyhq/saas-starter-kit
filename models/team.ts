@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { findOrCreateApp } from '@/lib/svix';
-import { Role, Team } from '@prisma/client';
+import { Role, Team, TeamMember } from '@prisma/client';
 
 export const createTeam = async (param: {
   userId: string;
@@ -102,7 +102,7 @@ export async function isTeamMember(userId: string, teamId: string) {
   );
 }
 
-export async function getTeamRoles(userId: string): Promise<string> {
+export async function getTeamRoles(userId: string) {
   const teamRoles = await prisma.teamMember.findMany({
     where: {
       userId,
@@ -169,3 +169,41 @@ export const isTeamExists = async (condition: any) => {
     },
   });
 };
+
+export async function hasTeamAccess(
+  params: { userId: string } & ({ teamId: string } | { teamSlug: string })
+) {
+  const { userId } = params;
+
+  let teamMember: TeamMember | null = null;
+
+  if ('teamId' in params) {
+    teamMember = await prisma.teamMember.findFirst({
+      where: {
+        userId,
+        teamId: params.teamId,
+      },
+    });
+  }
+
+  if ('teamSlug' in params) {
+    teamMember = await prisma.teamMember.findFirst({
+      where: {
+        userId,
+        team: {
+          slug: params.teamSlug,
+        },
+      },
+    });
+  }
+
+  if (teamMember) {
+    return (
+      teamMember.role === Role.MEMBER ||
+      teamMember.role === Role.OWNER ||
+      teamMember.role === Role.ADMIN
+    );
+  }
+
+  return false;
+}

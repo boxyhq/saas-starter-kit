@@ -17,7 +17,7 @@ const WithLoadingAndError = (props: WithLoadingAndErrorProps) => {
     return <Alert status="error">{error.message}</Alert>;
   }
 
-  return children;
+  return <>{children}</>;
 };
 
 export default WithLoadingAndError;

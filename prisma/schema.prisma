@@ -75,6 +75,7 @@ model Team {
 
   members     TeamMember[]
   invitations Invitation[]
+  apiKeys     ApiKey[]
 }
 
 model TeamMember {
@@ -109,12 +110,24 @@ model Invitation {
   @@unique([teamId, email])
 }
 
-
 model PasswordReset {
-  id            Int      @id @default(autoincrement())
-  email         String
-  token         String   @unique
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  expiresAt     DateTime
+  id        Int      @id @default(autoincrement())
+  email     String
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expiresAt DateTime
+}
+
+model ApiKey {
+  id         String    @id @default(uuid())
+  name       String
+  teamId     String
+  hashedKey  String    @unique
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now())
+  expiresAt  DateTime?
+  lastUsedAt DateTime?
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }

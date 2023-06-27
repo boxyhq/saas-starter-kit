@@ -59,7 +59,7 @@ export const teamNavigations = (slug: string, activeTab: string) => {
     },
     {
       name: 'API Keys',
-      href: '#',
+      href: `/teams/${slug}/api-keys`,
       active: activeTab === 'api-keys',
       icon: KeyIcon,
     },
