@@ -1,38 +1,13 @@
-import jackson from '@/lib/jackson';
 import type { NextApiRequest, NextApiResponse } from 'next';
+
+import handlerProxy from '../../oauth/saml';
+
+// This is a legacy endpoint that is maintained for backwards compatibility.
+// The new endpoint is pages/api/oauth/saml.ts
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method } = req;
-
-  switch (method) {
-    case 'POST':
-      return await handlePOST(req, res);
-    default:
-      res.setHeader('Allow', 'POST');
-      res.status(405).json({
-        error: { message: `Method ${method} Not Allowed` },
-      });
-  }
+  return handlerProxy(req, res);
 }
-
-const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { oauthController } = await jackson();
-
-  const { RelayState, SAMLResponse } = req.body;
-
-  const { redirect_url } = await oauthController.samlResponse({
-    RelayState,
-    SAMLResponse,
-  });
-
-  if (!redirect_url) {
-    return res.status(400).json({
-      error: { message: 'No redirect URL found.' },
-    });
-  }
-
-  res.redirect(302, redirect_url);
-};

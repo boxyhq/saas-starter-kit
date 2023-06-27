@@ -68,6 +68,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     data['filterTypes'] = eventTypes;
   }
 
+  if (!app) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
+  }
+
   const endpoint = await createWebhook(app.id, data);
 
   sendAudit({
@@ -98,15 +105,28 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const app = await findOrCreateApp(team.name, team.id);
 
+  if (!app) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
+  }
+
   const webhooks = await listWebhooks(app.id);
+
+  if (!webhooks) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
+  }
 
   return res.status(200).json({ data: webhooks.data, error: null });
 };
 
 // Delete a webhook
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const slug = req.query.slug as string;
-  const { webhookId } = req.body;
+  const { slug, webhookId } = req.query as { slug: string; webhookId: string };
 
   const session = await getSession(req, res);
 
@@ -126,6 +146,13 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const app = await findOrCreateApp(team.name, team.id);
+
+  if (!app) {
+    return res.status(200).json({
+      data: null,
+      error: { message: 'Bad request.' },
+    });
+  }
 
   if (app.uid != team.id) {
     return res.status(200).json({

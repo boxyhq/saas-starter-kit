@@ -1,14 +1,13 @@
-import { hashPassword, verifyPassword } from '@/lib/auth';
-import { createRandomString } from '@/lib/common';
+import { verifyPassword } from '@/lib/auth';
 import env from '@/lib/env';
-import jackson from '@/lib/jackson';
 import { prisma } from '@/lib/prisma';
-import type { OAuthTokenReq } from '@boxyhq/saml-jackson';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { Role } from '@prisma/client';
 import { getAccount } from 'models/account';
-import { addTeamMember, getTeam } from 'models/team';
+import { addTeamMember, getTeam, getTeamRoles } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import NextAuth, { Account, NextAuthOptions, User } from 'next-auth';
+import BoxyHQSAMLProvider from 'next-auth/providers/boxyhq-saml';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import EmailProvider from 'next-auth/providers/email';
 import GitHubProvider from 'next-auth/providers/github';
@@ -53,47 +52,14 @@ export const authOptions: NextAuthOptions = {
       },
     }),
 
-    CredentialsProvider({
-      id: 'saml-sso',
-      credentials: {
-        code: { type: 'text' },
-        state: { type: 'text' },
-      },
-      async authorize(credentials) {
-        const code = credentials?.code;
-
-        if (!code) {
-          throw new Error('No code found.');
-        }
-
-        const { oauthController } = await jackson();
-
-        const { access_token } = await oauthController.token({
-          client_id: 'dummy',
-          client_secret: 'dummy',
-          code,
-          redirect_uri: env.saml.callback,
-        } as OAuthTokenReq);
-
-        const profile = await oauthController.userInfo(access_token);
-        let user = await getUser({ email: profile.email });
-
-        if (user === null) {
-          // Create user account if it doesn't exist
-          user = await createUser({
-            name: `${profile.firstName} ${profile.lastName}`,
-            email: profile.email,
-            password: await hashPassword(createRandomString()),
-          });
-
-          const team = await getTeam({
-            id: profile.requested.tenant,
-          });
-
-          await addTeamMember(team.id, user.id, team.defaultRole);
-        }
-
-        return user;
+    BoxyHQSAMLProvider({
+      authorization: { params: { scope: '' } },
+      issuer: env.appUrl,
+      clientId: 'dummy',
+      clientSecret: 'dummy',
+      allowDangerousEmailAccountLinking: true,
+      httpOptions: {
+        timeout: 30000,
       },
     }),
 
@@ -130,46 +96,55 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       if (
-        account?.provider === 'email' ||
         account?.provider === 'credentials' ||
-        account?.provider === 'saml-sso'
+        account?.provider === 'github' ||
+        account?.provider === 'google'
       ) {
         return true;
       }
 
-      if (account?.provider != 'github' && account?.provider != 'google') {
-        return false;
-      }
-
       if (!user.email) {
         return false;
       }
 
-      if (!user.email) {
+      // Login via email (Magic Link)
+      if (account?.provider === 'email') {
+        const userFound = await getUser({ email: user.email });
+
+        if (!userFound) {
+          return false;
+        }
+
+        return true;
+      }
+
+      if (!account || !profile) {
         return false;
       }
+
+      // TODO: Only SAML login reaches here for now
 
       // TODO: We should check if email is verified here before linking account
-
       const existingUser = await getUser({ email: user.email });
 
+      // Create user account if it doesn't exist
       if (!existingUser) {
-        // Create user account if it doesn't exist
         const newUser = await createUser({
-          name: `${profile?.name}`,
-          email: `${profile?.email}`,
+          name: `${user.name}`,
+          email: `${user.email}`,
         });
 
         await linkAccount(newUser, account);
+
+        await linkToTeam(profile, newUser.id);
       } else {
-        // User account already exists, check if it's linked to the account
         const linkedAccount = await getAccount({ userId: existingUser.id });
 
-        if (linkedAccount) {
-          return true;
+        if (!linkedAccount) {
+          await linkAccount(existingUser, account);
         }
 
-        await linkAccount(existingUser, account);
+        await linkToTeam(profile, existingUser.id);
       }
 
       return true;
@@ -178,6 +153,11 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token && session) {
         session.user.id = token.sub as string;
+
+        if (token.sub) {
+          const roles = await getTeamRoles(token.sub as string);
+          (session.user as any).roles = roles;
+        }
       }
 
       return session;
@@ -186,6 +166,36 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default NextAuth(authOptions);
+
+const linkToTeam = async (profile: any, userId: string) => {
+  const team = await getTeam({
+    id: profile.requested.tenant,
+  });
+
+  // Sort out roles
+  const roles = profile.roles || profile.groups || [];
+  let userRole: Role = team.defaultRole || Role.MEMBER;
+
+  for (let role of roles) {
+    if (env.groupPrefix) {
+      role = role.replace(env.groupPrefix, '');
+    }
+    // Owner > Admin > Member
+    if (
+      role.toUpperCase() === Role.ADMIN &&
+      userRole.toUpperCase() !== Role.OWNER.toUpperCase()
+    ) {
+      userRole = Role.ADMIN;
+      continue;
+    }
+    if (role.toUpperCase() === Role.OWNER) {
+      userRole = Role.OWNER;
+      break;
+    }
+  }
+
+  await addTeamMember(team.id, userId, userRole);
+};
 
 const linkAccount = async (user: User, account: Account) => {
   return await adapter.linkAccount({

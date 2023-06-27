@@ -55,7 +55,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     const connection = {
       config: connections.length > 0 ? connections[0] : [],
       issuer: env.saml.issuer,
-      acs: env.saml.acs,
+      acs: `${env.appUrl}${env.saml.path}`,
     };
 
     return res.json({ data: connection });
