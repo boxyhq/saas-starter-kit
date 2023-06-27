@@ -4,7 +4,9 @@ import fetcher from '@/lib/fetcher';
 import type { ApiKey, Team } from '@prisma/client';
 import { useTranslation } from 'next-i18next';
 import { Button } from 'react-daisyui';
+import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
+import { ApiResponse } from 'types';
 
 interface APIKeysProps {
   team: Team;
@@ -20,11 +22,21 @@ const APIKeys = ({ team }: APIKeysProps) => {
 
   // Delete API Key
   const deleteApiKey = async (id: string) => {
-    await fetch(`/api/teams/${team.slug}/api-keys/${id}`, {
+    const res = await fetch(`/api/teams/${team.slug}/api-keys/${id}`, {
       method: 'DELETE',
     });
 
-    mutate();
+    const { data, error } = (await res.json()) as ApiResponse<{}>;
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    if (data) {
+      mutate();
+      toast.success('API Key deleted successfully');
+    }
   };
 
   const apiKeys = data?.data ?? [];
