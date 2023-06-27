@@ -1,3 +1,4 @@
+import { ApiError } from '@/lib/errors';
 import { getSession } from '@/lib/session';
 import { createApiKey, fetchApiKeys } from 'models/apiKey';
 import { getTeam, hasTeamAccess } from 'models/team';
@@ -24,8 +25,9 @@ export default async function handler(
     }
   } catch (error: any) {
     const message = error.message || 'Something went wrong';
+    const status = error.status || 500;
 
-    res.status(500).json({ error: { message } });
+    res.status(status).json({ error: { message } });
   }
 }
 
@@ -40,7 +42,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query as { slug: string };
 
   if (!(await hasTeamAccess({ userId: session.user.id, teamSlug: slug }))) {
-    throw new Error('You are not allowed to perform this action');
+    throw new ApiError(403, 'You are not allowed to perform this action');
   }
 
   const team = await getTeam({ slug });
@@ -61,7 +63,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name } = JSON.parse(req.body) as { name: string };
 
   if (!(await hasTeamAccess({ userId: session.user.id, teamSlug: slug }))) {
-    throw new Error('You are not allowed to perform this action');
+    throw new ApiError(403, 'You are not allowed to perform this action');
   }
 
   const team = await getTeam({ slug });

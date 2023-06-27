@@ -1,3 +1,4 @@
+import { ApiError } from '@/lib/errors';
 import { getSession } from '@/lib/session';
 import { deleteApiKey } from 'models/apiKey';
 import { hasTeamAccess } from 'models/team';
@@ -22,6 +23,7 @@ export default async function handler(
     }
   } catch (error: any) {
     const message = error.message || 'Something went wrong';
+    const status = error.status || 500;
 
     res.status(500).json({ error: { message } });
   }
@@ -38,7 +40,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug, apiKeyId } = req.query as { slug: string; apiKeyId: string };
 
   if (!(await hasTeamAccess({ userId: session.user.id, teamSlug: slug }))) {
-    throw new Error('You are not allowed to perform this action');
+    throw new ApiError(403, 'You are not allowed to perform this action');
   }
 
   await deleteApiKey(apiKeyId);
