@@ -21,7 +21,7 @@ const InputWithCopyButton = (props: InputWithCopyButtonProps) => {
       <Input
         className="input input-bordered w-full"
         {...rest}
-        value={value}
+        defaultValue={value}
       />
       {description && (
         <label className="label">
