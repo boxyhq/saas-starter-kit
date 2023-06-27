@@ -1,5 +1,5 @@
-import { createApiKey, fetchApiKeys } from '@/core/lib/api-keys';
 import { getSession } from '@/lib/session';
+import { createApiKey, fetchApiKeys } from 'models/apiKey';
 import { getTeam, hasTeamAccess } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
 

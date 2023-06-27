@@ -1,5 +1,5 @@
-import { deleteApiKey } from '@/core/lib/api-keys';
 import { getSession } from '@/lib/session';
+import { deleteApiKey } from 'models/apiKey';
 import { hasTeamAccess } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
 

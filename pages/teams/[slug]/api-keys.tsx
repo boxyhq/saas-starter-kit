@@ -1,4 +1,4 @@
-import APIKeysContainer from 'core/components/api-keys/APIKeysContainer';
+import APIKeysContainer from '@/components/apiKey/APIKeysContainer';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
