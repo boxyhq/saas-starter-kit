@@ -15,7 +15,7 @@ export default async function handler(
       case 'DELETE':
         return await handleDELETE(req, res);
       default:
-        res.setHeader('Allow', ['DELETE']);
+        res.setHeader('Allow', 'DELETE');
         res.status(405).json({
           data: null,
           error: { message: `Method ${method} Not Allowed` },
@@ -25,7 +25,7 @@ export default async function handler(
     const message = error.message || 'Something went wrong';
     const status = error.status || 500;
 
-    res.status(500).json({ error: { message } });
+    res.status(status).json({ error: { message } });
   }
 }
 
