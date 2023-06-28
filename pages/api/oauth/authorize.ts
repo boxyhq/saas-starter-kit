@@ -24,7 +24,7 @@ export default async function handler(
 }
 
 const handleAuthorize = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { oauthController, apiController } = await jackson();
+  const { oauthController } = await jackson();
 
   const requestParams = req.method === 'GET' ? req.query : req.body;
 
