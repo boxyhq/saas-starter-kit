@@ -11,6 +11,7 @@ export type EventType =
   | 'member.remove'
   | 'member.update'
   | 'sso.connection.create'
+  | 'sso.connection.delete'
   | 'dsync.connection.create'
   | 'webhook.create'
   | 'webhook.delete'
