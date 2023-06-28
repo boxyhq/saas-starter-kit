@@ -70,75 +70,80 @@ const TeamSSO: NextPageWithLayout = () => {
   return (
     <>
       <TeamTab activeTab="saml" team={team} />
-      <div className="flex flex-col">
-        <div className="flex mt-2 justify-end">
-          <Button
-            color="primary"
-            onClick={() => {
-              setVisible(!visible);
-            }}
-          >
-            {t('add-connection')}
-          </Button>
-        </div>
-        <Card heading={t('team-connections')}>
-          <Card.Body>
-            <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-              <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  {/* <th scope="col" className="px-6 py-3">
-                    {t('name')}
-                  </th> */}
-                  <th scope="col" className="px-6 py-3">
-                    {t('provider')}
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    {t('actions')}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {connectionsAdded &&
-                  samlConfig?.connections.map((connection) => {
-                    return (
-                      <tr
-                        key={connection.clientID}
-                        className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                      >
-                        <td className="px-6 py-3">
-                          {connection.idpMetadata.friendlyProviderName ||
-                            connection.idpMetadata.provider}
-                        </td>
-                        <td className="px-6 py-3">
-                          <Button
-                            size="xs"
-                            color="error"
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedSsoConnection(connection);
-                              setConfirmationDialogVisible(true);
-                            }}
-                          >
-                            Delete
-                          </Button>
-                        </td>
-                        {/* <td className="px-6 py-3">{connection.product}</td> */}
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </Card.Body>
-        </Card>
-      </div>
-      <Card heading={t('configure-singlesignon')}>
-        <Card.Body className="px-3 py-3 text-sm">
-          <div className="mb-3 flex items-center justify-between">
-            <p>{t('allow-team')}</p>
-            <Button onClick={() => setVisible(!visible)} variant="outline">
-              {t('configure')}
+      {connectionsAdded && (
+        <div className="flex flex-col">
+          <div className="flex mt-2 justify-end">
+            <Button
+              color="primary"
+              onClick={() => {
+                setVisible(!visible);
+              }}
+            >
+              {t('add-connection')}
             </Button>
           </div>
+
+          <Card heading={t('team-connections')}>
+            <Card.Body>
+              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+                <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    {/* <th scope="col" className="px-6 py-3">
+                    {t('name')}
+                  </th> */}
+                    <th scope="col" className="px-6 py-3">
+                      {t('provider')}
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      {t('actions')}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {connectionsAdded &&
+                    samlConfig?.connections.map((connection) => {
+                      return (
+                        <tr
+                          key={connection.clientID}
+                          className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+                        >
+                          <td className="px-6 py-3">
+                            {connection.idpMetadata.friendlyProviderName ||
+                              connection.idpMetadata.provider}
+                          </td>
+                          <td className="px-6 py-3">
+                            <Button
+                              size="xs"
+                              color="error"
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedSsoConnection(connection);
+                                setConfirmationDialogVisible(true);
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          </td>
+                          {/* <td className="px-6 py-3">{connection.product}</td> */}
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </Card.Body>
+          </Card>
+        </div>
+      )}
+      <Card heading={t('configure-singlesignon')}>
+        <Card.Body className="px-3 py-3 text-sm">
+          {!connectionsAdded && (
+            <div className="mb-3 flex items-center justify-between">
+              <p>{t('allow-team')}</p>
+              <Button onClick={() => setVisible(!visible)} variant="outline">
+                {t('configure')}
+              </Button>
+            </div>
+          )}
           {connectionsAdded && (
             <>
               <Alert status="success">{t('saml-connection-established')}</Alert>
