@@ -39,9 +39,7 @@ const CreateConnection = (props: CreateConnectionProps) => {
           return schema.required();
         },
       }),
-    metadataRaw: Yup.string()
-      .url()
-      .when('tab', {
+    metadataRaw: Yup.string().when('tab', {
         is: tab === 1,
         then(schema) {
           return schema.required();
