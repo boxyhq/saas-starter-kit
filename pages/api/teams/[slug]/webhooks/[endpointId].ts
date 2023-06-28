@@ -17,7 +17,7 @@ export default async function handler(
     case 'PUT':
       return handlePUT(req, res);
     default:
-      res.setHeader('Allow', ['GET', 'PUT']);
+      res.setHeader('Allow', 'GET, PUT');
       res.status(405).json({
         data: null,
         error: { message: `Method ${method} Not Allowed` },
