@@ -1,5 +1,6 @@
 import { InputWithCopyButton, InputWithLabel } from '@/components/shared';
 import type { Team } from '@prisma/client';
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button, Modal } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
@@ -44,6 +45,7 @@ const CreateAPIKeyForm = ({
   onNewAPIKey,
 }: CreateAPIKeyFormProps) => {
   const [name, setName] = useState('');
+  const { t } = useTranslation('common');
   const [submitting, setSubmitting] = useState(false);
 
   // Handle form submission
@@ -70,22 +72,20 @@ const CreateAPIKeyForm = ({
 
     if (data.apiKey) {
       onNewAPIKey(data.apiKey);
-      toast.success('API key created successfully');
+      toast.success(t('api-key-created'));
     }
   };
 
   return (
     <form onSubmit={handleSubmit} method="POST">
       <Modal.Header className="flex flex-col space-y-2">
-        <h2 className="font-bold">Create API Key</h2>
-        <p className="text-sm text-gray-500">
-          API keys allow your app to communicate the API.
-        </p>
+        <h2 className="font-bold">{t('new-api-key')}</h2>
+        <p className="text-sm text-gray-500">{t('new-api-key-description')}</p>
       </Modal.Header>
       <Modal.Body>
         <div className="flex flex-col space-y-3 mt-4">
           <InputWithLabel
-            label="Name"
+            label={t('name')}
             name="name"
             required
             value={name}
@@ -100,7 +100,7 @@ const CreateAPIKeyForm = ({
           loading={submitting}
           disabled={!name}
         >
-          Create API Key
+          {t('create-api-key')}
         </Button>
         <Button
           color="secondary"
@@ -108,7 +108,7 @@ const CreateAPIKeyForm = ({
           onClick={() => setCreateModalVisible(false)}
           type="button"
         >
-          Close
+          {t('close')}
         </Button>
       </Modal.Actions>
     </form>
@@ -120,18 +120,17 @@ const DisplayAPIKey = ({
   clearApiKey,
   setCreateModalVisible,
 }: DisplayAPIKeyProps) => {
+  const { t } = useTranslation('common');
+
   return (
     <>
       <Modal.Header className="flex flex-col space-y-2">
-        <h2 className="font-bold">API Key Created</h2>
-        <p className="text-sm text-gray-500">
-          {`Save this API key somewhere safe. You won't be able to see it again once you close this dialog.`}
-        </p>
+        <h2 className="font-bold">{t('new-api-key')}</h2>
+        <p className="text-sm text-gray-500">{t('new-api-warning')}</p>
       </Modal.Header>
       <Modal.Body>
         <div className="flex flex-col space-y-3 mt-4">
-          <InputWithCopyButton label="API Key" value={apiKey} />
-          {/* <InputWithLabel label="API Key" defaultValue={apiKey} /> */}
+          <InputWithCopyButton label={t('api-key')} value={apiKey} />
         </div>
       </Modal.Body>
       <Modal.Actions>
@@ -144,7 +143,7 @@ const DisplayAPIKey = ({
           }}
           type="button"
         >
-          Close
+          {t('close')}
         </Button>
       </Modal.Actions>
     </>

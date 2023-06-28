@@ -18,7 +18,7 @@ if (hideLandingPage) {
 const nextConfig = withTM({
   reactStrictMode: true,
   images: {
-    domains: [],
+    domains: ['boxyhq.com'],
   },
   i18n,
   async redirects() {

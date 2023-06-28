@@ -37,7 +37,7 @@ const APIKeysContainer: NextPageWithLayout = () => {
             variant="outline"
             onClick={() => setCreateModalVisible(true)}
           >
-            New API Key
+            {t('new-api-key')}
           </Button>
         </div>
         <APIKeys team={team} />

@@ -46,20 +46,18 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   }
 
   if (!auditLogToken) {
-    return (
-      <Error message="Error getting audit log token. Please check your configuration." />
-    );
+    return <Error message={t('error-getting-audit-log-token')} />;
   }
 
   return (
     <>
       <TeamTab activeTab="audit-logs" team={team} />
-      <Card heading="Audit Logs">
+      <Card heading={t('audit-logs')}>
         <Card.Body>
           <RetracedEventsBrowser
             host={`${retracedHost}/viewer/v1`}
             auditLogToken={auditLogToken}
-            header="Audit Logs"
+            header={t('audit-logs')}
           />
         </Card.Body>
       </Card>

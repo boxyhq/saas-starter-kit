@@ -29,18 +29,20 @@ const ProfileImageUpload = ({ formik }) => {
       <div className="">
         <div className="relative w-36 h-36 mb-4">
           {formik.values.image ? (
-            <img
+            <Image
               src={formik.values.image}
               className="w-36 h-36 rounded-full absolute m-auto shadow"
-              alt=""
+              width={36}
+              height={36}
+              alt="Profile picture"
             />
           ) : (
             <Image
               src="/user-default-profile.jpeg"
               className="w-36 h-36 rounded-full absolute m-auto shadow"
-              alt=""
-              width={144}
-              height={144}
+              alt="Profile picture"
+              width={36}
+              height={36}
               style={{
                 maxWidth: '100%',
                 height: 'auto',
