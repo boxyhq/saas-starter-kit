@@ -146,12 +146,12 @@ const TeamSSO: NextPageWithLayout = () => {
                 <p>{t('identity-provider')}</p>
                 <InputWithLabel
                   label={t('entity-id')}
-                  value={samlConfig.issuer}
+                  defaultValue={samlConfig.issuer}
                   className="w-full text-sm"
                 />
                 <InputWithLabel
                   label={t('acs-url')}
-                  value={samlConfig.acs}
+                  defaultValue={samlConfig.acs}
                   className="w-full text-sm"
                 />
               </div>
