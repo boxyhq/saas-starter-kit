@@ -40,17 +40,17 @@ const CreateConnection = (props: CreateConnectionProps) => {
         },
       }),
     metadataRaw: Yup.string().when('tab', {
-        is: tab === 1,
-        then(schema) {
-          return schema.required();
-        },
-      }),
+      is: tab === 1,
+      then(schema) {
+        return schema.required();
+      },
+    }),
   });
 
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       const { metadataUrl, metadataRaw } = values;
 
       try {
@@ -70,6 +70,7 @@ const CreateConnection = (props: CreateConnectionProps) => {
           toast.success(t('saml-config-updated'));
           mutateSamlConfig();
           setVisible(false);
+          resetForm();
         }
       } catch (error: any) {
         toast.error(getAxiosError(error));
@@ -131,6 +132,8 @@ const CreateConnection = (props: CreateConnectionProps) => {
             variant="outline"
             onClick={() => {
               setVisible(!visible);
+              setTab(0);
+              formik.resetForm();
             }}
           >
             {t('close')}
