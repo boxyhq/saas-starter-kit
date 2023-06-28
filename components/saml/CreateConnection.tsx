@@ -85,7 +85,6 @@ const CreateConnection = (props: CreateConnectionProps) => {
               <Tabs.Tab value={0}>{t('metadata-url')}</Tabs.Tab>
               <Tabs.Tab value={1}>{t('metadata-xml')}</Tabs.Tab>
             </Tabs>
-
             {tab === 0 && (
               <div className="flex">
                 <InputWithLabel
