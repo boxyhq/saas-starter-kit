@@ -1,4 +1,5 @@
 import env from '@/lib/env';
+import { ApiError } from '@/lib/errors';
 import jackson from '@/lib/jackson';
 import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
@@ -11,16 +12,25 @@ export default async function handler(
 ) {
   const { method } = req;
 
-  switch (method) {
-    case 'GET':
-      return await handleGET(req, res);
-    case 'POST':
-      return await handlePOST(req, res);
-    default:
-      res.setHeader('Allow', 'GET, POST');
-      res.status(405).json({
-        error: { message: `Method ${method} Not Allowed` },
-      });
+  try {
+    switch (method) {
+      case 'GET':
+        return await handleGET(req, res);
+      case 'POST':
+        return await handlePOST(req, res);
+      case 'DELETE':
+        return await handleDELETE(req, res);
+      default:
+        res.setHeader('Allow', 'GET, POST, DELETE');
+        res.status(405).json({
+          error: { message: `Method ${method} Not Allowed` },
+        });
+    }
+  } catch (err: any) {
+    const message = err.message || 'Something went wrong';
+    const status = err.status || 500;
+
+    res.status(status).json({ error: { message } });
   }
 }
 
@@ -31,17 +41,13 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({
-      error: { message: 'Unauthorized.' },
-    });
+    throw new ApiError(401, 'Unauthorized.');
   }
 
   const team = await getTeam({ slug });
 
   if (!(await isTeamMember(session.user.id, team.id))) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(403, 'You are not allowed to perform this action');
   }
 
   const { apiController } = await jackson();
@@ -52,13 +58,13 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
       product: env.product,
     });
 
-    const connection = {
-      config: connections.length > 0 ? connections[0] : [],
+    const response = {
+      connections,
       issuer: env.saml.issuer,
       acs: `${env.appUrl}${env.saml.path}`,
     };
 
-    return res.json({ data: connection });
+    return res.json({ data: response });
   } catch (error: any) {
     const { message } = error;
 
@@ -74,17 +80,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({
-      error: { message: 'Unauthorized.' },
-    });
+    throw new ApiError(401, 'Unauthorized.');
   }
 
   const team = await getTeam({ slug });
 
   if (!(await isTeamMember(session.user.id, team.id))) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(403, 'You are not allowed to perform this action');
   }
 
   const { apiController } = await jackson();
@@ -107,6 +109,40 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     return res.status(201).json({ data: connection });
+  } catch (error: any) {
+    const { message } = error;
+
+    return res.status(500).json({ error: { message } });
+  }
+};
+
+const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await getSession(req, res);
+
+  if (!session) {
+    throw new ApiError(401, 'Unauthorized.');
+  }
+  const { slug, clientID, clientSecret } = req.query as {
+    slug: string;
+    clientID: string;
+    clientSecret: string;
+  };
+  const team = await getTeam({ slug });
+
+  if (!(await isTeamMember(session.user.id, team.id))) {
+    throw new ApiError(403, 'You are not allowed to perform this action');
+  }
+
+  const { apiController } = await jackson();
+  try {
+    await apiController.deleteConnections({ clientID, clientSecret });
+    sendAudit({
+      action: 'sso.connection.delete',
+      crud: 'c',
+      user: session.user,
+      team,
+    });
+    return res.json({ data: {} });
   } catch (error: any) {
     const { message } = error;
 
