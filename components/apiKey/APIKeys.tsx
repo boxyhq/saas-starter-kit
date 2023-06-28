@@ -46,7 +46,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
 
     if (data) {
       mutate();
-      toast.success('API Key deleted successfully');
+      toast.success(t('api-key-deleted'));
     }
   };
 
@@ -56,12 +56,12 @@ const APIKeys = ({ team }: APIKeysProps) => {
     <WithLoadingAndError isLoading={isLoading} error={error}>
       {apiKeys.length === 0 ? (
         <EmptyState
-          title="You haven't created any API Keys yet"
-          description="API Keys allow your app to communicate with BoxyHQ."
+          title={t('no-api-key-title')}
+          description={t('no-api-key-description')}
         />
       ) : (
         <>
-          <Card heading="API Keys">
+          <Card heading={t('api-keys')}>
             <Card.Body>
               <table className="w-full text-left text-sm text-gray-500">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-700">
@@ -86,7 +86,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
                       <tr key={apiKey.id} className="border-b bg-white">
                         <td className="px-6 py-3">{apiKey.name}</td>
                         <td className="px-6 py-3">
-                          <Badge color="success">Active</Badge>
+                          <Badge color="success">{t('active')}</Badge>
                         </td>
                         <td className="px-6 py-3">
                           {new Date(apiKey.createdAt).toLocaleDateString()}
@@ -101,7 +101,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
                               setConfirmationDialogVisible(true);
                             }}
                           >
-                            Revoke
+                            {t('revoke')}
                           </Button>
                         </td>
                       </tr>
@@ -112,15 +112,14 @@ const APIKeys = ({ team }: APIKeysProps) => {
             </Card.Body>
           </Card>
           <ConfirmationDialog
-            title="Revoke API Key"
+            title={t('revoke-api-key')}
             visible={confirmationDialogVisible}
             onConfirm={() => deleteApiKey(selectedApiKey)}
             onCancel={() => setConfirmationDialogVisible(false)}
-            cancelText="Cancel"
-            confirmText="Revoke API Key"
+            cancelText={t('cancel')}
+            confirmText={t('revoke-api-key')}
           >
-            Are you sure you want to revoke this API Key? This action can not be
-            undone.
+            {t('revoke-api-key-confirm')}
           </ConfirmationDialog>
         </>
       )}

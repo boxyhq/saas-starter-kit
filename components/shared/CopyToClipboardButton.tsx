@@ -1,5 +1,6 @@
 import { copyToClipboard } from '@/lib/common';
 import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'next-i18next';
 import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
 
@@ -7,12 +8,12 @@ interface CopyToClipboardProps {
   value: string;
 }
 
-const CopyToClipboardButton = (props: CopyToClipboardProps) => {
-  const { value } = props;
+const CopyToClipboardButton = ({ value }: CopyToClipboardProps) => {
+  const { t } = useTranslation('common');
 
   const handleCopy = () => {
     copyToClipboard(value);
-    toast.success('Copied to clipboard');
+    toast.success(t('copied-to-clipboard'));
   };
 
   return (
@@ -20,7 +21,7 @@ const CopyToClipboardButton = (props: CopyToClipboardProps) => {
       variant="link"
       size="xs"
       className="tooltip p-0"
-      data-tip="Copy"
+      data-tip={t('copy-to-clipboard')}
       onClick={handleCopy}
     >
       <ClipboardDocumentIcon className="w-6 h-6" />

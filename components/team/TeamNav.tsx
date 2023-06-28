@@ -42,7 +42,7 @@ const TeamNav = ({ slug }: { slug: string }) => {
       icon: UserPlusIcon,
     },
     {
-      name: t('audit-logs-menu'),
+      name: t('audit-logs'),
       href: `/teams/${slug}/audit-logs`,
       active: activeTab === 'audit-logs',
       icon: DocumentMagnifyingGlassIcon,
