@@ -7,7 +7,7 @@ const useSAMLConfig = (slug: string | undefined) => {
   const url = `/api/teams/${slug}/saml`;
 
   const { data, error, isLoading } = useSWR<
-    ApiResponse<SPSAMLConfig & { config: SAMLSSORecord }>
+    ApiResponse<SPSAMLConfig & { connections: SAMLSSORecord[] }>
   >(slug ? url : null, fetcher);
 
   const mutateSamlConfig = async () => {
