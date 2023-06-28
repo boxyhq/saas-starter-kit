@@ -57,13 +57,12 @@ IdPSelection.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = async ({
   query,
-  req,
 }: GetServerSidePropsContext) => {
   const { apiController } = await jackson();
 
   const paramsToRelay = { ...query } as { [key: string]: string };
 
-  const { authFlow, entityId, tenant, product, idp_hint } = query as {
+  const { authFlow, tenant, product, idp_hint } = query as {
     authFlow: 'oauth';
     tenant?: string;
     product?: string;
