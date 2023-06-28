@@ -35,12 +35,18 @@ const CreateConnection = (props: CreateConnectionProps) => {
       .url()
       .when('tab', {
         is: tab === 0,
-        then: Yup.string().required(),
+        then(schema) {
+          return schema.required();
+        },
       }),
-    metadataRaw: Yup.string().when('tab', {
-      is: tab === 1,
-      then: Yup.string().required(),
-    }),
+    metadataRaw: Yup.string()
+      .url()
+      .when('tab', {
+        is: tab === 1,
+        then(schema) {
+          return schema.required();
+        },
+      }),
   });
 
   const formik = useFormik({

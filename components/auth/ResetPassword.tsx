@@ -23,9 +23,10 @@ const ResetPassword = () => {
     },
     validationSchema: Yup.object().shape({
       password: Yup.string().required().min(8),
-      confirmPassword: Yup.string().oneOf(
-        [Yup.ref('password'), null],
-        'Passwords must match'
+      confirmPassword: Yup.string().test(
+        'passwords-match',
+        'Passwords must match',
+        (value, context) => value === context.parent.password
       ),
     }),
     onSubmit: async (values) => {
