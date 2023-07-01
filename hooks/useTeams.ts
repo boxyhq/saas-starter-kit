@@ -3,7 +3,7 @@ import useSWR, { mutate } from 'swr';
 import type { ApiResponse, TeamWithMemberCount } from 'types';
 
 const useTeams = () => {
-  const url = `/api/teams`;
+  const url = "/api/teams";
 
   const { data, error, isLoading } = useSWR<ApiResponse<TeamWithMemberCount[]>>(
     url,
