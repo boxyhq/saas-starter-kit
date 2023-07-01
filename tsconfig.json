@@ -22,6 +22,6 @@
       "@/components/*": ["components/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-auth.d.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-auth.d.ts", "node_modules/.prisma/client"],
   "exclude": ["node_modules"]
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 interface UploadCSVProps {
-  onFileUpload: (feedback: string[]) => void;
+  onFileUpload: (file: File) => void;
 }
 
 const UploadCSV: React.FC<UploadCSVProps> = ({ onFileUpload }) => {
@@ -11,24 +11,8 @@ const UploadCSV: React.FC<UploadCSVProps> = ({ onFileUpload }) => {
     const file = e.target.files?.[0];
     if (file) {
       setFileName(file.name);
-      parseCSV(file);
+      onFileUpload(file);
     }
-  };
-
-  const parseCSV = (file: File) => {
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      const contents = e.target?.result as string;
-      const feedbackArray = contents.split('\n').map((row) => row.trim());
-
-      // Remove empty rows and filter out the header row if present
-      const filteredFeedbackArray = feedbackArray.filter((row, index) => row && (index > 0 || row !== 'Feedback'));
-
-      onFileUpload(filteredFeedbackArray);
-    };
-
-    reader.readAsText(file);
   };
 
   return (

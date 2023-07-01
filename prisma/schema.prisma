@@ -62,6 +62,7 @@ model User {
   accounts    Account[]
   sessions    Session[]
   invitations Invitation[]
+  feedbacks Feedback[]
 }
 
 model Team {
@@ -75,6 +76,15 @@ model Team {
 
   members     TeamMember[]
   invitations Invitation[]
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model TeamMember {
