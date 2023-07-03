@@ -19,11 +19,11 @@
     "test:cov": "jest --coverage --env=jsdom"
   },
   "dependencies": {
-    "@boxyhq/saml-jackson": "1.10.1",
+    "@boxyhq/saml-jackson": "1.11.0",
     "@heroicons/react": "2.0.18",
     "@hookform/resolvers": "3.1.1",
     "@next-auth/prisma-adapter": "1.0.7",
-    "@prisma/client": "4.16.1",
+    "@prisma/client": "4.16.2",
     "@retracedhq/logs-viewer": "2.5.0",
     "@retracedhq/retraced": "0.7.0",
     "@tailwindcss/typography": "0.5.9",
@@ -65,14 +65,14 @@
     "@types/crypto-js": "4.1.1",
     "@types/jest": "29.5.2",
     "@types/mocha": "10.0.1",
-    "@types/node": "20.3.2",
+    "@types/node": "20.3.3",
     "@types/nodemailer": "6.4.8",
     "@types/react": "18.2.14",
     "@types/uuid": "9.0.2",
     "@typescript-eslint/eslint-plugin": "5.60.1",
     "@typescript-eslint/parser": "5.60.1",
     "daisyui": "2.52.0",
-    "eslint": "8.43.0",
+    "eslint": "8.44.0",
     "eslint-config-next": "13.4.7",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-react": "7.32.2",
@@ -85,7 +85,7 @@
     "prettier-plugin-tailwindcss": "0.3.0",
     "prisma": "4.16.1",
     "tailwindcss": "3.3.2",
-    "typescript": "5.1.5"
+    "typescript": "5.1.6"
   },
   "husky": {
     "hooks": {
