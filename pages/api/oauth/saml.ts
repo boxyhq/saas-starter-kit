@@ -12,7 +12,7 @@ export default async function handler(
       case 'POST':
         return await handlePOST(req, res);
       default:
-        res.setHeader('Allow', ['POST']);
+        res.setHeader('Allow', 'POST');
         res.status(405).json({
           error: { message: `Method ${method} Not Allowed` },
         });

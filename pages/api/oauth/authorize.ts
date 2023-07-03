@@ -13,7 +13,7 @@ export default async function handler(
       case 'POST':
         return await handleAuthorize(req, res);
       default:
-        res.setHeader('Allow', ['GET', 'POST']);
+        res.setHeader('Allow', 'GET, POST');
         res.status(405).json({
           error: { message: `Method ${method} Not Allowed` },
         });
