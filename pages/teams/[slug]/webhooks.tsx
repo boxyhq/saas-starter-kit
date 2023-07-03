@@ -33,7 +33,9 @@ const WebhookList: NextPageWithLayout = () => {
       <div className="flex flex-col">
         <div className="flex mt-2 justify-end">
           <Button
+            variant="outline"
             color="primary"
+            size="sm"
             onClick={() => {
               setVisible(!visible);
             }}

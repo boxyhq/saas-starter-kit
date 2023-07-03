@@ -33,8 +33,9 @@ const APIKeysContainer: NextPageWithLayout = () => {
       <div className="flex flex-col space-y-4">
         <div className="flex justify-end mt-4">
           <Button
-            color="primary"
             variant="outline"
+            color="primary"
+            size="sm"
             onClick={() => setCreateModalVisible(true)}
           >
             {t('new-api-key')}

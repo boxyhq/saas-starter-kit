@@ -139,7 +139,12 @@ const TeamSSO: NextPageWithLayout = () => {
           {!connectionsAdded && (
             <div className="mb-3 flex items-center justify-between">
               <p>{t('allow-team')}</p>
-              <Button onClick={() => setVisible(!visible)} variant="outline">
+              <Button
+                onClick={() => setVisible(!visible)}
+                variant="outline"
+                size="sm"
+                color="primary"
+              >
                 {t('configure')}
               </Button>
             </div>

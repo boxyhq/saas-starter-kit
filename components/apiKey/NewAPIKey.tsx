@@ -103,10 +103,9 @@ const CreateAPIKeyForm = ({
           {t('create-api-key')}
         </Button>
         <Button
-          color="secondary"
+          type="button"
           variant="outline"
           onClick={() => setCreateModalVisible(false)}
-          type="button"
         >
           {t('close')}
         </Button>
@@ -135,13 +134,12 @@ const DisplayAPIKey = ({
       </Modal.Body>
       <Modal.Actions>
         <Button
-          color="secondary"
+          type="button"
           variant="outline"
           onClick={() => {
             setCreateModalVisible(false);
             clearApiKey();
           }}
-          type="button"
         >
           {t('close')}
         </Button>

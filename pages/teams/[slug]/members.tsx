@@ -1,5 +1,5 @@
-import { Error, Loading } from '@/components/shared';
 import { InviteMember, PendingInvitations } from '@/components/invitation';
+import { Error, Loading } from '@/components/shared';
 import { Members, TeamTab } from '@/components/team';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
@@ -31,9 +31,11 @@ const TeamMembers: NextPageWithLayout = () => {
     <>
       <TeamTab activeTab="members" team={team} />
       <div className="flex flex-col">
-        <div className="flex mt-2 justify-end">
+        <div className="flex mt-4 justify-end">
           <Button
             color="primary"
+            variant="outline"
+            size="sm"
             onClick={() => {
               setVisible(!visible);
             }}
