@@ -90,7 +90,7 @@ model TeamMember {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([teamId, userId])
-  @@unique([userId])
+  @@index([userId])
 }
 
 model Invitation {
