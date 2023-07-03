@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import useTeams from 'hooks/useTeams';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { Button, Input, Modal } from 'react-daisyui';
 import toast from 'react-hot-toast';
@@ -19,6 +20,7 @@ const CreateTeam = ({
 }) => {
   const { t } = useTranslation('common');
   const { mutateTeams } = useTeams();
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
@@ -40,6 +42,7 @@ const CreateTeam = ({
           mutateTeams();
           formik.resetForm();
           setVisible(false);
+          router.push(`/teams/${teamCreated.slug}/settings`);
         }
       } catch (error: any) {
         toast.error(getAxiosError(error));

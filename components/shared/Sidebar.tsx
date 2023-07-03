@@ -1,13 +1,14 @@
 import {
   ChevronUpDownIcon,
-  CircleStackIcon,
+  CodeBracketIcon,
+  Cog6ToothIcon,
   FolderIcon,
   FolderPlusIcon,
-  HomeIcon,
   LockClosedIcon,
+  RectangleStackIcon,
   UserCircleIcon,
+  UsersIcon,
 } from '@heroicons/react/24/outline';
-import { Team } from '@prisma/client';
 import useTeams from 'hooks/useTeams';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
@@ -16,21 +17,50 @@ import { useRouter } from 'next/router';
 
 import NavItem from './NavItem';
 
-interface TeamDropdownProps {
-  teams: Team[];
-  currentTeam: Team;
-}
-
 export default function Sidebar() {
   const router = useRouter();
-  const { teams } = useTeams();
   const { t } = useTranslation('common');
 
-  const currentTeam = teams?.find((team) => team.slug === router.query.slug);
+  const { slug } = router.query;
 
-  if (!currentTeam || !teams) {
-    return null;
-  }
+  const sidebarMenus = {
+    personal: [
+      {
+        name: t("all-teams"),
+        href: '/teams',
+        icon: RectangleStackIcon,
+      },
+      {
+        name: t("account"),
+        href: '/settings/account',
+        icon: UserCircleIcon,
+      },
+      {
+        name: t("password"),
+        href: '/settings/password',
+        icon: LockClosedIcon,
+      },
+    ],
+    team: [
+      {
+        name: t("all-products"),
+        href: `/teams/${slug}/products`,
+        icon: CodeBracketIcon,
+      },
+      {
+        name: t("settings"),
+        href: `/teams/${slug}/settings`,
+        icon: Cog6ToothIcon,
+      },
+      {
+        name: t("members"),
+        href: `/teams/${slug}/members`,
+        icon: UsersIcon,
+      },
+    ],
+  };
+
+  const menus = sidebarMenus[slug ? 'team' : 'personal'];
 
   return (
     <>
@@ -41,65 +71,19 @@ export default function Sidebar() {
         <div className="relative flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white pt-0">
           <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
             <div className="flex-1 space-y-1 divide-y bg-white">
-              <TeamDropdown teams={teams} currentTeam={currentTeam} />
-
+              <TeamDropdown />
               <div className="p-4">
                 <ul className="space-y-1">
-                  <li>
-                    <NavItem
-                      href="/dashboard"
-                      text={t('dashboard')}
-                      icon={HomeIcon}
-                      active={router.pathname === '/dashboard'}
-                    />
-                  </li>
-                  <li>
-                    <NavItem
-                      href="/products"
-                      text={t('products')}
-                      icon={CircleStackIcon}
-                      active={router.pathname === '/products'}
-                    />
-                  </li>
-                </ul>
-              </div>
-
-              {/* <div className="p-4">
-                <span className="flex text-sm px-2 mb-2">{t('teams')}</span>
-                <ul className="space-y-1">
-                  {teams &&
-                    teams.map((item) => (
-                      <li key={item.name}>
-                        <NavItem
-                          href={`/teams/${item.slug}/settings`}
-                          text={item.name}
-                          icon={BuildingOfficeIcon}
-                          active={router.asPath.includes(`/teams/${item.slug}`)}
-                        />
-                      </li>
-                    ))}
-                </ul>
-              </div> */}
-
-              <div className="p-4">
-                <span className="flex text-sm px-2 mb-2">{t('account')}</span>
-                <ul className="space-y-1">
-                  <li>
-                    <NavItem
-                      href="/settings/account"
-                      text={t('account-info')}
-                      icon={UserCircleIcon}
-                      active={router.pathname === '/settings/account'}
-                    />
-                  </li>
-                  <li>
-                    <NavItem
-                      href="/settings/password"
-                      text={t('password')}
-                      icon={LockClosedIcon}
-                      active={router.pathname === '/settings/password'}
-                    />
-                  </li>
+                  {menus.map((item) => (
+                    <li key={item.name}>
+                      <NavItem
+                        href={item.href}
+                        text={t(item.name)}
+                        icon={item.icon}
+                        active={router.asPath === item.href}
+                      />
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -114,14 +98,52 @@ export default function Sidebar() {
   );
 }
 
-const TeamDropdown = ({ teams, currentTeam }: TeamDropdownProps) => {
-  // const router = useRouter();
+const TeamDropdown = () => {
+  const router = useRouter();
 
-  // const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   router.push(`/teams/${e.target.value}/settings`);
-  // };
-
+  const { teams } = useTeams();
   const { data } = useSession();
+  const { t } = useTranslation('common');
+
+  const currentTeam = (teams || []).find(
+    (team) => team.slug === router.query.slug
+  );
+
+  const menus = [
+    {
+      name: t("personal"),
+      items: [
+        {
+          name: data?.user?.name,
+          href: '/settings/account',
+          icon: UserCircleIcon,
+        },
+      ],
+    },
+    {
+      name: t("teams"),
+      items: (teams || []).map((team) => ({
+        name: team.name,
+        href: `/teams/${team.slug}/settings`,
+        icon: FolderIcon,
+      })),
+    },
+    {
+      name: '',
+      items: [
+        {
+          name: t("all-teams"),
+          href: '/teams',
+          icon: RectangleStackIcon,
+        },
+        {
+          name: t("new-team"),
+          href: '/teams?newTeam=true',
+          icon: FolderPlusIcon,
+        },
+      ],
+    },
+  ];
 
   return (
     <div className="px-4 py-2">
@@ -131,59 +153,41 @@ const TeamDropdown = ({ teams, currentTeam }: TeamDropdownProps) => {
             tabIndex={0}
             className="border border-gray-300 flex h-10 items-center px-4 justify-between cursor-pointer rounded text-sm font-bold"
           >
-            {currentTeam.name} <ChevronUpDownIcon className="w-5 h-5" />
+            {currentTeam?.name || data?.user?.name} <ChevronUpDownIcon className="w-5 h-5" />
           </div>
           <ul
             tabIndex={0}
             className="dropdown-content p-2 shadow-md bg-base-100 w-full rounded border px-2"
           >
-            <li className="text-xs text-gray-500 py-1 px-2">Personal</li>
-            <li>
-              <Link href="/settings/account">
-                <div className="flex hover:bg-gray-100 focus:bg-gray-100 focus:outline-none py-2 px-2 rounded text-sm font-medium gap-2 items-center">
-                  <UserCircleIcon className="w-5 h-5" /> {data?.user?.name}
-                </div>
-              </Link>
-            </li>
-            <li className="divider m-0" />
-            <li className="text-xs text-gray-500 py-1 px-2">Teams</li>
-            {teams.map((team) => (
-              <li key={team.slug}>
-                <Link href={`/teams/${team.slug}/settings`} className="">
-                  <div className="flex hover:bg-gray-100 focus:bg-gray-100 focus:outline-none py-2 px-2 rounded text-sm font-medium gap-2 items-center">
-                    <FolderIcon className="w-5 h-5" /> {team.name}
-                  </div>
-                </Link>
-              </li>
-            ))}
-            <li className="divider m-0" />
-            <li>
-              <Link href="/teams/create">
-                <div className="flex hover:bg-gray-100 focus:bg-gray-100 focus:outline-none py-2 px-2 rounded text-sm font-medium gap-2 items-center">
-                  <FolderPlusIcon className="w-5 h-5" /> Create Team
-                </div>
-              </Link>
-            </li>
+            {menus.map(({ name, items }) => {
+              return (
+                <>
+                  {name && (
+                    <li className="text-xs text-gray-500 py-1 px-2">{name}</li>
+                  )}
+                  {items.map((item) => (
+                    <li
+                      key={item.name}
+                      onClick={() => {
+                        if (document.activeElement) {
+                          (document.activeElement as HTMLElement).blur();
+                        }
+                      }}
+                    >
+                      <Link href={item.href}>
+                        <div className="flex hover:bg-gray-100 focus:bg-gray-100 focus:outline-none py-2 px-2 rounded text-sm font-medium gap-2 items-center">
+                          <item.icon className="w-5 h-5" /> {item.name}
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                  {name && <li className="divider m-0" />}
+                </>
+              );
+            })}
           </ul>
         </div>
       </div>
     </div>
   );
-
-  // return (
-  //   <select
-  //     className="select select-bordered w-full max-w-xs rounded"
-  //     value={currentTeam.slug}
-  //     onChange={handleChange}
-  //   >
-  //     {teams.map((team) => (
-  //       <option key={team.slug} value={team.slug}>
-  //         <span className="inline-block">
-  //           {team.name} <FolderIcon className="w-5 h-5" />
-  //         </span>
-  //       </option>
-  //     ))}
-  //     <option value="create">Create a Team</option>
-  //   </select>
-  // );
 };

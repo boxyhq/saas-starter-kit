@@ -2,14 +2,24 @@ import { CreateTeam, Teams } from '@/components/team';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { Button } from 'react-daisyui';
 import type { NextPageWithLayout } from 'types';
 
 const AllTeams: NextPageWithLayout = () => {
   const [visible, setVisible] = useState(false);
 
+  const router = useRouter();
   const { t } = useTranslation('common');
+
+  const { newTeam } = router.query as { newTeam: string };
+
+  useEffect(() => {
+    if (newTeam) {
+      setVisible(true);
+    }
+  }, [router.query]);
 
   return (
     <>

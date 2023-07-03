@@ -45,7 +45,6 @@
   "accept-invite": "You can accept the invitation to join the team by clicking the button below.",
   "invite-create-account": "To continue, you must either create a new account or login to an existing account.",
   "no-active-team": "You do not have any active team.",
-  "audit-logs": "Audit Logs allow you to track and analyze each member activity.",
   "coming-soon": "Coming Soon",
   "provision": "Provision and de-provision users with your directory provider.",
   "name": "Name",
@@ -154,5 +153,8 @@
   "copy-to-clipboard": "Copy",
   "copied-to-clipboard": "Copied to clipboard",
   "api-key": "API Key",
-  "error-getting-audit-log-token": "Error getting audit log token. Please check your configuration."
+  "error-getting-audit-log-token": "Error getting audit log token. Please check your configuration.",
+  "all-products": "All Products",
+  "new-team": "New Team",
+  "personal": "Personal"
 }
