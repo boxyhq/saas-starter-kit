@@ -12,7 +12,7 @@ export default async function handler(
       case 'GET':
         return await handleGET(req, res);
       default:
-        res.setHeader('Allow', ['GET']);
+        res.setHeader('Allow', 'GET');
         res.status(405).json({
           error: { message: `Method ${method} Not Allowed` },
         });
