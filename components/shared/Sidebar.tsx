@@ -111,7 +111,7 @@ const TeamDropdown = () => {
 
   const menus = [
     {
-      name: t("personal"),
+      name: t("profile"),
       items: [
         {
           name: data?.user?.name,

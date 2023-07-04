@@ -156,5 +156,5 @@
   "error-getting-audit-log-token": "Error getting audit log token. Please check your configuration.",
   "all-products": "All Products",
   "new-team": "New Team",
-  "personal": "Personal"
+  "profile": "Profile"
 }
