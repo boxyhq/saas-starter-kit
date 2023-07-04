@@ -29,7 +29,7 @@ const ConfirmationDialog = ({
 
   return (
     <Modal open={visible}>
-      <Modal.Header className="font-bold">{title}</Modal.Header>
+      <Modal.Header className="font-semibold">{title}</Modal.Header>
       <Modal.Body>
         <div className="mt-2 flex flex-col space-y-2">{children}</div>
       </Modal.Body>
