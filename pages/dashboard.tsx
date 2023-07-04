@@ -7,6 +7,7 @@ import type { NextPageWithLayout } from 'types';
 
 const Dashboard: NextPageWithLayout = () => {
   const { data: session } = useSession();
+  
   const { t } = useTranslation('common');
 
   return (

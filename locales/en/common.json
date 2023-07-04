@@ -45,7 +45,6 @@
   "accept-invite": "You can accept the invitation to join the team by clicking the button below.",
   "invite-create-account": "To continue, you must either create a new account or login to an existing account.",
   "no-active-team": "You do not have any active team.",
-  "audit-logs": "Audit Logs allow you to track and analyze each member activity.",
   "coming-soon": "Coming Soon",
   "provision": "Provision and de-provision users with your directory provider.",
   "name": "Name",
@@ -157,5 +156,8 @@
   "error-getting-audit-log-token": "Error getting audit log token. Please check your configuration.",
   "remove-team-confirmation": "Are you sure you want to delete the team? Deleting the team will delete all resources and data associated with the team forever.",
   "team-removed-successfully": "Team removed successfully.",
-  "leave-team-confirmation": "Are you sure you want to leave the team? You'll lose access to all resources and data associated with the team."
+  "leave-team-confirmation": "Are you sure you want to leave the team? You'll lose access to all resources and data associated with the team.",
+  "all-products": "All Products",
+  "new-team": "New Team",
+  "profile": "Profile"
 }
