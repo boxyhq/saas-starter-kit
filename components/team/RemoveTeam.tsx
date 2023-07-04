@@ -3,22 +3,19 @@ import { Team } from '@prisma/client';
 import axios from 'axios';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
+
+import ConfirmationDialog from '../shared/ConfirmationDialog';
 
 const RemoveTeam = ({ team }: { team: Team }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [askConfirmation, setAskConfirmation] = useState(false);
 
   const removeTeam = async () => {
-    const confirm = window.confirm(
-      'Are you sure you want to remove this team? This action cannot be undone.'
-    );
-
-    if (!confirm) return;
-
     setLoading(true);
 
     const response = await axios.delete(`/api/teams/${team.slug}`);
@@ -33,26 +30,38 @@ const RemoveTeam = ({ team }: { team: Team }) => {
     }
 
     if (data) {
-      toast.success('Team removed successfully!');
+      toast.success(t('team-removed-successfully'));
       return router.push('/teams');
     }
   };
 
   return (
-    <Card heading="Remove Team">
-      <Card.Body className="px-3 py-3">
-        <div className="space-y-3">
-          <p className="text-sm">{t('remove-team-warning')}</p>
-          <Button
-            color="error"
-            onClick={removeTeam}
-            loading={loading}
-          >
-            {t('remove-team')}
-          </Button>
-        </div>
-      </Card.Body>
-    </Card>
+    <>
+      <Card heading={t('remove-team')}>
+        <Card.Body className="px-3 py-3">
+          <div className="flex flex-row gap-4">
+            <p className="text-sm">{t('remove-team-warning')}</p>
+            <Button
+              color="error"
+              onClick={() => setAskConfirmation(true)}
+              loading={loading}
+              variant="outline"
+              size="sm"
+            >
+              {t('remove-team')}
+            </Button>
+          </div>
+        </Card.Body>
+      </Card>
+      <ConfirmationDialog
+        visible={askConfirmation}
+        title={t('remove-team')}
+        onCancel={() => setAskConfirmation(false)}
+        onConfirm={removeTeam}
+      >
+        {t('remove-team-confirmation')}
+      </ConfirmationDialog>
+    </>
   );
 };
 
