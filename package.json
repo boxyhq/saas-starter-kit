@@ -37,7 +37,7 @@
     "formik": "2.4.2",
     "i18next": "22.5.1",
     "moment": "2.29.4",
-    "next": "13.4.7",
+    "next": "13.4.8",
     "next-auth": "4.22.1",
     "next-i18next": "13.3.0",
     "next-transpile-modules": "10.0.0",
