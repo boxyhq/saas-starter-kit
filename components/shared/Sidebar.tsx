@@ -14,6 +14,7 @@ import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import React from 'react';
 
 import NavItem from './NavItem';
 
@@ -26,34 +27,34 @@ export default function Sidebar() {
   const sidebarMenus = {
     personal: [
       {
-        name: t("all-teams"),
+        name: t('all-teams'),
         href: '/teams',
         icon: RectangleStackIcon,
       },
       {
-        name: t("account"),
+        name: t('account'),
         href: '/settings/account',
         icon: UserCircleIcon,
       },
       {
-        name: t("password"),
+        name: t('password'),
         href: '/settings/password',
         icon: LockClosedIcon,
       },
     ],
     team: [
       {
-        name: t("all-products"),
+        name: t('all-products'),
         href: `/teams/${slug}/products`,
         icon: CodeBracketIcon,
       },
       {
-        name: t("settings"),
+        name: t('settings'),
         href: `/teams/${slug}/settings`,
         icon: Cog6ToothIcon,
       },
       {
-        name: t("members"),
+        name: t('members'),
         href: `/teams/${slug}/members`,
         icon: UsersIcon,
       },
@@ -111,9 +112,11 @@ const TeamDropdown = () => {
 
   const menus = [
     {
-      name: t("profile"),
+      id: 1,
+      name: t('profile'),
       items: [
         {
+          id: data?.user.id,
           name: data?.user?.name,
           href: '/settings/account',
           icon: UserCircleIcon,
@@ -121,23 +124,28 @@ const TeamDropdown = () => {
       ],
     },
     {
-      name: t("teams"),
+      id: 2,
+      name: t('teams'),
       items: (teams || []).map((team) => ({
+        id: team.id,
         name: team.name,
         href: `/teams/${team.slug}/settings`,
         icon: FolderIcon,
       })),
     },
     {
+      id: 3,
       name: '',
       items: [
         {
-          name: t("all-teams"),
+          id: 'all-teams',
+          name: t('all-teams'),
           href: '/teams',
           icon: RectangleStackIcon,
         },
         {
-          name: t("new-team"),
+          id: 'new-team',
+          name: t('new-team'),
           href: '/teams?newTeam=true',
           icon: FolderPlusIcon,
         },
@@ -153,21 +161,27 @@ const TeamDropdown = () => {
             tabIndex={0}
             className="border border-gray-300 flex h-10 items-center px-4 justify-between cursor-pointer rounded text-sm font-bold"
           >
-            {currentTeam?.name || data?.user?.name} <ChevronUpDownIcon className="w-5 h-5" />
+            {currentTeam?.name || data?.user?.name}{' '}
+            <ChevronUpDownIcon className="w-5 h-5" />
           </div>
           <ul
             tabIndex={0}
             className="dropdown-content p-2 shadow-md bg-base-100 w-full rounded border px-2"
           >
-            {menus.map(({ name, items }) => {
+            {menus.map(({ id, name, items }) => {
               return (
-                <>
+                <React.Fragment key={id}>
                   {name && (
-                    <li className="text-xs text-gray-500 py-1 px-2">{name}</li>
+                    <li
+                      className="text-xs text-gray-500 py-1 px-2"
+                      key={`${id}-name`}
+                    >
+                      {name}
+                    </li>
                   )}
                   {items.map((item) => (
                     <li
-                      key={item.name}
+                      key={`${id}-${item.id}`}
                       onClick={() => {
                         if (document.activeElement) {
                           (document.activeElement as HTMLElement).blur();
@@ -181,8 +195,8 @@ const TeamDropdown = () => {
                       </Link>
                     </li>
                   ))}
-                  {name && <li className="divider m-0" />}
-                </>
+                  {name && <li className="divider m-0" key={`${id}-divider`} />}
+                </React.Fragment>
               );
             })}
           </ul>
