@@ -17,11 +17,11 @@ export default async function handler(
 
   switch (method) {
     case 'GET':
-      return handleGET(req, res);
+      return await handleGET(req, res);
     case 'PUT':
-      return handlePUT(req, res);
+      return await handlePUT(req, res);
     case 'DELETE':
-      return handleDELETE(req, res);
+      return await handleDELETE(req, res);
     default:
       res.setHeader('Allow', 'GET, PUT, DELETE');
       res.status(405).json({

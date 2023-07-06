@@ -11,9 +11,9 @@ export default async function handler(
 
   switch (method) {
     case 'GET':
-      return handleGET(req, res);
+      return await handleGET(req, res);
     case 'POST':
-      return handlePOST(req, res);
+      return await handlePOST(req, res);
     default:
       res.setHeader('Allow', 'GET, POST');
       res.status(405).json({
