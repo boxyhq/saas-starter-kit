@@ -1,3 +1,4 @@
+import { ApiError } from '@/lib/errors';
 import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp, findWebhook, updateWebhook } from '@/lib/svix';
@@ -11,69 +12,84 @@ export default async function handler(
 ) {
   const { method } = req;
 
-  switch (method) {
-    case 'GET':
-      return await handleGET(req, res);
-    case 'PUT':
-      return await handlePUT(req, res);
-    default:
-      res.setHeader('Allow', 'GET, PUT');
-      res.status(405).json({
-        error: { message: `Method ${method} Not Allowed` },
-      });
+  try {
+    switch (method) {
+      case 'GET':
+        await handleGET(req, res);
+        break;
+      case 'PUT':
+        await handlePUT(req, res);
+        break;
+      default:
+        res.setHeader('Allow', 'GET, PUT');
+        res.status(405).json({
+          error: { message: `Method ${method} Not Allowed` },
+        });
+    }
+  } catch (err: any) {
+    const message = err.message || 'Something went wrong';
+    const status = err.status || 500;
+
+    res.status(status).json({ error: { message } });
   }
 }
 
 // Get a Webhook
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug, endpointId } = req.query;
+  const { slug, endpointId } = req.query as {
+    slug: string;
+    endpointId: string;
+  };
 
   const session = await getSession(req, res);
-  const userId = session?.user?.id as string;
 
-  const team = await getTeam({ slug: slug as string });
+  if (!session) {
+    throw new ApiError(401, 'Unauthorized.');
+  }
 
-  if (!(await isTeamMember(userId, team?.id))) {
-    return res.status(200).json({
-      error: { message: 'Bad request.' },
-    });
+  const team = await getTeam({ slug });
+
+  if (!(await isTeamMember(session.user.id, team.id))) {
+    throw new ApiError(200, 'Bad request.');
   }
 
   const app = await findOrCreateApp(team.name, team.id);
 
   if (!app) {
-    return res.status(200).json({
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(200, 'Bad request.');
   }
 
   const webhook = await findWebhook(app.id, endpointId as string);
 
-  return res.status(200).json({ data: webhook });
+  res.status(200).json({ data: webhook });
 };
 
 // Update a Webhook
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug, endpointId } = req.query;
+  const { slug, endpointId } = req.query as {
+    slug: string;
+    endpointId: string;
+  };
+
   const { name, url, eventTypes } = req.body;
 
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({
-      error: { message: 'Unauthorized.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const team = await getTeam({ slug: slug as string });
 
-  if (!(await isTeamMember(session.user.id, team?.id))) {
-    return res.status(200).json({
-      error: { message: 'Bad request.' },
-    });
+  if (!(await isTeamMember(session.user.id, team.id))) {
+    throw new ApiError(200, 'Bad request.');
   }
 
   const app = await findOrCreateApp(team.name, team.id);
+
+  if (!app) {
+    throw new ApiError(200, 'Bad request.');
+  }
 
   const data: EndpointIn = {
     description: name,
@@ -85,13 +101,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     data['filterTypes'] = eventTypes;
   }
 
-  if (!app) {
-    return res.status(200).json({
-      error: { message: 'Bad request.' },
-    });
-  }
-
-  const webhook = await updateWebhook(app.id, endpointId as string, data);
+  const webhook = await updateWebhook(app.id, endpointId, data);
 
   sendAudit({
     action: 'webhook.update',
@@ -100,5 +110,5 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(200).json({ data: webhook });
+  res.status(200).json({ data: webhook });
 };

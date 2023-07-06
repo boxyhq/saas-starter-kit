@@ -5,7 +5,7 @@ import { NextApiHandler } from 'next';
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== 'POST') {
-    return res.status(405).json({
+    res.status(405).json({
       error: {
         message: 'Method not allowed',
       },
@@ -15,7 +15,7 @@ const handler: NextApiHandler = async (req, res) => {
   const { email } = req.body;
 
   if (!email || !validateEmail(email)) {
-    return res.status(422).json({
+    res.status(422).json({
       error: {
         message: `The e-mail address you entered is invalid`,
       },
@@ -27,7 +27,7 @@ const handler: NextApiHandler = async (req, res) => {
   });
 
   if (!user) {
-    return res.status(422).json({
+    res.status(422).json({
       error: {
         message: `We can't find a user with that e-mail address`,
       },

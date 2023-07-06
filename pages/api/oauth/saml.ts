@@ -10,7 +10,8 @@ export default async function handler(
   try {
     switch (method) {
       case 'POST':
-        return await handlePOST(req, res);
+        await handlePOST(req, res);
+        break;
       default:
         res.setHeader('Allow', 'POST');
         res.status(405).json({
@@ -37,5 +38,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error('No redirect URL found.');
   }
 
-  return res.redirect(302, redirect_url);
+  res.redirect(302, redirect_url);
 };

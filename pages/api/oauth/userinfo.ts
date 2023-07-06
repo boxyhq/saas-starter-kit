@@ -1,3 +1,4 @@
+import { ApiError } from '@/lib/errors';
 import jackson from '@/lib/jackson';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -10,16 +11,19 @@ export default async function handler(
   try {
     switch (method) {
       case 'GET':
-        return await handleGET(req, res);
+        await handleGET(req, res);
+        break;
       default:
         res.setHeader('Allow', 'GET');
         res.status(405).json({
           error: { message: `Method ${method} Not Allowed` },
         });
     }
-  } catch (err: any) {
-    // TODO: Handle error
-    console.error('token error:', err);
+  } catch (error: any) {
+    const message = error.message || 'Something went wrong';
+    const status = error.status || 500;
+
+    res.status(status).json({ error: { message } });
   }
 }
 
@@ -38,10 +42,10 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const profile = await oauthController.userInfo(token);
 
-  return res.json(profile);
+  res.json(profile);
 };

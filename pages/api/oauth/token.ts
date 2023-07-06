@@ -10,7 +10,8 @@ export default async function handler(
   try {
     switch (method) {
       case 'POST':
-        return await handlePOST(req, res);
+        await handlePOST(req, res);
+        break;
       default:
         res.setHeader('Allow', 'POST');
         res.status(405).json({
@@ -28,5 +29,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const token = await oauthController.token(req.body);
 
-  return res.json(token);
+  res.json(token);
 };

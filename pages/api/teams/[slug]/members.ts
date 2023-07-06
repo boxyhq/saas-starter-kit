@@ -1,3 +1,4 @@
+import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
 import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
@@ -18,20 +19,31 @@ export default async function handler(
 ) {
   const { method } = req;
 
-  switch (method) {
-    case 'GET':
-      return await handleGET(req, res);
-    case 'DELETE':
-      return await handleDELETE(req, res);
-    case 'PUT':
-      return await handlePUT(req, res);
-    case 'PATCH':
-      return await handlePATCH(req, res);
-    default:
-      res.setHeader('Allow', 'GET, DELETE, PUT, PATCH');
-      res.status(405).json({
-        error: { message: `Method ${method} Not Allowed` },
-      });
+  try {
+    switch (method) {
+      case 'GET':
+        await handleGET(req, res);
+        break;
+      case 'DELETE':
+        await handleDELETE(req, res);
+        break;
+      case 'PUT':
+        await handlePUT(req, res);
+        break;
+      case 'PATCH':
+        await handlePATCH(req, res);
+        break;
+      default:
+        res.setHeader('Allow', 'GET, DELETE, PUT, PATCH');
+        res.status(405).json({
+          error: { message: `Method ${method} Not Allowed` },
+        });
+    }
+  } catch (error: any) {
+    const message = error.message || 'Something went wrong';
+    const status = error.status || 500;
+
+    res.status(status).json({ error: { message } });
   }
 }
 
@@ -42,23 +54,18 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
-  const userId = session.user.id;
   const team = await getTeam({ slug });
 
-  if (!(await isTeamMember(userId, team.id))) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+  if (!(await isTeamMember(session.user.id, team.id))) {
+    throw new ApiError(400, 'Bad request');
   }
 
   const members = await getTeamMembers(slug);
 
-  return res.status(200).json({ data: members });
+  res.status(200).json({ data: members });
 };
 
 // Delete the member from the team
@@ -68,17 +75,13 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const team = await getTeam({ slug });
 
   if (!(await isTeamAdmin(session.user.id, team.id))) {
-    return res.status(400).json({
-      error: { message: 'You are not allowed to perform this action.' },
-    });
+    throw new ApiError(400, 'You are not allowed to perform this action.');
   }
 
   const teamMember = await removeTeamMember(team.id, memberId);
@@ -92,7 +95,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(200).json({ data: {} });
+  res.status(200).json({ data: {} });
 };
 
 // Leave a team
@@ -102,18 +105,13 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
-  const userId = session.user.id;
   const team = await getTeam({ slug });
 
-  if (!(await isTeamMember(userId, team.id))) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+  if (!(await isTeamMember(session.user.id, team.id))) {
+    throw new ApiError(400, 'Bad request.');
   }
 
   const totalTeamOwners = await prisma.teamMember.count({
@@ -124,14 +122,12 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   if (totalTeamOwners <= 1) {
-    return res.status(400).json({
-      error: { message: 'A team should have at least one owner.' },
-    });
+    throw new ApiError(400, 'A team should have at least one owner.');
   }
 
-  await removeTeamMember(team.id, userId);
+  await removeTeamMember(team.id, session.user.id);
 
-  return res.status(200).json({ data: {} });
+  res.status(200).json({ data: {} });
 };
 
 // Update the role of a member
@@ -142,18 +138,13 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
-  const userId = session.user.id;
   const team = await getTeam({ slug });
 
-  if (!(await isTeamAdmin(userId, team.id))) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+  if (!(await isTeamAdmin(session.user.id, team.id))) {
+    throw new ApiError(400, 'Bad request.');
   }
 
   const memberUpdated = await prisma.teamMember.update({
@@ -175,5 +166,5 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(200).json({ data: memberUpdated });
+  res.status(200).json({ data: memberUpdated });
 };

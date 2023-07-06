@@ -13,7 +13,8 @@ export default async function handler(
   try {
     switch (method) {
       case 'DELETE':
-        return await handleDELETE(req, res);
+        await handleDELETE(req, res);
+        break;
       default:
         res.setHeader('Allow', 'DELETE');
         res.status(405).json({
@@ -33,7 +34,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    throw new Error('Unauthorized');
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const { slug, apiKeyId } = req.query as { slug: string; apiKeyId: string };
@@ -44,5 +45,5 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteApiKey(apiKeyId);
 
-  return res.json({ data: {} });
+  res.json({ data: {} });
 };

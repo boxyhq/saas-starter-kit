@@ -13,9 +13,11 @@ export default async function handler(
   try {
     switch (method) {
       case 'GET':
-        return await handleGET(req, res);
+        await handleGET(req, res);
+        break;
       case 'POST':
-        return await handlePOST(req, res);
+        await handlePOST(req, res);
+        break;
       default:
         res.setHeader('Allow', 'GET, POST');
         res.status(405).json({
@@ -47,7 +49,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const team = await getTeam({ slug });
   const apiKeys = await fetchApiKeys(team.id);
 
-  return res.json({ data: apiKeys });
+  res.json({ data: apiKeys });
 };
 
 // Create an API key
@@ -71,5 +73,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     teamId: team.id,
   });
 
-  return res.status(201).json({ data: { apiKey } });
+  res.status(201).json({ data: { apiKey } });
 };
