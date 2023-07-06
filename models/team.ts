@@ -1,6 +1,9 @@
+import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
+import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
 import { Role, Team, TeamMember } from '@prisma/client';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const createTeam = async (param: {
   userId: string;
@@ -171,7 +174,10 @@ export const isTeamExists = async (condition: any) => {
 };
 
 export async function hasTeamAccess(
-  params: { userId: string } & ({ teamId: string } | { teamSlug: string })
+  params: { userId: string | undefined } & (
+    | { teamId: string }
+    | { teamSlug: string }
+  )
 ) {
   const { userId } = params;
 
@@ -207,3 +213,32 @@ export async function hasTeamAccess(
 
   return false;
 }
+
+export const throwIfNoTeamAccess = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  const session = await getSession(req, res);
+
+  if (!session) {
+    throw new ApiError(401, 'Unauthorized');
+  }
+
+  const { slug } = req.query as { slug: string };
+
+  const teamMember = await prisma.teamMember.findFirst({
+    where: {
+      userId: session.user.id,
+      team: {
+        slug,
+      },
+      role: {
+        in: ['ADMIN', 'MEMBER', 'OWNER'],
+      },
+    },
+  });
+
+  if (!teamMember) {
+    throw new ApiError(403, 'You are not allowed to perform this action');
+  }
+};
