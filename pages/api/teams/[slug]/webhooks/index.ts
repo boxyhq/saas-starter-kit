@@ -26,7 +26,6 @@ export default async function handler(
     default:
       res.setHeader('Allow', 'POST, GET, DELETE');
       res.status(405).json({
-        data: null,
         error: { message: `Method ${method} Not Allowed` },
       });
   }
@@ -49,7 +48,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamMember(session.user.id, team?.id))) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
@@ -70,7 +68,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!app) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
@@ -84,7 +81,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(200).json({ data: endpoint, error: null });
+  return res.status(200).json({ data: endpoint });
 };
 
 // Get all webhooks created by a team
@@ -98,7 +95,6 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamMember(userId, team?.id))) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
@@ -107,7 +103,6 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!app) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
@@ -116,12 +111,11 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!webhooks) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
 
-  return res.status(200).json({ data: webhooks.data, error: null });
+  return res.status(200).json({ data: webhooks.data });
 };
 
 // Delete a webhook
@@ -140,7 +134,6 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamMember(session.user.id, team?.id))) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
@@ -149,14 +142,12 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!app) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
 
   if (app.uid != team.id) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
@@ -170,5 +161,5 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(200).json({ data: {}, error: null });
+  return res.status(200).json({ data: {} });
 };

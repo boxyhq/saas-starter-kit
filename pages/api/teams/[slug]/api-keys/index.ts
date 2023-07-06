@@ -19,7 +19,6 @@ export default async function handler(
       default:
         res.setHeader('Allow', 'GET, POST');
         res.status(405).json({
-          data: null,
           error: { message: `Method ${method} Not Allowed` },
         });
     }

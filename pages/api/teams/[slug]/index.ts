@@ -25,7 +25,6 @@ export default async function handler(
     default:
       res.setHeader('Allow', 'GET, PUT, DELETE');
       res.status(405).json({
-        data: null,
         error: { message: `Method ${method} Not Allowed` },
       });
   }
@@ -42,12 +41,11 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamMember(userId, team.id))) {
     return res.status(400).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
 
-  return res.status(200).json({ data: team, error: null });
+  return res.status(200).json({ data: team });
 };
 
 // Update a team
@@ -66,7 +64,6 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamOwner(session.user.id, team.id))) {
     return res.status(400).json({
-      data: null,
       error: { message: `You don't have permission to do this action.` },
     });
   }
@@ -84,7 +81,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(200).json({ data: updatedTeam, error: null });
+  return res.status(200).json({ data: updatedTeam });
 };
 
 // Delete a team
@@ -103,7 +100,6 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamOwner(session.user.id, team.id))) {
     return res.status(200).json({
-      data: null,
       error: { message: `You don't have permission to do this action.` },
     });
   }
@@ -117,5 +113,5 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(200).json({ data: {}, error: null });
+  return res.status(200).json({ data: {} });
 };

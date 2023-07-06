@@ -19,7 +19,6 @@ export default async function handler(
     default:
       res.setHeader('Allow', 'GET, PUT');
       res.status(405).json({
-        data: null,
         error: { message: `Method ${method} Not Allowed` },
       });
   }
@@ -36,7 +35,6 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamMember(userId, team?.id))) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
@@ -45,14 +43,13 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!app) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
 
   const webhook = await findWebhook(app.id, endpointId as string);
 
-  return res.status(200).json({ data: webhook, error: null });
+  return res.status(200).json({ data: webhook });
 };
 
 // Update a Webhook
@@ -72,7 +69,6 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamMember(session.user.id, team?.id))) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
@@ -91,7 +87,6 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!app) {
     return res.status(200).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
@@ -105,5 +100,5 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(200).json({ data: webhook, error: null });
+  return res.status(200).json({ data: webhook });
 };

@@ -17,7 +17,6 @@ export default async function handler(
     default:
       res.setHeader('Allow', 'GET, POST');
       res.status(405).json({
-        data: null,
         error: { message: `Method ${method} Not Allowed` },
       });
   }
@@ -29,7 +28,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const teams = await getTeams(session?.user.id as string);
 
-  return res.status(200).json({ data: teams, error: null });
+  return res.status(200).json({ data: teams });
 };
 
 // Create a team
@@ -41,7 +40,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (await isTeamExists({ slug })) {
     return res.status(200).json({
-      data: null,
       error: {
         message: 'A team with the name already exists.',
       },
@@ -54,5 +52,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     slug,
   });
 
-  return res.status(200).json({ data: team, error: null });
+  return res.status(200).json({ data: team });
 };

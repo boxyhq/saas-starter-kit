@@ -73,7 +73,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (!(await isTeamMember(session.user.id, team?.id))) {
     return res.status(400).json({
-      data: null,
       error: { message: 'Bad request.' },
     });
   }
