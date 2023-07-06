@@ -39,7 +39,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const slug = slugify(name);
 
   if (await isTeamExists({ slug })) {
-    return res.status(200).json({
+    return res.status(400).json({
       error: {
         message: 'A team with the name already exists.',
       },

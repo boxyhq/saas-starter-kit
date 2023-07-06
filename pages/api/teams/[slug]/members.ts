@@ -51,7 +51,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const team = await getTeam({ slug });
 
   if (!(await isTeamMember(userId, team.id))) {
-    return res.status(200).json({
+    return res.status(400).json({
       error: { message: 'Bad request.' },
     });
   }

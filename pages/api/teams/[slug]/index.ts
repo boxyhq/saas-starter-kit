@@ -99,7 +99,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const team = await getTeam({ slug });
 
   if (!(await isTeamOwner(session.user.id, team.id))) {
-    return res.status(200).json({
+    return res.status(400).json({
       error: { message: `You don't have permission to do this action.` },
     });
   }
