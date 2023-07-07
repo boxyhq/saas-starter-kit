@@ -45,5 +45,5 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  res.json({ data: permissions['MEMBER'] });
+  res.json({ data: permissions[teamRole.role] });
 };
