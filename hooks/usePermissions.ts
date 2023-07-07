@@ -1,5 +1,5 @@
 import fetcher from '@/lib/fetcher';
-import type { Permission } from '@/lib/roles';
+import type { Permission } from '@/lib/permissions';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';

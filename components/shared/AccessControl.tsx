@@ -1,37 +1,20 @@
-import type { Permission } from '@/lib/roles';
-import usePermissions from 'hooks/usePermissions';
+import type { Action, Resource } from '@/lib/permissions';
+import useCanAccess from 'hooks/useCanAccess';
 
 interface AccessControlProps {
   children: React.ReactNode;
-  resource: Permission['resource'];
-  actions: Permission['actions'];
+  resource: Resource;
+  actions: Action[];
 }
-
-const hasPermission = (
-  permissions: Permission[],
-  resource: Permission['resource'],
-  actions: Permission['actions']
-) => {
-  return permissions.some(
-    (permission) =>
-      permission.resource === resource &&
-      (permission.actions === '*' ||
-        permission.actions.some((action) => actions.includes(action)))
-  );
-};
 
 export const AccessControl = ({
   children,
   resource,
   actions,
 }: AccessControlProps) => {
-  const { permissions } = usePermissions();
+  const { canAccess } = useCanAccess();
 
-  if (!permissions) {
-    return null;
-  }
-
-  if (!hasPermission(permissions, resource, actions)) {
+  if (!canAccess(resource, actions)) {
     return null;
   }
 

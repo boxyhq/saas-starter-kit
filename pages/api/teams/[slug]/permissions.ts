@@ -1,5 +1,5 @@
+import { permissions } from '@/lib/permissions';
 import { prisma } from '@/lib/prisma';
-import { permissions } from '@/lib/roles';
 import { getSession } from '@/lib/session';
 import { throwIfNoTeamAccess } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
