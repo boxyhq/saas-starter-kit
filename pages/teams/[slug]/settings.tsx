@@ -1,4 +1,5 @@
 import { Error, Loading } from '@/components/shared';
+import { AccessControl } from '@/components/shared/AccessControl';
 import { RemoveTeam, TeamSettings, TeamTab } from '@/components/team';
 import useTeam from 'hooks/useTeam';
 import type { GetServerSidePropsContext } from 'next';
@@ -24,7 +25,9 @@ const Settings: NextPageWithLayout = () => {
     <>
       <TeamTab activeTab="settings" team={team} />
       <TeamSettings team={team} />
-      <RemoveTeam team={team} />
+      <AccessControl resource="team_settings" actions={["delete"]}>
+        <RemoveTeam team={team} />
+      </AccessControl>
     </>
   );
 };

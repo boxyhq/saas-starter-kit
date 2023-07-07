@@ -1,11 +1,22 @@
 import { Role } from '@prisma/client';
-import { ApiError } from 'next/dist/server/api-utils';
+
+import { ApiError } from './errors';
 
 type RoleType = (typeof Role)[keyof typeof Role];
 
-type Permission = {
-  resource: string;
-  actions: string[] | '*';
+type Action = 'create' | 'update' | 'read' | 'list' | 'delete';
+
+// TODO: Add more resources
+type Resource =
+  | 'team_settings'
+  | 'members'
+  | 'invites'
+  | 'webhooks'
+  | 'api_keys';
+
+export type Permission = {
+  resource: Resource;
+  actions: Action[] | '*';
 };
 
 type RolePermissions = {
@@ -48,7 +59,11 @@ export const permissions: RolePermissions = {
   ],
 };
 
-export const hasPermission = (role: Role, resource: string, action: string) => {
+export const hasPermission = (
+  role: Role,
+  resource: Resource,
+  action: Action
+) => {
   const rolePermissions = permissions[role];
 
   if (!rolePermissions) {
@@ -68,8 +83,8 @@ export const hasPermission = (role: Role, resource: string, action: string) => {
 
 export const throwIfNoPermission = (
   role: Role,
-  resource: string,
-  action: string
+  resource: Resource,
+  action: Action
 ) => {
   if (hasPermission(role, resource, action)) {
     return true;

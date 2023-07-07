@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { permissions } from '@/lib/roles';
 import { getSession } from '@/lib/session';
-import { getTeam, throwIfNoTeamAccess } from 'models/team';
+import { throwIfNoTeamAccess } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -13,7 +13,8 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET':
-        return await handleGET(req, res);
+        await handleGET(req, res);
+        break;
       default:
         res.setHeader('Allow', 'GET');
         res.status(405).json({
@@ -44,5 +45,5 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  return res.json({ data: permissions[teamRole.role] });
+  res.json({ data: permissions['MEMBER'] });
 };
