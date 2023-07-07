@@ -25,7 +25,7 @@ const Settings: NextPageWithLayout = () => {
     <>
       <TeamTab activeTab="settings" team={team} />
       <TeamSettings team={team} />
-      <AccessControl resource="team_settings" actions={["delete"]}>
+      <AccessControl resource="team" actions={["delete"]}>
         <RemoveTeam team={team} />
       </AccessControl>
     </>

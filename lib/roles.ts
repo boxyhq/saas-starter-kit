@@ -9,6 +9,7 @@ type Action = 'create' | 'update' | 'read' | 'list' | 'delete';
 // TODO: Add more resources
 type Resource =
   | 'team_settings'
+  | 'team'
   | 'members'
   | 'invites'
   | 'webhooks'
