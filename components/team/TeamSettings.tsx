@@ -82,7 +82,7 @@ const TeamSettings = ({ team }: { team: Team }) => {
               />
             </div>
           </Card.Body>
-          <AccessControl resource="team_settings" actions={['update']}>
+          <AccessControl resource="team" actions={['update']}>
             <Card.Footer>
               <div className="flex justify-end">
                 <Button

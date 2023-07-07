@@ -7,13 +7,7 @@ type RoleType = (typeof Role)[keyof typeof Role];
 type Action = 'create' | 'update' | 'read' | 'list' | 'delete';
 
 // TODO: Add more resources
-type Resource =
-  | 'team_settings'
-  | 'team'
-  | 'members'
-  | 'invites'
-  | 'webhooks'
-  | 'api_keys';
+type Resource = 'team' | 'members' | 'invites' | 'webhooks' | 'api_keys';
 
 export type Permission = {
   resource: Resource;
@@ -42,19 +36,19 @@ export const availableRoles = [
 export const permissions: RolePermissions = {
   OWNER: [
     {
-      resource: 'team_settings',
+      resource: 'team',
       actions: '*',
     },
   ],
   ADMIN: [
     {
-      resource: 'team_settings',
+      resource: 'team',
       actions: '*',
     },
   ],
   MEMBER: [
     {
-      resource: 'team_settings',
+      resource: 'team',
       actions: ['read'],
     },
   ],
