@@ -24,6 +24,9 @@ const nextConfig = withTM({
   async redirects() {
     return redirects;
   },
+  experimental: {
+    forceSwcTransforms: true,
+  },
 });
 
 module.exports = nextConfig;
