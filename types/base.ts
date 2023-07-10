@@ -9,10 +9,10 @@ export type ApiError = {
 export type ApiResponse<T = unknown> =
   | {
       data: T;
-      error: null;
+      error: never;
     }
   | {
-      data: null;
+      data: never;
       error: ApiError;
     };
 

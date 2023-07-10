@@ -1,4 +1,5 @@
 import { sendTeamInviteEmail } from '@/lib/email/sendTeamInviteEmail';
+import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
 import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
@@ -18,20 +19,31 @@ export default async function handler(
 ) {
   const { method } = req;
 
-  switch (method) {
-    case 'GET':
-      return await handleGET(req, res);
-    case 'POST':
-      return await handlePOST(req, res);
-    case 'PUT':
-      return await handlePUT(req, res);
-    case 'DELETE':
-      return await handleDELETE(req, res);
-    default:
-      res.setHeader('Allow', 'GET, POST, PUT, DELETE');
-      res.status(405).json({
-        error: { message: `Method ${method} Not Allowed` },
-      });
+  try {
+    switch (method) {
+      case 'GET':
+        await handleGET(req, res);
+        break;
+      case 'POST':
+        await handlePOST(req, res);
+        break;
+      case 'PUT':
+        await handlePUT(req, res);
+        break;
+      case 'DELETE':
+        await handleDELETE(req, res);
+        break;
+      default:
+        res.setHeader('Allow', 'GET, POST, PUT, DELETE');
+        res.status(405).json({
+          error: { message: `Method ${method} Not Allowed` },
+        });
+    }
+  } catch (error: any) {
+    const message = error.message || 'Something went wrong';
+    const status = error.status || 500;
+
+    res.status(status).json({ error: { message } });
   }
 }
 
@@ -43,17 +55,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({
-      error: { message: 'Unauthorized.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const team = await getTeam({ slug });
 
   if (!(await isTeamAdmin(session.user.id, team.id))) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(400, 'Bad request');
   }
 
   const invitationExists = await prisma.invitation.findFirst({
@@ -64,9 +72,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   if (invitationExists) {
-    return res.status(400).json({
-      error: { message: 'An invitation already exists for this email.' },
-    });
+    throw new ApiError(400, 'An invitation already exists for this email.');
   }
 
   const invitation = await createInvitation({
@@ -87,7 +93,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(200).json({ data: invitation });
+  res.status(200).json({ data: invitation });
 };
 
 // Get all invitations for an organization
@@ -97,22 +103,18 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({
-      error: { message: 'Unauthorized.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const team = await getTeam({ slug });
 
   if (!(await isTeamAdmin(session.user.id, team?.id))) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(400, 'Bad request');
   }
 
   const invitations = await getInvitations(team.id);
 
-  return res.status(200).json({ data: invitations });
+  res.status(200).json({ data: invitations });
 };
 
 // Delete an invitation
@@ -122,27 +124,22 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({
-      error: { message: 'Unauthorized.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const team = await getTeam({ slug });
 
   if (!(await isTeamAdmin(session.user.id, team?.id))) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(400, 'Bad request');
   }
 
   const invitation = await getInvitation({ id });
 
   if (invitation.invitedBy != session.user.id || invitation.teamId != team.id) {
-    return res.status(400).json({
-      error: {
-        message: "You don't have permission to delete this invitation.",
-      },
-    });
+    throw new ApiError(
+      400,
+      `You don't have permission to delete this invitation.`
+    );
   }
 
   await deleteInvitation({ id });
@@ -156,7 +153,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await sendEvent(team.id, 'invitation.removed', invitation);
 
-  return res.status(200).json({ data: {} });
+  res.status(200).json({ data: {} });
 };
 
 // Accept an invitation to an organization
@@ -178,5 +175,5 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteInvitation({ token: inviteToken });
 
-  return res.status(200).json({ data: {} });
+  res.status(200).json({ data: {} });
 };
