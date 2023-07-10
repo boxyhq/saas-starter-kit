@@ -1,4 +1,5 @@
 import env from '@/lib/env';
+import { ApiError } from '@/lib/errors';
 import jackson from '@/lib/jackson';
 import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
@@ -11,16 +12,25 @@ export default async function handler(
 ) {
   const { method } = req;
 
-  switch (method) {
-    case 'GET':
-      return await handleGET(req, res);
-    case 'POST':
-      return await handlePOST(req, res);
-    default:
-      res.setHeader('Allow', 'GET, POST');
-      res.status(405).json({
-        error: { message: `Method ${method} Not Allowed` },
-      });
+  try {
+    switch (method) {
+      case 'GET':
+        await handleGET(req, res);
+        break;
+      case 'POST':
+        await handlePOST(req, res);
+        break;
+      default:
+        res.setHeader('Allow', 'GET, POST');
+        res.status(405).json({
+          error: { message: `Method ${method} Not Allowed` },
+        });
+    }
+  } catch (error: any) {
+    const message = error.message || 'Something went wrong';
+    const status = error.status || 500;
+
+    res.status(status).json({ error: { message } });
   }
 }
 
@@ -30,15 +40,13 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({ error: { message: 'Unauthorized' } });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const team = await getTeam({ slug });
 
   if (!(await isTeamMember(session.user.id, team?.id))) {
-    return res.status(400).json({
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(400, 'Bad request');
   }
 
   const { directorySync } = await jackson();
@@ -49,10 +57,10 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   );
 
   if (error) {
-    return res.status(400).json({ error });
+    res.status(400).json({ error });
   }
 
-  return res.status(200).json({ data });
+  res.status(200).json({ data });
 };
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -64,18 +72,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({
-      error: { message: 'Unauthorized.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const team = await getTeam({ slug: slug as string });
 
   if (!(await isTeamMember(session.user.id, team?.id))) {
-    return res.status(400).json({
-      data: null,
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(400, 'Bad request');
   }
 
   const { data, error } = await directorySync.directories.create({
@@ -92,5 +95,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(201).json({ data, error });
+  res.status(201).json({ data, error });
 };

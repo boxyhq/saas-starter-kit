@@ -1,3 +1,4 @@
+import { ApiError } from '@/lib/errors';
 import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import {
@@ -15,19 +16,28 @@ export default async function handler(
 ) {
   const { method } = req;
 
-  switch (method) {
-    case 'GET':
-      return handleGET(req, res);
-    case 'PUT':
-      return handlePUT(req, res);
-    case 'DELETE':
-      return handleDELETE(req, res);
-    default:
-      res.setHeader('Allow', 'GET, PUT, DELETE');
-      res.status(405).json({
-        data: null,
-        error: { message: `Method ${method} Not Allowed` },
-      });
+  try {
+    switch (method) {
+      case 'GET':
+        await handleGET(req, res);
+        break;
+      case 'PUT':
+        await handlePUT(req, res);
+        break;
+      case 'DELETE':
+        await handleDELETE(req, res);
+        break;
+      default:
+        res.setHeader('Allow', 'GET, PUT, DELETE');
+        res.status(405).json({
+          error: { message: `Method ${method} Not Allowed` },
+        });
+    }
+  } catch (error: any) {
+    const message = error.message || 'Something went wrong';
+    const status = error.status || 500;
+
+    res.status(status).json({ error: { message } });
   }
 }
 
@@ -41,13 +51,10 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const team = await getTeam({ slug: slug as string });
 
   if (!(await isTeamMember(userId, team.id))) {
-    return res.status(400).json({
-      data: null,
-      error: { message: 'Bad request.' },
-    });
+    throw new ApiError(400, 'Bad request');
   }
 
-  return res.status(200).json({ data: team, error: null });
+  res.status(200).json({ data: team });
 };
 
 // Update a team
@@ -57,18 +64,13 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({
-      error: { message: 'Unauthorized.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const team = await getTeam({ slug: slug as string });
 
   if (!(await isTeamOwner(session.user.id, team.id))) {
-    return res.status(400).json({
-      data: null,
-      error: { message: `You don't have permission to do this action.` },
-    });
+    throw new ApiError(400, `You don't have permission to do this action.`);
   }
 
   const updatedTeam = await updateTeam(slug as string, {
@@ -80,11 +82,11 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'team.update',
     crud: 'u',
-    user: session.user,
+    user: session?.user,
     team,
   });
 
-  return res.status(200).json({ data: updatedTeam, error: null });
+  res.status(200).json({ data: updatedTeam });
 };
 
 // Delete a team
@@ -94,18 +96,13 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    return res.status(401).json({
-      error: { message: 'Unauthorized.' },
-    });
+    throw new ApiError(401, 'Unauthorized');
   }
 
   const team = await getTeam({ slug });
 
   if (!(await isTeamOwner(session.user.id, team.id))) {
-    return res.status(200).json({
-      data: null,
-      error: { message: `You don't have permission to do this action.` },
-    });
+    throw new ApiError(400, `You don't have permission to do this action.`);
   }
 
   await deleteTeam({ slug });
@@ -117,5 +114,5 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     team,
   });
 
-  return res.status(200).json({ data: {}, error: null });
+  res.status(200).json({ data: {} });
 };

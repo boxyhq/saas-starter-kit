@@ -12,7 +12,8 @@ export default async function handler(
   try {
     switch (method) {
       case 'POST':
-        return await handlePOST(req, res);
+        await handlePOST(req, res);
+        break;
       default:
         res.setHeader('Allow', 'POST');
         res.status(405).json({
@@ -20,7 +21,7 @@ export default async function handler(
         });
     }
   } catch (err: any) {
-    return res.status(400).json({
+    res.status(400).json({
       error: { message: err.message },
     });
   }
@@ -54,5 +55,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     teamId: team.id,
   };
 
-  return res.json({ data });
+  res.json({ data });
 };

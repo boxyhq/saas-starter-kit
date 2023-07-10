@@ -44,7 +44,7 @@ export default async function handler(
     handleEvents
   );
 
-  return res.status(status).json(data);
+  res.status(status).json(data);
 }
 
 // Handle the SCIM events
