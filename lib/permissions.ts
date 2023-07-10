@@ -1,12 +1,15 @@
 import { Role } from '@prisma/client';
 
-import { ApiError } from './errors';
-
-type RoleType = (typeof Role)[keyof typeof Role];
+export type RoleType = (typeof Role)[keyof typeof Role];
 export type Action = 'create' | 'update' | 'read' | 'list' | 'delete';
-export type Resource = 'team' | 'members' | 'invites' | 'webhooks' | 'api_keys';
+export type Resource =
+  | 'team'
+  | 'teamMembers'
+  | 'teamInvites'
+  | 'webhooks'
+  | 'api_keys';
 
-type RolePermissions = {
+export type RolePermissions = {
   [role in RoleType]: Permission[];
 };
 
@@ -36,10 +39,18 @@ export const permissions: RolePermissions = {
       resource: 'team',
       actions: '*',
     },
+    {
+      resource: 'teamMembers',
+      actions: '*',
+    },
   ],
   ADMIN: [
     {
       resource: 'team',
+      actions: '*',
+    },
+    {
+      resource: 'teamMembers',
       actions: '*',
     },
   ],
