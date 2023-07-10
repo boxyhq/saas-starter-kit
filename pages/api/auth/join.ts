@@ -13,7 +13,8 @@ export default async function handler(
 
   switch (method) {
     case 'POST':
-      return await handlePOST(req, res);
+      await handlePOST(req, res);
+      break;
     default:
       res.setHeader('Allow', 'POST');
       res.status(405).json({
@@ -29,7 +30,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const existingUser = await getUser({ email });
 
   if (existingUser) {
-    return res.status(400).json({
+    res.status(400).json({
       error: {
         message:
           'An user with this email already exists or the email was invalid.',
@@ -44,7 +45,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     const nameCollisions = await isTeamExists([{ name: team }, { slug }]);
 
     if (nameCollisions > 0) {
-      return res.status(400).json({
+      res.status(400).json({
         error: {
           message: 'A team with this name already exists in our database.',
         },
@@ -70,5 +71,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     await sendWelcomeEmail(name, email, team);
   }
 
-  return res.status(201).json({ data: user });
+  res.status(201).json({ data: user });
 };

@@ -10,7 +10,8 @@ export default async function handler(
   try {
     switch (method) {
       case 'GET':
-        return await handleGET(req, res);
+        await handleGET(req, res);
+        break;
       default:
         res.setHeader('Allow', 'GET');
         res.status(405).json({
@@ -18,7 +19,7 @@ export default async function handler(
         });
     }
   } catch (error: any) {
-    return res.status(400).json({
+    res.status(400).json({
       error: { message: error.message },
     });
   }
@@ -30,5 +31,5 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const invitation = await getInvitation({ token });
 
-  return res.status(200).json({ data: invitation });
+  res.status(200).json({ data: invitation });
 };

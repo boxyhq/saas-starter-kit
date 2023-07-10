@@ -15,11 +15,14 @@ export default async function handler(
   try {
     switch (method) {
       case 'GET':
-        return await handleGET(req, res);
+        await handleGET(req, res);
+        break;
       case 'POST':
-        return await handlePOST(req, res);
+        await handlePOST(req, res);
+        break;
       case 'DELETE':
-        return await handleDELETE(req, res);
+        await handleDELETE(req, res);
+        break;
       default:
         res.setHeader('Allow', 'GET, POST, DELETE');
         res.status(405).json({
@@ -52,24 +55,18 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { apiController } = await jackson();
 
-  try {
-    const connections = await apiController.getConnections({
-      tenant: team.id,
-      product: env.product,
-    });
+  const connections = await apiController.getConnections({
+    tenant: team.id,
+    product: env.product,
+  });
 
-    const response = {
-      connections,
-      issuer: env.saml.issuer,
-      acs: `${env.appUrl}${env.saml.path}`,
-    };
+  const response = {
+    connections,
+    issuer: env.saml.issuer,
+    acs: `${env.appUrl}${env.saml.path}`,
+  };
 
-    return res.json({ data: response });
-  } catch (error: any) {
-    const { message } = error;
-
-    return res.status(500).json({ error: { message } });
-  }
+  res.json({ data: response });
 };
 
 // Create a SAML connection for the team.
@@ -91,29 +88,23 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { apiController } = await jackson();
 
-  try {
-    const connection = await apiController.createSAMLConnection({
-      encodedRawMetadata,
-      metadataUrl,
-      defaultRedirectUrl: env.saml.callback,
-      redirectUrl: env.saml.callback,
-      tenant: team.id,
-      product: env.product,
-    });
+  const connection = await apiController.createSAMLConnection({
+    encodedRawMetadata,
+    metadataUrl,
+    defaultRedirectUrl: env.saml.callback,
+    redirectUrl: env.saml.callback,
+    tenant: team.id,
+    product: env.product,
+  });
 
-    sendAudit({
-      action: 'sso.connection.create',
-      crud: 'c',
-      user: session.user,
-      team,
-    });
+  sendAudit({
+    action: 'sso.connection.create',
+    crud: 'c',
+    user: session.user,
+    team,
+  });
 
-    return res.status(201).json({ data: connection });
-  } catch (error: any) {
-    const { message } = error;
-
-    return res.status(500).json({ error: { message } });
-  }
+  res.status(201).json({ data: connection });
 };
 
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -122,11 +113,13 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!session) {
     throw new ApiError(401, 'Unauthorized.');
   }
+
   const { slug, clientID, clientSecret } = req.query as {
     slug: string;
     clientID: string;
     clientSecret: string;
   };
+
   const team = await getTeam({ slug });
 
   if (!(await isTeamMember(session.user.id, team.id))) {
@@ -134,18 +127,15 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { apiController } = await jackson();
-  try {
-    await apiController.deleteConnections({ clientID, clientSecret });
-    sendAudit({
-      action: 'sso.connection.delete',
-      crud: 'c',
-      user: session.user,
-      team,
-    });
-    return res.json({ data: {} });
-  } catch (error: any) {
-    const { message } = error;
 
-    return res.status(500).json({ error: { message } });
-  }
+  await apiController.deleteConnections({ clientID, clientSecret });
+
+  sendAudit({
+    action: 'sso.connection.delete',
+    crud: 'c',
+    user: session.user,
+    team,
+  });
+
+  res.json({ data: {} });
 };

@@ -11,7 +11,8 @@ export default async function handler(
     switch (method) {
       case 'GET':
       case 'POST':
-        return await handleAuthorize(req, res);
+        await handleAuthorize(req, res);
+        break;
       default:
         res.setHeader('Allow', 'GET, POST');
         res.status(405).json({
@@ -19,7 +20,7 @@ export default async function handler(
         });
     }
   } catch (err: any) {
-    return res.status(500).json({ error: { message: err.message } });
+    res.status(500).json({ error: { message: err.message } });
   }
 }
 
