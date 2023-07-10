@@ -57,10 +57,12 @@ export const getServerSideProps = async (
 
   deleteCookie('pending-invite', { req, res });
 
+  const teams = await getTeams(session?.user.id as string);
+
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
-      teams: await getTeams(session?.user.id as string),
+      teams: JSON.parse(JSON.stringify(teams)),
     },
   };
 };

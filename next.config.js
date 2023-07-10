@@ -1,5 +1,4 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
-const withTM = require('next-transpile-modules')(['react-daisyui']);
 const { i18n } = require('./next-i18next.config');
 
 // Redirect to login page if landing page is hidden
@@ -15,7 +14,7 @@ if (hideLandingPage) {
 }
 
 /** @type {import('next').NextConfig} */
-const nextConfig = withTM({
+const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ['boxyhq.com'],
@@ -24,6 +23,6 @@ const nextConfig = withTM({
   async redirects() {
     return redirects;
   },
-});
+};
 
 module.exports = nextConfig;
