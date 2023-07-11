@@ -51,7 +51,7 @@ export default async function handler(
 // Invite a user to a team
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_invitation', 'create');
+  throwIfNotAllowed(teamMember, 'team_invitation', 'create');
 
   const { email, role } = req.body;
 
@@ -90,7 +90,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 // Get all invitations for a team
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_invitation', 'read');
+  throwIfNotAllowed(teamMember, 'team_invitation', 'read');
 
   const invitations = await getInvitations(teamMember.teamId);
 
@@ -100,7 +100,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 // Delete an invitation
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_invitation', 'delete');
+  throwIfNotAllowed(teamMember, 'team_invitation', 'delete');
 
   const { id } = req.query as { id: string };
 

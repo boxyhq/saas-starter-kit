@@ -1,8 +1,6 @@
 import { ApiError } from '@/lib/errors';
 import { sendAudit } from '@/lib/retraced';
-import { getSession } from '@/lib/session';
 import { findOrCreateApp, findWebhook, updateWebhook } from '@/lib/svix';
-import { getTeam, isTeamMember } from 'models/team';
 import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -39,7 +37,7 @@ export default async function handler(
 // Get a Webhook
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_webhook', 'read');
+  throwIfNotAllowed(teamMember, 'team_webhook', 'read');
 
   const { endpointId } = req.query as {
     endpointId: string;
@@ -59,7 +57,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 // Update a Webhook
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_webhook', 'update');
+  throwIfNotAllowed(teamMember, 'team_webhook', 'update');
 
   const { endpointId } = req.query as {
     endpointId: string;

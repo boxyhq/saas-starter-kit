@@ -1,9 +1,13 @@
-import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
-import { Role, Team, TeamMember } from '@prisma/client';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { Role, Team } from '@prisma/client';
+import type {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from 'next';
+import { User } from 'next-auth';
 
 export const createTeam = async (param: {
   userId: string;
@@ -89,22 +93,6 @@ export const getTeams = async (userId: string) => {
   });
 };
 
-// Check if the user is a member of the team
-export async function isTeamMember(userId: string, teamId: string) {
-  const teamMember = await prisma.teamMember.findFirstOrThrow({
-    where: {
-      userId,
-      teamId,
-    },
-  });
-
-  return (
-    teamMember.role === Role.MEMBER ||
-    teamMember.role === Role.OWNER ||
-    teamMember.role === Role.ADMIN
-  );
-}
-
 export async function getTeamRoles(userId: string) {
   const teamRoles = await prisma.teamMember.findMany({
     where: {
@@ -117,18 +105,6 @@ export async function getTeamRoles(userId: string) {
   });
 
   return teamRoles;
-}
-
-// Check if the user is an owner of the team
-export async function isTeamOwner(userId: string, teamId: string) {
-  const teamMember = await prisma.teamMember.findFirstOrThrow({
-    where: {
-      userId,
-      teamId,
-    },
-  });
-
-  return teamMember.role === Role.OWNER;
 }
 
 // Check if the user is an admin or owner of the team
@@ -173,62 +149,24 @@ export const isTeamExists = async (condition: any) => {
   });
 };
 
-export async function hasTeamAccess(
-  params: { userId: string | undefined } & (
-    | { teamId: string }
-    | { teamSlug: string }
-  )
-) {
-  const { userId } = params;
-
-  let teamMember: TeamMember | null = null;
-
-  if ('teamId' in params) {
-    teamMember = await prisma.teamMember.findFirst({
-      where: {
-        userId,
-        teamId: params.teamId,
-      },
-    });
-  }
-
-  if ('teamSlug' in params) {
-    teamMember = await prisma.teamMember.findFirst({
-      where: {
-        userId,
-        team: {
-          slug: params.teamSlug,
-        },
-      },
-    });
-  }
-
-  if (teamMember) {
-    return (
-      teamMember.role === Role.MEMBER ||
-      teamMember.role === Role.OWNER ||
-      teamMember.role === Role.ADMIN
-    );
-  }
-
-  return false;
-}
-
 // Check if the current user has access to the team
 // Should be used in API routes to check if the user has access to the team
 export const throwIfNoTeamAccess = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const teamMember = await getTeamUser(req, res);
-
-  if (!teamMember) {
-    throw new Error('You do not have access to this team');
-  }
-
   const session = await getSession(req, res);
 
   if (!session) {
+    throw new Error('Unauthorized');
+  }
+
+  const teamMember = await getTeamMember(
+    session.user.id,
+    req.query.slug as string
+  );
+
+  if (!teamMember) {
     throw new Error('You do not have access to this team');
   }
 
@@ -241,21 +179,10 @@ export const throwIfNoTeamAccess = async (
 };
 
 // Get the current user's team member object
-export const getTeamUser = async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => {
-  const session = await getSession(req, res);
-
-  if (!session) {
-    return null;
-  }
-
-  const { slug } = req.query as { slug: string };
-
+export const getTeamMember = async (userId: string, slug: string) => {
   const teamMember = await prisma.teamMember.findFirstOrThrow({
     where: {
-      userId: session.user.id,
+      userId,
       team: {
         slug,
       },

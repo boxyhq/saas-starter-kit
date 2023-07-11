@@ -45,7 +45,7 @@ export default async function handler(
 // Create a Webhook endpoint
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_webhook', 'create');
+  throwIfNotAllowed(teamMember, 'team_webhook', 'create');
 
   const { name, url, eventTypes } = req.body;
 
@@ -82,7 +82,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 // Get all webhooks created by a team
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_webhook', 'read');
+  throwIfNotAllowed(teamMember, 'team_webhook', 'read');
 
   const app = await findOrCreateApp(teamMember.team.name, teamMember.team.id);
 
@@ -98,7 +98,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 // Delete a webhook
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_webhook', 'delete');
+  throwIfNotAllowed(teamMember, 'team_webhook', 'delete');
 
   const { webhookId } = req.query as { webhookId: string };
 

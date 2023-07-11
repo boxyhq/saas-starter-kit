@@ -34,7 +34,7 @@ export default async function handler(
 // Get API keys
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_api_key', 'read');
+  throwIfNotAllowed(teamMember, 'team_api_key', 'read');
 
   const apiKeys = await fetchApiKeys(teamMember.teamId);
 
@@ -44,7 +44,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 // Create an API key
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_api_key', 'create');
+  throwIfNotAllowed(teamMember, 'team_api_key', 'create');
 
   const { name } = JSON.parse(req.body) as { name: string };
 

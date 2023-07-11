@@ -35,7 +35,7 @@ export default async function handler(
 
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_dsync', 'read');
+  throwIfNotAllowed(teamMember, 'team_dsync', 'read');
 
   const { directorySync } = await jackson();
 
@@ -53,7 +53,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_dsync', 'create');
+  throwIfNotAllowed(teamMember, 'team_dsync', 'create');
 
   const { name, provider } = req.body;
 

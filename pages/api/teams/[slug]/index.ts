@@ -42,7 +42,7 @@ export default async function handler(
 // Get a team by slug
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team', 'read');
+  throwIfNotAllowed(teamMember, 'team', 'read');
 
   const team = await getTeam({ id: teamMember.teamId });
 
@@ -52,7 +52,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 // Update a team
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team', 'update');
+  throwIfNotAllowed(teamMember, 'team', 'update');
 
   const updatedTeam = await updateTeam(teamMember.team.slug, {
     name: req.body.name,
@@ -73,7 +73,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 // Delete a team
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team', 'delete');
+  throwIfNotAllowed(teamMember, 'team', 'delete');
 
   await deleteTeam({ id: teamMember.teamId });
 

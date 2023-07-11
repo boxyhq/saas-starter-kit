@@ -31,7 +31,7 @@ export default async function handler(
 // Delete an API key
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
-  throwIfNotAllowed(teamMember.role, 'team_api_key', 'delete');
+  throwIfNotAllowed(teamMember, 'team_api_key', 'delete');
 
   const { apiKeyId } = req.query as { apiKeyId: string };
 

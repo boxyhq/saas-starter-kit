@@ -29,7 +29,5 @@ export default async function handler(
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamRole = await throwIfNoTeamAccess(req, res);
 
-  // teamRole.role
-
-  res.json({ data: permissions['MEMBER'] });
+  res.json({ data: permissions[teamRole.role] });
 };
