@@ -72,6 +72,8 @@ export const getServerSideProps = async (
 
   const cookieParsed = getParsedCookie(req, res);
 
+  console.log(cookieParsed);
+
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
