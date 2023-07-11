@@ -37,12 +37,16 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 
   const { isLoading, isError, team } = useTeam(slug as string);
 
-  if (isLoading || !team) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!team) {
+    return <Error message="Team not found" />;
   }
 
   if (!auditLogToken) {

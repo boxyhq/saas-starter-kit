@@ -1,13 +1,16 @@
 import { Role } from '@prisma/client';
 
 export type RoleType = (typeof Role)[keyof typeof Role];
-export type Action = 'create' | 'update' | 'read' | 'list' | 'delete';
+export type Action = 'create' | 'update' | 'read' | 'delete' | 'leave';
 export type Resource =
   | 'team'
-  | 'teamMembers'
-  | 'teamInvites'
-  | 'webhooks'
-  | 'api_keys';
+  | 'team_member'
+  | 'team_invitation'
+  | 'team_sso'
+  | 'team_dsync'
+  | 'team_audit_log'
+  | 'team_webhook'
+  | 'team_api_key';
 
 export type RolePermissions = {
   [role in RoleType]: Permission[];
@@ -40,7 +43,31 @@ export const permissions: RolePermissions = {
       actions: '*',
     },
     {
-      resource: 'teamMembers',
+      resource: 'team_member',
+      actions: '*',
+    },
+    {
+      resource: 'team_invitation',
+      actions: '*',
+    },
+    {
+      resource: 'team_sso',
+      actions: '*',
+    },
+    {
+      resource: 'team_dsync',
+      actions: '*',
+    },
+    {
+      resource: 'team_audit_log',
+      actions: '*',
+    },
+    {
+      resource: 'team_webhook',
+      actions: '*',
+    },
+    {
+      resource: 'team_api_key',
       actions: '*',
     },
   ],
@@ -50,51 +77,38 @@ export const permissions: RolePermissions = {
       actions: '*',
     },
     {
-      resource: 'teamMembers',
+      resource: 'team_member',
+      actions: '*',
+    },
+    {
+      resource: 'team_invitation',
+      actions: '*',
+    },
+    {
+      resource: 'team_sso',
+      actions: '*',
+    },
+    {
+      resource: 'team_dsync',
+      actions: '*',
+    },
+    {
+      resource: 'team_audit_log',
+      actions: '*',
+    },
+    {
+      resource: 'team_webhook',
+      actions: '*',
+    },
+    {
+      resource: 'team_api_key',
       actions: '*',
     },
   ],
   MEMBER: [
     {
       resource: 'team',
-      actions: ['read'],
+      actions: ['read', 'leave'],
     },
   ],
 };
-
-// export const hasPermission = (
-//   role: Role,
-//   resource: Resource,
-//   action: Action
-// ) => {
-//   const rolePermissions = permissions[role];
-
-//   if (!rolePermissions) {
-//     return false;
-//   }
-
-//   for (const permission of rolePermissions) {
-//     if (permission.resource === resource) {
-//       if (permission.actions === '*' || permission.actions.includes(action)) {
-//         return true;
-//       }
-//     }
-//   }
-
-//   return false;
-// };
-
-// export const throwIfNoPermission = (
-//   role: Role,
-//   resource: Resource,
-//   action: Action
-// ) => {
-//   if (hasPermission(role, resource, action)) {
-//     return true;
-//   }
-
-//   throw new ApiError(
-//     403,
-//     `Role '${role}' does not have permission to perform '${action}' on '${resource}'.`
-//   );
-// };

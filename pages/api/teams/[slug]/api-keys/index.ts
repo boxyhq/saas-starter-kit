@@ -1,7 +1,6 @@
-import { ApiError } from '@/lib/errors';
-import { getSession } from '@/lib/session';
 import { createApiKey, fetchApiKeys } from 'models/apiKey';
-import { getTeam, hasTeamAccess } from 'models/team';
+import { throwIfNoTeamAccess } from 'models/team';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -34,43 +33,24 @@ export default async function handler(
 
 // Get API keys
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getSession(req, res);
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember.role, 'team_api_key', 'read');
 
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const { slug } = req.query as { slug: string };
-
-  if (!(await hasTeamAccess({ userId: session.user.id, teamSlug: slug }))) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
-
-  const team = await getTeam({ slug });
-  const apiKeys = await fetchApiKeys(team.id);
+  const apiKeys = await fetchApiKeys(teamMember.teamId);
 
   res.json({ data: apiKeys });
 };
 
 // Create an API key
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getSession(req, res);
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember.role, 'team_api_key', 'create');
 
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const { slug } = req.query as { slug: string };
   const { name } = JSON.parse(req.body) as { name: string };
 
-  if (!(await hasTeamAccess({ userId: session.user.id, teamSlug: slug }))) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
-
-  const team = await getTeam({ slug });
   const apiKey = await createApiKey({
     name,
-    teamId: team.id,
+    teamId: teamMember.teamId,
   });
 
   res.status(201).json({ data: { apiKey } });

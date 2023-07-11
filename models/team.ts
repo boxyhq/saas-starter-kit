@@ -214,19 +214,46 @@ export async function hasTeamAccess(
   return false;
 }
 
+// Check if the current user has access to the team
+// Should be used in API routes to check if the user has access to the team
 export const throwIfNoTeamAccess = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  const teamMember = await getTeamUser(req, res);
+
+  if (!teamMember) {
+    throw new Error('You do not have access to this team');
+  }
+
+  const session = await getSession(req, res);
+
+  if (!session) {
+    throw new Error('You do not have access to this team');
+  }
+
+  return {
+    ...teamMember,
+    user: {
+      ...session.user,
+    },
+  };
+};
+
+// Get the current user's team member object
+export const getTeamUser = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
   const session = await getSession(req, res);
 
   if (!session) {
-    throw new ApiError(401, 'Unauthorized');
+    return null;
   }
 
   const { slug } = req.query as { slug: string };
 
-  const teamMember = await prisma.teamMember.findFirst({
+  const teamMember = await prisma.teamMember.findFirstOrThrow({
     where: {
       userId: session.user.id,
       team: {
@@ -236,9 +263,10 @@ export const throwIfNoTeamAccess = async (
         in: ['ADMIN', 'MEMBER', 'OWNER'],
       },
     },
+    include: {
+      team: true,
+    },
   });
 
-  if (!teamMember) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
+  return teamMember;
 };

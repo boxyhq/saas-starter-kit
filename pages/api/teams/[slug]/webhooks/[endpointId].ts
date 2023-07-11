@@ -3,6 +3,8 @@ import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp, findWebhook, updateWebhook } from '@/lib/svix';
 import { getTeam, isTeamMember } from 'models/team';
+import { throwIfNoTeamAccess } from 'models/team';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { EndpointIn } from 'svix';
 
@@ -36,24 +38,14 @@ export default async function handler(
 
 // Get a Webhook
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug, endpointId } = req.query as {
-    slug: string;
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember.role, 'team_webhook', 'read');
+
+  const { endpointId } = req.query as {
     endpointId: string;
   };
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const team = await getTeam({ slug });
-
-  if (!(await isTeamMember(session.user.id, team.id))) {
-    throw new ApiError(200, 'Bad request.');
-  }
-
-  const app = await findOrCreateApp(team.name, team.id);
+  const app = await findOrCreateApp(teamMember.team.name, teamMember.team.id);
 
   if (!app) {
     throw new ApiError(200, 'Bad request.');
@@ -66,26 +58,16 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Update a Webhook
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug, endpointId } = req.query as {
-    slug: string;
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember.role, 'team_webhook', 'update');
+
+  const { endpointId } = req.query as {
     endpointId: string;
   };
 
   const { name, url, eventTypes } = req.body;
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const team = await getTeam({ slug: slug as string });
-
-  if (!(await isTeamMember(session.user.id, team.id))) {
-    throw new ApiError(200, 'Bad request.');
-  }
-
-  const app = await findOrCreateApp(team.name, team.id);
+  const app = await findOrCreateApp(teamMember.team.name, teamMember.team.id);
 
   if (!app) {
     throw new ApiError(200, 'Bad request.');
@@ -106,8 +88,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'webhook.update',
     crud: 'u',
-    user: session.user,
-    team,
+    user: teamMember.user,
+    team: teamMember.team,
   });
 
   res.status(200).json({ data: webhook });

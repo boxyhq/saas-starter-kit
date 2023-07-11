@@ -27,7 +27,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
   }
 
   const acceptInvitation = async () => {

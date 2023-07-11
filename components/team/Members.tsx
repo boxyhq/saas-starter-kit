@@ -23,7 +23,7 @@ const Members = ({ team }: { team: Team }) => {
   }
 
   if (isError || !session) {
-    return <Error />;
+    return <Error message={isError.message} />;
   }
 
   if (!members) {

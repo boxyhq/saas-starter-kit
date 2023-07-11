@@ -1,6 +1,4 @@
 import { permissions } from '@/lib/permissions';
-import { prisma } from '@/lib/prisma';
-import { getSession } from '@/lib/session';
 import { throwIfNoTeamAccess } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -9,8 +7,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    await throwIfNoTeamAccess(req, res);
-
     switch (req.method) {
       case 'GET':
         await handleGET(req, res);
@@ -31,19 +27,9 @@ export default async function handler(
 
 // Get permissions for a team for the current user
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getSession(req, res);
+  const teamRole = await throwIfNoTeamAccess(req, res);
 
-  const teamRole = await prisma.teamMember.findFirstOrThrow({
-    where: {
-      userId: session?.user.id,
-      team: {
-        slug: req.query.slug as string,
-      },
-    },
-    select: {
-      role: true,
-    },
-  });
+  // teamRole.role
 
-  res.json({ data: permissions[teamRole.role] });
+  res.json({ data: permissions['MEMBER'] });
 };

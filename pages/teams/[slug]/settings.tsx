@@ -13,19 +13,23 @@ const Settings: NextPageWithLayout = () => {
 
   const { isLoading, isError, team } = useTeam(slug);
 
-  if (isLoading || !team) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!team) {
+    return <Error message="Team not found" />;
   }
 
   return (
     <>
       <TeamTab activeTab="settings" team={team} />
       <TeamSettings team={team} />
-      <AccessControl resource="team" actions={["delete"]}>
+      <AccessControl resource="team" actions={['delete']}>
         <RemoveTeam team={team} />
       </AccessControl>
     </>

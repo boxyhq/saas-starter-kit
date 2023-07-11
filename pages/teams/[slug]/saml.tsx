@@ -28,14 +28,17 @@ const TeamSSO: NextPageWithLayout = () => {
 
   const { isLoading, isError, team } = useTeam(slug);
   const { samlConfig, mutateSamlConfig } = useSAMLConfig(slug);
+
   // Delete SSO Connection
   const deleteSsoConnection = async (connection: SAMLSSORecord | null) => {
     if (!connection) return;
+
     const { clientID, clientSecret } = connection;
     const params = new URLSearchParams({
       clientID,
       clientSecret,
     });
+
     const res = await fetch(`/api/teams/${slug}/saml?${params}`, {
       method: 'DELETE',
     });
@@ -56,12 +59,16 @@ const TeamSSO: NextPageWithLayout = () => {
     }
   };
 
-  if (isLoading || !team) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!team) {
+    return <Error message="Team not found" />;
   }
 
   const connectionsAdded =
@@ -78,6 +85,8 @@ const TeamSSO: NextPageWithLayout = () => {
               onClick={() => {
                 setVisible(!visible);
               }}
+              size="sm"
+              variant="outline"
             >
               {t('add-connection')}
             </Button>
