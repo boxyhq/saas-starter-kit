@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-use-before-define
-import NextAuth, { DefaultSession } from 'next-auth';
+import { DefaultSession } from 'next-auth';
 
 declare module 'next-auth' {
   /**
