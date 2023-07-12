@@ -17,37 +17,6 @@ const CreateConnection = (props: CreateConnectionProps) => {
   const { mutateSamlConfig } = useSAMLConfig(team.slug);
   const { t } = useTranslation('common');
 
-  // const formik = useFormik({
-  //   initialValues,
-  //   validationSchema,
-  //   onSubmit: async (values, { resetForm }) => {
-  //     const { metadataUrl, metadataRaw } = values;
-
-  //     try {
-  //       const response = await axios.post<ApiResponse<SAMLSSORecord>>(
-  //         `/api/teams/${team.slug}/saml`,
-  //         {
-  //           metadataUrl,
-  //           encodedRawMetadata: metadataRaw
-  //             ? Buffer.from(metadataRaw).toString('base64')
-  //             : undefined,
-  //         }
-  //       );
-
-  //       const { data } = response.data;
-
-  //       if (data) {
-  //         toast.success(t('saml-config-updated'));
-  //         mutateSamlConfig();
-  //         setVisible(false);
-  //         resetForm();
-  //       }
-  //     } catch (error: any) {
-  //       toast.error(getAxiosError(error));
-  //     }
-  //   },
-  // });
-
   return (
     <Modal open={visible}>
       <Modal.Header className="font-bold">
