@@ -28,7 +28,7 @@ const CreateConnection = (props: CreateConnectionProps) => {
             setVisible(!visible);
             mutateSamlConfig();
           }}
-          classNames={{ button: 'btn btn-primary' }}
+          classNames={{ button: 'btn btn-primary mt-6' }}
           errorCallback={(errMessage) => {
             toast.error(errMessage);
           }}
