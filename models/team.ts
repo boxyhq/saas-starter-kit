@@ -2,12 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
 import { Role, Team } from '@prisma/client';
-import type {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from 'next';
-import { User } from 'next-auth';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const createTeam = async (param: {
   userId: string;
