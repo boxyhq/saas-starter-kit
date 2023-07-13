@@ -38,19 +38,22 @@ const CreateConnection = (props: CreateConnectionProps) => {
       <Modal.Body>
         <div className="mt-2 flex flex-col space-y-2">
           <p>{t('update-saml-config-message')}</p>
-          <CreateSAMLConnection
-            successCallback={() => {
-              toast.success(t('saml-config-updated'));
-              setVisible(!visible);
-              mutateSamlConfig();
-            }}
-            classNames={{ button: 'btn btn-primary mt-6' }}
-            errorCallback={(errMessage) => {
-              toast.error(errMessage);
-            }}
-            variant="basic"
-            urls={{ save: `/api/teams/${team.slug}/saml` }}
-          />
+          {visible && (
+            // Need to have conditional rendering here to reset the form state
+            <CreateSAMLConnection
+              successCallback={() => {
+                toast.success(t('saml-config-updated'));
+                setVisible(!visible);
+                mutateSamlConfig();
+              }}
+              classNames={{ button: 'btn btn-primary mt-6' }}
+              errorCallback={(errMessage) => {
+                toast.error(errMessage);
+              }}
+              variant="basic"
+              urls={{ save: `/api/teams/${team.slug}/saml` }}
+            />
+          )}
         </div>
       </Modal.Body>
     </Modal>
