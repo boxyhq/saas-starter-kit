@@ -1,4 +1,5 @@
 import { Error, Loading } from '@/components/shared';
+import { AccessControl } from '@/components/shared/AccessControl';
 import { RemoveTeam, TeamSettings, TeamTab } from '@/components/team';
 import useTeam from 'hooks/useTeam';
 import type { GetServerSidePropsContext } from 'next';
@@ -12,19 +13,25 @@ const Settings: NextPageWithLayout = () => {
 
   const { isLoading, isError, team } = useTeam(slug);
 
-  if (isLoading || !team) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!team) {
+    return <Error message="Team not found" />;
   }
 
   return (
     <>
       <TeamTab activeTab="settings" team={team} />
       <TeamSettings team={team} />
-      <RemoveTeam team={team} />
+      <AccessControl resource="team" actions={['delete']}>
+        <RemoveTeam team={team} />
+      </AccessControl>
     </>
   );
 };

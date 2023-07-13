@@ -22,12 +22,16 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
 
   const { isLoading, isError, invitation } = useInvitation(token as string);
 
-  if (isLoading || !invitation) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!invitation) {
+    return null;
   }
 
   const acceptInvitation = async () => {

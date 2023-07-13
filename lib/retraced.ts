@@ -79,5 +79,11 @@ export const getViewerToken = async (groupId: string, actorId: string) => {
     return;
   }
 
-  return await retracedClient.getViewerToken(groupId, actorId, true);
+  try {
+    return await retracedClient.getViewerToken(groupId, actorId, true);
+  } catch (error: any) {
+    throw new Error(
+      'Unable to get viewer token from Retraced. Please check Retraced configuration.'
+    );
+  }
 };

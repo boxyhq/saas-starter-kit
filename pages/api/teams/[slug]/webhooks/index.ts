@@ -1,13 +1,13 @@
 import { ApiError } from '@/lib/errors';
 import { sendAudit } from '@/lib/retraced';
-import { getSession } from '@/lib/session';
 import {
   createWebhook,
   deleteWebhook,
   findOrCreateApp,
   listWebhooks,
 } from '@/lib/svix';
-import { getTeam, isTeamMember } from 'models/team';
+import { throwIfNoTeamAccess } from 'models/team';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { EndpointIn } from 'svix';
 
@@ -44,22 +44,12 @@ export default async function handler(
 
 // Create a Webhook endpoint
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { slug: string };
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember, 'team_webhook', 'create');
+
   const { name, url, eventTypes } = req.body;
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const team = await getTeam({ slug });
-
-  if (!(await isTeamMember(session.user.id, team.id))) {
-    throw new ApiError(400, 'Bad request.');
-  }
-
-  const app = await findOrCreateApp(team.name, team.id);
+  const app = await findOrCreateApp(teamMember.team.name, teamMember.team.id);
 
   // TODO: The endpoint URL must be HTTPS.
 
@@ -82,8 +72,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'webhook.create',
     crud: 'c',
-    user: session.user,
-    team,
+    user: teamMember.user,
+    team: teamMember.team,
   });
 
   res.status(200).json({ data: endpoint });
@@ -91,21 +81,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Get all webhooks created by a team
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { slug: string };
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember, 'team_webhook', 'read');
 
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const team = await getTeam({ slug });
-
-  if (!(await isTeamMember(session.user.id, team.id))) {
-    throw new ApiError(400, 'Bad request.');
-  }
-
-  const app = await findOrCreateApp(team.name, team.id);
+  const app = await findOrCreateApp(teamMember.team.name, teamMember.team.id);
 
   if (!app) {
     throw new ApiError(400, 'Bad request.');
@@ -118,27 +97,18 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Delete a webhook
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug, webhookId } = req.query as { slug: string; webhookId: string };
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember, 'team_webhook', 'delete');
 
-  const session = await getSession(req, res);
+  const { webhookId } = req.query as { webhookId: string };
 
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
-  const team = await getTeam({ slug });
-
-  if (!(await isTeamMember(session.user.id, team.id))) {
-    throw new ApiError(400, 'Bad request.');
-  }
-
-  const app = await findOrCreateApp(team.name, team.id);
+  const app = await findOrCreateApp(teamMember.team.name, teamMember.team.id);
 
   if (!app) {
     throw new ApiError(400, 'Bad request.');
   }
 
-  if (app.uid != team.id) {
+  if (app.uid != teamMember.team.id) {
     throw new ApiError(400, 'Bad request.');
   }
 
@@ -147,8 +117,8 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'webhook.delete',
     crud: 'd',
-    user: session.user,
-    team,
+    user: teamMember.user,
+    team: teamMember.team,
   });
 
   res.status(200).json({ data: {} });

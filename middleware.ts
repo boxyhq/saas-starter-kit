@@ -10,6 +10,8 @@ const unAuthenticatedRoutes = [
   '/api/oauth/**',
   '/api/scim/v2.0/**',
   '/auth/**',
+  '/invitations/*',
+  '/api/invitations/*',
 ];
 
 export default async function middleware(req: NextRequest) {

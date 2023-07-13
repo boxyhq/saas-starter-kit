@@ -1,7 +1,7 @@
 import { Card, Error, LetterAvatar, Loading } from '@/components/shared';
-import { isTeamAdmin } from '@/lib/teams';
 import { Team, TeamMember } from '@prisma/client';
 import axios from 'axios';
+import useCanAccess from 'hooks/useCanAccess';
 import useTeamMembers from 'hooks/useTeamMembers';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
@@ -13,6 +13,7 @@ import UpdateMemberRole from './UpdateMemberRole';
 const Members = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
   const { t } = useTranslation('common');
+  const { canAccess } = useCanAccess();
 
   const { isLoading, isError, members, mutateTeamMembers } = useTeamMembers(
     team.slug
@@ -22,8 +23,8 @@ const Members = ({ team }: { team: Team }) => {
     return <Loading />;
   }
 
-  if (isError || !session) {
-    return <Error />;
+  if (isError) {
+    return <Error message={isError.message} />;
   }
 
   if (!members) {
@@ -40,14 +41,16 @@ const Members = ({ team }: { team: Team }) => {
     toast.success(t('member-deleted'));
   };
 
-  const isAdmin = isTeamAdmin(session.user, members);
-
   const canUpdateRole = (member: TeamMember) => {
-    return session.user.id != member.userId && isAdmin;
+    return (
+      session?.user.id != member.userId && canAccess('team_member', ['update'])
+    );
   };
 
   const canRemoveMember = (member: TeamMember) => {
-    return session.user.id != member.userId && isAdmin;
+    return (
+      session?.user.id != member.userId && canAccess('team_member', ['delete'])
+    );
   };
 
   return (
@@ -65,7 +68,7 @@ const Members = ({ team }: { team: Team }) => {
               <th scope="col" className="px-6 py-3">
                 {t('role')}
               </th>
-              {isAdmin && (
+              {canAccess('team_member', ['delete']) && (
                 <th scope="col" className="px-6 py-3">
                   {t('action')}
                 </th>
