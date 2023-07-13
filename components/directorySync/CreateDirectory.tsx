@@ -61,6 +61,10 @@ const CreateDirectory = ({
     },
   });
 
+  const toggleVisible = () => {
+    setVisible(!visible);
+  };
+
   if (!data) {
     return <Loading />;
   }
@@ -68,7 +72,16 @@ const CreateDirectory = ({
   const providers = data.data;
 
   return (
-    <Modal open={visible}>
+    <Modal open={visible} onClickBackdrop={toggleVisible}>
+      <Button
+        type="button"
+        size="sm"
+        shape="circle"
+        className="absolute right-2 top-2 rounded-full"
+        onClick={toggleVisible}
+      >
+        ✕
+      </Button>
       <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header className="font-bold">
           {t('create-directory-connection')}
@@ -114,15 +127,6 @@ const CreateDirectory = ({
             active={formik.dirty}
           >
             {t('create-directory')}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setVisible(!visible);
-            }}
-          >
-            {t('close')}
           </Button>
         </Modal.Actions>
       </form>

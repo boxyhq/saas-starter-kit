@@ -2,7 +2,7 @@ import { CreateSAMLConnection } from '@boxyhq/react-ui/sso';
 import { Team } from '@prisma/client';
 import useSAMLConfig from 'hooks/useSAMLConfig';
 import { useTranslation } from 'next-i18next';
-import { Modal } from 'react-daisyui';
+import { Button, Modal } from 'react-daisyui';
 import toast from 'react-hot-toast';
 
 interface CreateConnectionProps {
@@ -17,8 +17,21 @@ const CreateConnection = (props: CreateConnectionProps) => {
   const { mutateSamlConfig } = useSAMLConfig(team.slug);
   const { t } = useTranslation('common');
 
+  const toggleVisible = () => {
+    setVisible(!visible);
+  };
+
   return (
-    <Modal open={visible}>
+    <Modal open={visible} onClickBackdrop={toggleVisible}>
+      <Button
+        type="button"
+        size="sm"
+        shape="circle"
+        className="absolute right-2 top-2 rounded-full"
+        onClick={toggleVisible}
+      >
+        ✕
+      </Button>
       <Modal.Header className="font-bold">
         {t('configure-singlesignon')}
       </Modal.Header>
