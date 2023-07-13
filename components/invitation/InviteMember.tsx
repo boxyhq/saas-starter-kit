@@ -53,9 +53,21 @@ const InviteMember = ({
       }
     },
   });
+  const toggleVisible = () => {
+    setVisible(!visible);
+  };
 
   return (
-    <Modal open={visible}>
+    <Modal open={visible} onClickBackdrop={toggleVisible}>
+      <Button
+        type="button"
+        size="sm"
+        shape="circle"
+        className="absolute right-2 top-2 rounded-full"
+        onClick={toggleVisible}
+      >
+        ✕
+      </Button>
       <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header className="font-bold">
           {t('invite-new-member')}
@@ -95,15 +107,6 @@ const InviteMember = ({
             active={formik.dirty}
           >
             {t('send-invite')}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setVisible(!visible);
-            }}
-          >
-            {t('close')}
           </Button>
         </Modal.Actions>
       </form>
