@@ -106,6 +106,16 @@ const TeamDropdown = () => {
 
   const menus = [
     {
+      id: 2,
+      name: t('teams'),
+      items: (teams || []).map((team) => ({
+        id: team.id,
+        name: team.name,
+        href: `/teams/${team.slug}/settings`,
+        icon: FolderIcon,
+      })),
+    },
+    {
       id: 1,
       name: t('profile'),
       items: [
@@ -116,16 +126,6 @@ const TeamDropdown = () => {
           icon: UserCircleIcon,
         },
       ],
-    },
-    {
-      id: 2,
-      name: t('teams'),
-      items: (teams || []).map((team) => ({
-        id: team.id,
-        name: team.name,
-        href: `/teams/${team.slug}/settings`,
-        icon: FolderIcon,
-      })),
     },
     {
       id: 3,
