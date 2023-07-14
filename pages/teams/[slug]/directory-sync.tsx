@@ -30,7 +30,7 @@ const DirectorySync: NextPageWithLayout = () => {
   }
 
   if (!team) {
-    return <Error message="Team not found" />;
+    return <Error message={t('team-not-found')} />;
   }
 
   const directory =
