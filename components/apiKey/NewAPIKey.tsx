@@ -26,11 +26,7 @@ const NewAPIKey = ({
   };
 
   return (
-    <Modal
-      open={createModalVisible}
-      className="p-8"
-      onClickBackdrop={() => apiKey === '' && toggleVisible()}
-    >
+    <Modal open={createModalVisible} className="p-8">
       <Button
         type="button"
         size="sm"

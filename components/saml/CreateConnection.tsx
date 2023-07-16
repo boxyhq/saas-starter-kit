@@ -22,7 +22,7 @@ const CreateConnection = (props: CreateConnectionProps) => {
   };
 
   return (
-    <Modal open={visible} onClickBackdrop={toggleVisible}>
+    <Modal open={visible}>
       <Button
         type="button"
         size="sm"
@@ -38,22 +38,20 @@ const CreateConnection = (props: CreateConnectionProps) => {
       <Modal.Body>
         <div className="mt-2 flex flex-col space-y-2">
           <p>{t('update-saml-config-message')}</p>
-          {visible && (
-            // Need to have conditional rendering here to reset the form state
-            <CreateSAMLConnection
-              successCallback={() => {
-                toast.success(t('saml-config-updated'));
-                setVisible(!visible);
-                mutateSamlConfig();
-              }}
-              classNames={{ button: 'btn btn-primary mt-6' }}
-              errorCallback={(errMessage) => {
-                toast.error(errMessage);
-              }}
-              variant="basic"
-              urls={{ save: `/api/teams/${team.slug}/saml` }}
-            />
-          )}
+
+          <CreateSAMLConnection
+            successCallback={() => {
+              toast.success(t('saml-config-updated'));
+              setVisible(!visible);
+              mutateSamlConfig();
+            }}
+            classNames={{ button: 'btn btn-primary mt-6' }}
+            errorCallback={(errMessage) => {
+              toast.error(errMessage);
+            }}
+            variant="basic"
+            urls={{ save: `/api/teams/${team.slug}/saml` }}
+          />
         </div>
       </Modal.Body>
     </Modal>

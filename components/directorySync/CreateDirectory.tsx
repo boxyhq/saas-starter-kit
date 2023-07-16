@@ -72,7 +72,7 @@ const CreateDirectory = ({
   const providers = data.data;
 
   return (
-    <Modal open={visible} onClickBackdrop={toggleVisible}>
+    <Modal open={visible}>
       <Button
         type="button"
         size="sm"

@@ -58,7 +58,7 @@ const InviteMember = ({
   };
 
   return (
-    <Modal open={visible} onClickBackdrop={toggleVisible}>
+    <Modal open={visible}>
       <Button
         type="button"
         size="sm"
