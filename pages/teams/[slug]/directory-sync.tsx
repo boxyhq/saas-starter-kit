@@ -17,7 +17,7 @@ const DirectorySync: NextPageWithLayout = () => {
   const { slug } = router.query as { slug: string };
 
   const [visible, setVisible] = useState(false);
-  const { isLoading, isError, team } = useTeam(slug);
+  const { isLoading, isError, team } = useTeam();
   const { directories } = useDirectory(slug);
   const { t } = useTranslation('common');
 
