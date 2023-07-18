@@ -1,4 +1,4 @@
-import { Card, Error, Loading } from '@/components/shared';
+import { Card } from '@/components/shared';
 import { WithLoadingAndError } from '@/components/shared';
 import { EmptyState } from '@/components/shared';
 import { Team } from '@prisma/client';
