@@ -30,7 +30,7 @@ const WebhookList: NextPageWithLayout = () => {
     <>
       <TeamTab activeTab="webhooks" team={team} />
       <div className="flex flex-col">
-        <div className="flex mt-2 justify-end">
+        <div className="flex my-3 justify-end">
           <Button
             variant="outline"
             color="primary"
