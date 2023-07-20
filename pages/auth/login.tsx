@@ -14,7 +14,7 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import type { ReactElement } from 'react';
+import { type ReactElement, useEffect } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
@@ -23,9 +23,21 @@ import * as Yup from 'yup';
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ csrfToken, redirectAfterSignIn }) => {
-  const { status } = useSession();
   const router = useRouter();
+  const { status } = useSession();
   const { t } = useTranslation('common');
+
+  const { error } = router.query;
+
+  useEffect(() => {
+    if (error) {
+      toast.error(t(error));
+    }
+  }, [router.query]);
+
+  if (status === 'authenticated') {
+    router.push('/');
+  }
 
   if (status === 'authenticated') {
     router.push(redirectAfterSignIn);

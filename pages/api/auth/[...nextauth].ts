@@ -1,4 +1,5 @@
 import { verifyPassword } from '@/lib/auth';
+import { isNonWorkEmailDomain } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { prisma } from '@/lib/prisma';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
@@ -29,8 +30,11 @@ export const authOptions: NextAuthOptions = {
           throw new Error('No credentials found.');
         }
 
-        const email = credentials?.email as string;
-        const password = credentials?.password as string;
+        const { email, password } = credentials;
+
+        if (!email || !password) {
+          return null;
+        }
 
         const user = await getUser({ email });
 
@@ -99,11 +103,13 @@ export const authOptions: NextAuthOptions = {
   },
   secret: env.nextAuth.secret,
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      console.log({ user, account, profile, email, credentials });
-
-      if (!user.email || !account || !profile) {
+    async signIn({ user, account, profile }) {
+      if (!user || !user.email || !account) {
         return false;
+      }
+
+      if (env.disableNonWorkEmailSignup && isNonWorkEmailDomain(user.email)) {
+        return '/auth/login?error=allow-only-work-email';
       }
 
       // Login via email and password
@@ -136,8 +142,6 @@ export const authOptions: NextAuthOptions = {
 
       // Existing users reach here
       const linkedAccount = await getAccount({ userId: existingUser.id });
-
-      console.log({ linkedAccount, existingUser });
 
       if (!linkedAccount) {
         await linkAccount(existingUser, account);
