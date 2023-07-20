@@ -81,6 +81,7 @@ export default function Sidebar() {
                         <div className="mt-1 space-y-1">
                           {menu?.items?.map((submenu) => (
                             <SidebarItem
+                              key={submenu.name}
                               href={submenu.href}
                               name={submenu.name}
                               active={router.asPath === submenu.href}
