@@ -38,7 +38,10 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const hasValidPassword = await verifyPassword(password, user.password);
+        const hasValidPassword = await verifyPassword(
+          password,
+          user.password as string
+        );
 
         if (!hasValidPassword) {
           return null;
@@ -78,11 +81,13 @@ export const authOptions: NextAuthOptions = {
     GitHubProvider({
       clientId: env.github.clientId,
       clientSecret: env.github.clientSecret,
+      allowDangerousEmailAccountLinking: true,
     }),
 
     GoogleProvider({
       clientId: env.google.clientId,
       clientSecret: env.google.clientSecret,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   pages: {
@@ -94,40 +99,26 @@ export const authOptions: NextAuthOptions = {
   },
   secret: env.nextAuth.secret,
   callbacks: {
-    async signIn({ user, account, profile }) {
-      if (
-        account?.provider === 'credentials' ||
-        account?.provider === 'github' ||
-        account?.provider === 'google'
-      ) {
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log({ user, account, profile, email, credentials });
+
+      if (!user.email || !account || !profile) {
+        return false;
+      }
+
+      // Login via email and password
+      if (account?.provider === 'credentials') {
         return true;
       }
 
-      if (!user.email) {
-        return false;
-      }
+      const existingUser = await getUser({ email: user.email });
 
       // Login via email (Magic Link)
       if (account?.provider === 'email') {
-        const userFound = await getUser({ email: user.email });
-
-        if (!userFound) {
-          return false;
-        }
-
-        return true;
+        return existingUser ? true : false;
       }
 
-      if (!account || !profile) {
-        return false;
-      }
-
-      // TODO: Only SAML login reaches here for now
-
-      // TODO: We should check if email is verified here before linking account
-      const existingUser = await getUser({ email: user.email });
-
-      // Create user account if it doesn't exist
+      // First time users
       if (!existingUser) {
         const newUser = await createUser({
           name: `${user.name}`,
@@ -136,15 +127,20 @@ export const authOptions: NextAuthOptions = {
 
         await linkAccount(newUser, account);
 
-        await linkToTeam(profile, newUser.id);
-      } else {
-        const linkedAccount = await getAccount({ userId: existingUser.id });
-
-        if (!linkedAccount) {
-          await linkAccount(existingUser, account);
+        if (account.provider === 'boxyhq-saml') {
+          await linkToTeam(profile, newUser.id);
         }
 
-        await linkToTeam(profile, existingUser.id);
+        return true;
+      }
+
+      // Existing users reach here
+      const linkedAccount = await getAccount({ userId: existingUser.id });
+
+      console.log({ linkedAccount, existingUser });
+
+      if (!linkedAccount) {
+        await linkAccount(existingUser, account);
       }
 
       return true;

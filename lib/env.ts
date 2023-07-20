@@ -53,6 +53,11 @@ const env = {
   },
 
   groupPrefix: process.env.GROUP_PREFIX,
+
+  disableNonWorkAndDisposableEmailSignup:
+    process.env.DISABLE_NON_WORK_AND_DISPOSABLE_EMAIL_SIGNUP === 'true'
+      ? true
+      : false,
 };
 
 export default env;
