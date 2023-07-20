@@ -1,4 +1,4 @@
-import { Card, Loading } from '@/components/shared';
+import { Card } from '@/components/shared';
 import useTeams from 'hooks/useTeams';
 import { GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
