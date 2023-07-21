@@ -5,14 +5,11 @@ import useTeam from 'hooks/useTeam';
 import type { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRouter } from 'next/router';
 import type { NextPageWithLayout } from 'types';
 
 const Settings: NextPageWithLayout = () => {
-  const router = useRouter();
   const { t } = useTranslation('common');
-  const { slug } = router.query as { slug: string };
-  const { isLoading, isError, team } = useTeam(slug);
+  const { isLoading, isError, team } = useTeam();
 
   if (isLoading) {
     return <Loading />;
