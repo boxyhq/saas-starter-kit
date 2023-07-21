@@ -9,8 +9,8 @@ const VerifyEmail: NextPageWithLayout = () => {
       <div className="space-y-3 text-center">
         <h2 className="text-xl">Please verify your email</h2>
         <p className="text-base text-gray-600 pb-4">
-          You're almost there! We just sent a verification link to your email.
-          The link in the email will expire in 24 hours.
+          {`You're almost there! We just sent a verification link to your email.
+          The link in the email will expire in 24 hours.`}
         </p>
         <Link href="/auth/login" className="btn btn-sm btn-outline">
           Go to login
