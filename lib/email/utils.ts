@@ -1,19 +1,9 @@
-// TODO: Add disposable email domain to the list
-const emailDomains = [
-  '@gmail.com',
-  '@yahoo.com',
-  '@hotmail.com',
-  '@outlook.com',
-  '@protonmail.com',
-  '@aol.com',
-  '@icloud.com',
-  '@zoho.com',
-  '@mail.com',
-  '@gmzil.com',
-];
+import blockedDomains from './freeEmailService.json';
 
-export const isNonWorkEmailDomain = (email: string) => {
-  const domain = email.substring(email.lastIndexOf('@'));
+export const isBusinessEmail = (email: string) => {
+  if (email.indexOf('@') > 0 && email.indexOf('@') < email.length - 3) {
+    const emailDomain = email.split('@')[1];
 
-  return emailDomains.includes(domain);
+    return !blockedDomains[emailDomain];
+  }
 };

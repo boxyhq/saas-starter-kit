@@ -1,7 +1,7 @@
 import { hashPassword } from '@/lib/auth';
 import { slugify } from '@/lib/common';
 import { sendWelcomeEmail } from '@/lib/email/sendWelcomeEmail';
-import { isNonWorkEmailDomain } from '@/lib/email/utils';
+import { isBusinessEmail } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
 import { createTeam, isTeamExists } from 'models/team';
@@ -43,7 +43,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new ApiError(400, 'An user with this email already exists.');
   }
 
-  if (env.disableNonWorkEmailSignup && isNonWorkEmailDomain(email)) {
+  if (env.disableNonBusinessEmailSignup && !isBusinessEmail(email)) {
     throw new ApiError(
       400,
       `We currently only accept work email addresses for sign-up. Please use your work email to create an account. If you don't have a work email, feel free to contact our support team for assistance.`

@@ -1,5 +1,5 @@
 import { verifyPassword } from '@/lib/auth';
-import { isNonWorkEmailDomain } from '@/lib/email/utils';
+import { isBusinessEmail } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { prisma } from '@/lib/prisma';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
@@ -108,7 +108,7 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
 
-      if (env.disableNonWorkEmailSignup && isNonWorkEmailDomain(user.email)) {
+      if (env.disableNonBusinessEmailSignup && !isBusinessEmail(user.email)) {
         return '/auth/login?error=allow-only-work-email';
       }
 
