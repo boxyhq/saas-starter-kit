@@ -1,6 +1,7 @@
 import { hashPassword } from '@/lib/auth';
 import { slugify } from '@/lib/common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
+import env from '@/lib/env';
 import { prisma } from '@/lib/prisma';
 import { createTeam, isTeamExists } from 'models/team';
 import { createUser, getUser } from 'models/user';
@@ -72,7 +73,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Send account verification email
-  if (user) {
+  if (user && env.confirmEmail) {
     const verificationToken = await prisma.verificationToken.create({
       data: {
         identifier: email,

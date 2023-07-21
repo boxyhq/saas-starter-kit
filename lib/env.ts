@@ -53,6 +53,9 @@ const env = {
   },
 
   groupPrefix: process.env.GROUP_PREFIX,
+
+  // Users will need to confirm their email before accessing the app feature
+  confirmEmail: process.env.CONFIRM_EMAIL === 'true',
 };
 
 export default env;
