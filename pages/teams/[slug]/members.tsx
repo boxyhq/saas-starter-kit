@@ -5,19 +5,14 @@ import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button } from 'react-daisyui';
 import type { NextPageWithLayout } from 'types';
 
 const TeamMembers: NextPageWithLayout = () => {
-  const router = useRouter();
   const { t } = useTranslation('common');
-  const { slug } = router.query;
-
   const [visible, setVisible] = useState(false);
-
-  const { isLoading, isError, team } = useTeam(slug as string);
+  const { isLoading, isError, team } = useTeam();
 
   if (isLoading) {
     return <Loading />;
