@@ -12,7 +12,7 @@ const Directory = ({ team }: { team: Team }) => {
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
   }
 
   if (directories && directories.length === 0) {

@@ -33,7 +33,7 @@ const EditWebhook = ({
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
   }
 
   const onSubmit = async (

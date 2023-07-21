@@ -1,5 +1,5 @@
 import { getAxiosError } from '@/lib/common';
-import { availableRoles } from '@/lib/roles';
+import { availableRoles } from '@/lib/permissions';
 import type { Invitation, Team } from '@prisma/client';
 import axios from 'axios';
 import { useFormik } from 'formik';

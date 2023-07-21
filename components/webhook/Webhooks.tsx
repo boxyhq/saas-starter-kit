@@ -20,12 +20,16 @@ const Webhooks = ({ team }: { team: Team }) => {
     team.slug
   );
 
-  if (isLoading || !webhooks) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!webhooks) {
+    return null;
   }
 
   const deleteWebhook = async (webhook: EndpointOut) => {

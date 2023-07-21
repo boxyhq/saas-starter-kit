@@ -28,14 +28,17 @@ const TeamSSO: NextPageWithLayout = () => {
 
   const { isLoading, isError, team } = useTeam(slug);
   const { samlConfig, mutateSamlConfig } = useSAMLConfig(slug);
+
   // Delete SSO Connection
   const deleteSsoConnection = async (connection: SAMLSSORecord | null) => {
     if (!connection) return;
+
     const { clientID, clientSecret } = connection;
     const params = new URLSearchParams({
       clientID,
       clientSecret,
     });
+
     const res = await fetch(`/api/teams/${slug}/saml?${params}`, {
       method: 'DELETE',
     });
@@ -52,16 +55,20 @@ const TeamSSO: NextPageWithLayout = () => {
 
     if (data) {
       mutateSamlConfig();
-      toast.success('SSO Connection deleted successfully');
+      toast.success(t('sso-connection-deleted'));
     }
   };
 
-  if (isLoading || !team) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!team) {
+    return <Error message={t('team-not-found')} />;
   }
 
   const connectionsAdded =
@@ -78,6 +85,8 @@ const TeamSSO: NextPageWithLayout = () => {
               onClick={() => {
                 setVisible(!visible);
               }}
+              size="sm"
+              variant="outline"
             >
               {t('add-connection')}
             </Button>
@@ -171,15 +180,14 @@ const TeamSSO: NextPageWithLayout = () => {
       </Card>
       <CreateConnection team={team} visible={visible} setVisible={setVisible} />
       <ConfirmationDialog
-        title="Delete SSO Connection"
+        title={t('delete-sso-connection')}
         visible={confirmationDialogVisible}
         onConfirm={() => deleteSsoConnection(selectedSsoConnection)}
         onCancel={() => setConfirmationDialogVisible(false)}
-        cancelText="Cancel"
-        confirmText="Delete SSO Connection"
+        cancelText={t('cancel')}
+        confirmText={t('delete-sso-connection')}
       >
-        Are you sure you want to delete this SSO Connection? This action can not
-        be undone.
+        {t('delete-sso-connection-confirmation')}
       </ConfirmationDialog>
     </>
   );

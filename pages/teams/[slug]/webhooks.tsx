@@ -12,19 +12,23 @@ import type { NextPageWithLayout } from 'types';
 
 const WebhookList: NextPageWithLayout = () => {
   const router = useRouter();
-  const slug = router.query.slug as string;
   const { t } = useTranslation('common');
-
   const [visible, setVisible] = useState(false);
+
+  const slug = router.query.slug as string;
 
   const { isLoading, isError, team } = useTeam(slug);
 
-  if (isLoading || !team) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!team) {
+    return <Error message={t('team-not-found')} />;
   }
 
   return (

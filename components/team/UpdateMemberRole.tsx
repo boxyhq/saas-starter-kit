@@ -1,4 +1,4 @@
-import { availableRoles } from '@/lib/roles';
+import { availableRoles } from '@/lib/permissions';
 import { Team, TeamMember } from '@prisma/client';
 import axios from 'axios';
 import { useTranslation } from 'next-i18next';

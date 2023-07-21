@@ -160,5 +160,10 @@
   "leave-team-confirmation": "Are you sure you want to leave the team? You'll lose access to all resources and data associated with the team.",
   "all-products": "All Products",
   "new-team": "New Team",
-  "profile": "Profile"
+  "profile": "Profile",
+  "profile-picture": "Profile picture",
+  "sso-connection-deleted": "SSO Connection deleted successfully",
+  "team-not-found": "Team not found",
+  "delete-sso-connection": "Delete SSO Connection",
+  "delete-sso-connection-confirmation": "Are you sure you want to delete this SSO Connection? This action can not be undone."
 }

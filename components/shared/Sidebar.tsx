@@ -7,7 +7,6 @@ import {
   LockClosedIcon,
   RectangleStackIcon,
   UserCircleIcon,
-  UsersIcon,
 } from '@heroicons/react/24/outline';
 import useTeams from 'hooks/useTeams';
 import { useSession } from 'next-auth/react';
@@ -52,11 +51,6 @@ export default function Sidebar() {
         name: t('settings'),
         href: `/teams/${slug}/settings`,
         icon: Cog6ToothIcon,
-      },
-      {
-        name: t('members'),
-        href: `/teams/${slug}/members`,
-        icon: UsersIcon,
       },
     ],
   };
@@ -112,6 +106,16 @@ const TeamDropdown = () => {
 
   const menus = [
     {
+      id: 2,
+      name: t('teams'),
+      items: (teams || []).map((team) => ({
+        id: team.id,
+        name: team.name,
+        href: `/teams/${team.slug}/settings`,
+        icon: FolderIcon,
+      })),
+    },
+    {
       id: 1,
       name: t('profile'),
       items: [
@@ -122,16 +126,6 @@ const TeamDropdown = () => {
           icon: UserCircleIcon,
         },
       ],
-    },
-    {
-      id: 2,
-      name: t('teams'),
-      items: (teams || []).map((team) => ({
-        id: team.id,
-        name: team.name,
-        href: `/teams/${team.slug}/settings`,
-        icon: FolderIcon,
-      })),
     },
     {
       id: 3,
