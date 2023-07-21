@@ -34,8 +34,8 @@ const Join = () => {
         });
 
         formik.resetForm();
-        toast.success(t('successfully-joined'));
-        router.push('/auth/login');
+        // toast.success(t('successfully-joined'));
+        router.push('/auth/email/verify');
       } catch (error: any) {
         toast.error(getAxiosError(error));
       }

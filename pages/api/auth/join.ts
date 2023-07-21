@@ -1,9 +1,11 @@
 import { hashPassword } from '@/lib/auth';
 import { slugify } from '@/lib/common';
-import { sendWelcomeEmail } from '@/lib/email/sendWelcomeEmail';
+import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
+import { prisma } from '@/lib/prisma';
 import { createTeam, isTeamExists } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { v4 as uuidv4 } from 'uuid';
 
 export default async function handler(
   req: NextApiRequest,
@@ -67,8 +69,19 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       name: team,
       slug,
     });
+  }
 
-    await sendWelcomeEmail(name, email, team);
+  // Send account verification email
+  if (user) {
+    const verificationToken = await prisma.verificationToken.create({
+      data: {
+        identifier: email,
+        token: uuidv4(),
+        expires: new Date(),
+      },
+    });
+
+    await sendVerificationEmail({ user, verificationToken });
   }
 
   res.status(201).json({ data: user });

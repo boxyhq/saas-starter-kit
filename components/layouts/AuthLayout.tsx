@@ -23,12 +23,16 @@ export default function AuthLayout({
             width={48}
             height={48}
           />
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {heading}
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            {description}
-          </p>
+          {heading && (
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+              {heading}
+            </h2>
+          )}
+          {description && (
+            <p className="mt-2 text-center text-sm text-gray-600">
+              {description}
+            </p>
+          )}
         </div>
         {children}
       </div>
