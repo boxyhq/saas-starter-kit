@@ -2,12 +2,10 @@ import { AuthLayout } from '@/components/layouts';
 import type { ReactElement } from 'react';
 
 const VerifyEmail = () => {
-  const email = 'kiran@boxyhq.com';
-
   return (
     <div className="rounded p-6 border">
       <div className="space-y-3">
-        <h2>{`Confirm your email address ${email}`}</h2>
+        <h2>Confirm your email address</h2>
         <p className="text-base text-gray-600">
           To complete the signup process, click the link in the email we sent
           you.

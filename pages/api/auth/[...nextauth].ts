@@ -42,7 +42,10 @@ export const authOptions: NextAuthOptions = {
           throw new Error('email-not-verified');
         }
 
-        const hasValidPassword = await verifyPassword(password, user.password);
+        const hasValidPassword = await verifyPassword(
+          password,
+          user?.password as string
+        );
 
         if (!hasValidPassword) {
           throw new Error('invalid-credentials');

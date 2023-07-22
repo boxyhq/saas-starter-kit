@@ -1,12 +1,11 @@
 import { hashPassword } from '@/lib/auth';
-import { slugify } from '@/lib/common';
+import { generateToken, slugify } from '@/lib/common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import env from '@/lib/env';
 import { prisma } from '@/lib/prisma';
 import { createTeam, isTeamExists } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { v4 as uuidv4 } from 'uuid';
 
 export default async function handler(
   req: NextApiRequest,
@@ -77,8 +76,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     const verificationToken = await prisma.verificationToken.create({
       data: {
         identifier: email,
-        token: uuidv4(),
-        expires: new Date(),
+        token: generateToken(),
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 24 hours
       },
     });
 
