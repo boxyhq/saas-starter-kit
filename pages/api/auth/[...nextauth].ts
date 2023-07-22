@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials) {
-          throw new Error('No credentials found.');
+          throw new Error('no-credentials');
         }
 
         const email = credentials?.email as string;
@@ -35,13 +35,17 @@ export const authOptions: NextAuthOptions = {
         const user = await getUser({ email });
 
         if (!user) {
-          return null;
+          throw new Error('invalid-credentials');
+        }
+
+        if (env.confirmEmail && !user.emailVerified) {
+          throw new Error('email-not-verified');
         }
 
         const hasValidPassword = await verifyPassword(password, user.password);
 
         if (!hasValidPassword) {
-          return null;
+          throw new Error('invalid-credentials');
         }
 
         return {

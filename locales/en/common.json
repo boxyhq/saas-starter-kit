@@ -167,5 +167,8 @@
   "delete-sso-connection-confirmation": "Are you sure you want to delete this SSO Connection? This action can not be undone.",
   "no-webhook-title": "You haven't created any webhook yet",
   "token-not-found": "The verification token is invalid or has already been used.",
-  "email-verified": "Your email has been successfully verified. Thank you for confirming your account."
+  "email-verified": "Your email has been successfully verified. Thank you for confirming your account.",
+  "invalid-credentials": "Invalid login credentials",
+  "email-not-verified": "Please confirm your email address.",
+  "no-credentials": "No credentials found."
 }

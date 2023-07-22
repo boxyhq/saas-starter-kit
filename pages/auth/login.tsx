@@ -77,7 +77,7 @@ const Login: NextPageWithLayout<LoginProps> = ({
       formik.resetForm();
 
       if (!response?.ok) {
-        toast.error(t('login-error'));
+        toast.error(t(response?.error));
         return;
       }
     },
