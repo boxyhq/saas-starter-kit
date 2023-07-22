@@ -1,26 +1,35 @@
 import { AuthLayout } from '@/components/layouts';
-import Link from 'next/link';
 import type { ReactElement } from 'react';
 
 const VerifyEmail = () => {
+  const email = 'kiran@boxyhq.com';
+
   return (
     <div className="rounded p-6 border">
-      <div className="space-y-3 text-center">
-        <h2 className="text-xl">Please verify your email</h2>
-        <p className="text-base text-gray-600 pb-4">
-          {`You're almost there! We just sent a verification link to your email.
-          The link in the email will expire in 24 hours.`}
+      <div className="space-y-3">
+        <h2>{`Confirm your email address ${email}`}</h2>
+        <p className="text-base text-gray-600">
+          To complete the signup process, click the link in the email we sent
+          you.
         </p>
-        <Link href="/auth/login" className="btn btn-sm btn-outline">
-          Go to login
-        </Link>
+        <p className="text-base text-gray-600">
+          If your verification email is not in your Inbox, you may wish to check
+          your Spam folder.
+        </p>
       </div>
     </div>
   );
 };
 
 VerifyEmail.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout>{page}</AuthLayout>;
+  return (
+    <AuthLayout
+      heading="Awaiting email verification"
+      description="Please confirm your email address to activate your account."
+    >
+      {page}
+    </AuthLayout>
+  );
 };
 
 export default VerifyEmail;
