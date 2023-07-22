@@ -37,7 +37,7 @@ export const getServerSideProps = async ({
   }
 
   // TODO
-  // Handle token expiry
+  // Handle expired token
 
   await Promise.allSettled([
     prisma.user.update({
