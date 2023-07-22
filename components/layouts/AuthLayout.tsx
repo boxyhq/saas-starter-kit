@@ -29,7 +29,7 @@ export default function AuthLayout({
             </h2>
           )}
           {description && (
-            <p className="mt-2 text-center text-sm text-gray-600">
+            <p className="mt-2 text-center text-gray-600">
               {description}
             </p>
           )}

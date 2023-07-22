@@ -39,7 +39,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (env.confirmEmail && !user.emailVerified) {
-          throw new Error('email-not-verified');
+          throw new Error('confirm-your-email');
         }
 
         const hasValidPassword = await verifyPassword(

@@ -1,18 +1,20 @@
 import { AuthLayout } from '@/components/layouts';
+import { GetServerSidePropsContext } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { ReactElement } from 'react';
 
 const VerifyEmail = () => {
+  const { t } = useTranslation('common');
+
+  return <></>
+
   return (
     <div className="rounded p-6 border">
-      <div className="space-y-3">
-        <h2>Confirm your email address</h2>
+      <div className="space-y-3 text-center">
+        <h2>{t('confirm-email')}</h2>
         <p className="text-base text-gray-600">
-          To complete the signup process, click the link in the email we sent
-          you.
-        </p>
-        <p className="text-base text-gray-600">
-          If your verification email is not in your Inbox, you may wish to check
-          your Spam folder.
+          {t('confirm-email-description')}
         </p>
       </div>
     </div>
@@ -20,14 +22,28 @@ const VerifyEmail = () => {
 };
 
 VerifyEmail.getLayout = function getLayout(page: ReactElement) {
+  const { t } = useTranslation('common');
+
   return (
     <AuthLayout
-      heading="Awaiting email verification"
-      description="Please confirm your email address to activate your account."
+      heading={t('confirm-email')}
+      description={t('confirm-email-description')}
     >
       {page}
     </AuthLayout>
   );
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { locale }: GetServerSidePropsContext = context;
+
+  return {
+    props: {
+      ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+    },
+  };
 };
 
 export default VerifyEmail;

@@ -170,6 +170,8 @@
   "token-expired": "The verification token has expired.",
   "email-verified": "Your email has been successfully verified. Thank you for confirming your account.",
   "invalid-credentials": "Invalid login credentials",
-  "email-not-verified": "Please confirm your email address.",
-  "no-credentials": "No credentials found."
+  "no-credentials": "No credentials found.",
+  "confirm-email": "Confirm your email address",
+  "confirm-email-description": "Please click the verification link sent to your email to activate your account."
 }
+
