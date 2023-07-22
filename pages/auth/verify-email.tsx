@@ -1,9 +1,8 @@
 import { AuthLayout } from '@/components/layouts';
 import Link from 'next/link';
 import type { ReactElement } from 'react';
-import type { NextPageWithLayout } from 'types';
 
-const VerifyEmail: NextPageWithLayout = () => {
+const VerifyEmail = () => {
   return (
     <div className="rounded p-6 border">
       <div className="space-y-3 text-center">

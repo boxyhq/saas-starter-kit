@@ -1,7 +1,7 @@
 import GithubButton from '@/components/auth/GithubButton';
 import GoogleButton from '@/components/auth/GoogleButton';
 import { AuthLayout } from '@/components/layouts';
-import { InputWithLabel } from '@/components/shared';
+import { Alert, InputWithLabel } from '@/components/shared';
 import { getParsedCookie } from '@/lib/cookie';
 import env from '@/lib/env';
 import { useFormik } from 'formik';
@@ -14,18 +14,41 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import type { ReactElement } from 'react';
+import { type ReactElement, useEffect, useState } from 'react';
 import { Button } from 'react-daisyui';
+import type { ComponentStatus } from 'react-daisyui/dist/types';
 import toast from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
 
-const Login: NextPageWithLayout<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ csrfToken, redirectAfterSignIn }) => {
-  const { status } = useSession();
+type LoginProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const Login: NextPageWithLayout<LoginProps> = ({
+  csrfToken,
+  redirectAfterSignIn,
+}) => {
   const router = useRouter();
+  const { status } = useSession();
   const { t } = useTranslation('common');
+  const [message, setMessage] = useState<{
+    text: string | null;
+    status: ComponentStatus | null;
+  }>({
+    text: null,
+    status: null,
+  });
+
+  const { error, success } = router.query as { error: string; success: string };
+
+  useEffect(() => {
+    if (error) {
+      setMessage({ text: error, status: 'error' });
+    }
+
+    if (success) {
+      setMessage({ text: success, status: 'success' });
+    }
+  }, [router, router.query]);
 
   if (status === 'authenticated') {
     router.push(redirectAfterSignIn);
@@ -62,6 +85,9 @@ const Login: NextPageWithLayout<
 
   return (
     <>
+      {message.text && message.status && (
+        <Alert status={message.status}>{t(message.text)}</Alert>
+      )}
       <div className="rounded p-6 border">
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">

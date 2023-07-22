@@ -37,12 +37,10 @@ const Join = () => {
 
         const { confirmEmail } = response.data.data;
 
-        console.log('confirmEmail', confirmEmail)
-
         formik.resetForm();
 
         if (confirmEmail) {
-          router.push('/auth/email/verify');
+          router.push('/auth/verify-email');
         } else {
           toast.success(t('successfully-joined'));
           router.push('/auth/login');
