@@ -73,7 +73,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Send account verification email
-  if (user && env.confirmEmail) {
+  if (env.confirmEmail) {
     const verificationToken = await prisma.verificationToken.create({
       data: {
         identifier: email,
@@ -85,5 +85,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     await sendVerificationEmail({ user, verificationToken });
   }
 
-  res.status(201).json({ data: user });
+  res.status(201).json({
+    data: {
+      user,
+      confirmEmail: env.confirmEmail,
+    },
+  });
 };

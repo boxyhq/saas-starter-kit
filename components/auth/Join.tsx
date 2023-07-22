@@ -29,13 +29,24 @@ const Join = () => {
     }),
     onSubmit: async (values) => {
       try {
-        await axios.post<ApiResponse<User>>('/api/auth/join', {
+        const response = await axios.post<
+          ApiResponse<User & { confirmEmail: boolean }>
+        >('/api/auth/join', {
           ...values,
         });
 
+        const { confirmEmail } = response.data.data;
+
+        console.log('confirmEmail', confirmEmail)
+
         formik.resetForm();
-        // toast.success(t('successfully-joined'));
-        router.push('/auth/email/verify');
+
+        if (confirmEmail) {
+          router.push('/auth/email/verify');
+        } else {
+          toast.success(t('successfully-joined'));
+          router.push('/auth/login');
+        }
       } catch (error: any) {
         toast.error(getAxiosError(error));
       }
