@@ -13,7 +13,6 @@ import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
 import type { NextPageWithLayout } from 'types';
 
 interface RetracedEventsBrowserProps {
@@ -34,12 +33,9 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   retracedHost,
   error,
 }) => {
-  const router = useRouter();
-  const { slug } = router.query;
   const { t } = useTranslation('common');
   const { canAccess } = useCanAccess();
-
-  const { isLoading, isError, team } = useTeam(slug as string);
+  const { isLoading, isError, team } = useTeam();
 
   if (isLoading) {
     return <Loading />;

@@ -165,5 +165,6 @@
   "sso-connection-deleted": "SSO Connection deleted successfully",
   "team-not-found": "Team not found",
   "delete-sso-connection": "Delete SSO Connection",
-  "delete-sso-connection-confirmation": "Are you sure you want to delete this SSO Connection? This action can not be undone."
+  "delete-sso-connection-confirmation": "Are you sure you want to delete this SSO Connection? This action can not be undone.",
+  "no-webhook-title": "You haven't created any webhook yet"
 }
