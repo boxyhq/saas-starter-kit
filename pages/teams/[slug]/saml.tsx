@@ -26,7 +26,7 @@ const TeamSSO: NextPageWithLayout = () => {
 
   const { slug } = router.query as { slug: string };
 
-  const { isLoading, isError, team } = useTeam(slug);
+  const { isLoading, isError, team } = useTeam();
   const { samlConfig, mutateSamlConfig } = useSAMLConfig(slug);
 
   // Delete SSO Connection
