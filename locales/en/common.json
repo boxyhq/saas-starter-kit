@@ -165,5 +165,12 @@
   "team-not-found": "Team not found",
   "delete-sso-connection": "Delete SSO Connection",
   "delete-sso-connection-confirmation": "Are you sure you want to delete this SSO Connection? This action can not be undone.",
-  "no-webhook-title": "You haven't created any webhook yet"
+  "no-webhook-title": "You haven't created any webhook yet",
+  "sp_saml_config_title": "Service Provider (SP) SAML Configuration",
+  "sp_saml_config_description": "Your Identity Provider (IdP) will ask for the following information while configuring the SAML application. Share this information with your IT administrator.",
+  "sp_acs_url": "ACS (Assertion Consumer Service) URL / Single Sign-On URL / Destination URL",
+  "sp_entity_id": "SP Entity ID / Identifier / Audience URI / Audience Restriction",
+  "assertion_signature": "Assertion Signature",
+  "signature_algorithm": "Signature Algorithm",
+  "assertion_encryption": "Assertion Encryption"
 }
