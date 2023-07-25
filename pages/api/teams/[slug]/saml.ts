@@ -1,9 +1,8 @@
 import env from '@/lib/env';
-import { ApiError } from '@/lib/errors';
 import jackson from '@/lib/jackson';
 import { sendAudit } from '@/lib/retraced';
-import { getSession } from '@/lib/session';
-import { getTeam, isTeamMember } from 'models/team';
+import { throwIfNoTeamAccess } from 'models/team';
+import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -39,24 +38,13 @@ export default async function handler(
 
 // Get the SAML connection for the team.
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { slug: string };
-
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const team = await getTeam({ slug });
-
-  if (!(await isTeamMember(session.user.id, team.id))) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember, 'team_sso', 'read');
 
   const { apiController } = await jackson();
 
   const connections = await apiController.getConnections({
-    tenant: team.id,
+    tenant: teamMember.teamId,
     product: env.product,
   });
 
@@ -71,20 +59,10 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Create a SAML connection for the team.
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { slug: string };
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember, 'team_sso', 'create');
+
   const { metadataUrl, encodedRawMetadata } = req.body;
-
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const team = await getTeam({ slug });
-
-  if (!(await isTeamMember(session.user.id, team.id))) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
 
   const { apiController } = await jackson();
 
@@ -93,38 +71,28 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     metadataUrl,
     defaultRedirectUrl: env.saml.callback,
     redirectUrl: env.saml.callback,
-    tenant: team.id,
+    tenant: teamMember.teamId,
     product: env.product,
   });
 
   sendAudit({
     action: 'sso.connection.create',
     crud: 'c',
-    user: session.user,
-    team,
+    user: teamMember.user,
+    team: teamMember.team,
   });
 
   res.status(201).json({ data: connection });
 };
 
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getSession(req, res);
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember, 'team_sso', 'delete');
 
-  if (!session) {
-    throw new ApiError(401, 'Unauthorized.');
-  }
-
-  const { slug, clientID, clientSecret } = req.query as {
-    slug: string;
+  const { clientID, clientSecret } = req.query as {
     clientID: string;
     clientSecret: string;
   };
-
-  const team = await getTeam({ slug });
-
-  if (!(await isTeamMember(session.user.id, team.id))) {
-    throw new ApiError(403, 'You are not allowed to perform this action');
-  }
 
   const { apiController } = await jackson();
 
@@ -133,8 +101,8 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   sendAudit({
     action: 'sso.connection.delete',
     crud: 'c',
-    user: session.user,
-    team,
+    user: teamMember.user,
+    team: teamMember.team,
   });
 
   res.json({ data: {} });

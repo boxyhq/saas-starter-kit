@@ -23,7 +23,7 @@ const Teams = () => {
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
   }
 
   const leaveTeam = async (team: Team) => {

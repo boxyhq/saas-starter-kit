@@ -1,4 +1,7 @@
+import { ApiError } from '@/lib/errors';
+import { Action, Resource, permissions } from '@/lib/permissions';
 import { prisma } from '@/lib/prisma';
+import { Role, TeamMember } from '@prisma/client';
 import type { Session } from 'next-auth';
 
 export const createUser = async (param: {
@@ -42,4 +45,37 @@ export const deleteUser = async (key: { id: string } | { email: string }) => {
   return await prisma.user.delete({
     where: key,
   });
+};
+
+export const isAllowed = (role: Role, resource: Resource, action: Action) => {
+  const rolePermissions = permissions[role];
+
+  if (!rolePermissions) {
+    return false;
+  }
+
+  for (const permission of rolePermissions) {
+    if (permission.resource === resource) {
+      if (permission.actions === '*' || permission.actions.includes(action)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+export const throwIfNotAllowed = (
+  teamMember: TeamMember,
+  resource: Resource,
+  action: Action
+) => {
+  if (isAllowed(teamMember.role, resource, action)) {
+    return true;
+  }
+
+  throw new ApiError(
+    403,
+    `You are not allowed to perform ${action} on ${resource}`
+  );
 };

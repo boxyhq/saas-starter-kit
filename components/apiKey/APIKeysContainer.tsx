@@ -2,29 +2,27 @@ import { Error, Loading } from '@/components/shared';
 import { TeamTab } from '@/components/team';
 import useTeam from 'hooks/useTeam';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button } from 'react-daisyui';
-import type { NextPageWithLayout } from 'types';
 
 import APIKeys from './APIKeys';
 import NewAPIKey from './NewAPIKey';
 
-const APIKeysContainer: NextPageWithLayout = () => {
-  const router = useRouter();
+const APIKeysContainer = () => {
   const { t } = useTranslation('common');
   const [createModalVisible, setCreateModalVisible] = useState(false);
+  const { isLoading, isError, team } = useTeam();
 
-  const { slug } = router.query as { slug: string };
-
-  const { isLoading, isError, team } = useTeam(slug);
-
-  if (isLoading || !team) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!team) {
+    return <Error message={t('team-not-found')} />;
   }
 
   return (

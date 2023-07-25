@@ -1,30 +1,35 @@
 import { Error, Loading } from '@/components/shared';
+import { AccessControl } from '@/components/shared/AccessControl';
 import { RemoveTeam, TeamSettings, TeamTab } from '@/components/team';
 import useTeam from 'hooks/useTeam';
 import type { GetServerSidePropsContext } from 'next';
+import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRouter } from 'next/router';
 import type { NextPageWithLayout } from 'types';
 
 const Settings: NextPageWithLayout = () => {
-  const router = useRouter();
-  const { slug } = router.query as { slug: string };
+  const { t } = useTranslation('common');
+  const { isLoading, isError, team } = useTeam();
 
-  const { isLoading, isError, team } = useTeam(slug);
-
-  if (isLoading || !team) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!team) {
+    return <Error message={t('team-not-found')} />;
   }
 
   return (
     <>
       <TeamTab activeTab="settings" team={team} />
       <TeamSettings team={team} />
-      <RemoveTeam team={team} />
+      <AccessControl resource="team" actions={['delete']}>
+        <RemoveTeam team={team} />
+      </AccessControl>
     </>
   );
 };

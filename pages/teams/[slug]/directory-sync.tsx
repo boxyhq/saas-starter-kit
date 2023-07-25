@@ -17,16 +17,20 @@ const DirectorySync: NextPageWithLayout = () => {
   const { slug } = router.query as { slug: string };
 
   const [visible, setVisible] = useState(false);
-  const { isLoading, isError, team } = useTeam(slug);
+  const { isLoading, isError, team } = useTeam();
   const { directories } = useDirectory(slug);
   const { t } = useTranslation('common');
 
-  if (isLoading || !team) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
-    return <Error />;
+    return <Error message={isError.message} />;
+  }
+
+  if (!team) {
+    return <Error message={t('team-not-found')} />;
   }
 
   const directory =

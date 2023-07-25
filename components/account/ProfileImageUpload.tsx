@@ -26,7 +26,7 @@ const ProfileImageUpload = ({ formik }) => {
       <label className="line-clamp-3 tracking-wide block mb-2 text-gray-700 text-sm">
         {t('add-profile-picture')}
       </label>
-      <div className="">
+      <div>
         <div className="relative w-36 h-36 mb-4">
           {formik.values.image ? (
             <Image
@@ -34,13 +34,13 @@ const ProfileImageUpload = ({ formik }) => {
               className="w-36 h-36 rounded-full absolute m-auto shadow"
               width={36}
               height={36}
-              alt="Profile picture"
+              alt={t('profile-picture')}
             />
           ) : (
             <Image
               src="/user-default-profile.jpeg"
               className="w-36 h-36 rounded-full absolute m-auto shadow"
-              alt="Profile picture"
+              alt={t('profile-picture')}
               width={36}
               height={36}
               style={{

@@ -11,7 +11,7 @@ const Error = (props: ErrorProps) => {
   const { t } = useTranslation('common');
 
   return (
-    <Alert status="error">
+    <Alert status="error" className="my-2">
       <p>{message || t('unknown-error')}</p>
     </Alert>
   );
