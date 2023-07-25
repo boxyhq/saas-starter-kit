@@ -37,7 +37,6 @@ const CreateConnection = (props: CreateConnectionProps) => {
       </Modal.Header>
       <Modal.Body>
         <div className="mt-2 flex flex-col space-y-2">
-          <p>{t('update-saml-config-message')}</p>
           <CreateSAMLConnection
             successCallback={() => {
               toast.success(t('saml-config-updated'));
