@@ -11,7 +11,7 @@ describe('Lib - commom', () => {
     });
 
     it('should create a random string with random length', () => {
-      const length = Math.round(Math.random() * 10);
+      const length = Math.round(Math.random() * 10) + 1;
       const result = createRandomString(length);
       expect(result).toBeTruthy();
       expect(result.length).toBe(length);
