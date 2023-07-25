@@ -48,13 +48,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     product: env.product,
   });
 
-  const response = {
-    connections,
-    issuer: env.saml.issuer,
-    acs: `${env.appUrl}${env.saml.path}`,
-  };
-
-  res.json({ data: response });
+  res.json({ data: connections });
 };
 
 // Create a SAML connection for the team.
