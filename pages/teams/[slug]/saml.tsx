@@ -3,6 +3,7 @@ import { Alert, Error, InputWithLabel, Loading } from '@/components/shared';
 import { Card } from '@/components/shared';
 import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
 import { TeamTab } from '@/components/team';
+import { ConnectionList } from '@boxyhq/react-ui/sso';
 import type { SAMLSSORecord } from '@boxyhq/saml-jackson';
 import useSAMLConfig from 'hooks/useSAMLConfig';
 import useTeam from 'hooks/useTeam';
@@ -71,8 +72,7 @@ const TeamSSO: NextPageWithLayout = () => {
     return <Error message={t('team-not-found')} />;
   }
 
-  const connectionsAdded =
-    samlConfig?.connections && samlConfig.connections.length > 0;
+  const connectionsAdded = samlConfig && samlConfig.length > 0;
 
   return (
     <>
@@ -91,15 +91,19 @@ const TeamSSO: NextPageWithLayout = () => {
               {t('add-connection')}
             </Button>
           </div>
+          <ConnectionList
+            classNames={{ tableContainer: 'mt-6' }}
+            getConnectionsUrl={`/api/teams/${slug}/saml`}
+            onIconClick={function () {
+              // throw new Error('Function not implemented.');
+            }}
+          />
 
-          <Card heading={t('team-connections')}>
+          {/* <Card heading={t('team-connections')}>
             <Card.Body>
               <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
                 <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
-                    {/* <th scope="col" className="px-6 py-3">
-                    {t('name')}
-                  </th> */}
                     <th scope="col" className="px-6 py-3">
                       {t('provider')}
                     </th>
@@ -133,14 +137,13 @@ const TeamSSO: NextPageWithLayout = () => {
                               Delete
                             </Button>
                           </td>
-                          {/* <td className="px-6 py-3">{connection.product}</td> */}
                         </tr>
                       );
                     })}
                 </tbody>
               </table>
             </Card.Body>
-          </Card>
+          </Card> */}
         </div>
       )}
       <Card heading={t('configure-singlesignon')}>

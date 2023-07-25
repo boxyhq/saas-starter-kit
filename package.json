@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage --env=jsdom"
   },
   "dependencies": {
-    "@boxyhq/react-ui": "3.1.0",
+    "@boxyhq/react-ui": "3.2.1",
     "@boxyhq/saml-jackson": "1.11.0",
     "@heroicons/react": "2.0.18",
     "@hookform/resolvers": "3.1.1",
