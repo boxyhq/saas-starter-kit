@@ -1,5 +1,5 @@
 import { CreateConnection } from '@/components/saml';
-import { Alert, Error, InputWithLabel, Loading } from '@/components/shared';
+import { Alert, Error, Loading } from '@/components/shared';
 import { Card } from '@/components/shared';
 import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
 import { TeamTab } from '@/components/team';
@@ -10,6 +10,7 @@ import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button } from 'react-daisyui';
@@ -92,58 +93,14 @@ const TeamSSO: NextPageWithLayout = () => {
             </Button>
           </div>
           <ConnectionList
-            classNames={{ tableContainer: 'mt-6' }}
-            getConnectionsUrl={`/api/teams/${slug}/saml`}
-            onIconClick={function () {
-              // throw new Error('Function not implemented.');
+            tableCaption={t('team-connections')}
+            classNames={{
+              tableContainer: 'mt-6 border',
             }}
+            getConnectionsUrl={`/api/teams/${slug}/saml`}
+            hideCols={['tenant', 'product']}
+            onActionClick={function () {}}
           />
-
-          {/* <Card heading={t('team-connections')}>
-            <Card.Body>
-              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-                <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      {t('provider')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      {t('actions')}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {connectionsAdded &&
-                    samlConfig?.connections.map((connection) => {
-                      return (
-                        <tr
-                          key={connection.clientID}
-                          className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                        >
-                          <td className="px-6 py-3">
-                            {connection.idpMetadata.friendlyProviderName ||
-                              connection.idpMetadata.provider}
-                          </td>
-                          <td className="px-6 py-3">
-                            <Button
-                              size="xs"
-                              color="error"
-                              variant="outline"
-                              onClick={() => {
-                                setSelectedSsoConnection(connection);
-                                setConfirmationDialogVisible(true);
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-            </Card.Body>
-          </Card> */}
         </div>
       )}
       <Card heading={t('configure-singlesignon')}>
@@ -165,17 +122,17 @@ const TeamSSO: NextPageWithLayout = () => {
             <>
               <Alert status="success">{t('saml-connection-established')}</Alert>
               <div className="flex flex-col justify-between space-y-2 mt-4">
-                <p>{t('identity-provider')}</p>
-                <InputWithLabel
-                  label={t('entity-id')}
-                  defaultValue={samlConfig.issuer}
-                  className="w-full text-sm"
-                />
-                <InputWithLabel
-                  label={t('acs-url')}
-                  defaultValue={samlConfig.acs}
-                  className="w-full text-sm"
-                />
+                <p>
+                  {t('identity-provider-setup')}{' '}
+                  <Link
+                    href="/.well-known/saml-configuration"
+                    className="font-medium text-indigo-600 hover:text-indigo-500"
+                    target="_blank"
+                  >
+                    .well-known/saml-configuration
+                  </Link>
+                  .
+                </p>
               </div>
             </>
           )}
