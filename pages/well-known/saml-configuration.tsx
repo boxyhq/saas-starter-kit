@@ -1,13 +1,14 @@
-import type { NextPage, InferGetStaticPropsType } from 'next';
+import type { InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { useTranslation } from 'next-i18next';
 import jackson from '@/lib/jackson';
 import { InputWithCopyButton } from '@boxyhq/react-ui/shared';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { toast } from 'react-hot-toast';
+import type { NextPageWithLayout } from 'types';
 
-const SPConfig: NextPage<
+const SPConfig: NextPageWithLayout<
   InferGetStaticPropsType<typeof getServerSideProps>
 > = ({ config }) => {
   const { t } = useTranslation('common');
@@ -44,6 +45,7 @@ const SPConfig: NextPage<
                 }
                 text={config.acsUrl}
                 label={t('sp_acs_url')}
+                classNames={{ input: 'w-full' }}
               />
             </div>
             <div className="form-control w-full">
@@ -53,6 +55,7 @@ const SPConfig: NextPage<
                 }
                 text={config.entityId}
                 label={t('sp_entity_id')}
+                classNames={{ input: 'w-full' }}
               />
             </div>
             <div className="form-control w-full">
@@ -102,6 +105,10 @@ const SPConfig: NextPage<
       </div>
     </>
   );
+};
+
+SPConfig.getLayout = function getLayout(page: ReactElement) {
+  return <>{page}</>;
 };
 
 export const getServerSideProps = async ({ locale }) => {
