@@ -36,10 +36,10 @@ const ConfirmationDialog = ({
         </div>
       </Modal.Body>
       <Modal.Actions>
-        <Button type="button" color="error" onClick={handleConfirm}>
+        <Button type="button" color="error" onClick={handleConfirm} size="md">
           {confirmText || t('delete')}
         </Button>
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <Button type="button" variant="outline" onClick={onCancel} size="md">
           {cancelText || t('cancel')}
         </Button>
       </Modal.Actions>

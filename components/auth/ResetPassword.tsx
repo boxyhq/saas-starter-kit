@@ -82,6 +82,7 @@ const ResetPassword = () => {
             loading={submitting}
             active={formik.dirty}
             fullWidth
+            size='md'
           >
             {t('reset-password')}
           </Button>

@@ -40,7 +40,11 @@ const PricingSection = () => {
                     </div>
                   </Card.Body>
                   <Card.Actions className="justify-center">
-                    <Button color="primary" className="w-full rounded-md">
+                    <Button
+                      color="primary"
+                      className="w-full rounded-md"
+                      size="md"
+                    >
                       {t('buy-now')}
                     </Button>
                   </Card.Actions>

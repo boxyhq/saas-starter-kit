@@ -101,6 +101,7 @@ const Login: NextPageWithLayout<
               loading={formik.isSubmitting}
               active={formik.dirty}
               fullWidth
+              size='md'
             >
               {t('sign-in')}
             </Button>
