@@ -11,6 +11,13 @@ enum Role {
   ADMIN
   OWNER
   MEMBER
+  SYSTEM_ADMIN, // Full system-wide administrative access
+  BRANCH_MANAGER, // Management of a specific bank branch
+  TELLER, // Limited to processing transactions and customer interactions
+  CUSTOMER_SERVICE_REP, // Handles customer inquiries and issues
+  LOAN_OFFICER, // Responsible for managing and issuing loans
+  AUDITOR, // Read-only access for auditing purposes
+  IT_SUPPORT // For technical issues and maintenance
 }
 
 model Account {
