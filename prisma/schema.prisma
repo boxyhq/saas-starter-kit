@@ -147,9 +147,8 @@ model Entity {
   name    String
   regNumber String? // this could be null for a person
   DOB      DateTime? // this could be null for a business
-  nationality String? // this could be null for a business
-  country   String
   userId   Int
+  addresses Address[]
   user     User    @relation(fields: [userId], references: [id])
   politicallyExposedPersons PoliticallyExposedPerson[]
   sanctionedEntities SanctionedEntity[]
@@ -193,4 +192,16 @@ model Verification {
   verificationDate DateTime
   result   String
   comments String?
+}
+
+model Address {
+  id       Int      @id @default(autoincrement())
+  line1    String
+  line2    String?
+  city     String
+  state    String
+  zip      String
+  country  String
+  entityId Int
+  entity   Entity  @relation(fields: [entityId], references: [id])
 }
