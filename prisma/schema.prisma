@@ -11,13 +11,14 @@ enum Role {
   ADMIN
   OWNER
   MEMBER
-  SYSTEM_ADMIN, // Full system-wide administrative access
-  BRANCH_MANAGER, // Management of a specific bank branch
-  TELLER, // Limited to processing transactions and customer interactions
-  CUSTOMER_SERVICE_REP, // Handles customer inquiries and issues
-  LOAN_OFFICER, // Responsible for managing and issuing loans
+  COMPLIANCE_OFFICER
   AUDITOR, // Read-only access for auditing purposes
   IT_SUPPORT // For technical issues and maintenance
+}
+
+enum EntityType {
+  PERSON
+  BUSINESS
 }
 
 model Account {
@@ -137,4 +138,58 @@ model ApiKey {
   lastUsedAt DateTime?
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+model Entity {
+  id      Int      @id @default(autoincrement())
+  type    EntityType
+  name    String
+  regNumber String? // this could be null for a person
+  DOB      DateTime? // this could be null for a business
+  nationality String? // this could be null for a business
+  country   String
+  userId   Int
+  user     User    @relation(fields: [userId], references: [id])
+  politicallyExposedPersons PoliticallyExposedPerson[]
+  sanctionedEntities SanctionedEntity[]
+  verifications Verification[]
+}
+
+model SanctionsList {
+  id      Int      @id @default(autoincrement())
+  name    String
+  description String
+  startDate DateTime
+  endDate   DateTime
+  country   String
+  sanctionedEntities SanctionedEntity[]
+}
+
+model PoliticallyExposedPerson {
+  id      Int      @id @default(autoincrement())
+  position String
+  startDate DateTime
+  endDate DateTime
+  country  String
+  entityId Int
+  entity   Entity  @relation(fields: [entityId], references: [id])
+}
+
+model SanctionedEntity {
+  id      Int      @id @default(autoincrement())
+  entityId Int
+  entity   Entity  @relation(fields: [entityId], references: [id])
+  sanctionId Int
+  sanction SanctionsList @relation(fields: [sanctionId], references: [id])
+}
+
+model Verification {
+  id      Int      @id @default(autoincrement())
+  entityId Int
+  entity   Entity  @relation(fields: [entityId], references: [id])
+  userId   Int
+  user     User    @relation(fields: [userId], references: [id])
+  verificationDate DateTime
+  result   String
+  comments String?
 }
