@@ -7,13 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// enum Role {
+//   ADMIN
+//   OWNER
+//   MEMBER
+//   COMPLIANCE_OFFICER
+//   AUDITOR // Read-only access for auditing purposes
+//   IT_SUPPORT // For technical issues and maintenance
+// }
+
 enum Role {
   ADMIN
   OWNER
   MEMBER
-  COMPLIANCE_OFFICER
-  AUDITOR // Read-only access for auditing purposes
-  IT_SUPPORT // For technical issues and maintenance
 }
 
 enum EntityType {
