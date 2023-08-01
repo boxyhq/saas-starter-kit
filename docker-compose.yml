@@ -2,10 +2,78 @@ version: '3'
 services:
   db:
     image: postgres
-    restart: always
+    restart: unless-stopped
     environment:
-      POSTGRES_PASSWORD: admin
-      POSTGRES_USER: admin
-      POSTGRES_DB: saas-starter-kit
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ${DBUSER}
+      POSTGRES_PASSWORD: ${DBPASS}
+    volumes:
+      - type: volume
+        source: pgdb-data
+        target: '/var/lib/postgresql/data'
     ports:
-      - 5432:5432
+      - '127.0.0.1:${DBPORT}:5432'
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_LISTEN_ADDRESS: 0.0.0.0
+      PGADMIN_LISTEN_PORT: 5050
+    volumes:
+      - type: volume
+        source: pgadmin-data
+        target: /root/.pgadmin
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:${PGADMIN_PORT}:5050'
+
+  redis:
+    image: 'redis:6'
+    user: '999:999'
+    # command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - '127.0.0.1:${REDIS_PORT}:6379'
+    volumes:
+      - redis-data:/data
+      - redis-conf:/usr/local/etc/redis/redis.conf
+
+  redis-ui:
+    image: patrikx3/p3x-redis-ui:latest
+    depends_on:
+      - redis
+    ports:
+      - 127.0.0.1:${REDIS_UI_PORT}:7843
+    volumes:
+      - p3x-redis-ui-settings:/settings
+
+  # Use minio to mock s3
+  minio:
+    image: 'minio/minio:latest'
+    ports:
+      - '9000:9000'
+      - '9090:9090'
+    environment:
+      MINIO_ROOT_USER: 'root'
+      MINIO_ROOT_PASSWORD: 'password'
+    volumes:
+      - 'minio:/data/minio'
+    command: minio server /data/minio --console-address ":9090"
+
+  maildev:
+    # Can be access in browser at localhost:1080.
+    # Signin mail can be show at this adress.
+    # Server is accessible at localhost:1025, using app.env default config.
+    image: maildev/maildev
+    restart: always
+    ports:
+      - '1080:1080'
+      - '${SMTP_PORT}:1025'
+
+volumes:
+  pgdb-data:
+  pgadmin-data:
+  redis-data:
+  redis-conf:
+  p3x-redis-ui-settings:
+  minio:
