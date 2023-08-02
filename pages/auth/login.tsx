@@ -21,12 +21,9 @@ import toast from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
 
-type LoginProps = InferGetServerSidePropsType<typeof getServerSideProps>;
-
-const Login: NextPageWithLayout<LoginProps> = ({
-  csrfToken,
-  redirectAfterSignIn,
-}) => {
+const Login: NextPageWithLayout<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ csrfToken, redirectAfterSignIn }) => {
   const router = useRouter();
   const { status } = useSession();
   const { t } = useTranslation('common');
@@ -38,17 +35,29 @@ const Login: NextPageWithLayout<LoginProps> = ({
     status: null,
   });
 
-  const { error, success } = router.query as { error: string; success: string };
+  // const { error, success } = router.query as { error: string; success: string };
 
-  useEffect(() => {
-    if (error) {
-      setMessage({ text: error, status: 'error' });
-    }
+  // useEffect(() => {
+  //   if (error) {
+  //     setMessage({ text: error, status: 'error' });
+  //   }
 
-    if (success) {
-      setMessage({ text: success, status: 'success' });
-    }
-  }, [router, router.query]);
+  //   if (success) {
+  //     setMessage({ text: success, status: 'success' });
+  //   }
+  // }, [router, router.query]);
+
+  // const { error } = router.query;
+
+  // useEffect(() => {
+  //   if (error) {
+  //     toast.error(t(error));
+  //   }
+  // }, [router.query]);
+
+  if (status === 'authenticated') {
+    router.push('/');
+  }
 
   if (status === 'authenticated') {
     router.push(redirectAfterSignIn);
@@ -127,6 +136,7 @@ const Login: NextPageWithLayout<LoginProps> = ({
               loading={formik.isSubmitting}
               active={formik.dirty}
               fullWidth
+              size='md'
             >
               {t('sign-in')}
             </Button>

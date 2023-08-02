@@ -56,6 +56,9 @@ const env = {
 
   // Users will need to confirm their email before accessing the app feature
   confirmEmail: process.env.CONFIRM_EMAIL === 'true',
+
+  disableNonBusinessEmailSignup:
+    process.env.DISABLE_NON_BUSINESS_EMAIL_SIGNUP === 'true' ? true : false,
 };
 
 export default env;

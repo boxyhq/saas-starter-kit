@@ -31,13 +31,15 @@ const ConfirmationDialog = ({
     <Modal open={visible}>
       <Modal.Header className="font-semibold">{title}</Modal.Header>
       <Modal.Body>
-        <div className="mt-2 flex flex-col space-y-2">{children}</div>
+        <div className="mt-2 flex flex-col space-y-2 text-sm text-gray-600 leading-6">
+          {children}
+        </div>
       </Modal.Body>
       <Modal.Actions>
-        <Button type="button" color="error" onClick={handleConfirm}>
+        <Button type="button" color="error" onClick={handleConfirm} size="md">
           {confirmText || t('delete')}
         </Button>
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <Button type="button" variant="outline" onClick={onCancel} size="md">
           {cancelText || t('cancel')}
         </Button>
       </Modal.Actions>

@@ -98,6 +98,7 @@ const Join = () => {
           loading={formik.isSubmitting}
           active={formik.dirty}
           fullWidth
+          size='md'
         >
           {t('create-account')}
         </Button>
