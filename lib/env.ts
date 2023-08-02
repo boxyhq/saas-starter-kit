@@ -53,6 +53,11 @@ const env = {
   },
 
   groupPrefix: process.env.GROUP_PREFIX,
+
+  // Mixpanel configuration
+  mixpanel: {
+    token: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
+  },
 };
 
 export default env;
