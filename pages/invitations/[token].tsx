@@ -74,6 +74,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                 onClick={() => {
                   router.push(`/auth/join`);
                 }}
+                size="md"
               >
                 {t('create-a-new-account')}
               </Button>
@@ -83,12 +84,18 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                 onClick={() => {
                   router.push(`/auth/login`);
                 }}
+                size="md"
               >
                 {t('login')}
               </Button>
             </>
           ) : (
-            <Button onClick={acceptInvitation} fullWidth color="primary">
+            <Button
+              onClick={acceptInvitation}
+              fullWidth
+              color="primary"
+              size="md"
+            >
               {t('accept-invitation')}
             </Button>
           )}

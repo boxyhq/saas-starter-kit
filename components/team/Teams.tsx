@@ -80,7 +80,7 @@ const Teams = () => {
                       <td className="px-6 py-3">
                         <Button
                           variant="outline"
-                          size="sm"
+                          size="xs"
                           color="error"
                           onClick={() => {
                             setTeam(team);

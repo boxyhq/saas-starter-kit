@@ -34,7 +34,7 @@ const WebhookList: NextPageWithLayout = () => {
           <Button
             variant="outline"
             color="primary"
-            size="sm"
+            size="md"
             onClick={() => {
               setVisible(!visible);
             }}
