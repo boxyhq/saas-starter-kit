@@ -13,8 +13,12 @@ const Dashboard: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
   const { data: session } = useSession();
 
-  if (teams && teams.length > 0) {
-    router.push(`/teams/${teams[0].slug}/settings`);
+  if (teams) {
+    if (teams.length > 0) {
+      router.push(`/teams/${teams[0].slug}/settings`);
+    } else {
+      router.push('teams?newTeam=true');
+    }
   }
 
   return (

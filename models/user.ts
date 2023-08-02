@@ -15,7 +15,7 @@ export const createUser = async (param: {
     data: {
       name,
       email,
-      password: password ? password : '',
+      password: password ? password : null,
       emailVerified: new Date(),
     },
   });

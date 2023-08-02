@@ -53,6 +53,9 @@ const env = {
   },
 
   groupPrefix: process.env.GROUP_PREFIX,
+
+  disableNonBusinessEmailSignup:
+    process.env.DISABLE_NON_BUSINESS_EMAIL_SIGNUP === 'true' ? true : false,
 };
 
 export default env;
