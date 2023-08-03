@@ -131,3 +131,29 @@ model ApiKey {
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }
+
+model jackson_store {
+  key       String   @unique
+  value     String
+  iv        String
+  tag       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  jackson_index jackson_index[]
+}
+
+model jackson_index {
+  id       Int    @id @default(autoincrement())
+  key      String
+  storeKey String
+
+  store jackson_store @relation(fields: [storeKey], references: [key], onDelete: Cascade)
+
+  @@index([key])
+}
+
+model jackson_ttl {
+  key       String   @id
+  expiresAt DateTime
+}
