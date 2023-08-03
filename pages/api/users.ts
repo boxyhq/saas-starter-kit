@@ -36,7 +36,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     data: req.body,
   });
 
-  recordMetric('user_updated');
+  recordMetric('users.updated');
 
   res.status(200).json({ data: user });
 };

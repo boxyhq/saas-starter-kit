@@ -5,6 +5,7 @@ import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { EndpointIn } from 'svix';
+import { recordMetric } from '@/lib/metrics';
 
 export default async function handler(
   req: NextApiRequest,
@@ -51,6 +52,8 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const webhook = await findWebhook(app.id, endpointId as string);
 
+  recordMetric('webhooks.fetched');
+
   res.status(200).json({ data: webhook });
 };
 
@@ -89,6 +92,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     user: teamMember.user,
     team: teamMember.team,
   });
+
+  recordMetric('webhooks.updated');
 
   res.status(200).json({ data: webhook });
 };

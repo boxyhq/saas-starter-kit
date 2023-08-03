@@ -2,6 +2,7 @@ import { createApiKey, fetchApiKeys } from 'models/apiKey';
 import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { recordMetric } from '@/lib/metrics';
 
 export default async function handler(
   req: NextApiRequest,
@@ -38,6 +39,8 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const apiKeys = await fetchApiKeys(teamMember.teamId);
 
+  recordMetric('apiKeys.fetched');
+
   res.json({ data: apiKeys });
 };
 
@@ -52,6 +55,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     name,
     teamId: teamMember.teamId,
   });
+
+  recordMetric('apiKeys.created');
 
   res.status(201).json({ data: { apiKey } });
 };

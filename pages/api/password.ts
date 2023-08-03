@@ -51,7 +51,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     data: { password: await hashPassword(newPassword) },
   });
 
-  recordMetric('user_password_updated');
+  recordMetric('users.password.updated');
 
   res.status(200).json({ data: user });
 };

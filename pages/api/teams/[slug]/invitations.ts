@@ -13,6 +13,7 @@ import {
 import { addTeamMember, throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { recordMetric } from '@/lib/metrics';
 
 export default async function handler(
   req: NextApiRequest,
@@ -84,6 +85,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
+  recordMetric('invitations.created');
+
   res.status(200).json({ data: invitation });
 };
 
@@ -93,6 +96,8 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   throwIfNotAllowed(teamMember, 'team_invitation', 'read');
 
   const invitations = await getInvitations(teamMember.teamId);
+
+  recordMetric('invitations.fetched');
 
   res.status(200).json({ data: invitations });
 };
@@ -127,6 +132,8 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await sendEvent(teamMember.teamId, 'invitation.removed', invitation);
 
+  recordMetric('invitations.deleted');
+
   res.status(200).json({ data: {} });
 };
 
@@ -148,6 +155,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   await sendEvent(invitation.team.id, 'member.created', teamMember);
 
   await deleteInvitation({ token: inviteToken });
+
+  recordMetric('invitations.accepted');
 
   res.status(200).json({ data: {} });
 };

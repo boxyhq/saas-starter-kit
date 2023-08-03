@@ -1,5 +1,6 @@
 import { getInvitation } from 'models/invitation';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { recordMetric } from '@/lib/metrics';
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,6 +31,8 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.query as { token: string };
 
   const invitation = await getInvitation({ token });
+
+  recordMetric('invitations.fetched');
 
   res.status(200).json({ data: invitation });
 };
