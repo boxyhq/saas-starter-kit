@@ -165,6 +165,13 @@
   "team-not-found": "Team not found",
   "delete-sso-connection": "Delete SSO Connection",
   "delete-sso-connection-confirmation": "Are you sure you want to delete this SSO Connection? This action can not be undone.",
-  "allow-only-work-email": "Please use your work email to create an account.",
-  "no-webhook-title": "You haven't created any webhook yet"
+  "no-webhook-title": "You haven't created any webhook yet",
+  "token-not-found": "The verification token is invalid or has already been used.",
+  "token-expired": "The verification token has expired.",
+  "email-verified": "Your email has been successfully verified. Thank you for confirming your account.",
+  "invalid-credentials": "Invalid login credentials",
+  "no-credentials": "No credentials found.",
+  "confirm-email": "Confirm your email address",
+  "confirm-email-description": "Please click the verification link sent to your email to activate your account.",
+  "allow-only-work-email": "Please use your work email to create an account."
 }

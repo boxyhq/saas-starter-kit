@@ -14,13 +14,11 @@ export const createRandomString = (length = 6) => {
   return string;
 };
 
-/**
- * Generates a password reset token that is safe to use in URLs.
- */
-export function generatePasswordResetToken(length = 64): string {
+// Create token
+export function generateToken(length = 64) {
   const tokenBytes = lib.WordArray.random(length);
-  const tokenBase64 = enc.Base64.stringify(tokenBytes);
-  return tokenBase64;
+
+  return enc.Base64.stringify(tokenBytes);
 }
 
 export const slugify = (text: string) => {
