@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from 'next/dist/server/api-utils';
+import { recordMetric } from '@/lib/metrics';
 
 export default async function handler(
   req: NextApiRequest,
@@ -49,6 +50,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     where: { id: session?.user.id },
     data: { password: await hashPassword(newPassword) },
   });
+
+  recordMetric('user_password_updated');
 
   res.status(200).json({ data: user });
 };

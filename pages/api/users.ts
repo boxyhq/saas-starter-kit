@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { recordMetric } from '@/lib/metrics';
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,6 +35,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     where: { id: session?.user.id },
     data: req.body,
   });
+
+  recordMetric('user_updated');
 
   res.status(200).json({ data: user });
 };
