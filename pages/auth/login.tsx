@@ -35,25 +35,17 @@ const Login: NextPageWithLayout<
     status: null,
   });
 
-  // const { error, success } = router.query as { error: string; success: string };
+  const { error, success } = router.query as { error: string; success: string };
 
-  // useEffect(() => {
-  //   if (error) {
-  //     setMessage({ text: error, status: 'error' });
-  //   }
+  useEffect(() => {
+    if (error) {
+      setMessage({ text: error, status: 'error' });
+    }
 
-  //   if (success) {
-  //     setMessage({ text: success, status: 'success' });
-  //   }
-  // }, [router, router.query]);
-
-  // const { error } = router.query;
-
-  // useEffect(() => {
-  //   if (error) {
-  //     toast.error(t(error));
-  //   }
-  // }, [router.query]);
+    if (success) {
+      setMessage({ text: success, status: 'success' });
+    }
+  }, [router, router.query]);
 
   if (status === 'authenticated') {
     router.push('/');
@@ -136,7 +128,7 @@ const Login: NextPageWithLayout<
               loading={formik.isSubmitting}
               active={formik.dirty}
               fullWidth
-              size='md'
+              size="md"
             >
               {t('sign-in')}
             </Button>
