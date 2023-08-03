@@ -54,6 +54,11 @@ const env = {
 
   groupPrefix: process.env.GROUP_PREFIX,
 
+  // Mixpanel configuration
+  mixpanel: {
+    token: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
+  },
+
   disableNonBusinessEmailSignup:
     process.env.DISABLE_NON_BUSINESS_EMAIL_SIGNUP === 'true' ? true : false,
 };
