@@ -1,6 +1,7 @@
 import { hashPassword } from '@/lib/auth';
-import { slugify } from '@/lib/common';
-import { sendWelcomeEmail } from '@/lib/email/sendWelcomeEmail';
+import { generateToken, slugify } from '@/lib/common';
+import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
+import { prisma } from '@/lib/prisma';
 import { isBusinessEmail } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
@@ -75,9 +76,25 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       name: team,
       slug,
     });
-
-    await sendWelcomeEmail(name, email, team);
   }
 
-  res.status(201).json({ data: user });
+  // Send account verification email
+  if (env.confirmEmail) {
+    const verificationToken = await prisma.verificationToken.create({
+      data: {
+        identifier: email,
+        token: generateToken(),
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 24 hours
+      },
+    });
+
+    await sendVerificationEmail({ user, verificationToken });
+  }
+
+  res.status(201).json({
+    data: {
+      user,
+      confirmEmail: env.confirmEmail,
+    },
+  });
 };
