@@ -3,11 +3,12 @@ import { initializeMetrics, incrementCounter } from '@boxyhq/metrics';
 
 initializeMetrics({ name: packageInfo.name, version: packageInfo.version });
 
-const prefix = `${packageInfo.name}_`;
+const prefix = `${packageInfo.name}.`;
+const meter = packageInfo.name;
 
 export const recordMetric = (metric: string) => {
   incrementCounter({
-    meter: packageInfo.name,
+    meter,
     name: `${prefix}${metric}`,
   });
 };
