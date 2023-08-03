@@ -34,7 +34,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <title>{app.name}</title>
       </Head>
       <SessionProvider session={session}>
-        <Toaster />
+        <Toaster toastOptions={{ duration: 4000 }} />
         {getLayout(<Component {...props} />)}
       </SessionProvider>
     </>

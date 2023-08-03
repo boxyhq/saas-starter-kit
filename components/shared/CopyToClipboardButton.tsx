@@ -24,7 +24,7 @@ const CopyToClipboardButton = ({ value }: CopyToClipboardProps) => {
       data-tip={t('copy-to-clipboard')}
       onClick={handleCopy}
     >
-      <ClipboardDocumentIcon className="w-6 h-6" />
+      <ClipboardDocumentIcon className="w-5 h-5 text-secondary" />
     </Button>
   );
 };

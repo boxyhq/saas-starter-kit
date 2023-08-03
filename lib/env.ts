@@ -58,6 +58,9 @@ const env = {
   mixpanel: {
     token: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
   },
+
+  disableNonBusinessEmailSignup:
+    process.env.DISABLE_NON_BUSINESS_EMAIL_SIGNUP === 'true' ? true : false,
 };
 
 export default env;

@@ -103,6 +103,7 @@ const Members = ({ team }: { team: Team }) => {
                         onClick={() => {
                           removeTeamMember(member);
                         }}
+                        size='md'
                       >
                         {t('remove')}
                       </Button>
