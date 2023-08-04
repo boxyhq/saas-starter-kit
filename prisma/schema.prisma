@@ -133,7 +133,7 @@ model ApiKey {
 }
 
 model jackson_store {
-  key       String   @unique
+  key       String   @id
   value     String
   iv        String
   tag       String
