@@ -7,15 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// enum Role {
-//   ADMIN
-//   OWNER
-//   MEMBER
-//   COMPLIANCE_OFFICER
-//   AUDITOR // Read-only access for auditing purposes
-//   IT_SUPPORT // For technical issues and maintenance
-// }
-
 enum Role {
   ADMIN
   OWNER
@@ -40,7 +31,7 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -62,20 +53,19 @@ model VerificationToken {
 }
 
 model User {
-  id            String    @id @default(uuid())
+  id            String       @id @default(uuid())
   name          String
-  email         String    @unique
+  email         String       @unique
   emailVerified DateTime?
   password      String?
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now())
-  entities          Entity[]
-  verifications     Verification[]
-  teamMembers TeamMember[]
-  accounts    Account[]
-  sessions    Session[]
-  invitations Invitation[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now())
+  addresses     Address[]
+  teamMembers   TeamMember[]
+  accounts      Account[]
+  sessions      Session[]
+  invitations   Invitation[]
 }
 
 model Team {
@@ -146,67 +136,13 @@ model ApiKey {
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }
 
-model Entity {
-  id      Int      @id @default(autoincrement())
-  type    EntityType
-  name    String
-  regNumber String? // this could be null for a person
-  DOB      DateTime? // this could be null for a business
-  userId   String
-  addresses Address[]
-  user     User    @relation(fields: [userId], references: [id])
-  politicallyExposedPersons PoliticallyExposedPerson[]
-  sanctionedEntities SanctionedEntity[]
-  verifications Verification[]
-}
-
-model SanctionsList {
-  id      Int      @id @default(autoincrement())
-  name    String
-  description String
-  startDate DateTime
-  endDate   DateTime
-  country   String
-  sanctionedEntities SanctionedEntity[]
-}
-
-model PoliticallyExposedPerson {
-  id      Int      @id @default(autoincrement())
-  position String
-  startDate DateTime
-  endDate DateTime
-  country  String
-  entityId Int
-  entity   Entity  @relation(fields: [entityId], references: [id])
-}
-
-model SanctionedEntity {
-  id      Int      @id @default(autoincrement())
-  entityId Int
-  entity   Entity  @relation(fields: [entityId], references: [id])
-  sanctionId Int
-  sanction SanctionsList @relation(fields: [sanctionId], references: [id])
-}
-
-model Verification {
-  id      Int      @id @default(autoincrement())
-  entityId Int
-  entity   Entity  @relation(fields: [entityId], references: [id])
-  userId   String
-  user     User    @relation(fields: [userId], references: [id])
-  verificationDate DateTime
-  result   String
-  comments String?
-}
-
 model Address {
-  id       Int      @id @default(autoincrement())
-  line1    String
-  line2    String?
-  city     String
-  state    String
-  zip      String
-  country  String
-  entityId Int
-  entity   Entity  @relation(fields: [entityId], references: [id])
+  id      Int    @id @default(autoincrement())
+  street  String
+  city    String
+  state   String
+  zip     String
+  country String
+  userId  String
+  entity  User   @relation(fields: [userId], references: [id])
 }
