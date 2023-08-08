@@ -34,7 +34,7 @@ const TeamMembers: NextPageWithLayout = () => {
           <Button
             color="primary"
             variant="outline"
-            size="sm"
+            size="md"
             onClick={() => {
               setVisible(!visible);
             }}

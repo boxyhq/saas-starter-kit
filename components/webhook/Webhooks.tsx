@@ -77,6 +77,7 @@ const Webhooks = ({ team }: { team: Team }) => {
                       <td className="px-6 py-3">
                         <div className="flex space-x-2">
                           <Button
+                            size="xs"
                             variant="outline"
                             onClick={() => {
                               setEndpoint(webhook);
@@ -86,6 +87,8 @@ const Webhooks = ({ team }: { team: Team }) => {
                             {t('edit')}
                           </Button>
                           <Button
+                            size="xs"
+                            color="error"
                             variant="outline"
                             onClick={() => {
                               deleteWebhook(webhook);

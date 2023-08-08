@@ -75,6 +75,7 @@ const SSO: NextPageWithLayout = () => {
               loading={formik.isSubmitting}
               active={formik.dirty}
               fullWidth
+              size='md'
             >
               {t('continue-with-saml-sso')}
             </Button>

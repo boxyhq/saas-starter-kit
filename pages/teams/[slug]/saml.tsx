@@ -85,7 +85,7 @@ const TeamSSO: NextPageWithLayout = () => {
               onClick={() => {
                 setVisible(!visible);
               }}
-              size="sm"
+              size="md"
               variant="outline"
             >
               {t('add-connection')}
@@ -122,7 +122,7 @@ const TeamSSO: NextPageWithLayout = () => {
                           </td>
                           <td className="px-6 py-3">
                             <Button
-                              size="xs"
+                              size="md"
                               color="error"
                               variant="outline"
                               onClick={() => {
@@ -151,7 +151,7 @@ const TeamSSO: NextPageWithLayout = () => {
               <Button
                 onClick={() => setVisible(!visible)}
                 variant="outline"
-                size="sm"
+                size="md"
                 color="primary"
               >
                 {t('configure')}

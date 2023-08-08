@@ -41,7 +41,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     where: { id: session?.user.id },
   });
 
-  if (!(await verifyPassword(currentPassword, user.password))) {
+  if (!(await verifyPassword(currentPassword, user.password as string))) {
     throw new ApiError(400, 'Your current password is incorrect');
   }
 

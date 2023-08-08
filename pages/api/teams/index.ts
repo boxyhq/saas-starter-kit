@@ -1,8 +1,8 @@
 import { slugify } from '@/lib/common';
+import { ApiError } from '@/lib/errors';
 import { getSession } from '@/lib/session';
 import { createTeam, getTeams, isTeamExists } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ApiError } from 'next/dist/server/api-utils';
 
 export default async function handler(
   req: NextApiRequest,
@@ -48,7 +48,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
   const slug = slugify(name);
 
-  if (await isTeamExists({ slug })) {
+  if (await isTeamExists([{ slug }])) {
     throw new ApiError(400, 'A team with the name already exists.');
   }
 
