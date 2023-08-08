@@ -48,7 +48,7 @@ const DirectorySync: NextPageWithLayout = () => {
                 onClick={() => setVisible(!visible)}
                 variant="outline"
                 color="primary"
-                size="sm"
+                size="md"
               >
                 {t('configure')}
               </Button>
@@ -58,6 +58,7 @@ const DirectorySync: NextPageWithLayout = () => {
                 variant="outline"
                 color="error"
                 disabled
+                size="md"
               >
                 {t('remove')}
               </Button>

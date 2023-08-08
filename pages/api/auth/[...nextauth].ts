@@ -1,4 +1,5 @@
 import { verifyPassword } from '@/lib/auth';
+import { isBusinessEmail } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { prisma } from '@/lib/prisma';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
@@ -26,22 +27,32 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials) {
-          throw new Error('No credentials found.');
+          throw new Error('no-credentials');
         }
 
-        const email = credentials?.email as string;
-        const password = credentials?.password as string;
+        const { email, password } = credentials;
+
+        if (!email || !password) {
+          return null;
+        }
 
         const user = await getUser({ email });
 
         if (!user) {
-          return null;
+          throw new Error('invalid-credentials');
         }
 
-        const hasValidPassword = await verifyPassword(password, user.password);
+        if (env.confirmEmail && !user.emailVerified) {
+          throw new Error('confirm-your-email');
+        }
+
+        const hasValidPassword = await verifyPassword(
+          password,
+          user?.password as string
+        );
 
         if (!hasValidPassword) {
-          return null;
+          throw new Error('invalid-credentials');
         }
 
         return {
@@ -78,11 +89,13 @@ export const authOptions: NextAuthOptions = {
     GitHubProvider({
       clientId: env.github.clientId,
       clientSecret: env.github.clientSecret,
+      allowDangerousEmailAccountLinking: true,
     }),
 
     GoogleProvider({
       clientId: env.google.clientId,
       clientSecret: env.google.clientSecret,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   pages: {
@@ -95,39 +108,27 @@ export const authOptions: NextAuthOptions = {
   secret: env.nextAuth.secret,
   callbacks: {
     async signIn({ user, account, profile }) {
-      if (
-        account?.provider === 'credentials' ||
-        account?.provider === 'github' ||
-        account?.provider === 'google'
-      ) {
+      if (!user || !user.email || !account) {
+        return false;
+      }
+
+      if (env.disableNonBusinessEmailSignup && !isBusinessEmail(user.email)) {
+        return '/auth/login?error=allow-only-work-email';
+      }
+
+      // Login via email and password
+      if (account?.provider === 'credentials') {
         return true;
       }
 
-      if (!user.email) {
-        return false;
-      }
+      const existingUser = await getUser({ email: user.email });
 
       // Login via email (Magic Link)
       if (account?.provider === 'email') {
-        const userFound = await getUser({ email: user.email });
-
-        if (!userFound) {
-          return false;
-        }
-
-        return true;
+        return existingUser ? true : false;
       }
 
-      if (!account || !profile) {
-        return false;
-      }
-
-      // TODO: Only SAML login reaches here for now
-
-      // TODO: We should check if email is verified here before linking account
-      const existingUser = await getUser({ email: user.email });
-
-      // Create user account if it doesn't exist
+      // First time users
       if (!existingUser) {
         const newUser = await createUser({
           name: `${user.name}`,
@@ -136,15 +137,18 @@ export const authOptions: NextAuthOptions = {
 
         await linkAccount(newUser, account);
 
-        await linkToTeam(profile, newUser.id);
-      } else {
-        const linkedAccount = await getAccount({ userId: existingUser.id });
-
-        if (!linkedAccount) {
-          await linkAccount(existingUser, account);
+        if (account.provider === 'boxyhq-saml') {
+          await linkToTeam(profile, newUser.id);
         }
 
-        await linkToTeam(profile, existingUser.id);
+        return true;
+      }
+
+      // Existing users reach here
+      const linkedAccount = await getAccount({ userId: existingUser.id });
+
+      if (!linkedAccount) {
+        await linkAccount(existingUser, account);
       }
 
       return true;
