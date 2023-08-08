@@ -68,7 +68,7 @@
     "@types/nodemailer": "6.4.9",
     "@types/react": "18.2.18",
     "@types/uuid": "9.0.2",
-    "@typescript-eslint/eslint-plugin": "6.2.1",
+    "@typescript-eslint/eslint-plugin": "6.3.0",
     "@typescript-eslint/parser": "6.2.1",
     "daisyui": "2.52.0",
     "eslint": "8.46.0",
