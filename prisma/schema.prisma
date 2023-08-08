@@ -7,13 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// enum Role {
+//   ADMIN
+//   OWNER
+//   MEMBER
+//   COMPLIANCE_OFFICER
+//   AUDITOR // Read-only access for auditing purposes
+//   IT_SUPPORT // For technical issues and maintenance
+// }
+
 enum Role {
   ADMIN
   OWNER
   MEMBER
-  COMPLIANCE_OFFICER
-  AUDITOR, // Read-only access for auditing purposes
-  IT_SUPPORT // For technical issues and maintenance
 }
 
 enum EntityType {
@@ -34,8 +40,6 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  entities          Entity[]
-  verifications     Verification[]
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
@@ -66,7 +70,8 @@ model User {
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now())
-
+  entities          Entity[]
+  verifications     Verification[]
   teamMembers TeamMember[]
   accounts    Account[]
   sessions    Session[]
@@ -147,7 +152,7 @@ model Entity {
   name    String
   regNumber String? // this could be null for a person
   DOB      DateTime? // this could be null for a business
-  userId   Int
+  userId   String
   addresses Address[]
   user     User    @relation(fields: [userId], references: [id])
   politicallyExposedPersons PoliticallyExposedPerson[]
@@ -187,7 +192,7 @@ model Verification {
   id      Int      @id @default(autoincrement())
   entityId Int
   entity   Entity  @relation(fields: [entityId], references: [id])
-  userId   Int
+  userId   String
   user     User    @relation(fields: [userId], references: [id])
   verificationDate DateTime
   result   String
