@@ -19,11 +19,14 @@ export default async function handler(
       case 'POST':
         await handlePOST(req, res);
         break;
+      case 'PATCH':
+        await handlePATCH(req, res);
+        break;
       case 'DELETE':
         await handleDELETE(req, res);
         break;
       default:
-        res.setHeader('Allow', 'GET, POST, DELETE');
+        res.setHeader('Allow', 'GET, POST, PATCH, DELETE');
         res.status(405).json({
           error: { message: `Method ${method} Not Allowed` },
         });
@@ -31,7 +34,7 @@ export default async function handler(
   } catch (err: any) {
     const message = err.message || 'Something went wrong';
     const status = err.status || 500;
-
+    console.error(err);
     res.status(status).json({ error: { message } });
   }
 }
@@ -77,6 +80,35 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   res.status(201).json({ data: connection });
+};
+
+const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember, 'team_sso', 'create');
+
+  const { metadataUrl, encodedRawMetadata, clientID, clientSecret } = req.body;
+
+  const { apiController } = await jackson();
+
+  const connection = await apiController.updateSAMLConnection({
+    clientID,
+    clientSecret,
+    encodedRawMetadata,
+    metadataUrl,
+    defaultRedirectUrl: env.saml.callback,
+    redirectUrl: env.saml.callback,
+    tenant: teamMember.teamId,
+    product: env.product,
+  });
+
+  sendAudit({
+    action: 'sso.connection.patch',
+    crud: 'u',
+    user: teamMember.user,
+    team: teamMember.team,
+  });
+
+  res.status(200).json({ data: connection });
 };
 
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
