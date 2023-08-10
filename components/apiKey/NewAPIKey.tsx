@@ -101,6 +101,7 @@ const CreateAPIKeyForm = ({ team, onNewAPIKey }: CreateAPIKeyFormProps) => {
           type="submit"
           loading={submitting}
           disabled={!name}
+          size='md'
         >
           {t('create-api-key')}
         </Button>

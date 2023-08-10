@@ -98,6 +98,7 @@ const Form = ({
             color="primary"
             loading={formik.isSubmitting}
             active={formik.dirty}
+            size='md'
           >
             {t('create-webhook')}
           </Button>

@@ -23,6 +23,7 @@ export const sendEmail = async (data: EmailData) => {
   if (!env.smtp.host) {
     return;
   }
+
   const emailDefaults = {
     from: env.smtp.from,
   };

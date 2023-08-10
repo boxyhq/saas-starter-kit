@@ -172,5 +172,13 @@
   "sp_entity_id": "SP Entity ID / Identifier / Audience URI / Audience Restriction",
   "assertion_signature": "Assertion Signature",
   "signature_algorithm": "Signature Algorithm",
-  "assertion_encryption": "Assertion Encryption"
+  "assertion_encryption": "Assertion Encryption",
+  "token-not-found": "The verification token is invalid or has already been used.",
+  "token-expired": "The verification token has expired.",
+  "email-verified": "Your email has been successfully verified. Thank you for confirming your account.",
+  "invalid-credentials": "Invalid login credentials",
+  "no-credentials": "No credentials found.",
+  "confirm-email": "Confirm your email address",
+  "confirm-email-description": "Please click the verification link sent to your email to activate your account.",
+  "allow-only-work-email": "Please use your work email to create an account."
 }

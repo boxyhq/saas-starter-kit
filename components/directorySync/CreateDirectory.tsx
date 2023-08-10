@@ -125,6 +125,7 @@ const CreateDirectory = ({
             color="primary"
             loading={formik.isSubmitting}
             active={formik.dirty}
+            size='md'
           >
             {t('create-directory')}
           </Button>

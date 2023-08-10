@@ -1,25 +1,37 @@
-import { generatePasswordResetToken, validateEmail } from '@/lib/common';
+import { generateToken, validateEmail } from '@/lib/common';
 import { sendPasswordResetEmail } from '@/lib/email/sendPasswordResetEmail';
+import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
-import { NextApiHandler } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-const handler: NextApiHandler = async (req, res) => {
-  if (req.method !== 'POST') {
-    res.status(405).json({
-      error: {
-        message: 'Method not allowed',
-      },
-    });
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  try {
+    switch (req.method) {
+      case 'POST':
+        await handlePOST(req, res);
+        break;
+      default:
+        res.setHeader('Allow', 'POST');
+        res.status(405).json({
+          error: { message: `Method ${req.method} Not Allowed` },
+        });
+    }
+  } catch (error: any) {
+    const message = error.message || 'Something went wrong';
+    const status = error.status || 500;
+
+    res.status(status).json({ error: { message } });
   }
+}
 
+const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body;
 
   if (!email || !validateEmail(email)) {
-    res.status(422).json({
-      error: {
-        message: `The e-mail address you entered is invalid`,
-      },
-    });
+    throw new ApiError(422, 'The e-mail address you entered is invalid');
   }
 
   const user = await prisma.user.findUnique({
@@ -27,34 +39,20 @@ const handler: NextApiHandler = async (req, res) => {
   });
 
   if (!user) {
-    res.status(422).json({
-      error: {
-        message: `We can't find a user with that e-mail address`,
-      },
-    });
+    throw new ApiError(422, `We can't find a user with that e-mail address`);
   }
 
-  const token = generatePasswordResetToken();
-  const expirationDate = new Date(Date.now() + 60 * 60 * 1000); // expires in 1 hour
+  const resetToken = generateToken();
+
   await prisma.passwordReset.create({
     data: {
       email,
-      token,
-      expiresAt: expirationDate,
+      token: resetToken,
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000), // Expires in 1 hour
     },
   });
 
-  try {
-    await sendPasswordResetEmail(email, encodeURIComponent(token));
+  await sendPasswordResetEmail(email, encodeURIComponent(resetToken));
 
-    res.status(200).json({ message: `Password reset e-mail sent` });
-  } catch (err) {
-    res.status(500).json({
-      error: {
-        message: `Error sending password reset e-mail. Please try again later.`,
-      },
-    });
-  }
+  res.json({});
 };
-
-export default handler;

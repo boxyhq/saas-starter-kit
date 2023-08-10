@@ -93,7 +93,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
                         </td>
                         <td className="px-6 py-3">
                           <Button
-                            size="xs"
+                            size='xs'
                             color="error"
                             variant="outline"
                             onClick={() => {

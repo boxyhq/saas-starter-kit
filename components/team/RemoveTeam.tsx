@@ -39,18 +39,16 @@ const RemoveTeam = ({ team }: { team: Team }) => {
     <>
       <Card heading={t('remove-team')}>
         <Card.Body className="px-3 py-3">
-          <div className="flex flex-row gap-4">
-            <p className="text-sm">{t('remove-team-warning')}</p>
-            <Button
-              color="error"
-              onClick={() => setAskConfirmation(true)}
-              loading={loading}
-              variant="outline"
-              size="sm"
-            >
-              {t('remove-team')}
-            </Button>
-          </div>
+          <p className="text-sm mb-4">{t('remove-team-warning')}</p>
+          <Button
+            color="error"
+            onClick={() => setAskConfirmation(true)}
+            loading={loading}
+            variant="outline"
+            size="md"
+          >
+            {t('remove-team')}
+          </Button>
         </Card.Body>
       </Card>
       <ConfirmationDialog
