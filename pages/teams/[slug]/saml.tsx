@@ -1,65 +1,17 @@
-import { CreateConnection } from '@/components/saml';
-import { Alert, Error, Loading } from '@/components/shared';
-import { Card } from '@/components/shared';
-import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
+import { Error, Loading } from '@/components/shared';
 import { TeamTab } from '@/components/team';
-import { ConnectionList } from '@boxyhq/react-ui/sso';
-import type { SAMLSSORecord } from '@boxyhq/saml-jackson';
-import useSAMLConfig from 'hooks/useSAMLConfig';
+import { ConnectionsWrapper } from '@boxyhq/react-ui/sso';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
-import type { ApiResponse, NextPageWithLayout } from 'types';
+import type { NextPageWithLayout } from 'types';
 
 const TeamSSO: NextPageWithLayout = () => {
-  const router = useRouter();
   const { t } = useTranslation('common');
-  const [visible, setVisible] = useState(false);
-  const [selectedSsoConnection, setSelectedSsoConnection] =
-    useState<SAMLSSORecord | null>(null);
-  const [confirmationDialogVisible, setConfirmationDialogVisible] =
-    useState(false);
-
-  const { slug } = router.query as { slug: string };
 
   const { isLoading, isError, team } = useTeam();
-  const { samlConfig, mutateSamlConfig } = useSAMLConfig(slug);
-
-  // Delete SSO Connection
-  const deleteSsoConnection = async (connection: SAMLSSORecord | null) => {
-    if (!connection) return;
-
-    const { clientID, clientSecret } = connection;
-    const params = new URLSearchParams({
-      clientID,
-      clientSecret,
-    });
-
-    const res = await fetch(`/api/teams/${slug}/saml?${params}`, {
-      method: 'DELETE',
-    });
-
-    const { data, error } = (await res.json()) as ApiResponse<null>;
-
-    setSelectedSsoConnection(null);
-    setConfirmationDialogVisible(false);
-
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-
-    if (data) {
-      mutateSamlConfig();
-      toast.success(t('sso-connection-deleted'));
-    }
-  };
 
   if (isLoading) {
     return <Loading />;
@@ -73,12 +25,83 @@ const TeamSSO: NextPageWithLayout = () => {
     return <Error message={t('team-not-found')} />;
   }
 
-  const connectionsAdded = samlConfig && samlConfig.length > 0;
+  // const connectionsAdded = samlConfig && samlConfig.length > 0;
 
   return (
     <>
       <TeamTab activeTab="saml" team={team} />
-      {connectionsAdded && (
+      {/* <EditSAMLConnection
+        connection={{
+          defaultRedirectUrl: 'http://localhost:3366/login/saml',
+          redirectUrl: ['http://localhost:3366'],
+          tenant: 'boxyhq.com',
+          product: 'mocksaml',
+          name: '',
+          description: '',
+          clientID: '7f43cbab5b82b431153f300173e31dd3c51852bc',
+          clientSecret: '7b22304bd743206045e880bd8475fabff975e6aa9b669675',
+          forceAuthn: false,
+          metadataUrl: 'https://mocksaml.com/api/saml/metadata',
+          idpMetadata: {
+            sso: {
+              postUrl: 'https://mocksaml.com/api/saml/sso',
+              redirectUrl: 'https://mocksaml.com/api/saml/sso',
+            },
+            slo: {},
+            entityID: 'https://saml.example.com/entityid',
+            thumbprint: 'd797f3829882233d3f01e49643f6a1195f242c94',
+            validTo: 'Jul  1 21:46:38 3021 GMT',
+            loginType: 'idp',
+            provider: 'saml.example.com',
+            friendlyProviderName: null,
+          },
+          deactivated: false,
+          // "isSystemSSO": false
+        }}
+        variant={'basic'}
+        errorCallback={function (): void {
+          // throw new Error('Function not implemented.');
+        }}
+        successCallback={function (): void {
+          // throw new Error('Function not implemented.');
+        }}
+        urls={{
+          delete: '',
+          patch: `/api/teams/${slug}/saml`,
+        }}
+      /> */}
+      <ConnectionsWrapper
+        componentProps={{
+          editOIDCConnection: {},
+          editSAMLConnection: {
+            urls: {
+              patch: `/api/teams/${team.slug}/saml`,
+              delete: `/api/teams/${team.slug}/saml`,
+            },
+          },
+          connectionList: {
+            hideCols: ['tenant', 'product'],
+            getConnectionsUrl: `/api/teams/${team.slug}/saml`,
+          },
+          createSSOConnection: {
+            componentProps: {
+              saml: {
+                variant: 'basic',
+                urls: {
+                  save: `/api/teams/${team.slug}/saml`,
+                },
+              },
+              oidc: {
+                variant: 'basic',
+                urls: {
+                  save: '',
+                },
+              },
+            },
+          },
+        }}
+      />
+      {/* {connectionsAdded && (
         <div className="flex flex-col">
           <div className="flex mt-2 justify-end">
             <Button
@@ -99,11 +122,11 @@ const TeamSSO: NextPageWithLayout = () => {
             }}
             getConnectionsUrl={`/api/teams/${slug}/saml`}
             hideCols={['tenant', 'product']}
-            onActionClick={function () {}}
+            onActionClick={() => setView('EDIT')}
           />
         </div>
-      )}
-      <Card heading={t('configure-singlesignon')}>
+      )} */}
+      {/* <Card heading={t('configure-singlesignon')}>
         <Card.Body className="px-3 py-3 text-sm">
           {!connectionsAdded && (
             <div className="mb-3 flex items-center justify-between">
@@ -137,8 +160,8 @@ const TeamSSO: NextPageWithLayout = () => {
             </>
           )}
         </Card.Body>
-      </Card>
-      <CreateConnection team={team} visible={visible} setVisible={setVisible} />
+      </Card> */}
+      {/* <CreateConnection team={team} visible={visible} setVisible={setVisible} />
       <ConfirmationDialog
         title={t('delete-sso-connection')}
         visible={confirmationDialogVisible}
@@ -148,7 +171,7 @@ const TeamSSO: NextPageWithLayout = () => {
         confirmText={t('delete-sso-connection')}
       >
         {t('delete-sso-connection-confirmation')}
-      </ConfirmationDialog>
+      </ConfirmationDialog> */}
     </>
   );
 };
