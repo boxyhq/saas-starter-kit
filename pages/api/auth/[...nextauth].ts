@@ -202,7 +202,7 @@ const linkToTeam = async (profile: any, userId: string) => {
 };
 
 const linkAccount = async (user: User, account: Account) => {
-  return await adapter.linkAccount({
+  return await adapter?.linkAccount({
     providerAccountId: account.providerAccountId,
     userId: user.id,
     provider: account.provider,
