@@ -202,13 +202,15 @@ const linkToTeam = async (profile: any, userId: string) => {
 };
 
 const linkAccount = async (user: User, account: Account) => {
-  return await adapter?.linkAccount({
-    providerAccountId: account.providerAccountId,
-    userId: user.id,
-    provider: account.provider,
-    type: 'oauth',
-    scope: account.scope,
-    token_type: account.token_type,
-    access_token: account.access_token,
-  });
+  if (adapter.linkAccount) {
+    return await adapter.linkAccount({
+      providerAccountId: account.providerAccountId,
+      userId: user.id,
+      provider: account.provider,
+      type: 'oauth',
+      scope: account.scope,
+      token_type: account.token_type,
+      access_token: account.access_token,
+    });
+  }
 };
