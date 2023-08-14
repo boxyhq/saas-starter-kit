@@ -86,7 +86,13 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_sso', 'create');
 
-  const { metadataUrl, encodedRawMetadata, clientID, clientSecret } = req.body;
+  const {
+    metadataUrl,
+    encodedRawMetadata,
+    clientID,
+    clientSecret,
+    deactivated,
+  } = req.body;
 
   const { apiController } = await jackson();
 
@@ -95,6 +101,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     clientSecret,
     encodedRawMetadata,
     metadataUrl,
+    deactivated,
     defaultRedirectUrl: env.saml.callback,
     redirectUrl: env.saml.callback,
     tenant: teamMember.teamId,
