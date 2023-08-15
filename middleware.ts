@@ -12,6 +12,10 @@ const unAuthenticatedRoutes = [
   '/auth/**',
   '/invitations/*',
   '/api/invitations/*',
+  '/api/github',
+  '/api/github/*',
+  '/github',
+  '/github/*',
 ];
 
 export default async function middleware(req: NextRequest) {
