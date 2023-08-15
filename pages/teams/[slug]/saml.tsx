@@ -72,6 +72,9 @@ const TeamSSO: NextPageWithLayout = () => {
       /> */}
       <ConnectionsWrapper
         urls={{ spMetadata: '/well-known/saml-configuration' }}
+        copyDoneCallback={() => {
+          /** show toast */
+        }}
         componentProps={{
           editOIDCConnection: {},
           editSAMLConnection: {
