@@ -1,16 +1,26 @@
+'use client'
+
 import { Navbar, Sidebar } from '@/components/shared';
-import React from 'react';
+import useCollapse from 'hooks/useCollapse';
+import React, { ElementRef, MouseEventHandler, useRef } from 'react';
 
 interface AccountLayoutProps {
   children: React.ReactNode;
 }
 
 export default function AccountLayout({ children }: AccountLayoutProps) {
+  const sidebarRef = useRef<ElementRef<"aside">>(null);
+  const [collapse, setCollapse] = useCollapse(sidebarRef, "dashboard-wrapper");
+
+  const handleToggleSidebar: MouseEventHandler<HTMLButtonElement> = () => {
+    setCollapse(prev => !prev);
+  }
+
   return (
     <>
-      <Navbar />
-      <div className="flex overflow-hidden pt-16 h-full">
-        <Sidebar />
+      <Navbar cb={handleToggleSidebar} />
+      <div id="dashboard-wrapper" className="flex overflow-hidden pt-16 h-full">
+        <Sidebar isCollapsed={collapse} ref={sidebarRef} />
         <div className="relative h-full w-full overflow-y-auto lg:ml-64">
           <main>
             <div className="flex h-screen w-full justify-center">

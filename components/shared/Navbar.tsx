@@ -1,15 +1,19 @@
+'use client'
+
 import app from '@/lib/app';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { MouseEventHandler } from 'react';
 import { Button } from 'react-daisyui';
 
-export default function Navbar() {
+export default function Navbar({ cb }: { cb?: MouseEventHandler<HTMLButtonElement> }) {
   return (
     <nav className="fixed z-30 w-full border-b border-gray-200 bg-white">
       <div className="px-3 py-3 lg:px-5 lg:pl-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-start">
             <button
+              onClick={cb}
               aria-expanded="true"
               aria-controls="sidebar"
               className="mr-2 cursor-pointer rounded p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100 lg:hidden"
