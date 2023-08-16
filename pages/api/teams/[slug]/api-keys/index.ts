@@ -39,7 +39,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const apiKeys = await fetchApiKeys(teamMember.teamId);
 
-  recordMetric('apiKeys.fetched');
+  recordMetric('apikey.fetched');
 
   res.json({ data: apiKeys });
 };
@@ -56,7 +56,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     teamId: teamMember.teamId,
   });
 
-  recordMetric('apiKeys.created');
+  recordMetric('apikey.created');
 
   res.status(201).json({ data: { apiKey } });
 };

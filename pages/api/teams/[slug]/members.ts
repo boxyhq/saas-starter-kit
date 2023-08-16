@@ -53,7 +53,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const members = await getTeamMembers(teamMember.team.slug);
 
-  recordMetric('members.fetched');
+  recordMetric('member.fetched');
 
   res.status(200).json({ data: members });
 };
@@ -76,7 +76,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  recordMetric('members.deleted');
+  recordMetric('member.removed');
 
   res.status(200).json({ data: {} });
 };
@@ -99,7 +99,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await removeTeamMember(teamMember.teamId, teamMember.user.id);
 
-  recordMetric('members.left');
+  recordMetric('member.left');
 
   res.status(200).json({ data: {} });
 };
@@ -130,7 +130,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  recordMetric('members.role.updated');
+  recordMetric('member.role.updated');
 
   res.status(200).json({ data: memberUpdated });
 };

@@ -52,7 +52,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const webhook = await findWebhook(app.id, endpointId as string);
 
-  recordMetric('webhooks.fetched');
+  recordMetric('webhook.fetched');
 
   res.status(200).json({ data: webhook });
 };
@@ -93,7 +93,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  recordMetric('webhooks.updated');
+  recordMetric('webhook.updated');
 
   res.status(200).json({ data: webhook });
 };

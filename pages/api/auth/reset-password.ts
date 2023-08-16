@@ -73,7 +73,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }),
   ]);
 
-  recordMetric('users.password.reset');
+  recordMetric('user.password.reset');
 
   res.status(200).json({ message: 'Password reset successfully' });
 };

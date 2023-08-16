@@ -85,7 +85,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  recordMetric('invitations.created');
+  recordMetric('invitation.created');
 
   res.status(200).json({ data: invitation });
 };
@@ -97,7 +97,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const invitations = await getInvitations(teamMember.teamId);
 
-  recordMetric('invitations.fetched');
+  recordMetric('invitation.fetched');
 
   res.status(200).json({ data: invitations });
 };
@@ -132,7 +132,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await sendEvent(teamMember.teamId, 'invitation.removed', invitation);
 
-  recordMetric('invitations.deleted');
+  recordMetric('invitation.removed');
 
   res.status(200).json({ data: {} });
 };
@@ -156,7 +156,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteInvitation({ token: inviteToken });
 
-  recordMetric('invitations.accepted');
+  recordMetric('member.created');
 
   res.status(200).json({ data: {} });
 };

@@ -39,7 +39,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const teams = await getTeams(session?.user.id as string);
 
-  recordMetric('teams.fetched');
+  recordMetric('team.fetched');
 
   res.status(200).json({ data: teams });
 };
@@ -61,7 +61,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     slug,
   });
 
-  recordMetric('teams.created');
+  recordMetric('team.created');
 
   res.status(200).json({ data: team });
 };

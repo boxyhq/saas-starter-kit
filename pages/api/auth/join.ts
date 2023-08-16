@@ -92,7 +92,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     await sendVerificationEmail({ user, verificationToken });
   }
 
-  recordMetric('users.signup');
+  recordMetric('user.signup');
 
   res.status(201).json({
     data: {

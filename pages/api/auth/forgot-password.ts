@@ -55,7 +55,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await sendPasswordResetEmail(email, encodeURIComponent(resetToken));
 
-  recordMetric('users.password.request');
+  recordMetric('user.password.request');
 
   res.json({});
 };

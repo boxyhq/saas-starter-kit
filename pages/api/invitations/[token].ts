@@ -32,7 +32,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const invitation = await getInvitation({ token });
 
-  recordMetric('invitations.fetched');
+  recordMetric('invitation.fetched');
 
   res.status(200).json({ data: invitation });
 };

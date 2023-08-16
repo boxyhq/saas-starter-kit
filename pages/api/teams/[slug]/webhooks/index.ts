@@ -77,7 +77,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  recordMetric('webhooks.created');
+  recordMetric('webhook.created');
 
   res.status(200).json({ data: endpoint });
 };
@@ -95,7 +95,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const webhooks = await listWebhooks(app.id);
 
-  recordMetric('webhooks.fetched');
+  recordMetric('webhook.fetched');
 
   res.status(200).json({ data: webhooks?.data || [] });
 };
@@ -126,7 +126,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  recordMetric('webhooks.deleted');
+  recordMetric('webhook.removed');
 
   res.status(200).json({ data: {} });
 };

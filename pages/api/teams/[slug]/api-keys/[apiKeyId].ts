@@ -38,7 +38,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await deleteApiKey(apiKeyId);
 
-  recordMetric('apiKeys.deleted');
+  recordMetric('apikeys.removed');
 
   res.json({ data: {} });
 };
