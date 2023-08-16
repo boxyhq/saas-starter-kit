@@ -37,7 +37,7 @@
     "i18next": "22.5.1",
     "mixpanel-browser": "^2.47.0",
     "moment": "2.29.4",
-    "next": "13.4.13",
+    "next": "13.4.16",
     "next-auth": "4.23.0",
     "next-i18next": "13.3.0",
     "nodemailer": "6.9.4",
