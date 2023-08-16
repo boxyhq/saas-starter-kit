@@ -59,10 +59,11 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(function Sideba
   return (
     <>
       <aside
+        className="fixed z-10 h-screen w-10/12 lg:w-fit"
         ref={ref}
         aria-label="Sidebar"
       >
-        <div className={`relative ${isCollapsed && "invisible"} lg:visible flex h-full flex-1 flex-col border-r border-gray-200 bg-white pt-0`}>
+        <div className={`relative ${isCollapsed && "invisible"} lg:visible flex h-full flex-col border-r border-gray-200 bg-white pt-0`}>
           <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
             <div className="flex-1 space-y-1 divide-y bg-white">
               <TeamDropdown />
