@@ -158,14 +158,13 @@ _Note: HTML test report is generated inside the `report` folder. Currently supor
 - Webhooks & Events
 - Internationalization
 - Audit logs
+- Roles and Permissions
 
 ## Coming Soon
 
 - Billing & subscriptions
-- Roles and Permissions
 - Unit and integration tests
 - Dark mode
-- Mobile-first UI
 
 ## Contributing
 
