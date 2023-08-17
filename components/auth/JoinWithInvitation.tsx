@@ -1,7 +1,6 @@
 import { Error, InputWithLabel, Loading } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import type { User } from '@prisma/client';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import useInvitation from 'hooks/useInvitation';
 import { useTranslation } from 'next-i18next';
@@ -36,18 +35,23 @@ const JoinWithInvitation = ({
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
-      try {
-        await axios.post<ApiResponse<User>>('/api/auth/join', {
-          ...values,
-        });
+      const response = await fetch('/api/auth/join', {
+        method: 'POST',
+        headers: defaultHeaders,
+        body: JSON.stringify(values),
+      });
 
-        formik.resetForm();
-        toast.success(t('successfully-joined'));
+      const json = (await response.json()) as ApiResponse<User>;
 
-        return next ? router.push(next) : router.push('/auth/login');
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
       }
+
+      formik.resetForm();
+      toast.success(t('successfully-joined'));
+
+      return next ? router.push(next) : router.push('/auth/login');
     },
   });
 
@@ -94,7 +98,7 @@ const JoinWithInvitation = ({
         loading={formik.isSubmitting}
         active={formik.dirty}
         fullWidth
-        size='md'
+        size="md"
       >
         {t('create-account')}
       </Button>

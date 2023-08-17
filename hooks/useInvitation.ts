@@ -1,7 +1,7 @@
 import fetcher from '@/lib/fetcher';
 import { Invitation, Team } from '@prisma/client';
 import useSWR from 'swr';
-import { ApiResponse } from 'types';
+import type { ApiResponse } from 'types';
 
 const useInvitation = (token: string) => {
   const url = `/api/invitations/${token}`;

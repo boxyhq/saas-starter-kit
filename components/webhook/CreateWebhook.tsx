@@ -1,5 +1,4 @@
 import type { Team } from '@prisma/client';
-import axios from 'axios';
 import type { FormikHelpers } from 'formik';
 import useWebhooks from 'hooks/useWebhooks';
 import { useTranslation } from 'next-i18next';
@@ -9,6 +8,7 @@ import type { ApiResponse } from 'types';
 import type { WebookFormSchema } from 'types';
 
 import ModalForm from './Form';
+import { defaultHeaders } from '@/lib/common';
 
 const CreateWebhook = ({
   visible,
@@ -26,28 +26,20 @@ const CreateWebhook = ({
     values: WebookFormSchema,
     formikHelpers: FormikHelpers<WebookFormSchema>
   ) => {
-    const { name, url, eventTypes } = values;
+    const response = await fetch(`/api/teams/${team.slug}/webhooks`, {
+      method: 'POST',
+      headers: defaultHeaders,
+      body: JSON.stringify(values),
+    });
 
-    const response = await axios.post<ApiResponse>(
-      `/api/teams/${team.slug}/webhooks`,
-      {
-        name,
-        url,
-        eventTypes,
-      }
-    );
+    const json = (await response.json()) as ApiResponse<Team>;
 
-    const { data: webhooks, error } = response.data;
-
-    if (error) {
-      toast.error(error.message);
+    if (!response.ok) {
+      toast.error(json.error.message);
       return;
     }
 
-    if (webhooks) {
-      toast.success(t('webhook-created'));
-    }
-
+    toast.success(t('webhook-created'));
     mutateWebhooks();
     setVisible(false);
     formikHelpers.resetForm();

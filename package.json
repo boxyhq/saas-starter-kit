@@ -28,7 +28,6 @@
     "@retracedhq/retraced": "0.7.0",
     "@tailwindcss/typography": "0.5.9",
     "autoprefixer": "10.4.15",
-    "axios": "1.4.0",
     "bcryptjs": "2.4.3",
     "classnames": "2.3.2",
     "cookies-next": "2.1.2",

@@ -1,6 +1,5 @@
 import { Card, Error, LetterAvatar, Loading } from '@/components/shared';
 import { Team, TeamMember } from '@prisma/client';
-import axios from 'axios';
 import useCanAccess from 'hooks/useCanAccess';
 import useTeamMembers from 'hooks/useTeamMembers';
 import { useSession } from 'next-auth/react';
@@ -9,6 +8,8 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 
 import UpdateMemberRole from './UpdateMemberRole';
+import { defaultHeaders } from '@/lib/common';
+import type { ApiResponse } from 'types';
 
 const Members = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
@@ -34,10 +35,22 @@ const Members = ({ team }: { team: Team }) => {
   const removeTeamMember = async (member: TeamMember) => {
     const sp = new URLSearchParams({ memberId: member.userId });
 
-    await axios.delete(`/api/teams/${team.slug}/members?${sp.toString()}`);
+    const response = await fetch(
+      `/api/teams/${team.slug}/members?${sp.toString()}`,
+      {
+        method: 'DELETE',
+        headers: defaultHeaders,
+      }
+    );
+
+    const json = (await response.json()) as ApiResponse;
+
+    if (!response.ok) {
+      toast.error(json.error.message);
+      return;
+    }
 
     mutateTeamMembers();
-
     toast.success(t('member-deleted'));
   };
 
@@ -103,7 +116,7 @@ const Members = ({ team }: { team: Team }) => {
                         onClick={() => {
                           removeTeamMember(member);
                         }}
-                        size='md'
+                        size="md"
                       >
                         {t('remove')}
                       </Button>

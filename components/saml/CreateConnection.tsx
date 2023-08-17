@@ -1,8 +1,7 @@
 import { InputWithLabel } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import type { SAMLSSORecord } from '@boxyhq/saml-jackson';
 import { Team } from '@prisma/client';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import useSAMLConfig from 'hooks/useSAMLConfig';
 import { useTranslation } from 'next-i18next';
@@ -53,28 +52,28 @@ const CreateConnection = (props: CreateConnectionProps) => {
     onSubmit: async (values, { resetForm }) => {
       const { metadataUrl, metadataRaw } = values;
 
-      try {
-        const response = await axios.post<ApiResponse<SAMLSSORecord>>(
-          `/api/teams/${team.slug}/saml`,
-          {
-            metadataUrl,
-            encodedRawMetadata: metadataRaw
-              ? Buffer.from(metadataRaw).toString('base64')
-              : undefined,
-          }
-        );
+      const response = await fetch(`/api/teams/${team.slug}/saml`, {
+        method: 'POST',
+        headers: defaultHeaders,
+        body: JSON.stringify({
+          metadataUrl,
+          encodedRawMetadata: metadataRaw
+            ? Buffer.from(metadataRaw).toString('base64')
+            : undefined,
+        }),
+      });
 
-        const { data } = response.data;
+      const json = (await response.json()) as ApiResponse<SAMLSSORecord>;
 
-        if (data) {
-          toast.success(t('saml-config-updated'));
-          mutateSamlConfig();
-          setVisible(false);
-          resetForm();
-        }
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
       }
+
+      toast.success(t('saml-config-updated'));
+      mutateSamlConfig();
+      setVisible(false);
+      resetForm();
     },
   });
 
@@ -124,7 +123,7 @@ const CreateConnection = (props: CreateConnectionProps) => {
             color="primary"
             loading={formik.isSubmitting}
             active={formik.dirty}
-            size='md'
+            size="md"
           >
             {t('save-changes')}
           </Button>
@@ -136,7 +135,7 @@ const CreateConnection = (props: CreateConnectionProps) => {
               setTab(0);
               formik.resetForm();
             }}
-            size='md'
+            size="md"
           >
             {t('close')}
           </Button>

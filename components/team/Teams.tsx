@@ -1,14 +1,13 @@
 import { Card, Error, LetterAvatar, Loading } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import { Team } from '@prisma/client';
-import axios from 'axios';
 import useTeams from 'hooks/useTeams';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
-import { ApiResponse } from 'types';
+import type { ApiResponse } from 'types';
 
 import ConfirmationDialog from '../shared/ConfirmationDialog';
 
@@ -27,13 +26,20 @@ const Teams = () => {
   }
 
   const leaveTeam = async (team: Team) => {
-    try {
-      await axios.put<ApiResponse>(`/api/teams/${team.slug}/members`);
-      toast.success(t('leave-team-success'));
-      mutateTeams();
-    } catch (error: any) {
-      toast.error(getAxiosError(error));
+    const response = await fetch(`/api/teams/${team.slug}/members`, {
+      method: 'PUT',
+      headers: defaultHeaders,
+    });
+
+    const json = (await response.json()) as ApiResponse;
+
+    if (!response.ok) {
+      toast.error(json.error.message);
+      return;
     }
+
+    toast.success(t('leave-team-success'));
+    mutateTeams();
   };
 
   return (

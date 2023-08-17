@@ -1,7 +1,6 @@
 import { Card, InputWithLabel } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import { Team } from '@prisma/client';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -30,23 +29,21 @@ const TeamSettings = ({ team }: { team: Team }) => {
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
-      try {
-        const response = await axios.put<ApiResponse<Team>>(
-          `/api/teams/${team.slug}`,
-          {
-            ...values,
-          }
-        );
+      const response = await fetch(`/api/teams/${team.slug}`, {
+        method: 'PUT',
+        headers: defaultHeaders,
+        body: JSON.stringify(values),
+      });
 
-        const { data: teamUpdated } = response.data;
+      const json = (await response.json()) as ApiResponse<Team>;
 
-        if (teamUpdated) {
-          toast.success(t('successfully-updated'));
-          return router.push(`/teams/${teamUpdated.slug}/settings`);
-        }
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
       }
+
+      toast.success(t('successfully-updated'));
+      router.push(`/teams/${json.data.slug}/settings`);
     },
   });
 

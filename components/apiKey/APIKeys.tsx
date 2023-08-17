@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
-import { ApiResponse } from 'types';
+import type { ApiResponse } from 'types';
 
 interface APIKeysProps {
   team: Team;

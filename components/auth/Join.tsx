@@ -1,7 +1,6 @@
 import { InputWithLabel } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import type { User } from '@prisma/client';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -28,25 +27,28 @@ const Join = () => {
       team: Yup.string().required().min(3),
     }),
     onSubmit: async (values) => {
-      try {
-        const response = await axios.post<
-          ApiResponse<User & { confirmEmail: boolean }>
-        >('/api/auth/join', {
-          ...values,
-        });
+      const response = await fetch('/api/auth/join', {
+        method: 'POST',
+        headers: defaultHeaders,
+        body: JSON.stringify(values),
+      });
 
-        const { confirmEmail } = response.data.data;
+      const json = (await response.json()) as ApiResponse<
+        User & { confirmEmail: boolean }
+      >;
 
-        formik.resetForm();
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
+      }
 
-        if (confirmEmail) {
-          router.push('/auth/verify-email');
-        } else {
-          toast.success(t('successfully-joined'));
-          router.push('/auth/login');
-        }
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      formik.resetForm();
+
+      if (json.data.confirmEmail) {
+        router.push('/auth/verify-email');
+      } else {
+        toast.success(t('successfully-joined'));
+        router.push('/auth/login');
       }
     },
   });
@@ -98,7 +100,7 @@ const Join = () => {
           loading={formik.isSubmitting}
           active={formik.dirty}
           fullWidth
-          size='md'
+          size="md"
         >
           {t('create-account')}
         </Button>

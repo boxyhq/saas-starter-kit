@@ -1,7 +1,6 @@
-import { getAxiosError } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import { availableRoles } from '@/lib/permissions';
 import type { Invitation, Team } from '@prisma/client';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import useInvitations from 'hooks/useInvitations';
 import { useTranslation } from 'next-i18next';
@@ -35,22 +34,23 @@ const InviteMember = ({
         .oneOf(availableRoles.map((r) => r.id)),
     }),
     onSubmit: async (values) => {
-      try {
-        await axios.post<ApiResponse<Invitation>>(
-          `/api/teams/${team.slug}/invitations`,
-          {
-            ...values,
-          }
-        );
+      const response = await fetch(`/api/teams/${team.slug}/invitations`, {
+        method: 'POST',
+        headers: defaultHeaders,
+        body: JSON.stringify(values),
+      });
 
-        toast.success(t('invitation-sent'));
+      const json = (await response.json()) as ApiResponse<Invitation>;
 
-        mutateInvitation();
-        setVisible(false);
-        formik.resetForm();
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
       }
+
+      toast.success(t('invitation-sent'));
+      mutateInvitation();
+      setVisible(false);
+      formik.resetForm();
     },
   });
 
@@ -93,7 +93,7 @@ const InviteMember = ({
             color="primary"
             loading={formik.isSubmitting}
             active={formik.dirty}
-            size='md'
+            size="md"
           >
             {t('send-invite')}
           </Button>
@@ -103,7 +103,7 @@ const InviteMember = ({
             onClick={() => {
               setVisible(!visible);
             }}
-            size='md'
+            size="md"
           >
             {t('close')}
           </Button>

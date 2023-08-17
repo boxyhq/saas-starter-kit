@@ -1,7 +1,6 @@
 import { Card, InputWithLabel } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import { User } from '@prisma/client';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { Button } from 'react-daisyui';
@@ -41,15 +40,20 @@ const UpdateAccount = ({ user }: { user: User }) => {
     },
     validationSchema: schema,
     onSubmit: async (values) => {
-      try {
-        await axios.put<ApiResponse<User>>('/api/users', {
-          ...values,
-        });
+      const response = await fetch('/api/users', {
+        method: 'PUT',
+        headers: defaultHeaders,
+        body: JSON.stringify(values),
+      });
 
-        toast.success(t('successfully-updated'));
-      } catch (error) {
-        toast.error(getAxiosError(error));
+      const json = (await response.json()) as ApiResponse<User>;
+
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
       }
+
+      toast.success(t('successfully-updated'));
     },
   });
 
@@ -86,7 +90,7 @@ const UpdateAccount = ({ user }: { user: User }) => {
               color="primary"
               loading={formik.isSubmitting}
               disabled={!formik.dirty || !formik.isValid}
-              size='md'
+              size="md"
             >
               {t('save-changes')}
             </Button>
