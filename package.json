@@ -51,7 +51,7 @@
     "swr": "2.2.1",
     "uuid": "9.0.0",
     "yup": "1.2.0",
-    "zod": "3.22.0"
+    "zod": "3.22.1"
   },
   "devDependencies": {
     "@playwright/test": "1.37.0",
