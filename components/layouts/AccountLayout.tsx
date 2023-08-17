@@ -19,7 +19,7 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
   return (
     <>
       <Navbar cb={handleToggleSidebar} />
-      <div id="dashboard-wrapper" className="flex overflow-hidden pt-16 h-full">
+      <div id="dashboard-wrapper" className="flex overflow-hidden pt-14 h-full">
         <Sidebar isCollapsed={collapse} ref={sidebarRef} />
         <div className="relative h-full w-full overflow-y-auto lg:ml-64">
           <main>
