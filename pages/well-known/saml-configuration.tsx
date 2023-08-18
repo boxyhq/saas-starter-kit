@@ -3,9 +3,8 @@ import Link from 'next/link';
 import React, { ReactElement } from 'react';
 import { useTranslation } from 'next-i18next';
 import jackson from '@/lib/jackson';
-import { InputWithCopyButton } from '@boxyhq/react-ui/shared';
+import InputWithCopyButton from '@/components/shared/InputWithCopyButton';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { toast } from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
 
 const SPConfig: NextPageWithLayout<
@@ -40,22 +39,14 @@ const SPConfig: NextPageWithLayout<
           <div className="mt-6 flex flex-col gap-6">
             <div className="form-control w-full">
               <InputWithCopyButton
-                toastSuccessCallback={() =>
-                  toast.success(t('copied-to-clipboard'))
-                }
-                text={config.acsUrl}
+                value={config.acsUrl}
                 label={t('sp_acs_url')}
-                classNames={{ input: 'w-full' }}
               />
             </div>
             <div className="form-control w-full">
               <InputWithCopyButton
-                toastSuccessCallback={() =>
-                  toast.success(t('copied-to-clipboard'))
-                }
-                text={config.entityId}
+                value={config.entityId}
                 label={t('sp_entity_id')}
-                classNames={{ input: 'w-full' }}
               />
             </div>
             <div className="form-control w-full">
