@@ -38,21 +38,34 @@ export default async function handler(
 // Get teams
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const response = await octokit.request('GET /repos/{owner}/{repo}/pulls', {
-      owner: 'retracedhq',
-      repo: 'logs-viewer',
-      state: 'open',
-    });
+    const { pull_number, owner, repo } = req.query;
+    const pullNumber = parseInt('' + pull_number, 10);
 
-    const prs = response.data.filter((pr) => {
-      return pr.user!.login === 'dependabot[bot]';
-    });
+    await octokit.request(
+      'POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews',
+      {
+        owner: owner as string,
+        repo: repo as string,
+        pull_number: pullNumber,
+        event: 'APPROVE',
+      }
+    );
 
-    // console.log('prs:', prs);
+    // console.log('response:', response);
 
-    res.status(200).json({
-      data: prs,
-    });
+    await octokit.request(
+      'PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge',
+      {
+        owner: owner as string,
+        repo: repo as string,
+        pull_number: pullNumber,
+        merge_method: 'squash',
+      }
+    );
+
+    // console.log('response1:', response1);
+
+    res.status(200).json({});
   } catch (error: any) {
     console.error('error:', error);
     res
