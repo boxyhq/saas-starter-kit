@@ -37,10 +37,12 @@ export default async function handler(
 
 // Get teams
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { owner, repo } = req.query;
+
   try {
     const response = await octokit.request('GET /repos/{owner}/{repo}/pulls', {
-      owner: 'retracedhq',
-      repo: 'logs-viewer',
+      owner: owner as string,
+      repo: repo as string,
       state: 'open',
     });
 

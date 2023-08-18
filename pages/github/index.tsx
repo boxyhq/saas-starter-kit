@@ -7,6 +7,9 @@ import toast from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
 import { Button } from 'react-daisyui';
 
+const owner = 'retracedhq';
+const repo = 'retraced';
+
 const GithubPage: NextPageWithLayout = () => {
   const [prs, setPrs] = useState([]);
 
@@ -19,7 +22,7 @@ const GithubPage: NextPageWithLayout = () => {
   // }
 
   const getPRs = async () => {
-    const response = await axios.get(`/api/github`, {});
+    const response = await axios.get(`/api/github/${owner}/${repo}`, {});
 
     const { data, error } = response.data;
 
@@ -44,7 +47,7 @@ const GithubPage: NextPageWithLayout = () => {
   const onApprove = (pull_number) => {
     return async () => {
       const response = await axios.get(
-        `/api/github/retracedhq/logs-viewer/review?pull_number=${pull_number}`,
+        `/api/github/${owner}/${repo}/review?pull_number=${pull_number}`,
         {}
       );
       console.log('response:', response);
