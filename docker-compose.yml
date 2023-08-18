@@ -4,9 +4,10 @@ services:
     image: postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_DB: ${DBNAME}
       POSTGRES_USER: ${DBUSER}
       POSTGRES_PASSWORD: ${DBPASS}
+      POSTGRES_PORT: ${DBPORT}
     volumes:
       - type: volume
         source: pgdb-data
