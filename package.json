@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 4002",
-    "build": "next build",
+    "build": "prisma generate && prisma db push && next build",
     "start": "next start --port 4002",
     "check-types": "tsc --pretty --noEmit",
     "check-format": "prettier --check .",
