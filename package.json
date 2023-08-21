@@ -16,7 +16,8 @@
     "test:e2e": "playwright test",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage --env=jsdom"
+    "test:cov": "jest --coverage --env=jsdom",
+    "build-ci": "next build"
   },
   "dependencies": {
     "@boxyhq/saml-jackson": "1.11.2",
