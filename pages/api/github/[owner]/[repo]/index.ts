@@ -37,7 +37,12 @@ export default async function handler(
 
 // Get teams
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { owner, repo } = req.query;
+  const { owner, repo, excludes } = req.query;
+
+  let excludesList = [];
+  if (excludes) {
+    excludesList = JSON.parse(excludes as string);
+  }
 
   try {
     const response = await octokit.request('GET /repos/{owner}/{repo}/pulls', {
@@ -47,7 +52,16 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     const prs = response.data.filter((pr) => {
-      return pr.user!.login === 'dependabot[bot]';
+      if (pr.user!.login === 'dependabot[bot]') {
+        for (const exclude in excludesList) {
+          if (pr.title.startsWith(`Bump ${excludesList[exclude]} from`)) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      return false;
     });
 
     // console.log('prs:', prs);

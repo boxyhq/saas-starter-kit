@@ -7,8 +7,9 @@ import toast from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
 import { Button } from 'react-daisyui';
 
-const owner = 'retracedhq';
-const repo = 'retraced';
+const owner = 'boxyhq';
+const repo = 'jackson';
+const excludes = ['pg'];
 
 const GithubPage: NextPageWithLayout = () => {
   const [prs, setPrs] = useState([]);
@@ -22,7 +23,10 @@ const GithubPage: NextPageWithLayout = () => {
   // }
 
   const getPRs = async () => {
-    const response = await axios.get(`/api/github/${owner}/${repo}`, {});
+    const response = await axios.get(
+      `/api/github/${owner}/${repo}?excludes=${JSON.stringify(excludes)}`,
+      {}
+    );
 
     const { data, error } = response.data;
 
