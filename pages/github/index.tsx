@@ -45,7 +45,17 @@ const GithubPage: NextPageWithLayout = () => {
   }
 
   const onApproveAll = () => {
-    return async () => {};
+    return async () => {
+      for (const pr of prs) {
+        const response = await axios.get(
+          `/api/github/${owner}/${repo}/review?pull_number=${
+            (pr as any).number
+          }`,
+          {}
+        );
+        console.log('response:', response);
+      }
+    };
   };
 
   const onApprove = (pull_number) => {
