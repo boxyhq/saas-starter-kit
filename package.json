@@ -17,7 +17,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --env=jsdom",
-    "build-ci": "npm run build"
+    "build-ci": "next build"
   },
   "dependencies": {
     "@boxyhq/saml-jackson": "1.11.2",
