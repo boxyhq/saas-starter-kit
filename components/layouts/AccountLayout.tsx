@@ -1,5 +1,3 @@
-'use client'
-
 import { Navbar, Sidebar } from '@/components/shared';
 import useCollapse from 'hooks/useCollapse';
 import React, { ElementRef, MouseEventHandler, useRef } from 'react';

@@ -1,5 +1,3 @@
-'use client'
-
 import app from '@/lib/app';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
