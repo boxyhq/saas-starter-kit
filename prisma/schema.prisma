@@ -133,27 +133,30 @@ model ApiKey {
 }
 
 model jackson_store {
-  key       String   @id
+  key       String    @id @db.VarChar(1500)
   value     String
-  iv        String
-  tag       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  iv        String?   @db.VarChar(64)
+  tag       String?   @db.VarChar(64)
+  createdAt DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt DateTime? @db.Timestamp(0)
 
   jackson_index jackson_index[]
 }
 
 model jackson_index {
   id       Int    @id @default(autoincrement())
-  key      String
-  storeKey String
+  key      String @db.VarChar(1500)
+  storeKey String @db.VarChar(1500)
 
   store jackson_store @relation(fields: [storeKey], references: [key], onDelete: Cascade)
 
   @@index([key])
+  @@index([key, storeKey])
 }
 
 model jackson_ttl {
-  key       String   @id
-  expiresAt DateTime
+  key       String @id @db.VarChar(1500)
+  expiresAt BigInt
+
+  @@index([expiresAt])
 }
