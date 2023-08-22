@@ -39,7 +39,7 @@ export default async function handler(
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const { owner, repo, excludes } = req.query;
 
-  let excludesList = [];
+  let excludesList = {};
   if (excludes) {
     excludesList = JSON.parse(excludes as string);
   }
@@ -53,9 +53,12 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const prs = response.data.filter((pr) => {
       if (pr.user!.login === 'dependabot[bot]') {
-        for (const exclude of excludesList) {
-          if (pr.title.startsWith(`Bump ${exclude} from`)) {
-            return false;
+        for (const ownerRepo in excludesList) {
+          const excluded = excludesList[ownerRepo];
+          for (const exc of excluded) {
+            if (pr.title.startsWith(`Bump ${exc} from`)) {
+              return false;
+            }
           }
         }
         return true;

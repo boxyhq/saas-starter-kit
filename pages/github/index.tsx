@@ -18,7 +18,7 @@ const ownerRepos = [
   'boxyhq/mock-saml',
 ];
 
-const excludes = ['pg'];
+const excludes = { 'boxyhq/jackson': ['pg'] };
 
 const GithubPage: NextPageWithLayout = () => {
   const [prs, setPrs] = useState([]);
@@ -34,7 +34,6 @@ const GithubPage: NextPageWithLayout = () => {
   // }
 
   const getPRs = async (index) => {
-    console.log('ownerRepo:', index, ownerRepos[index]);
     const response = await axios.get(
       `/api/github/${ownerRepos[index]}?excludes=${JSON.stringify(excludes)}`,
       {}
@@ -88,7 +87,6 @@ const GithubPage: NextPageWithLayout = () => {
         <Select
           value={selectedIndex}
           onChange={(event) => {
-            console.log('selectedIndex:', Number(event.target.value));
             setSelectedIndex(Number(event.target.value));
             getPRs(Number(event.target.value));
           }}
