@@ -5,26 +5,38 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState, type ReactElement, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
-import { Button } from 'react-daisyui';
+import { Button, Select } from 'react-daisyui';
 
-const owner = 'boxyhq';
-const repo = 'jackson';
+const ownerRepos = [
+  'boxyhq/jackson',
+  'retracedhq/retraced',
+  'boxyhq/terminus',
+  'boxyhq/saas-starter-kit',
+  'retracedhq/retraced-js',
+  'retracedhq/logs-viewer',
+  'retracedhq/retraced-go',
+  'boxyhq/mock-saml',
+];
+
 const excludes = ['pg'];
 
 const GithubPage: NextPageWithLayout = () => {
   const [prs, setPrs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
-    getPRs();
+    getPRs(selectedIndex);
   }, []);
 
   // if (isError) {
   //   return <Error message={isError.message} />;
   // }
 
-  const getPRs = async () => {
+  const getPRs = async (index) => {
+    console.log('ownerRepo:', index, ownerRepos[index]);
     const response = await axios.get(
-      `/api/github/${owner}/${repo}?excludes=${JSON.stringify(excludes)}`,
+      `/api/github/${ownerRepos[index]}?excludes=${JSON.stringify(excludes)}`,
       {}
     );
 
@@ -36,11 +48,12 @@ const GithubPage: NextPageWithLayout = () => {
     }
 
     if (data) {
+      setLoading(false);
       setPrs(data);
     }
   };
 
-  if (prs.length === 0) {
+  if (loading) {
     return <Loading />;
   }
 
@@ -48,7 +61,7 @@ const GithubPage: NextPageWithLayout = () => {
     return async () => {
       for (const pr of prs) {
         const response = await axios.get(
-          `/api/github/${owner}/${repo}/review?pull_number=${
+          `/api/github/${ownerRepos[selectedIndex]}/review?pull_number=${
             (pr as any).number
           }`,
           {}
@@ -61,7 +74,7 @@ const GithubPage: NextPageWithLayout = () => {
   const onApprove = (pull_number) => {
     return async () => {
       const response = await axios.get(
-        `/api/github/${owner}/${repo}/review?pull_number=${pull_number}`,
+        `/api/github/${ownerRepos[selectedIndex]}/review?pull_number=${pull_number}`,
         {}
       );
       console.log('response:', response);
@@ -72,9 +85,27 @@ const GithubPage: NextPageWithLayout = () => {
     <>
       <div key={'githubpage'} className="rounded p-6 border">
         <h1 className="text-2xl font-bold mb-4">Github PRs</h1>
-        <Button color="primary" onClick={onApproveAll()}>
-          Approve All & Merge
-        </Button>
+        <Select
+          value={selectedIndex}
+          onChange={(event) => {
+            console.log('selectedIndex:', Number(event.target.value));
+            setSelectedIndex(Number(event.target.value));
+            getPRs(Number(event.target.value));
+          }}
+        >
+          {ownerRepos.map((ownerRepo, i) => (
+            <option key={ownerRepo} value={i}>
+              {ownerRepo}
+            </option>
+          ))}
+        </Select>
+        {prs.length ? (
+          <div style={{ padding: '10px' }}>
+            <Button color="primary" onClick={onApproveAll()}>
+              Approve All & Merge
+            </Button>
+          </div>
+        ) : null}
         {prs.map((pr: any, index) => {
           return (
             <div className="card-compact card w-96" key={index}>
