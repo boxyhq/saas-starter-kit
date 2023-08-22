@@ -17,7 +17,7 @@ const useCollapse = (elemRef: RefObject<HTMLElement>, parent: string) => {
         .getElementById(parent)
         ?.removeEventListener('mousedown', handler);
     };
-  });
+  }, [elemRef, parent]);
 
   return [collapse, setCollapse] as const;
 };

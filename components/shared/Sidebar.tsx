@@ -57,7 +57,7 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(function Sideba
   return (
     <>
       <aside
-        className="fixed z-10 h-screen w-10/12 lg:w-64"
+        className={`fixed ${!isCollapsed && "z-10"} h-screen w-10/12 lg:w-64`}
         ref={ref}
         aria-label="Sidebar"
       >
