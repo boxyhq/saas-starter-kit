@@ -38,18 +38,17 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   return (
     <>
       <div className="rounded p-6 border">
+        <div className="flex gap-2">
+          <GithubButton />
+          <GoogleButton />
+        </div>
+        <div className="divider">or</div>
         {inviteToken ? (
           <JoinWithInvitation inviteToken={inviteToken} next={next} />
         ) : (
           <Join />
         )}
-        <div className="divider">or</div>
-        <div className="space-y-3">
-          <GithubButton />
-          <GoogleButton />
-        </div>
       </div>
-
       <p className="text-center text-sm text-gray-600">
         {t('already-have-an-account')}
         <Link

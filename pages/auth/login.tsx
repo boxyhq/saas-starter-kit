@@ -90,6 +90,11 @@ const Login: NextPageWithLayout<
         <Alert status={message.status}>{t(message.text)}</Alert>
       )}
       <div className="rounded p-6 border">
+        <div className="flex gap-2">
+          <GithubButton />
+          <GoogleButton />
+        </div>
+        <div className="divider">or</div>
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">
             <InputWithLabel
@@ -142,9 +147,6 @@ const Login: NextPageWithLayout<
           <Link href="/auth/sso" className="btn-outline btn w-full">
             &nbsp;{t('continue-with-saml-sso')}
           </Link>
-          <div className="divider">or</div>
-          <GithubButton />
-          <GoogleButton />
         </div>
       </div>
       <p className="text-center text-sm text-gray-600">

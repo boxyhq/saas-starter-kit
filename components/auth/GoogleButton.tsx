@@ -7,7 +7,7 @@ const GoogleButton = () => {
 
   return (
     <Button
-      className="btn-outline w-full"
+      className="btn-outline"
       onClick={() => {
         signIn('google', {
           callbackUrl: '/dashboard',
