@@ -9,6 +9,15 @@ const prefix = `${packageInfo.name}.`;
 const meter = packageInfo.name;
 
 export const recordMetric = (metric: AppEvent) => {
+  if (
+    !process.env.OTEL_EXPORTER_OTLP_METRICS_ENDPOINT ||
+    !process.env.OTEL_EXPORTER_OTLP_METRICS_HEADERS ||
+    !process.env.OTEL_EXPORTER_OTLP_METRICS_PROTOCOL
+  ) {
+    console.log('No metrics endpoint found, skipping metric recording');
+    return;
+  }
+
   incrementCounter({
     meter,
     name: `${prefix}${metric}`,
