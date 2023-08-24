@@ -53,12 +53,10 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const prs = response.data.filter((pr) => {
       if (pr.user!.login === 'dependabot[bot]') {
-        for (const ownerRepo in excludesList) {
-          const excluded = excludesList[ownerRepo];
-          for (const exc of excluded) {
-            if (pr.title.startsWith(`Bump ${exc} from`)) {
-              return false;
-            }
+        const excluded = excludesList[`${owner}/${repo}`] || [];
+        for (const exc of excluded) {
+          if (pr.title.startsWith(`Bump ${exc} from`)) {
+            return false;
           }
         }
         return true;
