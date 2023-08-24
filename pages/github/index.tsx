@@ -59,24 +59,34 @@ const GithubPage: NextPageWithLayout = () => {
   const onApproveAll = () => {
     return async () => {
       for (const pr of prs) {
-        const response = await axios.get(
-          `/api/github/${ownerRepos[selectedIndex]}/review?pull_number=${
-            (pr as any).number
-          }`,
-          {}
-        );
-        console.log('response:', response);
+        try {
+          const response = await axios.get(
+            `/api/github/${ownerRepos[selectedIndex]}/review?pull_number=${
+              (pr as any).number
+            }`,
+            {}
+          );
+          console.log('response:', response);
+        } catch (err) {
+          console.log('err:', err);
+        }
       }
+      getPRs(selectedIndex);
     };
   };
 
   const onApprove = (pull_number) => {
     return async () => {
-      const response = await axios.get(
-        `/api/github/${ownerRepos[selectedIndex]}/review?pull_number=${pull_number}`,
-        {}
-      );
-      console.log('response:', response);
+      try {
+        const response = await axios.get(
+          `/api/github/${ownerRepos[selectedIndex]}/review?pull_number=${pull_number}`,
+          {}
+        );
+        console.log('response:', response);
+      } catch (err) {
+        console.log('err:', err);
+      }
+      getPRs(selectedIndex);
     };
   };
 
