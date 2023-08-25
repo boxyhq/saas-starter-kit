@@ -65,7 +65,7 @@ const env = {
   disableNonBusinessEmailSignup:
     process.env.DISABLE_NON_BUSINESS_EMAIL_SIGNUP === 'true' ? true : false,
 
-  authProviders: process.env.AUTH_PROVIDERS,
+  authProviders: process.env.AUTH_PROVIDERS || 'github,credentials',
 };
 
 export default env;
