@@ -36,3 +36,5 @@ export type WebookFormSchema = {
   url: string;
   eventTypes: string[];
 };
+
+export type AUTH_PROVIDER = 'github' | 'google' | 'saml' | 'email';

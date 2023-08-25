@@ -1,39 +1,41 @@
-import GithubButton from '@/components/auth/GithubButton';
-import GoogleButton from '@/components/auth/GoogleButton';
-import { AuthLayout } from '@/components/layouts';
-import { Alert, InputWithLabel } from '@/components/shared';
-import { getParsedCookie } from '@/lib/cookie';
-import env from '@/lib/env';
-import { useFormik } from 'formik';
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
-import { getCsrfToken, signIn, useSession } from 'next-auth/react';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { type ReactElement, useEffect, useState } from 'react';
-import { Button } from 'react-daisyui';
-import type { ComponentStatus } from 'react-daisyui/dist/types';
-import toast from 'react-hot-toast';
-import type { NextPageWithLayout } from 'types';
+
 import * as Yup from 'yup';
+import Link from 'next/link';
+import { useFormik } from 'formik';
+import toast from 'react-hot-toast';
+import { Button } from 'react-daisyui';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { type ReactElement, useEffect, useState } from 'react';
+import type { ComponentStatus } from 'react-daisyui/dist/types';
+import { getCsrfToken, signIn, useSession } from 'next-auth/react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+import env from '@/lib/env';
+import { getParsedCookie } from '@/lib/cookie';
+import type { NextPageWithLayout } from 'types';
+import { AuthLayout } from '@/components/layouts';
+import GithubButton from '@/components/auth/GithubButton';
+import GoogleButton from '@/components/auth/GoogleButton';
+import { Alert, InputWithLabel } from '@/components/shared';
+import { authProviderEnabled } from '@/lib/auth';
+
+interface Message {
+  text: string | null;
+  status: ComponentStatus | null;
+}
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ csrfToken, redirectAfterSignIn }) => {
+> = ({ csrfToken, redirectAfterSignIn, authProviders }) => {
   const router = useRouter();
   const { status } = useSession();
   const { t } = useTranslation('common');
-  const [message, setMessage] = useState<{
-    text: string | null;
-    status: ComponentStatus | null;
-  }>({
-    text: null,
-    status: null,
-  });
+  const [message, setMessage] = useState<Message>({ text: null, status: null });
 
   const { error, success } = router.query as { error: string; success: string };
 
@@ -90,9 +92,9 @@ const Login: NextPageWithLayout<
         <Alert status={message.status}>{t(message.text)}</Alert>
       )}
       <div className="rounded p-6 border">
-        <div className="flex gap-2">
-          <GithubButton />
-          <GoogleButton />
+        <div className="flex gap-2 flex-wrap">
+          {authProviders.github && <GithubButton />}
+          {authProviders.google && <GoogleButton />}
         </div>
         <div className="divider">or</div>
         <form onSubmit={formik.handleSubmit}>
@@ -139,14 +141,23 @@ const Login: NextPageWithLayout<
             </Button>
           </div>
         </form>
-        <div className="divider"></div>
+
+        {(authProviders.email || authProviders.saml) && (
+          <div className="divider"></div>
+        )}
+
         <div className="space-y-3">
-          <Link href="/auth/magic-link" className="btn-outline btn w-full">
-            &nbsp;{t('sign-in-with-email')}
-          </Link>
-          <Link href="/auth/sso" className="btn-outline btn w-full">
-            &nbsp;{t('continue-with-saml-sso')}
-          </Link>
+          {authProviders.email && (
+            <Link href="/auth/magic-link" className="btn-outline btn w-full">
+              &nbsp;{t('sign-in-with-email')}
+            </Link>
+          )}
+
+          {authProviders.saml && (
+            <Link href="/auth/sso" className="btn-outline btn w-full">
+              &nbsp;{t('continue-with-saml-sso')}
+            </Link>
+          )}
         </div>
       </div>
       <p className="text-center text-sm text-gray-600">
@@ -182,6 +193,7 @@ export const getServerSideProps = async (
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       csrfToken: await getCsrfToken(context),
       redirectAfterSignIn: cookieParsed.url ?? env.redirectAfterSignIn,
+      authProviders: authProviderEnabled(),
     },
   };
 };

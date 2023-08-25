@@ -13,56 +13,79 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import EmailProvider from 'next-auth/providers/email';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
+import { isAuthProviderEnabled } from '@/lib/auth';
+import type { Provider } from 'next-auth/providers';
 
 const adapter = PrismaAdapter(prisma);
 
-export const authOptions: NextAuthOptions = {
-  adapter,
-  providers: [
-    CredentialsProvider({
-      id: 'credentials',
-      credentials: {
-        email: { type: 'email' },
-        password: { type: 'password' },
-      },
-      async authorize(credentials) {
-        if (!credentials) {
-          throw new Error('no-credentials');
-        }
+const providers: Provider[] = [
+  CredentialsProvider({
+    id: 'credentials',
+    credentials: {
+      email: { type: 'email' },
+      password: { type: 'password' },
+    },
+    async authorize(credentials) {
+      if (!credentials) {
+        throw new Error('no-credentials');
+      }
 
-        const { email, password } = credentials;
+      const { email, password } = credentials;
 
-        if (!email || !password) {
-          return null;
-        }
+      if (!email || !password) {
+        return null;
+      }
 
-        const user = await getUser({ email });
+      const user = await getUser({ email });
 
-        if (!user) {
-          throw new Error('invalid-credentials');
-        }
+      if (!user) {
+        throw new Error('invalid-credentials');
+      }
 
-        if (env.confirmEmail && !user.emailVerified) {
-          throw new Error('confirm-your-email');
-        }
+      if (env.confirmEmail && !user.emailVerified) {
+        throw new Error('confirm-your-email');
+      }
 
-        const hasValidPassword = await verifyPassword(
-          password,
-          user?.password as string
-        );
+      const hasValidPassword = await verifyPassword(
+        password,
+        user?.password as string
+      );
 
-        if (!hasValidPassword) {
-          throw new Error('invalid-credentials');
-        }
+      if (!hasValidPassword) {
+        throw new Error('invalid-credentials');
+      }
 
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        };
-      },
-    }),
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      };
+    },
+  }),
+];
 
+if (isAuthProviderEnabled('github')) {
+  providers.push(
+    GitHubProvider({
+      clientId: env.github.clientId,
+      clientSecret: env.github.clientSecret,
+      allowDangerousEmailAccountLinking: true,
+    })
+  );
+}
+
+if (isAuthProviderEnabled('google')) {
+  providers.push(
+    GoogleProvider({
+      clientId: env.google.clientId,
+      clientSecret: env.google.clientSecret,
+      allowDangerousEmailAccountLinking: true,
+    })
+  );
+}
+
+if (isAuthProviderEnabled('saml')) {
+  providers.push(
     BoxyHQSAMLProvider({
       authorization: { params: { scope: '' } },
       issuer: env.appUrl,
@@ -72,8 +95,12 @@ export const authOptions: NextAuthOptions = {
       httpOptions: {
         timeout: 30000,
       },
-    }),
+    })
+  );
+}
 
+if (isAuthProviderEnabled('email')) {
+  providers.push(
     EmailProvider({
       server: {
         host: env.smtp.host,
@@ -84,20 +111,13 @@ export const authOptions: NextAuthOptions = {
         },
       },
       from: env.smtp.from,
-    }),
+    })
+  );
+}
 
-    GitHubProvider({
-      clientId: env.github.clientId,
-      clientSecret: env.github.clientSecret,
-      allowDangerousEmailAccountLinking: true,
-    }),
-
-    GoogleProvider({
-      clientId: env.google.clientId,
-      clientSecret: env.google.clientSecret,
-      allowDangerousEmailAccountLinking: true,
-    }),
-  ],
+export const authOptions: NextAuthOptions = {
+  adapter,
+  providers,
   pages: {
     signIn: '/auth/login',
     verifyRequest: '/auth/verify-request',
