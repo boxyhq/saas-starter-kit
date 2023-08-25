@@ -7,19 +7,18 @@ import {
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import React from 'react';
 
 import SidebarItem, { type SidebarMenuItem } from './SidebarItem';
 import TeamDropdown from './TeamDropdown';
+import { forwardRef } from 'react';
 
 interface SidebarMenus {
   [key: string]: SidebarMenuItem[];
 }
 
-export default function Sidebar() {
+export default forwardRef<HTMLElement, { isCollapsed: boolean }>(function Sidebar({ isCollapsed }, ref) {
   const router = useRouter();
   const { t } = useTranslation('common');
-
   const { slug } = router.query;
 
   const sidebarMenus: SidebarMenus = {
@@ -55,14 +54,14 @@ export default function Sidebar() {
   };
 
   const menus = sidebarMenus[slug ? 'team' : 'personal'];
-
   return (
     <>
       <aside
-        className="transition-width fixed top-0 left-0 z-20 flex h-full w-64 flex-shrink-0 flex-col pt-12 duration-75 lg:flex"
+        className={`fixed ${!isCollapsed && "z-10"} h-screen w-10/12 lg:w-64`}
+        ref={ref}
         aria-label="Sidebar"
       >
-        <div className="relative flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white pt-0">
+        <div className={`relative ${isCollapsed && "invisible"} lg:visible flex h-full flex-col border-r border-gray-200 bg-white pt-0`}>
           <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
             <div className="flex-1 space-y-1 divide-y bg-white">
               <TeamDropdown />
@@ -104,4 +103,4 @@ export default function Sidebar() {
       />
     </>
   );
-}
+});
