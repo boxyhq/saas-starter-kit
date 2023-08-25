@@ -10,6 +10,7 @@ const useCollapse = (elemRef: RefObject<HTMLElement>, parent: string) => {
         return;
       }
     };
+
     document.getElementById(parent)?.addEventListener('mousedown', handler);
 
     return () => {
