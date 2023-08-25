@@ -37,4 +37,9 @@ export type WebookFormSchema = {
   eventTypes: string[];
 };
 
-export type AUTH_PROVIDER = 'github' | 'google' | 'saml' | 'email';
+export type AUTH_PROVIDER =
+  | 'github'
+  | 'google'
+  | 'saml'
+  | 'email'
+  | 'credentials';

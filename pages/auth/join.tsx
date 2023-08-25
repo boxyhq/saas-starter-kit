@@ -45,11 +45,18 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
           {authProviders.github && <GithubButton />}
           {authProviders.google && <GoogleButton />}
         </div>
-        <div className="divider">or</div>
-        {inviteToken ? (
-          <JoinWithInvitation inviteToken={inviteToken} next={next} />
-        ) : (
-          <Join />
+
+        {(authProviders.github || authProviders.google) &&
+          authProviders.credentials && <div className="divider">or</div>}
+
+        {authProviders.credentials && (
+          <>
+            {inviteToken ? (
+              <JoinWithInvitation inviteToken={inviteToken} next={next} />
+            ) : (
+              <Join />
+            )}
+          </>
         )}
       </div>
       <p className="text-center text-sm text-gray-600">

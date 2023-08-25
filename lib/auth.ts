@@ -25,5 +25,6 @@ export function authProviderEnabled() {
     google: isAuthProviderEnabled('google'),
     email: isAuthProviderEnabled('email'),
     saml: isAuthProviderEnabled('saml'),
+    credentials: isAuthProviderEnabled('credentials'),
   };
 }

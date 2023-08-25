@@ -96,51 +96,56 @@ const Login: NextPageWithLayout<
           {authProviders.github && <GithubButton />}
           {authProviders.google && <GoogleButton />}
         </div>
-        <div className="divider">or</div>
-        <form onSubmit={formik.handleSubmit}>
-          <div className="space-y-2">
-            <InputWithLabel
-              type="email"
-              label="Email"
-              name="email"
-              placeholder="Email"
-              value={formik.values.email}
-              error={formik.touched.email ? formik.errors.email : undefined}
-              onChange={formik.handleChange}
-            />
-            <InputWithLabel
-              type="password"
-              label="Password"
-              name="password"
-              placeholder="Password"
-              value={formik.values.password}
-              error={
-                formik.touched.password ? formik.errors.password : undefined
-              }
-              onChange={formik.handleChange}
-            />
-            <p className="text-sm text-gray-600 text-right">
-              <Link
-                href="/auth/forgot-password"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
+
+        {(authProviders.github || authProviders.google) &&
+          authProviders.credentials && <div className="divider">or</div>}
+
+        {authProviders.credentials && (
+          <form onSubmit={formik.handleSubmit}>
+            <div className="space-y-2">
+              <InputWithLabel
+                type="email"
+                label="Email"
+                name="email"
+                placeholder="Email"
+                value={formik.values.email}
+                error={formik.touched.email ? formik.errors.email : undefined}
+                onChange={formik.handleChange}
+              />
+              <InputWithLabel
+                type="password"
+                label="Password"
+                name="password"
+                placeholder="Password"
+                value={formik.values.password}
+                error={
+                  formik.touched.password ? formik.errors.password : undefined
+                }
+                onChange={formik.handleChange}
+              />
+              <p className="text-sm text-gray-600 text-right">
+                <Link
+                  href="/auth/forgot-password"
+                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                >
+                  {t('forgot-password')}
+                </Link>
+              </p>
+            </div>
+            <div className="mt-4">
+              <Button
+                type="submit"
+                color="primary"
+                loading={formik.isSubmitting}
+                active={formik.dirty}
+                fullWidth
+                size="md"
               >
-                {t('forgot-password')}
-              </Link>
-            </p>
-          </div>
-          <div className="mt-4">
-            <Button
-              type="submit"
-              color="primary"
-              loading={formik.isSubmitting}
-              active={formik.dirty}
-              fullWidth
-              size="md"
-            >
-              {t('sign-in')}
-            </Button>
-          </div>
-        </form>
+                {t('sign-in')}
+              </Button>
+            </div>
+          </form>
+        )}
 
         {(authProviders.email || authProviders.saml) && (
           <div className="divider"></div>

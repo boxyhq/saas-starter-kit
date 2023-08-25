@@ -18,51 +18,55 @@ import type { Provider } from 'next-auth/providers';
 
 const adapter = PrismaAdapter(prisma);
 
-const providers: Provider[] = [
-  CredentialsProvider({
-    id: 'credentials',
-    credentials: {
-      email: { type: 'email' },
-      password: { type: 'password' },
-    },
-    async authorize(credentials) {
-      if (!credentials) {
-        throw new Error('no-credentials');
-      }
+const providers: Provider[] = [];
 
-      const { email, password } = credentials;
+if (isAuthProviderEnabled('credentials')) {
+  providers.push(
+    CredentialsProvider({
+      id: 'credentials',
+      credentials: {
+        email: { type: 'email' },
+        password: { type: 'password' },
+      },
+      async authorize(credentials) {
+        if (!credentials) {
+          throw new Error('no-credentials');
+        }
 
-      if (!email || !password) {
-        return null;
-      }
+        const { email, password } = credentials;
 
-      const user = await getUser({ email });
+        if (!email || !password) {
+          return null;
+        }
 
-      if (!user) {
-        throw new Error('invalid-credentials');
-      }
+        const user = await getUser({ email });
 
-      if (env.confirmEmail && !user.emailVerified) {
-        throw new Error('confirm-your-email');
-      }
+        if (!user) {
+          throw new Error('invalid-credentials');
+        }
 
-      const hasValidPassword = await verifyPassword(
-        password,
-        user?.password as string
-      );
+        if (env.confirmEmail && !user.emailVerified) {
+          throw new Error('confirm-your-email');
+        }
 
-      if (!hasValidPassword) {
-        throw new Error('invalid-credentials');
-      }
+        const hasValidPassword = await verifyPassword(
+          password,
+          user?.password as string
+        );
 
-      return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      };
-    },
-  }),
-];
+        if (!hasValidPassword) {
+          throw new Error('invalid-credentials');
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        };
+      },
+    })
+  );
+}
 
 if (isAuthProviderEnabled('github')) {
   providers.push(

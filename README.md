@@ -1,4 +1,3 @@
-
 ![BoxyHQ Banner small (800 x 320 px) (4)](https://github.com/boxyhq/saas-starter-kit/assets/66887028/7727f48a-ca0a-4e61-8162-c5b9f9d9a406)
 
 # ⭐ Enterprise SaaS Starter Kit
@@ -140,8 +139,8 @@ npm run test:e2e
 
 _Note: HTML test report is generated inside the `report` folder. Currently supported browsers for test execution `chromium` and `firefox`_
 
-
 #### Fully customizable boilerplate out of the box, see images below 👇👇👇
+
 ![saas-starter-kit-poster](/public/saas-starter-kit-poster.png)
 
 ## 🥇 Features
