@@ -1,13 +1,12 @@
 import { InputWithLabel } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
-import axios from 'axios';
+import { defaultHeaders } from '@/lib/common';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
-import { ApiResponse } from 'types';
+import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 
 const ResetPassword = () => {
@@ -32,19 +31,27 @@ const ResetPassword = () => {
     onSubmit: async (values) => {
       setSubmitting(true);
 
-      try {
-        await axios.post<ApiResponse>('/api/auth/reset-password', {
+      const response = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: defaultHeaders,
+        body: JSON.stringify({
           ...values,
           token,
-        });
+        }),
+      });
 
-        setSubmitting(false);
-        formik.resetForm();
-        toast.success(t('password-updated'));
-        router.push('/auth/login');
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      const json = (await response.json()) as ApiResponse;
+
+      setSubmitting(false);
+
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
       }
+
+      formik.resetForm();
+      toast.success(t('password-updated'));
+      router.push('/auth/login');
     },
   });
 
@@ -82,7 +89,7 @@ const ResetPassword = () => {
             loading={submitting}
             active={formik.dirty}
             fullWidth
-            size='md'
+            size="md"
           >
             {t('reset-password')}
           </Button>
