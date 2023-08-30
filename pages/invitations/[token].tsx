@@ -1,6 +1,6 @@
 import { AuthLayout } from '@/components/layouts';
 import { Error, Loading } from '@/components/shared';
-import axios from 'axios';
+import { defaultHeaders } from '@/lib/common';
 import { setCookie } from 'cookies-next';
 import useInvitation from 'hooks/useInvitation';
 import type { GetServerSidePropsContext } from 'next';
@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
-import type { NextPageWithLayout } from 'types';
+import type { ApiResponse, NextPageWithLayout } from 'types';
 
 const AcceptTeamInvitation: NextPageWithLayout = () => {
   const { status } = useSession();
@@ -35,23 +35,23 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
   }
 
   const acceptInvitation = async () => {
-    const response = await axios.put(
+    const response = await fetch(
       `/api/teams/${invitation.team.slug}/invitations`,
       {
-        inviteToken: invitation.token,
+        method: 'PUT',
+        headers: defaultHeaders,
+        body: JSON.stringify({ inviteToken: invitation.token }),
       }
     );
 
-    const { data, error } = response.data;
+    const json = (await response.json()) as ApiResponse
 
-    if (error) {
-      toast.error(error.message);
+    if (!response.ok) {
+      toast.error(json.error.message);
       return;
     }
 
-    if (data) {
-      router.push('/teams/switch');
-    }
+    router.push('/teams/switch');
   };
 
   return (

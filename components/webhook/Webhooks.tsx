@@ -2,7 +2,6 @@ import { Card } from '@/components/shared';
 import { WithLoadingAndError } from '@/components/shared';
 import { EmptyState } from '@/components/shared';
 import { Team } from '@prisma/client';
-import axios from 'axios';
 import useWebhooks from 'hooks/useWebhooks';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
@@ -11,6 +10,8 @@ import toast from 'react-hot-toast';
 import type { EndpointOut } from 'svix';
 
 import EditWebhook from './EditWebhook';
+import { defaultHeaders } from '@/lib/common';
+import type { ApiResponse } from 'types';
 
 const Webhooks = ({ team }: { team: Team }) => {
   const { t } = useTranslation('common');
@@ -22,19 +23,23 @@ const Webhooks = ({ team }: { team: Team }) => {
 
   const deleteWebhook = async (webhook: EndpointOut) => {
     const sp = new URLSearchParams({ webhookId: webhook.id });
-    const response = await axios.delete(
-      `/api/teams/${team.slug}/webhooks?${sp.toString()}`
+
+    const response = await fetch(
+      `/api/teams/${team.slug}/webhooks?${sp.toString()}`,
+      {
+        method: 'DELETE',
+        headers: defaultHeaders,
+      }
     );
 
-    const { error } = response.data;
+    const json = (await response.json()) as ApiResponse;
 
-    if (error) {
-      toast.error(error.message);
+    if (!response.ok) {
+      toast.error(json.error.message);
       return;
     }
 
     mutateWebhooks();
-
     toast.success(t('webhook-deleted'));
   };
 

@@ -1,6 +1,5 @@
 import { Card } from '@/components/shared';
 import { Team } from '@prisma/client';
-import axios from 'axios';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -8,6 +7,8 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 
 import ConfirmationDialog from '../shared/ConfirmationDialog';
+import { defaultHeaders } from '@/lib/common';
+import type { ApiResponse } from 'types';
 
 const RemoveTeam = ({ team }: { team: Team }) => {
   const router = useRouter();
@@ -18,21 +19,22 @@ const RemoveTeam = ({ team }: { team: Team }) => {
   const removeTeam = async () => {
     setLoading(true);
 
-    const response = await axios.delete(`/api/teams/${team.slug}`);
+    const response = await fetch(`/api/teams/${team.slug}`, {
+      method: 'DELETE',
+      headers: defaultHeaders,
+    });
+
+    const json = (await response.json()) as ApiResponse;
 
     setLoading(false);
 
-    const { data, error } = response.data;
-
-    if (error) {
-      toast.error(error.message);
+    if (!response.ok) {
+      toast.error(json.error.message);
       return;
     }
 
-    if (data) {
-      toast.success(t('team-removed-successfully'));
-      return router.push('/teams');
-    }
+    toast.success(t('team-removed-successfully'));
+    router.push('/teams');
   };
 
   return (

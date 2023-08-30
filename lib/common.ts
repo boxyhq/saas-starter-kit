@@ -39,14 +39,6 @@ export const extractAuthToken = (req: NextApiRequest): string | null => {
   return authHeader ? authHeader.split(' ')[1] : null;
 };
 
-export const getAxiosError = (error: any): string => {
-  if (error.response) {
-    return error.response.data.error.message;
-  }
-
-  return error.message;
-};
-
 export const validateEmail = (email: string): boolean => {
   const re = /\S+@\S+\.\S+/;
   return re.test(email);
@@ -83,4 +75,8 @@ export const validatePassword = (password: string): boolean => {
 
 export const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
+};
+
+export const defaultHeaders = {
+  'Content-Type': 'application/json',
 };

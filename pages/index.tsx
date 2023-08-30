@@ -1,13 +1,14 @@
-import FAQSection from '@/components/defaultLanding/FAQSection';
-import FeatureSection from '@/components/defaultLanding/FeatureSection';
-import HeroSection from '@/components/defaultLanding/HeroSection';
-import PricingSection from '@/components/defaultLanding/PricingSection';
-import { GetServerSidePropsContext } from 'next';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 import type { ReactElement } from 'react';
+import { useTranslation } from 'next-i18next';
 import type { NextPageWithLayout } from 'types';
+import { GetServerSidePropsContext } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+import FAQSection from '@/components/defaultLanding/FAQSection';
+import HeroSection from '@/components/defaultLanding/HeroSection';
+import FeatureSection from '@/components/defaultLanding/FeatureSection';
+import PricingSection from '@/components/defaultLanding/PricingSection';
 
 const Home: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
@@ -21,12 +22,22 @@ const Home: NextPageWithLayout = () => {
           </Link>
         </div>
         <div className="flex-none">
-          <ul className="menu menu-horizontal p-0">
+          <ul className="menu menu-horizontal flex gap-4">
             <li>
-              <a>{t('sign-up')}</a>
+              <Link
+                href="/auth/join"
+                className="btn btn-primary btn-md text-white"
+              >
+                {t('sign-up')}
+              </Link>
             </li>
             <li>
-              <a>{t('item-3')}</a>
+              <Link
+                href="/auth/login"
+                className="btn btn-primary btn-outline btn-md"
+              >
+                {t('sign-in')}
+              </Link>
             </li>
           </ul>
         </div>

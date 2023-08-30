@@ -1,6 +1,5 @@
 import { Card, InputWithLabel } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
-import axios from 'axios';
+import { defaultHeaders } from '@/lib/common';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { Button } from 'react-daisyui';
@@ -22,14 +21,21 @@ const UpdatePassword = () => {
     },
     validationSchema: schema,
     onSubmit: async (values) => {
-      try {
-        await axios.put(`/api/password`, values);
+      const response = await fetch('/api/password', {
+        method: 'PUT',
+        headers: defaultHeaders,
+        body: JSON.stringify(values),
+      });
 
-        toast.success(t('successfully-updated'));
-        formik.resetForm();
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      const json = await response.json();
+
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
       }
+
+      toast.success(t('successfully-updated'));
+      formik.resetForm();
     },
   });
 
@@ -74,7 +80,7 @@ const UpdatePassword = () => {
                 color="primary"
                 loading={formik.isSubmitting}
                 disabled={!formik.dirty || !formik.isValid}
-                size='md'
+                size="md"
               >
                 {t('change-password')}
               </Button>

@@ -1,8 +1,8 @@
 import { InputWithLabel, Loading } from '@/components/shared';
+import { defaultHeaders } from '@/lib/common';
 import fetcher from '@/lib/fetcher';
 import type { Directory } from '@boxyhq/saml-jackson';
 import { Team } from '@prisma/client';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import useDirectory from 'hooks/useDirectory';
 import { useTranslation } from 'next-i18next';
@@ -35,27 +35,20 @@ const CreateDirectory = ({
       provider: Yup.string().required(),
     }),
     onSubmit: async (values) => {
-      const { name, provider } = values;
+      const response = await fetch(`/api/teams/${team.slug}/directory-sync`, {
+        method: 'POST',
+        headers: defaultHeaders,
+        body: JSON.stringify(values),
+      });
 
-      const response = await axios.post<ApiResponse<Directory>>(
-        `/api/teams/${team.slug}/directory-sync`,
-        {
-          name,
-          provider,
-        }
-      );
+      const json = (await response.json()) as ApiResponse<Directory>;
 
-      const { data: directory, error } = response.data;
-
-      if (error) {
-        toast.error(error.message);
+      if (!response.ok) {
+        toast.error(json.error.message);
         return;
       }
 
-      if (directory) {
-        toast.success(t('directory-connection-created'));
-      }
-
+      toast.success(t('directory-connection-created'));
       mutateDirectory();
       setVisible(false);
     },
@@ -79,6 +72,7 @@ const CreateDirectory = ({
         shape="circle"
         className="absolute right-2 top-2 rounded-full"
         onClick={toggleVisible}
+        aria-label={t('close')}
       >
         ✕
       </Button>
@@ -125,13 +119,13 @@ const CreateDirectory = ({
             color="primary"
             loading={formik.isSubmitting}
             active={formik.dirty}
-            size='md'
+            size="md"
           >
             {t('create-directory')}
           </Button>
-        </Modal.Actions>
-      </form>
-    </Modal>
+        </Modal.Actions >
+      </form >
+    </Modal >
   );
 };
 

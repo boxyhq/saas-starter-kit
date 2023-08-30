@@ -69,7 +69,7 @@
   "entity-id": "Entity ID",
   "add-webhook": "Add Webhook",
   "webhook-created": "Webhook created successfully.",
-  "webhook-deleted": "Webhook created successfully.",
+  "webhook-deleted": "Webhook deleted successfully.",
   "create-webhook": "Create Webhook",
   "webhook-create-desc": "Create webhook to listen to events from app.",
   "edit-webhook-endpoint": "Edit Webhook Endpoint",
@@ -180,5 +180,6 @@
   "no-credentials": "No credentials found.",
   "confirm-email": "Confirm your email address",
   "confirm-email-description": "Please click the verification link sent to your email to activate your account.",
-  "allow-only-work-email": "Please use your work email to create an account."
+  "allow-only-work-email": "Please use your work email to create an account.",
+  "webhook-updated": "Webhook updated successfully."
 }
