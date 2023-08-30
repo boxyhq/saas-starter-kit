@@ -1,5 +1,4 @@
 import { Loading } from '@/components/shared';
-import axios from 'axios';
 import type { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState, type ReactElement, useEffect } from 'react';
@@ -35,22 +34,22 @@ const GithubPage: NextPageWithLayout = () => {
   // }
 
   const getPRs = async (index) => {
-    const response = await axios.get(
-      `/api/github/${ownerRepos[index]}?excludes=${JSON.stringify(excludes)}`,
-      {}
+    const response = await fetch(
+      `/api/github/${ownerRepos[index]}?excludes=${JSON.stringify(excludes)}`
     );
+    const json = await response.json();
 
-    const { data, error } = response.data;
+    const { data, error } = json;
+
+    // console.log('response:', data);
 
     if (error) {
       toast.error(error.message);
       return;
     }
 
-    if (data) {
-      setLoading(false);
-      setPrs(data);
-    }
+    setLoading(false);
+    setPrs(data || []);
   };
 
   if (loading) {
@@ -61,15 +60,16 @@ const GithubPage: NextPageWithLayout = () => {
     return async () => {
       for (const pr of prs) {
         try {
-          const response = await axios.get(
+          const response = await fetch(
             `/api/github/${ownerRepos[selectedIndex]}/review?pull_number=${
               (pr as any).number
-            }`,
-            {}
+            }`
           );
-          console.log('response:', response);
+          const json = await response.json();
+
+          // console.log('response:', json);
         } catch (err) {
-          console.log('err:', err);
+          console.error('err:', err);
         }
       }
       getPRs(selectedIndex);
@@ -79,13 +79,15 @@ const GithubPage: NextPageWithLayout = () => {
   const onApprove = (pull_number) => {
     return async () => {
       try {
-        const response = await axios.get(
-          `/api/github/${ownerRepos[selectedIndex]}/review?pull_number=${pull_number}`,
-          {}
+        const response = await fetch(
+          `/api/github/${ownerRepos[selectedIndex]}/review?pull_number=${pull_number}`
         );
-        console.log('response:', response);
+
+        const json = await response.json();
+
+        // console.log('response:', json);
       } catch (err) {
-        console.log('err:', err);
+        console.error('err:', err);
       }
       getPRs(selectedIndex);
     };
