@@ -20,6 +20,7 @@
     "build-ci": "next build"
   },
   "dependencies": {
+    "@boxyhq/react-ui": "3.3.9",
     "@boxyhq/saml-jackson": "1.11.3",
     "@heroicons/react": "2.0.18",
     "@hookform/resolvers": "3.3.0",
@@ -35,7 +36,7 @@
     "crypto-js": "4.1.1",
     "formik": "2.4.3",
     "i18next": "22.5.1",
-    "mixpanel-browser": "^2.47.0",
+    "mixpanel-browser": "2.47.0",
     "moment": "2.29.4",
     "next": "13.4.19",
     "next-auth": "4.23.1",

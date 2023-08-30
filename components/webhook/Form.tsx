@@ -33,8 +33,22 @@ const Form = ({
 
   const { t } = useTranslation('common');
 
+  const toggleVisible = () => {
+    setVisible(!visible);
+    formik.resetForm();
+  };
+
   return (
     <Modal open={visible}>
+      <Button
+        type="button"
+        size="sm"
+        shape="circle"
+        className="absolute right-2 top-2 rounded-full"
+        onClick={toggleVisible}
+      >
+        ✕
+      </Button>
       <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header className="font-bold">
           {t('edit-webhook-endpoint')}
@@ -87,17 +101,6 @@ const Form = ({
             size='md'
           >
             {t('create-webhook')}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setVisible(!visible);
-              formik.resetForm();
-            }}
-            size='md'
-          >
-            {t('close')}
           </Button>
         </Modal.Actions>
       </form>
