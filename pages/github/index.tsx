@@ -11,6 +11,7 @@ const ownerRepos = [
   'boxyhq/jackson',
   'retracedhq/retraced',
   'boxyhq/terminus',
+  'boxyhq/saml20',
   'boxyhq/saas-starter-kit',
   'retracedhq/retraced-js',
   'retracedhq/logs-viewer',
