@@ -53,9 +53,22 @@ const InviteMember = ({
       formik.resetForm();
     },
   });
+  const toggleVisible = () => {
+    setVisible(!visible);
+  };
 
   return (
     <Modal open={visible}>
+      <Button
+        type="button"
+        size="sm"
+        shape="circle"
+        className="absolute right-2 top-2 rounded-full"
+        onClick={toggleVisible}
+        aria-label={t('close')}
+      >
+        ✕
+      </Button>
       <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header className="font-bold">
           {t('invite-new-member')}
@@ -97,19 +110,9 @@ const InviteMember = ({
           >
             {t('send-invite')}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setVisible(!visible);
-            }}
-            size="md"
-          >
-            {t('close')}
-          </Button>
-        </Modal.Actions>
-      </form>
-    </Modal>
+        </Modal.Actions >
+      </form >
+    </Modal >
   );
 };
 

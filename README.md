@@ -143,8 +143,8 @@ npm run test:e2e
 
 _Note: HTML test report is generated inside the `report` folder. Currently supported browsers for test execution `chromium` and `firefox`_
 
-
 #### Fully customizable boilerplate out of the box, see images below 👇👇👇
+
 ![saas-starter-kit-poster](/public/saas-starter-kit-poster.png)
 
 ## 🥇 Features
