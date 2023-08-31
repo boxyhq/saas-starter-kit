@@ -3,15 +3,17 @@ import { defaultHeaders } from '@/lib/common';
 import { Invitation, Team } from '@prisma/client';
 import useInvitations from 'hooks/useInvitations';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
+import ConfirmationDialog from '../shared/ConfirmationDialog';
 
 const PendingInvitations = ({ team }: { team: Team }) => {
   const { isLoading, isError, invitations, mutateInvitation } = useInvitations(
     team.slug
   );
+  const [visible, setVisible] = useState(false);
 
   const { t } = useTranslation('common');
 
@@ -26,10 +28,13 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   const deleteInvitation = async (invitation: Invitation) => {
     const sp = new URLSearchParams({ id: invitation.id });
 
-    const response = await fetch(`/api/teams/${team.slug}/invitations?${sp.toString()}`, {
-      method: 'DELETE',
-      headers: defaultHeaders,
-    });
+    const response = await fetch(
+      `/api/teams/${team.slug}/invitations?${sp.toString()}`,
+      {
+        method: 'DELETE',
+        headers: defaultHeaders,
+      }
+    );
 
     const json = (await response.json()) as ApiResponse<unknown>;
 
@@ -89,11 +94,19 @@ const PendingInvitations = ({ team }: { team: Team }) => {
                       color="error"
                       variant="outline"
                       onClick={() => {
-                        deleteInvitation(invitation);
+                        setVisible(true);
                       }}
                     >
                       {t('remove')}
                     </Button>
+                    <ConfirmationDialog
+                      visible={visible}
+                      onCancel={() => setVisible(false)}
+                      onConfirm={() => deleteInvitation(invitation)}
+                      title={t('confirm-delete-member-invitation')}
+                    >
+                      {t('delete-member-invitation-warning')}
+                    </ConfirmationDialog>
                   </td>
                 </tr>
               );

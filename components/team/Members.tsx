@@ -10,11 +10,14 @@ import toast from 'react-hot-toast';
 import UpdateMemberRole from './UpdateMemberRole';
 import { defaultHeaders } from '@/lib/common';
 import type { ApiResponse } from 'types';
+import ConfirmationDialog from '../shared/ConfirmationDialog';
+import { useState } from 'react';
 
 const Members = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
   const { t } = useTranslation('common');
   const { canAccess } = useCanAccess();
+  const [visible, setVisible] = useState(false);
 
   const { isLoading, isError, members, mutateTeamMembers } = useTeamMembers(
     team.slug
@@ -114,12 +117,20 @@ const Members = ({ team }: { team: Team }) => {
                       <Button
                         variant="outline"
                         onClick={() => {
-                          removeTeamMember(member);
+                          setVisible(true);
                         }}
                         size="md"
                       >
                         {t('remove')}
                       </Button>
+                      <ConfirmationDialog
+                        visible={visible}
+                        onCancel={() => setVisible(false)}
+                        onConfirm={() => removeTeamMember(member)}
+                        title={t('confirm-delete-member')}
+                      >
+                        {t('delete-member-warning')}
+                      </ConfirmationDialog>
                     </td>
                   )}
                 </tr>

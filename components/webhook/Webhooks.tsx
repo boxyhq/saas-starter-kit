@@ -12,10 +12,12 @@ import type { EndpointOut } from 'svix';
 import EditWebhook from './EditWebhook';
 import { defaultHeaders } from '@/lib/common';
 import type { ApiResponse } from 'types';
+import ConfirmationDialog from '../shared/ConfirmationDialog';
 
 const Webhooks = ({ team }: { team: Team }) => {
   const { t } = useTranslation('common');
   const [visible, setVisible] = React.useState(false);
+  const [removeVisible, setRemoveVisible] = React.useState(false);
   const [endpoint, setEndpoint] = React.useState<EndpointOut | null>(null);
   const { isLoading, isError, webhooks, mutateWebhooks } = useWebhooks(
     team.slug
@@ -96,11 +98,19 @@ const Webhooks = ({ team }: { team: Team }) => {
                             color="error"
                             variant="outline"
                             onClick={() => {
-                              deleteWebhook(webhook);
+                              setRemoveVisible(true);
                             }}
                           >
                             {t('remove')}
                           </Button>
+                          <ConfirmationDialog
+                            visible={removeVisible}
+                            onCancel={() => setRemoveVisible(false)}
+                            onConfirm={() => deleteWebhook(webhook)}
+                            title={t('confirm-delete-webhook')}
+                          >
+                            {t('delete-webhook-warning')}
+                          </ConfirmationDialog>
                         </div>
                       </td>
                     </tr>
