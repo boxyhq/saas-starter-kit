@@ -48,7 +48,7 @@
     "react-hot-toast": "2.4.1",
     "react-i18next": "12.3.1",
     "react-icons": "4.10.1",
-    "svix": "1.8.1",
+    "svix": "1.10.0",
     "swr": "2.2.2",
     "uuid": "9.0.0",
     "yup": "1.2.0",
