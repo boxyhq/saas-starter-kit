@@ -14,7 +14,7 @@ const schema = Yup.object().shape({
   name: Yup.string().required(),
   email: Yup.string().required(),
   image: Yup.mixed()
-    .required('Please select an image')
+    .nullable()
     .test('fileFormat', 'Only JPG, PNG, and GIF files are allowed', (value) => {
       if (!value) return true;
 
