@@ -10,10 +10,15 @@ import type { ApiResponse } from 'types';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
 
 const PendingInvitations = ({ team }: { team: Team }) => {
+  const [selectedInvitation, setSelectedInvitation] =
+    useState<Invitation | null>(null);
+
+  const [confirmationDialogVisible, setCOnfirmationDialogVisible] =
+    useState(false);
+
   const { isLoading, isError, invitations, mutateInvitation } = useInvitations(
     team.slug
   );
-  const [visible, setVisible] = useState(false);
 
   const { t } = useTranslation('common');
 
@@ -25,7 +30,9 @@ const PendingInvitations = ({ team }: { team: Team }) => {
     return <Error message={isError.message} />;
   }
 
-  const deleteInvitation = async (invitation: Invitation) => {
+  const deleteInvitation = async (invitation: Invitation | null) => {
+    if (!invitation) return;
+
     const sp = new URLSearchParams({ id: invitation.id });
 
     const response = await fetch(
@@ -52,69 +59,72 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   }
 
   return (
-    <Card heading="Invitations Sent">
-      <Card.Body>
-        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-          <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3" colSpan={2}>
-                {t('email')}
-              </th>
-              <th scope="col" className="px-6 py-3">
-                {t('role')}
-              </th>
-              <th scope="col" className="px-6 py-3">
-                {t('created-at')}
-              </th>
-              <th scope="col" className="px-6 py-3">
-                {t('action')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {invitations.map((invitation) => {
-              return (
-                <tr
-                  key={invitation.token}
-                  className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                >
-                  <td className="px-6 py-3" colSpan={2}>
-                    <div className="flex items-center justify-start space-x-2">
-                      <LetterAvatar name={invitation.email} />
-                      <span>{invitation.email}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-3">{invitation.role}</td>
-                  <td className="px-6 py-3">
-                    {new Date(invitation.createdAt).toDateString()}
-                  </td>
-                  <td className="px-6 py-3">
-                    <Button
-                      size="xs"
-                      color="error"
-                      variant="outline"
-                      onClick={() => {
-                        setVisible(true);
-                      }}
-                    >
-                      {t('remove')}
-                    </Button>
-                    <ConfirmationDialog
-                      visible={visible}
-                      onCancel={() => setVisible(false)}
-                      onConfirm={() => deleteInvitation(invitation)}
-                      title={t('confirm-delete-member-invitation')}
-                    >
-                      {t('delete-member-invitation-warning')}
-                    </ConfirmationDialog>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </Card.Body>
-    </Card>
+    <>
+      <Card heading="Invitations Sent">
+        <Card.Body>
+          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="px-6 py-3" colSpan={2}>
+                  {t('email')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('role')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('created-at')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('action')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {invitations.map((invitation) => {
+                return (
+                  <tr
+                    key={invitation.token}
+                    className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+                  >
+                    <td className="px-6 py-3" colSpan={2}>
+                      <div className="flex items-center justify-start space-x-2">
+                        <LetterAvatar name={invitation.email} />
+                        <span>{invitation.email}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-3">{invitation.role}</td>
+                    <td className="px-6 py-3">
+                      {new Date(invitation.createdAt).toDateString()}
+                    </td>
+                    <td className="px-6 py-3">
+                      <Button
+                        size="xs"
+                        color="error"
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedInvitation(invitation);
+                          setCOnfirmationDialogVisible(true);
+                        }}
+                      >
+                        {t('remove')}
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </Card.Body>
+      </Card>
+      <ConfirmationDialog
+        visible={confirmationDialogVisible}
+        onCancel={() => setCOnfirmationDialogVisible(false)}
+        onConfirm={() => deleteInvitation(selectedInvitation)}
+        title={t('confirm-delete-member-invitation')}
+      >
+        {t('delete-member-invitation-warning')}
+      </ConfirmationDialog>
+    </>
   );
 };
 

@@ -17,7 +17,9 @@ const Members = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
   const { t } = useTranslation('common');
   const { canAccess } = useCanAccess();
-  const [visible, setVisible] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [confirmationDialogVisible, setCOnfirmationDialogVisible] =
+    useState(false);
 
   const { isLoading, isError, members, mutateTeamMembers } = useTeamMembers(
     team.slug
@@ -35,7 +37,9 @@ const Members = ({ team }: { team: Team }) => {
     return null;
   }
 
-  const removeTeamMember = async (member: TeamMember) => {
+  const removeTeamMember = async (member: TeamMember | null) => {
+    if (!member) return;
+
     const sp = new URLSearchParams({ memberId: member.userId });
 
     const response = await fetch(
@@ -70,76 +74,79 @@ const Members = ({ team }: { team: Team }) => {
   };
 
   return (
-    <Card heading={t('team-members')}>
-      <Card.Body>
-        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-          <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                {t('name')}
-              </th>
-              <th scope="col" className="px-6 py-3">
-                {t('email')}
-              </th>
-              <th scope="col" className="px-6 py-3">
-                {t('role')}
-              </th>
-              {canAccess('team_member', ['delete']) && (
+    <>
+      <Card heading={t('team-members')}>
+        <Card.Body>
+          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
                 <th scope="col" className="px-6 py-3">
-                  {t('action')}
+                  {t('name')}
                 </th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {members.map((member) => {
-              return (
-                <tr
-                  key={member.id}
-                  className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                >
-                  <td className="px-6 py-3">
-                    <div className="flex items-center justify-start space-x-2">
-                      <LetterAvatar name={member.user.name} />
-                      <span>{member.user.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-3">{member.user.email}</td>
-                  <td className="px-6 py-3">
-                    {canUpdateRole(member) ? (
-                      <UpdateMemberRole team={team} member={member} />
-                    ) : (
-                      <span>{member.role}</span>
-                    )}
-                  </td>
-                  {canRemoveMember(member) && (
+                <th scope="col" className="px-6 py-3">
+                  {t('email')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('role')}
+                </th>
+                {canAccess('team_member', ['delete']) && (
+                  <th scope="col" className="px-6 py-3">
+                    {t('action')}
+                  </th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {members.map((member) => {
+                return (
+                  <tr
+                    key={member.id}
+                    className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+                  >
                     <td className="px-6 py-3">
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setVisible(true);
-                        }}
-                        size="md"
-                      >
-                        {t('remove')}
-                      </Button>
-                      <ConfirmationDialog
-                        visible={visible}
-                        onCancel={() => setVisible(false)}
-                        onConfirm={() => removeTeamMember(member)}
-                        title={t('confirm-delete-member')}
-                      >
-                        {t('delete-member-warning')}
-                      </ConfirmationDialog>
+                      <div className="flex items-center justify-start space-x-2">
+                        <LetterAvatar name={member.user.name} />
+                        <span>{member.user.name}</span>
+                      </div>
                     </td>
-                  )}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </Card.Body>
-    </Card>
+                    <td className="px-6 py-3">{member.user.email}</td>
+                    <td className="px-6 py-3">
+                      {canUpdateRole(member) ? (
+                        <UpdateMemberRole team={team} member={member} />
+                      ) : (
+                        <span>{member.role}</span>
+                      )}
+                    </td>
+                    {canRemoveMember(member) && (
+                      <td className="px-6 py-3">
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedMember(member);
+                            setCOnfirmationDialogVisible(true);
+                          }}
+                          size="md"
+                        >
+                          {t('remove')}
+                        </Button>
+                      </td>
+                    )}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </Card.Body>
+      </Card>
+      <ConfirmationDialog
+        visible={confirmationDialogVisible}
+        onCancel={() => setCOnfirmationDialogVisible(false)}
+        onConfirm={() => removeTeamMember(selectedMember)}
+        title={t('confirm-delete-member')}
+      >
+        {t('delete-member-warning')}
+      </ConfirmationDialog>
+    </>
   );
 };
 
