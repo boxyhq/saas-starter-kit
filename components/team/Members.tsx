@@ -18,7 +18,7 @@ const Members = ({ team }: { team: Team }) => {
   const { t } = useTranslation('common');
   const { canAccess } = useCanAccess();
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  const [confirmationDialogVisible, setCOnfirmationDialogVisible] =
+  const [confirmationDialogVisible, setConfirmationDialogVisible] =
     useState(false);
 
   const { isLoading, isError, members, mutateTeamMembers } = useTeamMembers(
@@ -123,7 +123,7 @@ const Members = ({ team }: { team: Team }) => {
                           variant="outline"
                           onClick={() => {
                             setSelectedMember(member);
-                            setCOnfirmationDialogVisible(true);
+                            setConfirmationDialogVisible(true);
                           }}
                           size="md"
                         >
@@ -140,7 +140,7 @@ const Members = ({ team }: { team: Team }) => {
       </Card>
       <ConfirmationDialog
         visible={confirmationDialogVisible}
-        onCancel={() => setCOnfirmationDialogVisible(false)}
+        onCancel={() => setConfirmationDialogVisible(false)}
         onConfirm={() => removeTeamMember(selectedMember)}
         title={t('confirm-delete-member')}
       >

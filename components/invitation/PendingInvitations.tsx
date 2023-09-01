@@ -13,7 +13,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   const [selectedInvitation, setSelectedInvitation] =
     useState<Invitation | null>(null);
 
-  const [confirmationDialogVisible, setCOnfirmationDialogVisible] =
+  const [confirmationDialogVisible, setConfirmationDialogVisible] =
     useState(false);
 
   const { isLoading, isError, invitations, mutateInvitation } = useInvitations(
@@ -103,7 +103,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
                         variant="outline"
                         onClick={() => {
                           setSelectedInvitation(invitation);
-                          setCOnfirmationDialogVisible(true);
+                          setConfirmationDialogVisible(true);
                         }}
                       >
                         {t('remove')}
@@ -118,7 +118,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
       </Card>
       <ConfirmationDialog
         visible={confirmationDialogVisible}
-        onCancel={() => setCOnfirmationDialogVisible(false)}
+        onCancel={() => setConfirmationDialogVisible(false)}
         onConfirm={() => deleteInvitation(selectedInvitation)}
         title={t('confirm-delete-member-invitation')}
       >
