@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
-import React, { ChangeEvent, useRef } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
+import { Button } from 'react-daisyui';
 
 const ProfileImageUpload = ({ formik }) => {
   const { t } = useTranslation('common');
@@ -19,6 +20,10 @@ const ProfileImageUpload = ({ formik }) => {
 
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleRemovePhoto = () => {
+    formik.setFieldValue('image', '');
   };
 
   return (
@@ -64,6 +69,15 @@ const ProfileImageUpload = ({ formik }) => {
           >
             {t('new-photo')}
           </label>
+          {formik.values.image && (
+            <Button
+              size="md"
+              className="ml-3 text-red-600 bg-transparent hover:bg-transparent uppercase text-xs font-medium leading-6 border border-inherit rounded-md cursor-pointer"
+              onClick={handleRemovePhoto}
+            >
+              {t('remove-photo')}
+            </Button>
+          )}
           {formik.touched.image && formik.errors.image && (
             <div className="text-red-500">{formik.errors.image}</div>
           )}
