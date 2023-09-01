@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useRef } from 'react';
 import { Button } from 'react-daisyui';
 
 const ProfileImageUpload = ({ formik }) => {
