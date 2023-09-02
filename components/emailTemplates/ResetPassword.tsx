@@ -8,7 +8,6 @@ import {
   Preview,
   Text,
 } from '@react-email/components';
-import * as React from 'react';
 import EmailLayout from './EmailLayout';
 
 interface ResetPasswordEmailProps {
