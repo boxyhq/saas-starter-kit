@@ -1,16 +1,18 @@
-import env from '../env';
+import { render } from '@react-email/components';
 import { sendEmail } from './sendEmail';
+import { WelcomeEmail } from '@/components/emailTemplates';
 
 export const sendWelcomeEmail = async (
   name: string,
   email: string,
   team: string
 ) => {
+  const subject = 'Welcome to BoxyHQ';
+  const html = render(WelcomeEmail({ name, team, subject }));
+
   await sendEmail({
     to: email,
-    subject: 'Welcome to BoxyHQ',
-    html: `Hello <b>${name}</b>,
-        <br/><br/>You have been successfully signed up to BoxyHQ on team <b>${team}</b>. Click the below link to login now.
-        <br/><br/><a href="${env.appUrl}/auth/login">Login</a>`,
+    subject,
+    html,
   });
 };
