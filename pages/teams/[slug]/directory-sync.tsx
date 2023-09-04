@@ -1,7 +1,9 @@
 import { CreateDirectory, Directory } from '@/components/directorySync';
 import { Card } from '@/components/shared';
 import { Error, Loading } from '@/components/shared';
+import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
 import { TeamTab } from '@/components/team';
+import { defaultHeaders } from '@/lib/common';
 import useDirectory from 'hooks/useDirectory';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
@@ -10,15 +12,18 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button } from 'react-daisyui';
-import type { NextPageWithLayout } from 'types';
+import { toast } from 'react-hot-toast';
+import type { ApiResponse, NextPageWithLayout } from 'types';
 
 const DirectorySync: NextPageWithLayout = () => {
   const router = useRouter();
   const { slug } = router.query as { slug: string };
 
   const [visible, setVisible] = useState(false);
+  const [confirmationDialogVisible, setConfirmationDialogVisible] =
+    useState(false);
   const { isLoading, isError, team } = useTeam();
-  const { directories } = useDirectory(slug);
+  const { directories, mutateDirectory } = useDirectory(slug);
   const { t } = useTranslation('common');
 
   if (isLoading) {
@@ -35,6 +40,30 @@ const DirectorySync: NextPageWithLayout = () => {
 
   const directory =
     directories && directories.length > 0 ? directories[0] : null;
+
+  const removeDirectory = async () => {
+    if (!directory) return;
+
+    const sp = new URLSearchParams({ dsyncId: directory.id });
+
+    const response = await fetch(
+      `/api/teams/${team.slug}/directory-sync?${sp.toString()}`,
+      {
+        method: 'DELETE',
+        headers: defaultHeaders,
+      }
+    );
+
+    const json = (await response.json()) as ApiResponse;
+
+    if (!response.ok) {
+      toast.error(json.error.message);
+      return;
+    }
+
+    mutateDirectory();
+    toast.success(t('directory-sync-deleted'));
+  };
 
   return (
     <>
@@ -54,10 +83,9 @@ const DirectorySync: NextPageWithLayout = () => {
               </Button>
             ) : (
               <Button
-                onClick={() => setVisible(!visible)}
+                onClick={() => setConfirmationDialogVisible(true)}
                 variant="outline"
                 color="error"
-                disabled
                 size="md"
               >
                 {t('remove')}
@@ -68,6 +96,14 @@ const DirectorySync: NextPageWithLayout = () => {
         </Card.Body>
       </Card>
       <CreateDirectory visible={visible} setVisible={setVisible} team={team} />
+      <ConfirmationDialog
+        visible={confirmationDialogVisible}
+        onCancel={() => setConfirmationDialogVisible(false)}
+        onConfirm={removeDirectory}
+        title={t('confirm-delete-directory-sync')}
+      >
+        {t('delete-directory-sync-warning')}
+      </ConfirmationDialog>
     </>
   );
 };
