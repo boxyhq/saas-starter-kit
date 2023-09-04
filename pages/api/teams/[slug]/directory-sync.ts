@@ -19,6 +19,9 @@ export default async function handler(
       case 'POST':
         await handlePOST(req, res);
         break;
+      case 'DELETE':
+        await handleDELETE(req, res);
+        break;
       default:
         res.setHeader('Allow', 'GET, POST');
         res.status(405).json({
@@ -78,4 +81,24 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   res.status(201).json({ data });
+};
+
+const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember, 'team_dsync', 'delete');
+
+  const { dsyncId } = req.query as { dsyncId: string };
+
+  const { directorySync } = await jackson();
+
+  await directorySync.directories.delete(dsyncId);
+
+  sendAudit({
+    action: 'dsync.connection.delete',
+    crud: 'd',
+    user: teamMember.user,
+    team: teamMember.team,
+  });
+
+  res.status(200).json({ data: {} });
 };
