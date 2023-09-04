@@ -28,9 +28,9 @@ const ProfileImageUpload = ({ formik }) => {
 
   return (
     <div>
-      <label className="line-clamp-3 tracking-wide block mb-2 text-gray-700 text-sm">
+      <span className="line-clamp-3 tracking-wide block mb-2 text-gray-700 dark:text-gray-100 text-sm">
         {t('add-profile-picture')}
-      </label>
+      </span>
       <div>
         <div className="relative w-36 h-36 mb-4">
           {formik.values.image ? (
@@ -64,7 +64,7 @@ const ProfileImageUpload = ({ formik }) => {
             onChange={(e) => handleImageChange(e)}
           />
           <label
-            className="px-4 py-1 uppercase text-xs font-medium leading-6 border inline-flex flex-row justify-center items-center no-underline rounded-md cursor-pointer transition duration-200 ease-in-out shadow-sm shadow-gray-100"
+            className="px-4 py-1 uppercase text-xs font-medium leading-6 border inline-flex flex-row justify-center items-center no-underline rounded-md cursor-pointer transition duration-200 ease-in-out shadow-sm shadow-gray-100 dark:shadow-gray-600 dark:border-gray-600"
             htmlFor="cover_image"
           >
             {t('new-photo')}
