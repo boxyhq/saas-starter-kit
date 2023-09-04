@@ -20,7 +20,6 @@ const ResetPasswordEmail = ({ url }: ResetPasswordEmailProps) => {
       <Head />
       <Preview>Reset Your {app.name} Password</Preview>
       <EmailLayout>
-        <Text>Dear User,</Text>
         <Text>
           We have received a request to reset your {app.name} password. If you
           did not request a password reset, please ignore this email.

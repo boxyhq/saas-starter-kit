@@ -22,7 +22,7 @@ const WelcomeEmail = ({ name, subject, team }: WelcomeEmailProps) => {
       <Head />
       <Preview>{subject}</Preview>
       <EmailLayout>
-        <Text>Dear {name},</Text>
+        <Text>Hi {name},</Text>
         <Text>
           You have been successfully signed up to {app.name} on team{' '}
           <b>{team}</b>.
