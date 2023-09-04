@@ -39,6 +39,11 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
           href: '/settings/password',
           icon: LockClosedIcon,
         },
+        {
+          name: t('settings'),
+          href: '/settings/general',
+          icon: Cog6ToothIcon,
+        },
       ],
       team: [
         {
@@ -65,10 +70,10 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
           <div
             className={`relative ${
               isCollapsed && 'invisible'
-            } lg:visible flex h-full flex-col border-r border-gray-200 bg-white pt-0`}
+            } lg:visible flex h-full flex-col border-r border-gray-200 dark:border-gray-600 bg-white dark:bg-black pt-0`}
           >
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
-              <div className="flex-1 space-y-1 divide-y bg-white">
+              <div className="flex-1 space-y-1 divide-y dark:divide-gray-600">
                 <TeamDropdown />
                 <div className="p-4">
                   <ul className="space-y-1">
