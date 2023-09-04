@@ -10,6 +10,7 @@ import mixpanel from 'mixpanel-browser';
 import '../styles/globals.css';
 import { useEffect } from 'react';
 import env from '@/lib/env';
+import { Theme, applyTheme } from '@/lib/theme';
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const { session, ...props } = pageProps;
@@ -23,6 +24,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         track_pageview: true,
       });
     }
+    // persist theme
+    applyTheme(localStorage.getItem('theme') as Theme);
   }, []);
 
   const getLayout =
