@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import React, { ChangeEvent, useRef } from 'react';
+import { Button } from 'react-daisyui';
 
 const ProfileImageUpload = ({ formik }) => {
   const { t } = useTranslation('common');
@@ -21,11 +22,15 @@ const ProfileImageUpload = ({ formik }) => {
     }
   };
 
+  const handleRemovePhoto = () => {
+    formik.setFieldValue('image', '');
+  };
+
   return (
     <div>
-      <label className="line-clamp-3 tracking-wide block mb-2 text-gray-700 text-sm">
+      <span className="line-clamp-3 tracking-wide block mb-2 text-gray-700 dark:text-gray-100 text-sm">
         {t('add-profile-picture')}
-      </label>
+      </span>
       <div>
         <div className="relative w-36 h-36 mb-4">
           {formik.values.image ? (
@@ -59,11 +64,20 @@ const ProfileImageUpload = ({ formik }) => {
             onChange={(e) => handleImageChange(e)}
           />
           <label
-            className="px-4 py-1 uppercase text-xs font-medium leading-6 border inline-flex flex-row justify-center items-center no-underline rounded-md cursor-pointer transition duration-200 ease-in-out shadow-sm shadow-gray-100"
+            className="px-4 py-1 uppercase text-xs font-medium leading-6 border inline-flex flex-row justify-center items-center no-underline rounded-md cursor-pointer transition duration-200 ease-in-out shadow-sm shadow-gray-100 dark:shadow-gray-600 dark:border-gray-600"
             htmlFor="cover_image"
           >
             {t('new-photo')}
           </label>
+          {formik.values.image && (
+            <Button
+              size="md"
+              className="ml-3 text-red-600 bg-transparent hover:bg-transparent uppercase text-xs font-medium leading-6 border border-inherit rounded-md cursor-pointer"
+              onClick={handleRemovePhoto}
+            >
+              {t('remove-photo')}
+            </Button>
+          )}
           {formik.touched.image && formik.errors.image && (
             <div className="text-red-500">{formik.errors.image}</div>
           )}

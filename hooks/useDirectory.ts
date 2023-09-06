@@ -1,7 +1,7 @@
 import fetcher from '@/lib/fetcher';
 import { Directory } from '@boxyhq/saml-jackson';
 import useSWR, { mutate } from 'swr';
-import { ApiResponse } from 'types';
+import type { ApiResponse } from 'types';
 
 const useDirectory = (slug: string) => {
   const url = `/api/teams/${slug}/directory-sync`;

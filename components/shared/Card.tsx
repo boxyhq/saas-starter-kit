@@ -14,7 +14,7 @@ const Card = (props: CardProps) => {
   const { heading, children } = props;
 
   return (
-    <div className="mt-5 flex flex-col border border-gray-300">
+    <div className="mt-5 flex flex-col border border-gray-300 dark:border-gray-600">
       <div className="border-b border-gray-300 bg-gray-100 px-3 py-3 text-sm font-medium text-gray-900">
         {heading}
       </div>
@@ -26,11 +26,13 @@ const Card = (props: CardProps) => {
 const Body = (props: CardBodyProps) => {
   const { children, className } = props;
 
-  return <div className={`${className} bg-white`}>{children}</div>;
+  return (
+    <div className={`${className} bg-white dark:bg-black`}>{children}</div>
+  );
 };
 
 const Footer = ({ children }: { children: React.ReactNode }) => {
-  return <div className="border-t border-gray-300 py-3 px-3">{children}</div>;
+  return <div className="border-t border-gray-300 dark:border-gray-600 py-3 px-3">{children}</div>;
 };
 
 Card.Body = Body;

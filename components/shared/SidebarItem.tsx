@@ -23,8 +23,8 @@ const SidebarItem = ({
     <NextLink
       href={href}
       className={classNames(
-        active ? 'bg-gray-100 font-semibold' : '',
-        'flex items-center rounded-lg text-sm text-gray-900 hover:bg-gray-100 p-2',
+        active ? 'bg-gray-100 font-semibold' : 'dark:text-white',
+        'flex items-center rounded-lg text-sm text-gray-900 hover:dark:text-black hover:bg-gray-100 p-2',
         className
       )}
     >
