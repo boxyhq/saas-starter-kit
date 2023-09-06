@@ -14,6 +14,7 @@ export type EventType =
   | 'sso.connection.patch'
   | 'sso.connection.delete'
   | 'dsync.connection.create'
+  | 'dsync.connection.delete'
   | 'webhook.create'
   | 'webhook.delete'
   | 'webhook.update'
