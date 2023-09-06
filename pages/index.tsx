@@ -1,16 +1,18 @@
 import Link from 'next/link';
-import type { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { NextPageWithLayout } from 'types';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
 import FAQSection from '@/components/defaultLanding/FAQSection';
 import HeroSection from '@/components/defaultLanding/HeroSection';
 import FeatureSection from '@/components/defaultLanding/FeatureSection';
 import PricingSection from '@/components/defaultLanding/PricingSection';
+import useTheme from 'hooks/useTheme';
 
 const Home: NextPageWithLayout = () => {
+  const { toggleTheme, selectedTheme } = useTheme();
+
   const { t } = useTranslation('common');
 
   return (
@@ -22,7 +24,15 @@ const Home: NextPageWithLayout = () => {
           </Link>
         </div>
         <div className="flex-none">
-          <ul className="menu menu-horizontal flex gap-4">
+          <ul className="menu menu-horizontal flex items-center gap-4">
+            <li>
+              <button
+                className="bg-none p-0 w-10 h-10 rounded-lg flex items-center justify-center"
+                onClick={toggleTheme}
+              >
+                <selectedTheme.icon className="w-5 h-5" />
+              </button>
+            </li>
             <li>
               <Link
                 href="/auth/join"
