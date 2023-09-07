@@ -184,7 +184,6 @@
   "signature_algorithm": "Signature Algorithm",
   "assertion_encryption": "Assertion Encryption",
   "token-not-found": "The verification token is invalid or has already been used.",
-  "token-expired": "The verification token has expired but a new one has been sent. Please check your email",
   "email-verified": "Your email has been successfully verified. Thank you for confirming your account.",
   "invalid-credentials": "Invalid login credentials",
   "no-credentials": "No credentials found.",
@@ -196,5 +195,8 @@
   "dark": "Dark",
   "light": "Light",
   "theme": "Theme",
-  "interface-theme": "Interface theme"
+  "interface-theme": "Interface theme",
+  "verify-your-account": "Verify your account",
+  "verify-account-expired": "This verification link is expired. Please enter the email address associated with your account, and we'll send you another verification link.",
+  "verify-account-link-sent": "Verification link sent. Please check your email."
 }

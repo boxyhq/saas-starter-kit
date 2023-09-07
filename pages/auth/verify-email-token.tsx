@@ -40,36 +40,36 @@ export const getServerSideProps = async ({
   }
 
   if (new Date() > verificationToken.expires) {
-    // Delete old token
-    prisma.verificationToken.delete({
-      where: {
-        token,
-      },
-    });
+    // // Delete old token
+    // prisma.verificationToken.delete({
+    //   where: {
+    //     token,
+    //   },
+    // });
 
-    // create a new one
-    const user = (await prisma.user.findFirst({
-      where: {
-        email: verificationToken.identifier,
-      },
-    })) as User;
+    // // create a new one
+    // const user = (await prisma.user.findFirst({
+    //   where: {
+    //     email: verificationToken.identifier,
+    //   },
+    // })) as User;
 
-    const newVerificationToken = await prisma.verificationToken.create({
-      data: {
-        identifier: verificationToken.identifier,
-        token: generateToken(),
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 24 hours
-      },
-    });
+    // const newVerificationToken = await prisma.verificationToken.create({
+    //   data: {
+    //     identifier: verificationToken.identifier,
+    //     token: generateToken(),
+    //     expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 24 hours
+    //   },
+    // });
 
-    // resend verification email
-    await sendVerificationEmail({
-      user,
-      verificationToken: newVerificationToken,
-    });
+    // // resend verification email
+    // await sendVerificationEmail({
+    //   user,
+    //   verificationToken: newVerificationToken,
+    // });
     return {
       redirect: {
-        destination: '/auth/login?error=token-expired',
+        destination: '/auth/verify-account?error=verify-account-expired',
         permanent: false,
       },
     };
