@@ -1,38 +1,11 @@
-import {
-  ChevronUpDownIcon,
-  ComputerDesktopIcon,
-  MoonIcon,
-  SunIcon,
-} from '@heroicons/react/24/outline';
+import { ChevronUpDownIcon } from '@heroicons/react/24/outline';
 import { Card } from '../shared';
-import { useState } from 'react';
-import { Theme, applyTheme } from '@/lib/theme';
 import { useTranslation } from 'react-i18next';
+import useTheme from 'hooks/useTheme';
 
 const ThemeSettings = () => {
-  const [theme, setTheme] = useState(localStorage.getItem('theme'));
-
   const { t } = useTranslation('common');
-
-  const themes = [
-    {
-      id: 'system',
-      name: t('system-default'),
-      icon: ComputerDesktopIcon,
-    },
-    {
-      id: 'dark',
-      name: t('dark'),
-      icon: MoonIcon,
-    },
-    {
-      id: 'light',
-      name: t('light'),
-      icon: SunIcon,
-    },
-  ];
-
-  const selectedTheme = themes.find((t) => t.id === theme) || themes[0];
+  const { setTheme, themes, selectedTheme, applyTheme } = useTheme();
 
   return (
     <Card heading={t('theme')}>
@@ -61,7 +34,7 @@ const ThemeSettings = () => {
                       <button
                         className="w-full flex hover:bg-gray-100 hover:dark:text-black focus:bg-gray-100 focus:outline-none py-2 px-2 rounded text-sm font-medium gap-2 items-center"
                         onClick={() => {
-                          applyTheme(theme.id as Theme);
+                          applyTheme(theme.id);
                           setTheme(theme.id);
                           if (document.activeElement) {
                             (document.activeElement as HTMLElement).blur();
