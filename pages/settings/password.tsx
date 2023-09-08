@@ -1,6 +1,7 @@
-import { UpdatePassword } from '@/components/account';
 import type { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+import { UpdatePassword } from '@/components/account';
 
 const Password = () => {
   return <UpdatePassword />;

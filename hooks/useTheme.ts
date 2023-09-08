@@ -1,15 +1,15 @@
-import { ThemesProps, applyTheme } from '@/lib/theme';
 import {
   ComputerDesktopIcon,
   MoonIcon,
   SunIcon,
 } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
+
+import { ThemesProps, applyTheme } from '@/lib/theme';
 
 const useTheme = () => {
   const [theme, setTheme] = useState<string | null>(null);
-
   const { t } = useTranslation('common');
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const useTheme = () => {
   const themes: ThemesProps[] = [
     {
       id: 'system',
-      name: t('system-default'),
+      name: t('system'),
       icon: ComputerDesktopIcon,
     },
     {
