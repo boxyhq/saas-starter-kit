@@ -61,19 +61,19 @@ const APIKeys = ({ team }: APIKeysProps) => {
         />
       ) : (
         <>
-          <table className="w-full text-left text-sm text-gray-500 table border">
-            <thead className="bg-gray-100 text-xs uppercase text-gray-700">
+          <table className="text-sm table table-xs w-full">
+            <thead className="bg-base-200">
               <tr>
-                <th scope="col" className="px-6 py-3">
+                <th>
                   {t('name')}
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th>
                   {t('status')}
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th>
                   {t('created')}
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th>
                   {t('actions')}
                 </th>
               </tr>
@@ -81,15 +81,15 @@ const APIKeys = ({ team }: APIKeysProps) => {
             <tbody>
               {apiKeys.map((apiKey) => {
                 return (
-                  <tr key={apiKey.id} className="border-b bg-white">
-                    <td className="px-6 py-3">{apiKey.name}</td>
-                    <td className="px-6 py-3">
+                  <tr key={apiKey.id}>
+                    <td>{apiKey.name}</td>
+                    <td>
                       <Badge color="success">{t('active')}</Badge>
                     </td>
-                    <td className="px-6 py-3">
+                    <td>
                       {new Date(apiKey.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-3">
+                    <td>
                       <Button
                         size="xs"
                         color="error"

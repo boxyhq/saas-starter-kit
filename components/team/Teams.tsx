@@ -44,32 +44,21 @@ const Teams = () => {
 
   return (
     <>
-      <table className="w-full table-fixed text-left text-sm text-gray-500 dark:text-gray-400 table border">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+      <table className="text-sm table table-xs w-full">
+        <thead className="bg-base-200">
           <tr>
-            <th scope="col" className="px-6 py-3">
-              {t('name')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('members')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('created-at')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('actions')}
-            </th>
+            <th>{t('name')}</th>
+            <th>{t('members')}</th>
+            <th>{t('created-at')}</th>
+            <th>{t('actions')}</th>
           </tr>
         </thead>
         <tbody>
           {teams &&
             teams.map((team) => {
               return (
-                <tr
-                  key={team.id}
-                  className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                >
-                  <td className="px-6 py-3">
+                <tr key={team.id}>
+                  <td>
                     <Link href={`/teams/${team.slug}/members`}>
                       <div className="flex items-center justify-start space-x-2">
                         <LetterAvatar name={team.name} />
@@ -77,11 +66,9 @@ const Teams = () => {
                       </div>
                     </Link>
                   </td>
-                  <td className="px-6 py-3">{team._count.members}</td>
-                  <td className="px-6 py-3">
-                    {new Date(team.createdAt).toDateString()}
-                  </td>
-                  <td className="px-6 py-3">
+                  <td>{team._count.members}</td>
+                  <td>{new Date(team.createdAt).toDateString()}</td>
+                  <td>
                     <Button
                       variant="outline"
                       size="xs"

@@ -75,40 +75,27 @@ const Members = ({ team }: { team: Team }) => {
 
   return (
     <>
-      <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 table border">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+      <table className="text-sm table table-xs w-full">
+        <thead className="bg-base-200">
           <tr>
-            <th scope="col" className="px-6 py-3">
-              {t('name')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('email')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('role')}
-            </th>
-            {canAccess('team_member', ['delete']) && (
-              <th scope="col" className="px-6 py-3">
-                {t('action')}
-              </th>
-            )}
+            <th>{t('name')}</th>
+            <th>{t('email')}</th>
+            <th>{t('role')}</th>
+            {canAccess('team_member', ['delete']) && <th>{t('action')}</th>}
           </tr>
         </thead>
         <tbody>
           {members.map((member) => {
             return (
-              <tr
-                key={member.id}
-                className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-              >
-                <td className="px-6 py-3">
+              <tr key={member.id}>
+                <td>
                   <div className="flex items-center justify-start space-x-2">
                     <LetterAvatar name={member.user.name} />
                     <span>{member.user.name}</span>
                   </div>
                 </td>
-                <td className="px-6 py-3">{member.user.email}</td>
-                <td className="px-6 py-3">
+                <td>{member.user.email}</td>
+                <td>
                   {canUpdateRole(member) ? (
                     <UpdateMemberRole team={team} member={member} />
                   ) : (
@@ -116,7 +103,7 @@ const Members = ({ team }: { team: Team }) => {
                   )}
                 </td>
                 {canRemoveMember(member) && (
-                  <td className="px-6 py-3">
+                  <td>
                     <Button
                       variant="outline"
                       onClick={() => {

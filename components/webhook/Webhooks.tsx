@@ -56,37 +56,24 @@ const Webhooks = ({ team }: { team: Team }) => {
       {webhooks?.length === 0 ? (
         <EmptyState title={t('no-webhook-title')} />
       ) : (
-        <>
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 table border">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+        <div className="overflow-x-auto">
+          <table className="text-sm table table-xs w-full">
+            <thead className="bg-base-200">
               <tr>
-                <th scope="col" className="px-6 py-3">
-                  {t('name')}
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  {t('url')}
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  {t('created-at')}
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  {t('action')}
-                </th>
+                <th>{t('name')}</th>
+                <th>{t('url')}</th>
+                <th>{t('created-at')}</th>
+                <th>{t('action')}</th>
               </tr>
             </thead>
             <tbody>
               {webhooks?.map((webhook) => {
                 return (
-                  <tr
-                    key={webhook.id}
-                    className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                  >
-                    <td className="px-6 py-3">{webhook.description}</td>
-                    <td className="px-6 py-3">{webhook.url}</td>
-                    <td className="px-6 py-3">
-                      {webhook.createdAt.toLocaleString()}
-                    </td>
-                    <td className="px-6 py-3">
+                  <tr key={webhook.id}>
+                    <td>{webhook.description}</td>
+                    <td>{webhook.url}</td>
+                    <td>{webhook.createdAt.toLocaleString()}</td>
+                    <td>
                       <div className="flex space-x-2">
                         <Button
                           size="xs"
@@ -124,7 +111,7 @@ const Webhooks = ({ team }: { team: Team }) => {
           >
             {t('delete-webhook-warning')}
           </ConfirmationDialog>
-        </>
+        </div>
       )}
       {endpoint && (
         <EditWebhook

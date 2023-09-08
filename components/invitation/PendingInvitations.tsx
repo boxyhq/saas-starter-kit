@@ -60,41 +60,29 @@ const PendingInvitations = ({ team }: { team: Team }) => {
 
   return (
     <>
-      <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 table border">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+      <h2>Pending Invitations ({invitations.length})</h2>
+      <table className="text-sm table table-xs w-full">
+        <thead className="bg-base-200">
           <tr>
-            <th scope="col" className="px-6 py-3" colSpan={2}>
-              {t('email')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('role')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('created-at')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('action')}
-            </th>
+            <th colSpan={2}>{t('email')}</th>
+            <th>{t('role')}</th>
+            <th>{t('created-at')}</th>
+            <th>{t('action')}</th>
           </tr>
         </thead>
         <tbody>
           {invitations.map((invitation) => {
             return (
-              <tr
-                key={invitation.token}
-                className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-              >
-                <td className="px-6 py-3" colSpan={2}>
+              <tr key={invitation.token}>
+                <td colSpan={2}>
                   <div className="flex items-center justify-start space-x-2">
                     <LetterAvatar name={invitation.email} />
                     <span>{invitation.email}</span>
                   </div>
                 </td>
-                <td className="px-6 py-3">{invitation.role}</td>
-                <td className="px-6 py-3">
-                  {new Date(invitation.createdAt).toDateString()}
-                </td>
-                <td className="px-6 py-3">
+                <td>{invitation.role}</td>
+                <td>{new Date(invitation.createdAt).toDateString()}</td>
+                <td>
                   <Button
                     size="xs"
                     color="error"

@@ -46,7 +46,6 @@ const TeamMembers: NextPageWithLayout = () => {
           <Members team={team} />
           <PendingInvitations team={team} />
         </div>
-
         <InviteMember visible={visible} setVisible={setVisible} team={team} />
       </div>
     </>
