@@ -1,4 +1,4 @@
-import { Card, Error, LetterAvatar, Loading } from '@/components/shared';
+import { Error, LetterAvatar, Loading } from '@/components/shared';
 import { Team, TeamMember } from '@prisma/client';
 import useCanAccess from 'hooks/useCanAccess';
 import useTeamMembers from 'hooks/useTeamMembers';

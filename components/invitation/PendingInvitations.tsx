@@ -1,4 +1,4 @@
-import { Card, Error, LetterAvatar, Loading } from '@/components/shared';
+import { Error, LetterAvatar, Loading } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import { Invitation, Team } from '@prisma/client';
 import useInvitations from 'hooks/useInvitations';

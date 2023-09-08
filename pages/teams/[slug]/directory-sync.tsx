@@ -68,8 +68,8 @@ const DirectorySync: NextPageWithLayout = () => {
   return (
     <>
       <TeamTab activeTab="directory-sync" team={team} />
-      <Card heading="Directory Sync">
-        <Card.Body className="px-3 py-3">
+      <Card>
+        <Card.Body>
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm">{t('provision')}</p>
             {directory === null ? (

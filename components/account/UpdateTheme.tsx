@@ -1,11 +1,9 @@
 import { ChevronUpDownIcon } from '@heroicons/react/24/outline';
-import { useTranslation } from 'next-i18next';
 
 import { Card } from '@/components/shared';
 import useTheme from 'hooks/useTheme';
 
 const UpdateTheme = () => {
-  const { t } = useTranslation('common');
   const { setTheme, themes, selectedTheme, applyTheme } = useTheme();
 
   return (
