@@ -165,12 +165,12 @@ _Note: HTML test report is generated inside the `report` folder. Currently suppo
 - Internationalization
 - Audit logs
 - Roles and Permissions
+- Dark mode
 
 ## ➡️ Coming Soon
 
 - Billing & subscriptions
 - Unit and integration tests
-- Dark mode
 
 ## ✨ Contributing
 
