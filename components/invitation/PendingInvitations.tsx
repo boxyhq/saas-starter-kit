@@ -61,7 +61,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   return (
     <>
       <h2>Pending Invitations ({invitations.length})</h2>
-      <table className="text-sm table table-xs w-full">
+      <table className="text-sm table w-full">
         <thead className="bg-base-200">
           <tr>
             <th colSpan={2}>{t('email')}</th>

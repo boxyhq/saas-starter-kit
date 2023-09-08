@@ -61,7 +61,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
         />
       ) : (
         <>
-          <table className="text-sm table table-xs w-full">
+          <table className="text-sm table w-full">
             <thead className="bg-base-200">
               <tr>
                 <th>
