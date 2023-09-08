@@ -29,20 +29,22 @@ const WebhookList: NextPageWithLayout = () => {
   return (
     <>
       <TeamTab activeTab="webhooks" team={team} />
-      <div className="flex flex-col">
-        <div className="flex my-3 justify-end">
-          <Button
-            variant="outline"
-            color="primary"
-            size="md"
-            onClick={() => {
-              setVisible(!visible);
-            }}
-          >
-            {t('add-webhook')}
-          </Button>
+      <div className="py-6">
+        <div className="flex flex-col gap-6">
+          <div className="flex justify-end">
+            <Button
+              variant="outline"
+              color="primary"
+              size="md"
+              onClick={() => {
+                setVisible(!visible);
+              }}
+            >
+              {t('add-webhook')}
+            </Button>
+          </div>
+          <Webhooks team={team} />
         </div>
-        <Webhooks team={team} />
       </div>
       <CreateWebhook visible={visible} setVisible={setVisible} team={team} />
     </>

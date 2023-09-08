@@ -1,4 +1,4 @@
-import { Card, EmptyState, WithLoadingAndError } from '@/components/shared';
+import { EmptyState, WithLoadingAndError } from '@/components/shared';
 import Badge from '@/components/shared/Badge';
 import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
 import fetcher from '@/lib/fetcher';
@@ -61,56 +61,52 @@ const APIKeys = ({ team }: APIKeysProps) => {
         />
       ) : (
         <>
-          <Card heading={t('api-keys')}>
-            <Card.Body>
-              <table className="w-full text-left text-sm text-gray-500">
-                <thead className="bg-gray-100 text-xs uppercase text-gray-700">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      {t('name')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      {t('status')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      {t('created')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      {t('actions')}
-                    </th>
+          <table className="w-full text-left text-sm text-gray-500 table border">
+            <thead className="bg-gray-100 text-xs uppercase text-gray-700">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  {t('name')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('status')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('created')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('actions')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {apiKeys.map((apiKey) => {
+                return (
+                  <tr key={apiKey.id} className="border-b bg-white">
+                    <td className="px-6 py-3">{apiKey.name}</td>
+                    <td className="px-6 py-3">
+                      <Badge color="success">{t('active')}</Badge>
+                    </td>
+                    <td className="px-6 py-3">
+                      {new Date(apiKey.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-3">
+                      <Button
+                        size="xs"
+                        color="error"
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedApiKey(apiKey);
+                          setConfirmationDialogVisible(true);
+                        }}
+                      >
+                        {t('revoke')}
+                      </Button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {apiKeys.map((apiKey) => {
-                    return (
-                      <tr key={apiKey.id} className="border-b bg-white">
-                        <td className="px-6 py-3">{apiKey.name}</td>
-                        <td className="px-6 py-3">
-                          <Badge color="success">{t('active')}</Badge>
-                        </td>
-                        <td className="px-6 py-3">
-                          {new Date(apiKey.createdAt).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-3">
-                          <Button
-                            size='xs'
-                            color="error"
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedApiKey(apiKey);
-                              setConfirmationDialogVisible(true);
-                            }}
-                          >
-                            {t('revoke')}
-                          </Button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </Card.Body>
-          </Card>
+                );
+              })}
+            </tbody>
+          </table>
           <ConfirmationDialog
             title={t('revoke-api-key')}
             visible={confirmationDialogVisible}

@@ -29,23 +29,26 @@ const TeamMembers: NextPageWithLayout = () => {
   return (
     <>
       <TeamTab activeTab="members" team={team} />
-      <div className="flex flex-col">
-        <div className="flex mt-4 justify-end">
-          <Button
-            color="primary"
-            variant="outline"
-            size="md"
-            onClick={() => {
-              setVisible(!visible);
-            }}
-          >
-            {t('add-member')}
-          </Button>
+      <div className='py-6'>
+        <div className="flex flex-col gap-6">
+          <div className='justify-end flex'>
+            <Button
+              color="primary"
+              variant="outline"
+              size="md"
+              onClick={() => {
+                setVisible(!visible);
+              }}
+            >
+              {t('add-member')}
+            </Button>
+          </div>
+          <Members team={team} />
+          <PendingInvitations team={team} />
         </div>
-        <Members team={team} />
+
+        <InviteMember visible={visible} setVisible={setVisible} team={team} />
       </div>
-      <PendingInvitations team={team} />
-      <InviteMember visible={visible} setVisible={setVisible} team={team} />
     </>
   );
 };

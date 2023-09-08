@@ -1,4 +1,3 @@
-import { Card } from '@/components/shared';
 import { WithLoadingAndError } from '@/components/shared';
 import { EmptyState } from '@/components/shared';
 import { Team } from '@prisma/client';
@@ -58,69 +57,65 @@ const Webhooks = ({ team }: { team: Team }) => {
         <EmptyState title={t('no-webhook-title')} />
       ) : (
         <>
-          <Card heading="Webhooks">
-            <Card.Body>
-              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-                <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      {t('name')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      {t('url')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      {t('created-at')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      t{'action'}
-                    </th>
+          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 table border">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  {t('name')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('url')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('created-at')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('action')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {webhooks?.map((webhook) => {
+                return (
+                  <tr
+                    key={webhook.id}
+                    className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+                  >
+                    <td className="px-6 py-3">{webhook.description}</td>
+                    <td className="px-6 py-3">{webhook.url}</td>
+                    <td className="px-6 py-3">
+                      {webhook.createdAt.toLocaleString()}
+                    </td>
+                    <td className="px-6 py-3">
+                      <div className="flex space-x-2">
+                        <Button
+                          size="xs"
+                          variant="outline"
+                          onClick={() => {
+                            setEndpoint(webhook);
+                            setVisible(!visible);
+                          }}
+                        >
+                          {t('edit')}
+                        </Button>
+                        <Button
+                          size="xs"
+                          color="error"
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedWebhook(webhook);
+                            setConfirmationDialogVisible(true);
+                          }}
+                        >
+                          {t('remove')}
+                        </Button>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {webhooks?.map((webhook) => {
-                    return (
-                      <tr
-                        key={webhook.id}
-                        className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                      >
-                        <td className="px-6 py-3">{webhook.description}</td>
-                        <td className="px-6 py-3">{webhook.url}</td>
-                        <td className="px-6 py-3">
-                          {webhook.createdAt.toLocaleString()}
-                        </td>
-                        <td className="px-6 py-3">
-                          <div className="flex space-x-2">
-                            <Button
-                              size="xs"
-                              variant="outline"
-                              onClick={() => {
-                                setEndpoint(webhook);
-                                setVisible(!visible);
-                              }}
-                            >
-                              {t('edit')}
-                            </Button>
-                            <Button
-                              size="xs"
-                              color="error"
-                              variant="outline"
-                              onClick={() => {
-                                setSelectedWebhook(webhook);
-                                setConfirmationDialogVisible(true);
-                              }}
-                            >
-                              {t('remove')}
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </Card.Body>
-          </Card>
+                );
+              })}
+            </tbody>
+          </table>
           <ConfirmationDialog
             visible={confirmationDialogVisible}
             onCancel={() => setConfirmationDialogVisible(false)}

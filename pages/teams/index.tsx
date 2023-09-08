@@ -23,21 +23,24 @@ const AllTeams: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <h4>{t('all-teams')}</h4>
-        <Button
-          color="primary"
-          size="md"
-          variant="outline"
-          onClick={() => {
-            setVisible(!visible);
-          }}
-        >
-          {t('create-team')}
-        </Button>
+      <div className="py-3">
+        <div className="flex flex-col gap-6">
+          <div className="flex justify-end">
+            <Button
+              color="primary"
+              size="md"
+              variant="outline"
+              onClick={() => {
+                setVisible(!visible);
+              }}
+            >
+              {t('create-team')}
+            </Button>
+          </div>
+          <Teams />
+        </div>
       </div>
       <CreateTeam visible={visible} setVisible={setVisible} />
-      <Teams />
     </>
   );
 };

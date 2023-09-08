@@ -28,18 +28,20 @@ const APIKeysContainer = () => {
   return (
     <>
       <TeamTab activeTab="api-keys" team={team} />
-      <div className="flex flex-col space-y-4">
-        <div className="flex justify-end mt-4">
-          <Button
-            variant="outline"
-            color="primary"
-            size='md'
-            onClick={() => setCreateModalVisible(true)}
-          >
-            {t('new-api-key')}
-          </Button>
+      <div className="py-6">
+        <div className="flex flex-col gap-6">
+          <div className="flex justify-end">
+            <Button
+              variant="outline"
+              color="primary"
+              size="md"
+              onClick={() => setCreateModalVisible(true)}
+            >
+              {t('new-api-key')}
+            </Button>
+          </div>
+          <APIKeys team={team} />
         </div>
-        <APIKeys team={team} />
       </div>
       <NewAPIKey
         team={team}
