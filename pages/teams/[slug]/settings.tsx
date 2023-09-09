@@ -26,10 +26,12 @@ const Settings: NextPageWithLayout = () => {
   return (
     <>
       <TeamTab activeTab="settings" team={team} />
-      <TeamSettings team={team} />
-      <AccessControl resource="team" actions={['delete']}>
-        <RemoveTeam team={team} />
-      </AccessControl>
+      <div className="space-y-6">
+        <TeamSettings team={team} />
+        <AccessControl resource="team" actions={['delete']}>
+          <RemoveTeam team={team} />
+        </AccessControl>
+      </div>
     </>
   );
 };
