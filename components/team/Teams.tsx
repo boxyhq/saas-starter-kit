@@ -4,21 +4,30 @@ import { Team } from '@prisma/client';
 import useTeams from 'hooks/useTeams';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
-
+import { useRouter } from 'next/router';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
 import { WithLoadingAndError } from '@/components/shared';
 import CreateTeam from './CreateTeam';
 
 const Teams = () => {
+  const router = useRouter();
   const { t } = useTranslation('common');
   const [team, setTeam] = useState<Team | null>(null);
   const { isLoading, isError, teams, mutateTeams } = useTeams();
   const [askConfirmation, setAskConfirmation] = useState(false);
   const [createTeamVisible, setCreateTeamVisible] = useState(false);
+
+  const { newTeam } = router.query as { newTeam: string };
+
+  useEffect(() => {
+    if (newTeam) {
+      setCreateTeamVisible(true);
+    }
+  }, [router.query]);
 
   const leaveTeam = async (team: Team) => {
     const response = await fetch(`/api/teams/${team.slug}/members`, {
@@ -46,7 +55,7 @@ const Teams = () => {
               Teams
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              All teams you're a member of are listed here.
+              Your teams are listed here.
             </p>
           </div>
           <Button
