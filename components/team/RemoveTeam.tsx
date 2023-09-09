@@ -42,7 +42,7 @@ const RemoveTeam = ({ team }: { team: Team }) => {
       <Card>
         <Card.Body>
           <Card.Header>
-            <Card.Title>Remove Team</Card.Title>
+            <Card.Title>{t('remove-team')}</Card.Title>
             <Card.Description>{t('remove-team-warning')}</Card.Description>
           </Card.Header>
         </Card.Body>

@@ -52,7 +52,7 @@ const Teams = () => {
         <div className="flex justify-between items-center">
           <div className="space-y-3">
             <h2 className="text-xl font-medium leading-none tracking-tight">
-              Teams
+              {t('all-teams')}
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Your teams are listed here.
