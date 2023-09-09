@@ -49,9 +49,17 @@ const TeamSettings = ({ team }: { team: Team }) => {
 
   return (
     <>
-      <form onSubmit={formik.handleSubmit} className='py-6'>
+      <form onSubmit={formik.handleSubmit}>
         <Card>
           <Card.Body>
+            <Card.Header>
+              <Card.Title>
+                Team Settings
+              </Card.Title>
+              <Card.Description>
+                Team settings and configuration.
+              </Card.Description>
+            </Card.Header>
             <div className="flex flex-col gap-4">
               <InputWithLabel
                 name="name"

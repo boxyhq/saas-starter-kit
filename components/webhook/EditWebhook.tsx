@@ -72,6 +72,7 @@ const EditWebhook = ({
         eventTypes: webhook.filterTypes as string[],
       }}
       onSubmit={onSubmit}
+      title={t('edit-webhook-endpoint')}
     />
   );
 };

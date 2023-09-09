@@ -21,28 +21,30 @@ const AllTeams: NextPageWithLayout = () => {
     }
   }, [router.query]);
 
-  return (
-    <>
-      <div className="py-3">
-        <div className="flex flex-col gap-6">
-          <div className="flex justify-end">
-            <Button
-              color="primary"
-              size="md"
-              variant="outline"
-              onClick={() => {
-                setVisible(!visible);
-              }}
-            >
-              {t('create-team')}
-            </Button>
-          </div>
-          <Teams />
-        </div>
-      </div>
-      <CreateTeam visible={visible} setVisible={setVisible} />
-    </>
-  );
+  return <Teams />
+
+  // return (
+  //   <>
+  //     <div className="py-3">
+  //       <div className="flex flex-col gap-6">
+  //         <div className="flex justify-end">
+  //           <Button
+  //             color="primary"
+  //             size="md"
+  //             variant="outline"
+  //             onClick={() => {
+  //               setVisible(!visible);
+  //             }}
+  //           >
+  //             {t('create-team')}
+  //           </Button>
+  //         </div>
+  //         <Teams />
+  //       </div>
+  //     </div>
+  //     <CreateTeam visible={visible} setVisible={setVisible} />
+  //   </>
+  // );
 };
 
 export async function getStaticProps({ locale }: GetServerSidePropsContext) {

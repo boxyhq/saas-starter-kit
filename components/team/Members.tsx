@@ -7,6 +7,7 @@ import { useTranslation } from 'next-i18next';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 
+import { InviteMember } from '@/components/invitation';
 import UpdateMemberRole from './UpdateMemberRole';
 import { defaultHeaders } from '@/lib/common';
 import type { ApiResponse } from 'types';
@@ -17,6 +18,7 @@ const Members = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
   const { t } = useTranslation('common');
   const { canAccess } = useCanAccess();
+  const [visible, setVisible] = useState(false);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [confirmationDialogVisible, setConfirmationDialogVisible] =
     useState(false);
@@ -74,8 +76,24 @@ const Members = ({ team }: { team: Team }) => {
   };
 
   return (
-    <>
-      <table className="text-sm table w-full">
+    <div className="space-y-3">
+      <div className="flex justify-between items-center">
+        <div className='space-y-3'>
+          <h2 className="text-xl font-medium leading-none tracking-tight">Members</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Team members and their roles.
+          </p>
+        </div>
+        <Button
+          color="primary"
+          variant="outline"
+          size="md"
+          onClick={() => setVisible(!visible)}
+        >
+          {t('add-member')}
+        </Button>
+      </div>
+      <table className="text-sm table w-full border-b dark:border-base-200">
         <thead className="bg-base-200">
           <tr>
             <th>{t('name')}</th>
@@ -129,7 +147,8 @@ const Members = ({ team }: { team: Team }) => {
       >
         {t('delete-member-warning')}
       </ConfirmationDialog>
-    </>
+      <InviteMember visible={visible} setVisible={setVisible} team={team} />
+    </div>
   );
 };
 

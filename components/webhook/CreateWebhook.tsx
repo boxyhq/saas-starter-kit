@@ -55,6 +55,7 @@ const CreateWebhook = ({
         eventTypes: [],
       }}
       onSubmit={onSubmit}
+      title={t('create-webhook')}
     />
   );
 };

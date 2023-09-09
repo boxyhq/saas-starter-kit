@@ -59,9 +59,15 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   }
 
   return (
-    <>
-      <h2>Pending Invitations ({invitations.length})</h2>
-      <table className="text-sm table w-full">
+    <div className="space-y-3">
+      <div className='space-y-3'>
+        <h2 className="text-xl font-medium leading-none tracking-tight">Pending Invitations</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Invitations that have been sent to users but have not yet been
+          accepted.
+        </p>
+      </div>
+      <table className="text-sm table w-full border-b dark:border-base-200">
         <thead className="bg-base-200">
           <tr>
             <th colSpan={2}>{t('email')}</th>
@@ -108,7 +114,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
       >
         {t('delete-member-invitation-warning')}
       </ConfirmationDialog>
-    </>
+    </div>
   );
 };
 
