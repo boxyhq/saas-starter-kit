@@ -54,6 +54,8 @@ const APIKeys = ({ team }: APIKeysProps) => {
 
   const apiKeys = data?.data ?? [];
 
+  console.log({ createModalVisible });
+
   return (
     <WithLoadingAndError isLoading={isLoading} error={error}>
       <div className="space-y-3">
@@ -70,7 +72,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
             color="primary"
             variant="outline"
             size="md"
-            onClick={() => setCreateModalVisible(!createModalVisible)}
+            onClick={() => setCreateModalVisible(true)}
           >
             {t('create-api-key')}
           </Button>
@@ -128,13 +130,13 @@ const APIKeys = ({ team }: APIKeysProps) => {
             >
               {t('revoke-api-key-confirm')}
             </ConfirmationDialog>
-            <NewAPIKey
-              team={team}
-              createModalVisible={createModalVisible}
-              setCreateModalVisible={setCreateModalVisible}
-            />
           </>
         )}
+        <NewAPIKey
+          team={team}
+          createModalVisible={createModalVisible}
+          setCreateModalVisible={setCreateModalVisible}
+        />
       </div>
     </WithLoadingAndError>
   );
