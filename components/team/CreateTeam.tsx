@@ -64,6 +64,7 @@ const CreateTeam = ({
                 onChange={formik.handleChange}
                 value={formik.values.name}
                 placeholder={t('team-name')}
+                color={formik.errors.name ? 'error' : 'primary'}
               />
             </div>
           </div>
@@ -75,6 +76,7 @@ const CreateTeam = ({
             loading={formik.isSubmitting}
             active={formik.dirty}
             size="md"
+            disabled={!formik.isValid}
           >
             {t('create-team')}
           </Button>
