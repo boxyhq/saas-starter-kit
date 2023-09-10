@@ -39,9 +39,14 @@ const RemoveTeam = ({ team }: { team: Team }) => {
 
   return (
     <>
-      <Card heading={t('remove-team')}>
-        <Card.Body className="px-3 py-3">
-          <p className="text-sm mb-4">{t('remove-team-warning')}</p>
+      <Card>
+        <Card.Body>
+          <Card.Header>
+            <Card.Title>{t('remove-team')}</Card.Title>
+            <Card.Description>{t('remove-team-warning')}</Card.Description>
+          </Card.Header>
+        </Card.Body>
+        <Card.Footer>
           <Button
             color="error"
             onClick={() => setAskConfirmation(true)}
@@ -51,7 +56,7 @@ const RemoveTeam = ({ team }: { team: Team }) => {
           >
             {t('remove-team')}
           </Button>
-        </Card.Body>
+        </Card.Footer>
       </Card>
       <ConfirmationDialog
         visible={askConfirmation}

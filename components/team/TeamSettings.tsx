@@ -50,13 +50,20 @@ const TeamSettings = ({ team }: { team: Team }) => {
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
-        <Card heading={t('team-settings')}>
-          <Card.Body className="px-3 py-3">
-            <div className="flex flex-col">
+        <Card>
+          <Card.Body>
+            <Card.Header>
+              <Card.Title>
+                Team Settings
+              </Card.Title>
+              <Card.Description>
+                Team settings and configuration.
+              </Card.Description>
+            </Card.Header>
+            <div className="flex flex-col gap-4">
               <InputWithLabel
                 name="name"
                 label={t('team-name')}
-                descriptionText={t('team-name')}
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 error={formik.errors.name}
@@ -64,7 +71,6 @@ const TeamSettings = ({ team }: { team: Team }) => {
               <InputWithLabel
                 name="slug"
                 label={t('team-slug')}
-                descriptionText={t('team-slug-description')}
                 value={formik.values.slug}
                 onChange={formik.handleChange}
                 error={formik.errors.slug}
@@ -72,7 +78,6 @@ const TeamSettings = ({ team }: { team: Team }) => {
               <InputWithLabel
                 name="domain"
                 label={t('team-domain')}
-                descriptionText={t('team-domain')}
                 value={formik.values.domain ? formik.values.domain : ''}
                 onChange={formik.handleChange}
                 error={formik.errors.domain}

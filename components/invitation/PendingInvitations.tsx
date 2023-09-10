@@ -1,4 +1,4 @@
-import { Card, Error, LetterAvatar, Loading } from '@/components/shared';
+import { Error, LetterAvatar, Loading } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import { Invitation, Team } from '@prisma/client';
 import useInvitations from 'hooks/useInvitations';
@@ -59,63 +59,53 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   }
 
   return (
-    <>
-      <Card heading="Invitations Sent">
-        <Card.Body>
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3" colSpan={2}>
-                  {t('email')}
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  {t('role')}
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  {t('created-at')}
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  {t('action')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {invitations.map((invitation) => {
-                return (
-                  <tr
-                    key={invitation.token}
-                    className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+    <div className="space-y-3">
+      <div className='space-y-3'>
+        <h2 className="text-xl font-medium leading-none tracking-tight">Pending Invitations</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Invitations that have been sent to users but have not yet been
+          accepted.
+        </p>
+      </div>
+      <table className="text-sm table w-full border-b dark:border-base-200">
+        <thead className="bg-base-200">
+          <tr>
+            <th colSpan={2}>{t('email')}</th>
+            <th>{t('role')}</th>
+            <th>{t('created-at')}</th>
+            <th>{t('action')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {invitations.map((invitation) => {
+            return (
+              <tr key={invitation.token}>
+                <td colSpan={2}>
+                  <div className="flex items-center justify-start space-x-2">
+                    <LetterAvatar name={invitation.email} />
+                    <span>{invitation.email}</span>
+                  </div>
+                </td>
+                <td>{invitation.role}</td>
+                <td>{new Date(invitation.createdAt).toDateString()}</td>
+                <td>
+                  <Button
+                    size="xs"
+                    color="error"
+                    variant="outline"
+                    onClick={() => {
+                      setSelectedInvitation(invitation);
+                      setConfirmationDialogVisible(true);
+                    }}
                   >
-                    <td className="px-6 py-3" colSpan={2}>
-                      <div className="flex items-center justify-start space-x-2">
-                        <LetterAvatar name={invitation.email} />
-                        <span>{invitation.email}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-3">{invitation.role}</td>
-                    <td className="px-6 py-3">
-                      {new Date(invitation.createdAt).toDateString()}
-                    </td>
-                    <td className="px-6 py-3">
-                      <Button
-                        size="xs"
-                        color="error"
-                        variant="outline"
-                        onClick={() => {
-                          setSelectedInvitation(invitation);
-                          setConfirmationDialogVisible(true);
-                        }}
-                      >
-                        {t('remove')}
-                      </Button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </Card.Body>
-      </Card>
+                    {t('remove')}
+                  </Button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
       <ConfirmationDialog
         visible={confirmationDialogVisible}
         onCancel={() => setConfirmationDialogVisible(false)}
@@ -124,7 +114,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
       >
         {t('delete-member-invitation-warning')}
       </ConfirmationDialog>
-    </>
+    </div>
   );
 };
 

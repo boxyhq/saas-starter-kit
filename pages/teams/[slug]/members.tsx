@@ -1,17 +1,14 @@
-import { InviteMember, PendingInvitations } from '@/components/invitation';
+import { PendingInvitations } from '@/components/invitation';
 import { Error, Loading } from '@/components/shared';
 import { Members, TeamTab } from '@/components/team';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useState } from 'react';
-import { Button } from 'react-daisyui';
 import type { NextPageWithLayout } from 'types';
 
 const TeamMembers: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
-  const [visible, setVisible] = useState(false);
   const { isLoading, isError, team } = useTeam();
 
   if (isLoading) {
@@ -29,23 +26,10 @@ const TeamMembers: NextPageWithLayout = () => {
   return (
     <>
       <TeamTab activeTab="members" team={team} />
-      <div className="flex flex-col">
-        <div className="flex mt-4 justify-end">
-          <Button
-            color="primary"
-            variant="outline"
-            size="md"
-            onClick={() => {
-              setVisible(!visible);
-            }}
-          >
-            {t('add-member')}
-          </Button>
-        </div>
+      <div className="space-y-6">
         <Members team={team} />
+        <PendingInvitations team={team} />
       </div>
-      <PendingInvitations team={team} />
-      <InviteMember visible={visible} setVisible={setVisible} team={team} />
     </>
   );
 };

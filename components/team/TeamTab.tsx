@@ -86,7 +86,7 @@ const TeamTab = (props: TeamTabProps) => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col pb-6">
       <h2 className="text-xl font-semibold mb-2">
         {heading ? heading : team.name}
       </h2>

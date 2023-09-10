@@ -1,4 +1,3 @@
-import { Card } from '@/components/shared';
 import { WithLoadingAndError } from '@/components/shared';
 import { EmptyState } from '@/components/shared';
 import { Team } from '@prisma/client';
@@ -9,6 +8,7 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { EndpointOut } from 'svix';
 
+import CreateWebhook from './CreateWebhook';
 import EditWebhook from './EditWebhook';
 import { defaultHeaders } from '@/lib/common';
 import type { ApiResponse } from 'types';
@@ -16,14 +16,17 @@ import ConfirmationDialog from '../shared/ConfirmationDialog';
 
 const Webhooks = ({ team }: { team: Team }) => {
   const { t } = useTranslation('common');
-  const [visible, setVisible] = React.useState(false);
+  const [createWebhookVisible, setCreateWebhookVisible] = useState(false);
+  const [updateWebhookVisible, setUpdateWebhookVisible] = useState(false);
+  const [endpoint, setEndpoint] = useState<EndpointOut | null>(null);
+
   const [confirmationDialogVisible, setConfirmationDialogVisible] =
     React.useState(false);
+
   const [selectedWebhook, setSelectedWebhook] = useState<EndpointOut | null>(
     null
   );
 
-  const [endpoint, setEndpoint] = React.useState<EndpointOut | null>(null);
   const { isLoading, isError, webhooks, mutateWebhooks } = useWebhooks(
     team.slug
   );
@@ -54,91 +57,99 @@ const Webhooks = ({ team }: { team: Team }) => {
 
   return (
     <WithLoadingAndError isLoading={isLoading} error={isError}>
-      {webhooks?.length === 0 ? (
-        <EmptyState title={t('no-webhook-title')} />
-      ) : (
-        <>
-          <Card heading="Webhooks">
-            <Card.Body>
-              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-                <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      {t('name')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      {t('url')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      {t('created-at')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      t{'action'}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {webhooks?.map((webhook) => {
-                    return (
-                      <tr
-                        key={webhook.id}
-                        className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                      >
-                        <td className="px-6 py-3">{webhook.description}</td>
-                        <td className="px-6 py-3">{webhook.url}</td>
-                        <td className="px-6 py-3">
-                          {webhook.createdAt.toLocaleString()}
-                        </td>
-                        <td className="px-6 py-3">
-                          <div className="flex space-x-2">
-                            <Button
-                              size="xs"
-                              variant="outline"
-                              onClick={() => {
-                                setEndpoint(webhook);
-                                setVisible(!visible);
-                              }}
-                            >
-                              {t('edit')}
-                            </Button>
-                            <Button
-                              size="xs"
-                              color="error"
-                              variant="outline"
-                              onClick={() => {
-                                setSelectedWebhook(webhook);
-                                setConfirmationDialogVisible(true);
-                              }}
-                            >
-                              {t('remove')}
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </Card.Body>
-          </Card>
-          <ConfirmationDialog
-            visible={confirmationDialogVisible}
-            onCancel={() => setConfirmationDialogVisible(false)}
-            onConfirm={() => deleteWebhook(selectedWebhook)}
-            title={t('confirm-delete-webhook')}
+      <div className="space-y-3">
+        <div className="flex justify-between items-center">
+          <div className="space-y-3">
+            <h2 className="text-xl font-medium leading-none tracking-tight">
+              Webhooks
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Webhooks are used to send notifications to your external apps.
+            </p>
+          </div>
+          <Button
+            color="primary"
+            variant="outline"
+            size="md"
+            onClick={() => setCreateWebhookVisible(!createWebhookVisible)}
           >
-            {t('delete-webhook-warning')}
-          </ConfirmationDialog>
-        </>
-      )}
-      {endpoint && (
-        <EditWebhook
-          visible={visible}
-          setVisible={setVisible}
-          team={team}
-          endpoint={endpoint}
-        />
-      )}
+            {t('add-webhook')}
+          </Button>
+        </div>
+        {webhooks?.length === 0 ? (
+          <EmptyState title={t('no-webhook-title')} />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="text-sm table w-full border-b dark:border-base-200">
+              <thead className="bg-base-200">
+                <tr>
+                  <th>{t('name')}</th>
+                  <th>{t('url')}</th>
+                  <th>{t('created-at')}</th>
+                  <th>{t('action')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {webhooks?.map((webhook) => {
+                  return (
+                    <tr key={webhook.id}>
+                      <td>{webhook.description}</td>
+                      <td>{webhook.url}</td>
+                      <td>{webhook.createdAt.toLocaleString()}</td>
+                      <td>
+                        <div className="flex space-x-2">
+                          <Button
+                            size="xs"
+                            variant="outline"
+                            onClick={() => {
+                              setEndpoint(webhook);
+                              setUpdateWebhookVisible(!updateWebhookVisible);
+                            }}
+                          >
+                            {t('edit')}
+                          </Button>
+                          <Button
+                            size="xs"
+                            color="error"
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedWebhook(webhook);
+                              setConfirmationDialogVisible(true);
+                            }}
+                          >
+                            {t('remove')}
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {endpoint && (
+          <EditWebhook
+            visible={updateWebhookVisible}
+            setVisible={setUpdateWebhookVisible}
+            team={team}
+            endpoint={endpoint}
+          />
+        )}
+      </div>
+      <ConfirmationDialog
+        visible={confirmationDialogVisible}
+        onCancel={() => setConfirmationDialogVisible(false)}
+        onConfirm={() => deleteWebhook(selectedWebhook)}
+        title={t('confirm-delete-webhook')}
+      >
+        {t('delete-webhook-warning')}
+      </ConfirmationDialog>
+      <CreateWebhook
+        visible={createWebhookVisible}
+        setVisible={setCreateWebhookVisible}
+        team={team}
+      />
     </WithLoadingAndError>
   );
 };

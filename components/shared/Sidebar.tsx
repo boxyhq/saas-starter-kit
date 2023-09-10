@@ -39,11 +39,6 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
           href: '/settings/password',
           icon: LockClosedIcon,
         },
-        {
-          name: t('settings'),
-          href: '/settings/general',
-          icon: Cog6ToothIcon,
-        },
       ],
       team: [
         {

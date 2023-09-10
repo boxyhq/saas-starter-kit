@@ -1,10 +1,11 @@
-import { Card, InputWithLabel } from '@/components/shared';
-import { defaultHeaders } from '@/lib/common';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import * as Yup from 'yup';
+
+import { Card, InputWithLabel } from '@/components/shared';
+import { defaultHeaders } from '@/lib/common';
 
 const schema = Yup.object().shape({
   currentPassword: Yup.string().required(),
@@ -42,8 +43,14 @@ const UpdatePassword = () => {
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
-        <Card heading={t('update-password')}>
-          <Card.Body className="p-4">
+        <Card>
+          <Card.Body>
+            <Card.Header>
+              <Card.Title>Password</Card.Title>
+              <Card.Description>
+                You can change your password here.
+              </Card.Description>
+            </Card.Header>
             <div className="flex flex-col space-y-3">
               <InputWithLabel
                 type="password"
