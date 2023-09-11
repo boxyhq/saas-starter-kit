@@ -36,14 +36,14 @@ export const getServerSideProps = async ({
     };
   }
 
-  if(new Date() > verificationToken.expires) {
+  if (new Date() > verificationToken.expires) {
     return {
       redirect: {
-        destination: '/auth/login?error=token-expired',
+        destination: '/auth/resend-email-token?error=verify-account-expired',
         permanent: false,
       },
     };
-  }  
+  }
 
   await Promise.allSettled([
     prisma.user.update({
