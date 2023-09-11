@@ -39,7 +39,7 @@ export const getServerSideProps = async ({
   if (new Date() > verificationToken.expires) {
     return {
       redirect: {
-        destination: '/auth/verify-account?error=verify-account-expired',
+        destination: '/auth/resend-email-token?error=verify-account-expired',
         permanent: false,
       },
     };

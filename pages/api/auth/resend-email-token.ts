@@ -46,7 +46,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     data: {
       identifier: email,
       token: generateToken(),
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 24 hours
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 24 hours),
     },
   });
 

@@ -42,7 +42,7 @@ const VerifyAccount: NextPageWithLayout<
       email: Yup.string().required().email(),
     }),
     onSubmit: async (values) => {
-      const response = await fetch('/api/auth/verify-account', {
+      const response = await fetch('/api/auth/resend-email-token', {
         method: 'POST',
         headers: defaultHeaders,
         body: JSON.stringify(values),
@@ -57,7 +57,7 @@ const VerifyAccount: NextPageWithLayout<
 
       formik.resetForm();
       toast.success(t('verify-account-link-sent'));
-      router.push('/login');
+      router.push('/auth/verify-email');
     },
   });
 
