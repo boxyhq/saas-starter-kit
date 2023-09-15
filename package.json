@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@boxyhq/react-ui": "3.3.10",
-    "@boxyhq/saml-jackson": "1.11.3",
+    "@boxyhq/saml-jackson": "1.12.0",
     "@heroicons/react": "2.0.18",
     "@hookform/resolvers": "3.3.1",
     "@next-auth/prisma-adapter": "1.0.7",
