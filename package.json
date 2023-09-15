@@ -70,7 +70,7 @@
     "@types/node": "20.6.0",
     "@types/nodemailer": "6.4.10",
     "@types/react": "18.2.21",
-    "@types/uuid": "9.0.3",
+    "@types/uuid": "9.0.4",
     "@typescript-eslint/eslint-plugin": "6.7.0",
     "@typescript-eslint/parser": "6.7.0",
     "daisyui": "2.52.0",
