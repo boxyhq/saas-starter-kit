@@ -1,23 +1,26 @@
-import GithubButton from '@/components/auth/GithubButton';
-import GoogleButton from '@/components/auth/GoogleButton';
-import Join from '@/components/auth/Join';
-import JoinWithInvitation from '@/components/auth/JoinWithInvitation';
-import { AuthLayout } from '@/components/layouts';
-import { getParsedCookie } from '@/lib/cookie';
-import { inferSSRProps } from '@/lib/inferSSRProps';
-import { GetServerSidePropsContext } from 'next';
+import Link from 'next/link';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next';
 import { type ReactElement, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+import Join from '@/components/auth/Join';
+import { getParsedCookie } from '@/lib/cookie';
 import type { NextPageWithLayout } from 'types';
+import { authProviderEnabled } from '@/lib/auth';
+import { AuthLayout } from '@/components/layouts';
+import { inferSSRProps } from '@/lib/inferSSRProps';
+import GithubButton from '@/components/auth/GithubButton';
+import GoogleButton from '@/components/auth/GoogleButton';
+import JoinWithInvitation from '@/components/auth/JoinWithInvitation';
 
 const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   inviteToken,
   next,
+  authProviders,
 }) => {
   const router = useRouter();
   const { status } = useSession();
@@ -38,18 +41,24 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   return (
     <>
       <div className="rounded p-6 border">
-        {inviteToken ? (
-          <JoinWithInvitation inviteToken={inviteToken} next={next} />
-        ) : (
-          <Join />
-        )}
-        <div className="divider">or</div>
-        <div className="space-y-3">
-          <GithubButton />
-          <GoogleButton />
+        <div className="flex gap-2 flex-wrap">
+          {authProviders.github && <GithubButton />}
+          {authProviders.google && <GoogleButton />}
         </div>
-      </div>
 
+        {(authProviders.github || authProviders.google) &&
+          authProviders.credentials && <div className="divider">or</div>}
+
+        {authProviders.credentials && (
+          <>
+            {inviteToken ? (
+              <JoinWithInvitation inviteToken={inviteToken} next={next} />
+            ) : (
+              <Join />
+            )}
+          </>
+        )}
+      </div>
       <p className="text-center text-sm text-gray-600">
         {t('already-have-an-account')}
         <Link
@@ -86,6 +95,7 @@ export const getServerSideProps = async (
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       inviteToken: cookieParsed.token,
       next: cookieParsed.url ?? '/auth/login',
+      authProviders: authProviderEnabled(),
     },
   };
 };

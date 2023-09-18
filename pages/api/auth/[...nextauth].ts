@@ -13,12 +13,15 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import EmailProvider from 'next-auth/providers/email';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
+import { isAuthProviderEnabled } from '@/lib/auth';
+import type { Provider } from 'next-auth/providers';
 
 const adapter = PrismaAdapter(prisma);
 
-export const authOptions: NextAuthOptions = {
-  adapter,
-  providers: [
+const providers: Provider[] = [];
+
+if (isAuthProviderEnabled('credentials')) {
+  providers.push(
     CredentialsProvider({
       id: 'credentials',
       credentials: {
@@ -61,8 +64,32 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
         };
       },
-    }),
+    })
+  );
+}
 
+if (isAuthProviderEnabled('github')) {
+  providers.push(
+    GitHubProvider({
+      clientId: env.github.clientId,
+      clientSecret: env.github.clientSecret,
+      allowDangerousEmailAccountLinking: true,
+    })
+  );
+}
+
+if (isAuthProviderEnabled('google')) {
+  providers.push(
+    GoogleProvider({
+      clientId: env.google.clientId,
+      clientSecret: env.google.clientSecret,
+      allowDangerousEmailAccountLinking: true,
+    })
+  );
+}
+
+if (isAuthProviderEnabled('saml')) {
+  providers.push(
     BoxyHQSAMLProvider({
       authorization: { params: { scope: '' } },
       issuer: env.appUrl,
@@ -72,8 +99,12 @@ export const authOptions: NextAuthOptions = {
       httpOptions: {
         timeout: 30000,
       },
-    }),
+    })
+  );
+}
 
+if (isAuthProviderEnabled('email')) {
+  providers.push(
     EmailProvider({
       server: {
         host: env.smtp.host,
@@ -84,20 +115,13 @@ export const authOptions: NextAuthOptions = {
         },
       },
       from: env.smtp.from,
-    }),
+    })
+  );
+}
 
-    GitHubProvider({
-      clientId: env.github.clientId,
-      clientSecret: env.github.clientSecret,
-      allowDangerousEmailAccountLinking: true,
-    }),
-
-    GoogleProvider({
-      clientId: env.google.clientId,
-      clientSecret: env.google.clientSecret,
-      allowDangerousEmailAccountLinking: true,
-    }),
-  ],
+export const authOptions: NextAuthOptions = {
+  adapter,
+  providers,
   pages: {
     signIn: '/auth/login',
     verifyRequest: '/auth/verify-request',
