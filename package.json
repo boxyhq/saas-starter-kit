@@ -20,7 +20,7 @@
     "build-ci": "next build"
   },
   "dependencies": {
-    "@boxyhq/metrics": "0.2.4",
+    "@boxyhq/metrics": "0.2.5",
     "@boxyhq/react-ui": "3.3.10",
     "@boxyhq/saml-jackson": "1.12.1",
     "@heroicons/react": "2.0.18",
