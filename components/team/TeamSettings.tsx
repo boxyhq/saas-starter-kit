@@ -1,7 +1,6 @@
 import { Card, InputWithLabel } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import { Team } from '@prisma/client';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -30,36 +29,41 @@ const TeamSettings = ({ team }: { team: Team }) => {
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
-      try {
-        const response = await axios.put<ApiResponse<Team>>(
-          `/api/teams/${team.slug}`,
-          {
-            ...values,
-          }
-        );
+      const response = await fetch(`/api/teams/${team.slug}`, {
+        method: 'PUT',
+        headers: defaultHeaders,
+        body: JSON.stringify(values),
+      });
 
-        const { data: teamUpdated } = response.data;
+      const json = (await response.json()) as ApiResponse<Team>;
 
-        if (teamUpdated) {
-          toast.success(t('successfully-updated'));
-          return router.push(`/teams/${teamUpdated.slug}/settings`);
-        }
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
       }
+
+      toast.success(t('successfully-updated'));
+      router.push(`/teams/${json.data.slug}/settings`);
     },
   });
 
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
-        <Card heading={t('team-settings')}>
-          <Card.Body className="px-3 py-3">
-            <div className="flex flex-col">
+        <Card>
+          <Card.Body>
+            <Card.Header>
+              <Card.Title>
+                Team Settings
+              </Card.Title>
+              <Card.Description>
+                Team settings and configuration.
+              </Card.Description>
+            </Card.Header>
+            <div className="flex flex-col gap-4">
               <InputWithLabel
                 name="name"
                 label={t('team-name')}
-                descriptionText={t('team-name')}
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 error={formik.errors.name}
@@ -67,7 +71,6 @@ const TeamSettings = ({ team }: { team: Team }) => {
               <InputWithLabel
                 name="slug"
                 label={t('team-slug')}
-                descriptionText={t('team-slug-description')}
                 value={formik.values.slug}
                 onChange={formik.handleChange}
                 error={formik.errors.slug}
@@ -75,7 +78,6 @@ const TeamSettings = ({ team }: { team: Team }) => {
               <InputWithLabel
                 name="domain"
                 label={t('team-domain')}
-                descriptionText={t('team-domain')}
                 value={formik.values.domain ? formik.values.domain : ''}
                 onChange={formik.handleChange}
                 error={formik.errors.domain}

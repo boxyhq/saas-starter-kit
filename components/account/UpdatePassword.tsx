@@ -1,11 +1,11 @@
-import { Card, InputWithLabel } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import * as Yup from 'yup';
+
+import { Card, InputWithLabel } from '@/components/shared';
+import { defaultHeaders } from '@/lib/common';
 
 const schema = Yup.object().shape({
   currentPassword: Yup.string().required(),
@@ -22,22 +22,35 @@ const UpdatePassword = () => {
     },
     validationSchema: schema,
     onSubmit: async (values) => {
-      try {
-        await axios.put(`/api/password`, values);
+      const response = await fetch('/api/password', {
+        method: 'PUT',
+        headers: defaultHeaders,
+        body: JSON.stringify(values),
+      });
 
-        toast.success(t('successfully-updated'));
-        formik.resetForm();
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      const json = await response.json();
+
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
       }
+
+      toast.success(t('successfully-updated'));
+      formik.resetForm();
     },
   });
 
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
-        <Card heading={t('update-password')}>
-          <Card.Body className="p-4">
+        <Card>
+          <Card.Body>
+            <Card.Header>
+              <Card.Title>Password</Card.Title>
+              <Card.Description>
+                You can change your password here.
+              </Card.Description>
+            </Card.Header>
             <div className="flex flex-col space-y-3">
               <InputWithLabel
                 type="password"
@@ -74,7 +87,7 @@ const UpdatePassword = () => {
                 color="primary"
                 loading={formik.isSubmitting}
                 disabled={!formik.dirty || !formik.isValid}
-                size='md'
+                size="md"
               >
                 {t('change-password')}
               </Button>

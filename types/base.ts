@@ -18,11 +18,6 @@ export type ApiResponse<T = unknown> =
 
 export type Role = 'owner' | 'member';
 
-export type SPSAMLConfig = {
-  issuer: string;
-  acs: string;
-};
-
 export type TeamWithMemberCount = Prisma.TeamGetPayload<{
   include: {
     _count: {
@@ -63,3 +58,10 @@ export type AppEvent =
   | 'webhook.removed'
   | 'webhook.fetched'
   | 'webhook.updated';
+
+export type AUTH_PROVIDER =
+  | 'github'
+  | 'google'
+  | 'saml'
+  | 'email'
+  | 'credentials';
