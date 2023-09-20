@@ -3,6 +3,7 @@ import { validatePassword } from '@/lib/common';
 import { prisma } from '@/lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from 'next/dist/server/api-utils';
+import { recordMetric } from '@/lib/metrics';
 
 export default async function handler(
   req: NextApiRequest,
@@ -71,6 +72,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       where: { token },
     }),
   ]);
+
+  recordMetric('user.password.reset');
 
   res.status(200).json({ message: 'Password reset successfully' });
 };

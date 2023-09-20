@@ -3,6 +3,7 @@ import { ApiError } from '@/lib/errors';
 import { getSession } from '@/lib/session';
 import { createTeam, getTeams, isTeamExists } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { recordMetric } from '@/lib/metrics';
 
 export default async function handler(
   req: NextApiRequest,
@@ -38,6 +39,8 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const teams = await getTeams(session?.user.id as string);
 
+  recordMetric('team.fetched');
+
   res.status(200).json({ data: teams });
 };
 
@@ -57,6 +60,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     name,
     slug,
   });
+
+  recordMetric('team.created');
 
   res.status(200).json({ data: team });
 };
