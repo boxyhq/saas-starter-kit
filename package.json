@@ -76,7 +76,7 @@
     "@typescript-eslint/parser": "6.7.2",
     "daisyui": "2.52.0",
     "eslint": "8.49.0",
-    "eslint-config-next": "13.4.19",
+    "eslint-config-next": "13.5.1",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-react": "7.33.2",
     "husky": "8.0.3",
