@@ -31,7 +31,7 @@
     "@retracedhq/logs-viewer": "2.5.1",
     "@retracedhq/retraced": "0.7.0",
     "@tailwindcss/typography": "0.5.10",
-    "autoprefixer": "10.4.15",
+    "autoprefixer": "10.4.16",
     "bcryptjs": "2.4.3",
     "classnames": "2.3.2",
     "cookies-next": "4.0.0",
