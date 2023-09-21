@@ -60,7 +60,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     version: 1,
   };
 
-  if (eventTypes.length > 0) {
+  if (eventTypes.length) {
     data['filterTypes'] = eventTypes;
   }
 
@@ -90,7 +90,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const app = await findOrCreateApp(teamMember.team.name, teamMember.team.id);
 
   if (!app) {
-    throw new ApiError(400, 'Bad request.');
+    throw new ApiError(400, 'Bad request. Please add a Svix API key.');
   }
 
   const webhooks = await listWebhooks(app.id);

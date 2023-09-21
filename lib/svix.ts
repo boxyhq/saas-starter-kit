@@ -60,14 +60,14 @@ export const deleteWebhook = async (appId: string, endpointId: string) => {
 export const sendEvent = async (
   appId: string,
   eventType: AppEvent,
-  payload: any
+  payload: Record<string, unknown>
 ) => {
   if (!env.svix.apiKey) {
     return;
   }
 
   return await svix.message.create(appId, {
-    eventType: eventType,
+    eventType,
     payload: {
       event: eventType,
       data: payload,
