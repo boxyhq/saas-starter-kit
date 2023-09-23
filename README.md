@@ -6,8 +6,6 @@
 
 # ⭐ Enterprise SaaS Starter Kit
 
-:warning: **This repository is still in an early stage of development.**
-
 <p>
     <a href="https://github.com/boxyhq/saas-starter-kit/stargazers"><img src="https://img.shields.io/github/stars/boxyhq/saas-starter-kit" alt="Github stargazers"></a>
     <a href="https://github.com/boxyhq/saas-starter-kit/issues"><img src="https://img.shields.io/github/issues/boxyhq/saas-starter-kit" alt="Github issues"></a>
