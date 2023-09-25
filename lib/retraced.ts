@@ -34,9 +34,7 @@ let retracedClient: Client;
 
 const getRetracedClient = () => {
   if (!env.retraced.apiKey || !env.retraced.projectId || !env.retraced.url) {
-    throw new Error(
-      'Retraced configuration is missing. Please check your environment variables.'
-    );
+    return;
   }
 
   if (!retracedClient) {
