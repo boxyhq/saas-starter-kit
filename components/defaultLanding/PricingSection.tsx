@@ -20,7 +20,7 @@ const PricingSection = () => {
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {plans.map((plan, index) => {
               return (
-                <Card key={index} className="rounded-md">
+                <Card key={`plan-${index}`} className="rounded-md">
                   <Card.Body>
                     <Card.Title tag="h2">
                       {plan.currency} {plan.amount} / {plan.duration}
@@ -28,9 +28,9 @@ const PricingSection = () => {
                     <p>{plan.description}</p>
                     <div className="mt-5">
                       <ul className="flex flex-col space-y-2">
-                        {plan.benefits.map((benefit: string) => {
+                        {plan.benefits.map((benefit: string, itemIndex: number) => {
                           return (
-                            <li key={index} className="flex items-center">
+                            <li key={`plan-${index}-benefit-${itemIndex}`} className="flex items-center">
                               <CheckIcon className="h-5 w-5" />
                               <span className="ml-1">{benefit}</span>
                             </li>
