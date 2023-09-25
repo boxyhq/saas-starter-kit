@@ -52,7 +52,7 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   return (
     <>
       <TeamTab activeTab="audit-logs" team={team} />
-      <Card heading={t('audit-logs')}>
+      <Card>
         <Card.Body>
           {canAccess('team_audit_log', ['read']) && auditLogToken && (
             <RetracedEventsBrowser
@@ -88,16 +88,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       props: {
         ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
         error: null,
-        auditLogToken,
-        retracedHost: env.retraced.url,
+        auditLogToken: auditLogToken ?? '',
+        retracedHost: env.retraced.url ?? '',
       },
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const { message } = error as { message: string };
     return {
       props: {
         ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
         error: {
-          message: error.message,
+          message,
         },
         auditLogToken: null,
         retracedHost: null,

@@ -1,15 +1,24 @@
-import app from '@/lib/app';
-import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { Button } from 'react-daisyui';
+import { signOut } from 'next-auth/react';
+import { MouseEventHandler } from 'react';
+import useTheme from 'hooks/useTheme';
+import app from '@/lib/app';
 
-export default function Navbar() {
+export default function Navbar({
+  toggleSidebar,
+}: {
+  toggleSidebar: MouseEventHandler<HTMLButtonElement>;
+}) {
+  const { toggleTheme, selectedTheme } = useTheme();
+
   return (
-    <nav className="fixed z-30 w-full border-b border-gray-200 bg-white">
+    <nav className="fixed z-30 w-full border-b border-gray-200 dark:border-gray-600 bg-white dark:bg-black">
       <div className="px-3 py-3 lg:px-5 lg:pl-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-start">
             <button
+              onClick={toggleSidebar}
               aria-expanded="true"
               aria-controls="sidebar"
               className="mr-2 cursor-pointer rounded p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100 lg:hidden"
@@ -47,7 +56,13 @@ export default function Navbar() {
               </Link>
             </div>
           </div>
-          <div>
+          <div className="flex items-center gap-4">
+            <button
+              className="p-0 w-10 h-10 rounded-lg flex items-center justify-center hover:bg-slate-200 dark:hover:bg-gray-200 dark:hover:text-black"
+              onClick={toggleTheme}
+            >
+              <selectedTheme.icon className="w-5 h-5" />
+            </button>
             <Button size="sm" variant="outline" onClick={() => signOut()}>
               Sign Out
             </Button>

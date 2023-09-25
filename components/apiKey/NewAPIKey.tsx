@@ -20,30 +20,32 @@ const NewAPIKey = ({
     mutate(`/api/teams/${team.slug}/api-keys`);
   };
 
+  const toggleVisible = () => {
+    setCreateModalVisible(!createModalVisible);
+    setApiKey('');
+  };
+
   return (
     <Modal open={createModalVisible} className="p-8">
+      <Button
+        type="button"
+        size="sm"
+        shape="circle"
+        className="absolute right-2 top-2 rounded-full"
+        onClick={toggleVisible}
+      >
+        ✕
+      </Button>
       {apiKey === '' ? (
-        <CreateAPIKeyForm
-          team={team}
-          onNewAPIKey={onNewAPIKey}
-          setCreateModalVisible={setCreateModalVisible}
-        />
+        <CreateAPIKeyForm team={team} onNewAPIKey={onNewAPIKey} />
       ) : (
-        <DisplayAPIKey
-          apiKey={apiKey}
-          clearApiKey={() => setApiKey('')}
-          setCreateModalVisible={setCreateModalVisible}
-        />
+        <DisplayAPIKey apiKey={apiKey} />
       )}
     </Modal>
   );
 };
 
-const CreateAPIKeyForm = ({
-  team,
-  setCreateModalVisible,
-  onNewAPIKey,
-}: CreateAPIKeyFormProps) => {
+const CreateAPIKeyForm = ({ team, onNewAPIKey }: CreateAPIKeyFormProps) => {
   const [name, setName] = useState('');
   const { t } = useTranslation('common');
   const [submitting, setSubmitting] = useState(false);
@@ -103,24 +105,12 @@ const CreateAPIKeyForm = ({
         >
           {t('create-api-key')}
         </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setCreateModalVisible(false)}
-          size='md'
-        >
-          {t('close')}
-        </Button>
       </Modal.Actions>
     </form>
   );
 };
 
-const DisplayAPIKey = ({
-  apiKey,
-  clearApiKey,
-  setCreateModalVisible,
-}: DisplayAPIKeyProps) => {
+const DisplayAPIKey = ({ apiKey }: DisplayAPIKeyProps) => {
   const { t } = useTranslation('common');
 
   return (
@@ -134,19 +124,6 @@ const DisplayAPIKey = ({
           <InputWithCopyButton label={t('api-key')} value={apiKey} />
         </div>
       </Modal.Body>
-      <Modal.Actions>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => {
-            setCreateModalVisible(false);
-            clearApiKey();
-          }}
-          size='md'
-        >
-          {t('close')}
-        </Button>
-      </Modal.Actions>
     </>
   );
 };
@@ -160,13 +137,10 @@ interface NewAPIKeyProps {
 interface CreateAPIKeyFormProps {
   team: Team;
   onNewAPIKey: (apiKey: string) => void;
-  setCreateModalVisible: (visible: boolean) => void;
 }
 
 interface DisplayAPIKeyProps {
   apiKey: string;
-  clearApiKey: () => void;
-  setCreateModalVisible: (visible: boolean) => void;
 }
 
 export default NewAPIKey;

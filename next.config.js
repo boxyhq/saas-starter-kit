@@ -23,6 +23,18 @@ const nextConfig = {
   async redirects() {
     return redirects;
   },
+  rewrites: async () => {
+    return [
+      {
+        source: '/.well-known/saml.cer',
+        destination: '/api/well-known/saml.cer',
+      },
+      {
+        source: '/.well-known/saml-configuration',
+        destination: '/well-known/saml-configuration',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

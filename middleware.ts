@@ -6,6 +6,7 @@ import type { NextRequest } from 'next/server';
 // Add routes that don't require authentication
 const unAuthenticatedRoutes = [
   '/api/hello',
+  '/api/health',
   '/api/auth/**',
   '/api/oauth/**',
   '/api/scim/v2.0/**',

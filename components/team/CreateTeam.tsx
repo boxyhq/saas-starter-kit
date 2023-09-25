@@ -1,6 +1,5 @@
-import { getAxiosError } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import type { Team } from '@prisma/client';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import useTeams from 'hooks/useTeams';
 import { useTranslation } from 'next-i18next';
@@ -30,23 +29,24 @@ const CreateTeam = ({
       name: Yup.string().required(),
     }),
     onSubmit: async (values) => {
-      try {
-        const response = await axios.post<ApiResponse<Team>>('/api/teams/', {
-          ...values,
-        });
+      const response = await fetch('/api/teams/', {
+        method: 'POST',
+        headers: defaultHeaders,
+        body: JSON.stringify(values),
+      });
 
-        const { data: teamCreated } = response.data;
+      const json = (await response.json()) as ApiResponse<Team>;
 
-        if (teamCreated) {
-          toast.success(t('team-created'));
-          mutateTeams();
-          formik.resetForm();
-          setVisible(false);
-          router.push(`/teams/${teamCreated.slug}/settings`);
-        }
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
       }
+
+      formik.resetForm();
+      mutateTeams();
+      setVisible(false);
+      toast.success(t('team-created'));
+      router.push(`/teams/${json.data.slug}/settings`);
     },
   });
 
@@ -64,6 +64,7 @@ const CreateTeam = ({
                 onChange={formik.handleChange}
                 value={formik.values.name}
                 placeholder={t('team-name')}
+                color={formik.errors.name ? 'error' : 'primary'}
               />
             </div>
           </div>
@@ -74,7 +75,8 @@ const CreateTeam = ({
             color="primary"
             loading={formik.isSubmitting}
             active={formik.dirty}
-            size='md'
+            size="md"
+            disabled={!formik.isValid}
           >
             {t('create-team')}
           </Button>
@@ -84,7 +86,7 @@ const CreateTeam = ({
             onClick={() => {
               setVisible(!visible);
             }}
-            size='md'
+            size="md"
           >
             {t('close')}
           </Button>

@@ -2,6 +2,7 @@ import { deleteApiKey } from 'models/apiKey';
 import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { recordMetric } from '@/lib/metrics';
 
 export default async function handler(
   req: NextApiRequest,
@@ -36,6 +37,8 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const { apiKeyId } = req.query as { apiKeyId: string };
 
   await deleteApiKey(apiKeyId);
+
+  recordMetric('apikey.removed');
 
   res.json({ data: {} });
 };

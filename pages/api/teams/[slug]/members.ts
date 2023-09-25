@@ -10,6 +10,7 @@ import {
 } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { recordMetric } from '@/lib/metrics';
 
 export default async function handler(
   req: NextApiRequest,
@@ -52,6 +53,8 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const members = await getTeamMembers(teamMember.team.slug);
 
+  recordMetric('member.fetched');
+
   res.status(200).json({ data: members });
 };
 
@@ -73,6 +76,8 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
+  recordMetric('member.removed');
+
   res.status(200).json({ data: {} });
 };
 
@@ -93,6 +98,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   await removeTeamMember(teamMember.teamId, teamMember.user.id);
+
+  recordMetric('member.left');
 
   res.status(200).json({ data: {} });
 };
@@ -122,6 +129,8 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     user: teamMember.user,
     team: teamMember.team,
   });
+
+  recordMetric('member.role.updated');
 
   res.status(200).json({ data: memberUpdated });
 };

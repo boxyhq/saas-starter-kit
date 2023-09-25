@@ -1,16 +1,14 @@
-import axios from 'axios';
-
 const fetcher = async (url: string) => {
-  try {
-    const { data } = await axios.get(url);
+  const response = await fetch(url);
+  const json = await response.json();
 
-    return data;
-  } catch (error: any) {
-    const message =
-      error.response?.data?.error?.message || 'Something went wrong';
-
-    throw new Error(message);
+  if (!response.ok) {
+    throw new Error(
+      json.error.message || 'An error occurred while fetching the data'
+    );
   }
+
+  return json;
 };
 
 export default fetcher;

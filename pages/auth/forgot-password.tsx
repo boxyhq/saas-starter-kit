@@ -1,7 +1,6 @@
 import { AuthLayout } from '@/components/layouts';
 import { InputWithLabel } from '@/components/shared';
-import { getAxiosError } from '@/lib/common';
-import axios from 'axios';
+import { defaultHeaders } from '@/lib/common';
 import { useFormik } from 'formik';
 import type {
   GetServerSidePropsContext,
@@ -37,16 +36,21 @@ const ForgotPassword: NextPageWithLayout<
       email: Yup.string().required().email(),
     }),
     onSubmit: async (values) => {
-      try {
-        await axios.post<ApiResponse>('/api/auth/forgot-password', {
-          ...values,
-        });
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: defaultHeaders,
+        body: JSON.stringify(values),
+      });
 
-        formik.resetForm();
-        toast.success(t('password-reset-link-sent'));
-      } catch (error: any) {
-        toast.error(getAxiosError(error));
+      const json = (await response.json()) as ApiResponse;
+
+      if (!response.ok) {
+        toast.error(json.error.message);
+        return;
       }
+
+      formik.resetForm();
+      toast.success(t('password-reset-link-sent'));
     },
   });
 
@@ -72,7 +76,7 @@ const ForgotPassword: NextPageWithLayout<
               loading={formik.isSubmitting}
               active={formik.dirty}
               fullWidth
-              size='md'
+              size="md"
             >
               {t('email-password-reset-link')}
             </Button>

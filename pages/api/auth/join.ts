@@ -8,6 +8,7 @@ import { ApiError } from '@/lib/errors';
 import { createTeam, isTeamExists } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { recordMetric } from '@/lib/metrics';
 
 export default async function handler(
   req: NextApiRequest,
@@ -90,6 +91,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
     await sendVerificationEmail({ user, verificationToken });
   }
+
+  recordMetric('user.signup');
 
   res.status(201).json({
     data: {

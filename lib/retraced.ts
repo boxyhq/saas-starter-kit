@@ -11,8 +11,10 @@ export type EventType =
   | 'member.remove'
   | 'member.update'
   | 'sso.connection.create'
+  | 'sso.connection.patch'
   | 'sso.connection.delete'
   | 'dsync.connection.create'
+  | 'dsync.connection.delete'
   | 'webhook.create'
   | 'webhook.delete'
   | 'webhook.update'
@@ -32,7 +34,9 @@ let retracedClient: Client;
 
 const getRetracedClient = () => {
   if (!env.retraced.apiKey || !env.retraced.projectId || !env.retraced.url) {
-    return;
+    throw new Error(
+      'Retraced configuration is missing. Please check your environment variables.'
+    );
   }
 
   if (!retracedClient) {
@@ -81,7 +85,7 @@ export const getViewerToken = async (groupId: string, actorId: string) => {
 
   try {
     return await retracedClient.getViewerToken(groupId, actorId, true);
-  } catch (error: any) {
+  } catch (_error) {
     throw new Error(
       'Unable to get viewer token from Retraced. Please check Retraced configuration.'
     );
