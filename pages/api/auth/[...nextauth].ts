@@ -7,7 +7,7 @@ import { Role } from '@prisma/client';
 import { getAccount } from 'models/account';
 import { addTeamMember, getTeam, getTeamRoles } from 'models/team';
 import { createUser, getUser } from 'models/user';
-import NextAuth, { Account, NextAuthOptions, User } from 'next-auth';
+import NextAuth, { Account, NextAuthOptions, Profile, User } from 'next-auth';
 import BoxyHQSAMLProvider from 'next-auth/providers/boxyhq-saml';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import EmailProvider from 'next-auth/providers/email';
@@ -161,7 +161,7 @@ export const authOptions: NextAuthOptions = {
 
         await linkAccount(newUser, account);
 
-        if (account.provider === 'boxyhq-saml') {
+        if (account.provider === 'boxyhq-saml' && profile) {
           await linkToTeam(profile, newUser.id);
         }
 
@@ -184,18 +184,26 @@ export const authOptions: NextAuthOptions = {
 
         if (token.sub) {
           const roles = await getTeamRoles(token.sub as string);
-          (session.user as any).roles = roles;
+          session.user.roles = roles;
         }
       }
 
       return session;
+    },
+
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === 'update') {
+        return { ...token, ...session.user };
+      }
+
+      return { ...token, ...user };
     },
   },
 };
 
 export default NextAuth(authOptions);
 
-const linkToTeam = async (profile: any, userId: string) => {
+const linkToTeam = async (profile: Profile, userId: string) => {
   const team = await getTeam({
     id: profile.requested.tenant,
   });

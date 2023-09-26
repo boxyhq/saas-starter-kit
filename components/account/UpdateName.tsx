@@ -8,6 +8,7 @@ import type { ApiResponse } from 'types';
 import { Card } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import { User } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 
 const schema = Yup.object().shape({
   name: Yup.string().required(),
@@ -15,6 +16,7 @@ const schema = Yup.object().shape({
 
 const UpdateName = ({ user }: { user: User }) => {
   const { t } = useTranslation('common');
+  const { data: session, update } = useSession();
 
   const formik = useFormik({
     initialValues: {
@@ -34,6 +36,14 @@ const UpdateName = ({ user }: { user: User }) => {
         toast.error(json.error.message);
         return;
       }
+
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          name: json.data.name,
+        },
+      });
 
       toast.success(t('successfully-updated'));
     },
