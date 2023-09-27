@@ -53,9 +53,7 @@ const TeamSettings = ({ team }: { team: Team }) => {
         <Card>
           <Card.Body>
             <Card.Header>
-              <Card.Title>
-                Team Settings
-              </Card.Title>
+              <Card.Title>Team Settings</Card.Title>
               <Card.Description>
                 Team settings and configuration.
               </Card.Description>

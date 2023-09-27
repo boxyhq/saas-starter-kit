@@ -28,14 +28,19 @@ const PricingSection = () => {
                     <p>{plan.description}</p>
                     <div className="mt-5">
                       <ul className="flex flex-col space-y-2">
-                        {plan.benefits.map((benefit: string, itemIndex: number) => {
-                          return (
-                            <li key={`plan-${index}-benefit-${itemIndex}`} className="flex items-center">
-                              <CheckIcon className="h-5 w-5" />
-                              <span className="ml-1">{benefit}</span>
-                            </li>
-                          );
-                        })}
+                        {plan.benefits.map(
+                          (benefit: string, itemIndex: number) => {
+                            return (
+                              <li
+                                key={`plan-${index}-benefit-${itemIndex}`}
+                                className="flex items-center"
+                              >
+                                <CheckIcon className="h-5 w-5" />
+                                <span className="ml-1">{benefit}</span>
+                              </li>
+                            );
+                          }
+                        )}
                       </ul>
                     </div>
                   </Card.Body>
