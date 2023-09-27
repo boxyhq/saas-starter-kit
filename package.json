@@ -70,7 +70,7 @@
     "@types/mocha": "10.0.1",
     "@types/node": "20.7.0",
     "@types/nodemailer": "6.4.11",
-    "@types/react": "18.2.22",
+    "@types/react": "18.2.23",
     "@types/uuid": "9.0.4",
     "@typescript-eslint/eslint-plugin": "6.7.3",
     "@typescript-eslint/parser": "6.7.3",
