@@ -5,7 +5,7 @@ module.exports = {
   jsxSingleQuote: true,
   trailingComma: 'es5',
   semi: true,
-  printWidth: 110,
+  printWidth: 80,
   arrowParens: 'always',
   importOrderSeparation: true,
   importOrder: ['^@core/(.*)$', '^@server/(.*)$', '^@ui/(.*)$', '^[./]'],
