@@ -4,7 +4,7 @@ module.exports = {
   semi: true,
   printWidth: 80,
   arrowParens: 'always',
-  importOrderSeparation: true,
-  importOrder: ['^@core/(.*)$', '^@server/(.*)$', '^@ui/(.*)$', '^[./]'],
-  importOrderSortSpecifiers: true,
+  // importOrderSeparation: true,
+  // importOrder: ['^@core/(.*)$', '^@server/(.*)$', '^@ui/(.*)$', '^[./]'],
+  // importOrderSortSpecifiers: true,
 };
