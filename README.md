@@ -4,6 +4,10 @@
   <img alt="BoxyHQ Banner" src="https://github.com/boxyhq/jackson/assets/66887028/b40520b7-dbce-400b-88d3-400d1c215ea1">
 </picture>
 
+<h3 align="center">
+  Participating in 
+</h3>
+
 <div align="center">  
   
   ![Hacktoberfest](https://ziadoua.github.io/m3-Markdown-Badges/badges/Hacktoberfest2023/hacktoberfest20231.svg)
