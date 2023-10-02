@@ -16,13 +16,10 @@ import env from '@/lib/env';
 
 const Home: NextPageWithLayout = () => {
     const { toggleTheme, selectedTheme } = useTheme();
-
     const { t } = useTranslation('common');
-
-    // Get user session
     const { data: session } = useSession()
 
-    // redirect to dashboard route
+    // redirect to dashboard route, if session is present
     if (session) redirect("/dashboard")
 
     return (
