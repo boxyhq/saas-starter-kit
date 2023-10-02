@@ -17,6 +17,7 @@
 
 The Open Source Next.js SaaS boilerplate for Enterprise SaaS app development.
 
+Please star ⭐ the repo if you want us to continue developing and improving the SaaS Starter Kit! 😀
 ## 📖 Additional Resources
 
 Video - [BoxyHQ's SaaS Starter Kit: Your Ultimate Enterprise-Compliant Boilerplate](https://www.youtube.com/watch?v=oF8QIwQIhyo) <br>
