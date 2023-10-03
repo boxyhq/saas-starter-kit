@@ -6,6 +6,7 @@ import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { NextPageWithLayout } from 'types';
+import styles from 'styles/sdk-override.module.css';
 
 const TeamSSO: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
@@ -24,7 +25,6 @@ const TeamSSO: NextPageWithLayout = () => {
     return <Error message={t('team-not-found')} />;
   }
 
-
   return (
     <>
       <TeamTab activeTab="saml" team={team} />
@@ -33,6 +33,7 @@ const TeamSSO: NextPageWithLayout = () => {
         copyDoneCallback={() => {
           /** show toast */
         }}
+        classNames={{ button: { ctoa: 'btn-primary' } }}
         componentProps={{
           editOIDCConnection: {},
           editSAMLConnection: {
@@ -42,7 +43,7 @@ const TeamSSO: NextPageWithLayout = () => {
             },
           },
           connectionList: {
-            cols: ["provider", "type", "status", "actions"],
+            cols: ['provider', 'type', 'status', 'actions'],
             getConnectionsUrl: `/api/teams/${team.slug}/saml`,
           },
           createSSOConnection: {
@@ -52,11 +53,19 @@ const TeamSSO: NextPageWithLayout = () => {
                 urls: {
                   save: `/api/teams/${team.slug}/saml`,
                 },
+                classNames: {
+                  input: styles['sdk-input'],
+                  button: { ctoa: 'btn-primary' },
+                },
               },
               oidc: {
                 variant: 'basic',
                 urls: {
                   save: '',
+                },
+                classNames: {
+                  input: styles['sdk-input'],
+                  button: { ctoa: 'btn-primary' },
                 },
               },
             },

@@ -7,10 +7,12 @@ import { Toaster } from 'react-hot-toast';
 import type { AppPropsWithLayout } from 'types';
 import mixpanel from 'mixpanel-browser';
 
+import '@boxyhq/react-ui/dist/style.css';
 import '../styles/globals.css';
 import { useEffect } from 'react';
 import env from '@/lib/env';
 import { Theme, applyTheme } from '@/lib/theme';
+import { Themer } from '@boxyhq/react-ui/shared';
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const { session, ...props } = pageProps;
@@ -39,7 +41,22 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       </Head>
       <SessionProvider session={session}>
         <Toaster toastOptions={{ duration: 4000 }} />
-        {getLayout(<Component {...props} />)}
+        <Themer
+          overrideTheme={{
+            '--primary-color': '#2563eb',
+            '--primary-color-50': '#eff6ff',
+            '--primary-color-100': '#dbeafe',
+            '--primary-color-200': '#bfdbfe',
+            '--primary-color-500': '#3b82f6',
+            '--primary-color-600': '#2563eb',
+            '--primary-color-700': '#1d4ed8',
+            '--primary-color-800': '#1e40af',
+            '--primary-color-900': '#1e3a8a',
+            '--primary-color-950': '#172554',
+          }}
+        >
+          {getLayout(<Component {...props} />)}
+        </Themer>
       </SessionProvider>
     </>
   );
