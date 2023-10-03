@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { type ReactElement } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { NextPageWithLayout } from 'types';
@@ -13,8 +15,10 @@ import env from '@/lib/env';
 
 const Home: NextPageWithLayout = () => {
   const { toggleTheme, selectedTheme } = useTheme();
-
   const { t } = useTranslation('common');
+  const { data: session } = useSession()
+
+  if (session) redirect("/dashboard")
 
   return (
     <div className="container mx-auto">
@@ -68,7 +72,7 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   // Redirect to login page if landing page is disabled
-  if(env.hideLandingPage) {
+  if (env.hideLandingPage) {
     return {
       redirect: {
         destination: '/auth/login',
