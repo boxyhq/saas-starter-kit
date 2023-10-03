@@ -45,6 +45,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new ApiError(400, 'An user with this email already exists.');
   }
 
+  if (password.length < 8) {
+    throw new Error('Password length should not be smaller than 8.');
+  }
+
   if (env.disableNonBusinessEmailSignup && !isBusinessEmail(email)) {
     throw new ApiError(
       400,
