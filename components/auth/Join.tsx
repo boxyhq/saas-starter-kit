@@ -23,7 +23,7 @@ const Join = () => {
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
-      password: Yup.string().required().min(7),
+      password: Yup.string().required().min(8),
       team: Yup.string().required().min(3),
     }),
     onSubmit: async (values) => {
