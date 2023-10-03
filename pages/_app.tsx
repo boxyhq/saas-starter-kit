@@ -4,6 +4,7 @@ import { SessionProvider } from 'next-auth/react';
 import { appWithTranslation } from 'next-i18next';
 import Head from 'next/head';
 import { Toaster } from 'react-hot-toast';
+import colors from 'tailwindcss/colors';
 import type { AppPropsWithLayout } from 'types';
 import mixpanel from 'mixpanel-browser';
 
@@ -44,15 +45,15 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <Themer
           overrideTheme={{
             '--primary-color': '#2563eb',
-            '--primary-color-50': '#eff6ff',
-            '--primary-color-100': '#dbeafe',
-            '--primary-color-200': '#bfdbfe',
-            '--primary-color-500': '#3b82f6',
-            '--primary-color-600': '#2563eb',
-            '--primary-color-700': '#1d4ed8',
-            '--primary-color-800': '#1e40af',
-            '--primary-color-900': '#1e3a8a',
-            '--primary-color-950': '#172554',
+            '--primary-color-50': colors.blue['50'],
+            '--primary-color-100': colors.blue['100'],
+            '--primary-color-200': colors.blue['200'],
+            '--primary-color-500': colors.blue['500'],
+            '--primary-color-600': colors.blue['600'],
+            '--primary-color-700': colors.blue['700'],
+            '--primary-color-800': colors.blue['800'],
+            '--primary-color-900': colors.blue['900'],
+            '--primary-color-950': colors.blue['950'],
           }}
         >
           {getLayout(<Component {...props} />)}
