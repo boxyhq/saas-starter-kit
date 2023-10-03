@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { type ReactElement } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -19,7 +18,6 @@ const Home: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
   const { data: session } = useSession()
 
-  // redirect to dashboard route, if session is present
   if (session) redirect("/dashboard")
 
   return (
