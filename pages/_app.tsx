@@ -44,10 +44,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <Toaster toastOptions={{ duration: 4000 }} />
         <Themer
           overrideTheme={{
-            '--primary-color': '#2563eb',
+            '--primary-color': colors.blue['500'],
             '--primary-color-50': colors.blue['50'],
             '--primary-color-100': colors.blue['100'],
             '--primary-color-200': colors.blue['200'],
+            '--primary-color-300': colors.blue['300'],
             '--primary-color-500': colors.blue['500'],
             '--primary-color-600': colors.blue['600'],
             '--primary-color-700': colors.blue['700'],
