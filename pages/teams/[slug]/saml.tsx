@@ -35,11 +35,20 @@ const TeamSSO: NextPageWithLayout = () => {
         }}
         classNames={{ button: { ctoa: 'btn-primary' } }}
         componentProps={{
-          editOIDCConnection: {},
+          editOIDCConnection: {
+            classNames: {
+              button: { ctoa: 'btn-primary' },
+              input: styles['sdk-input'],
+            },
+          },
           editSAMLConnection: {
             urls: {
               patch: `/api/teams/${team.slug}/saml`,
               delete: `/api/teams/${team.slug}/saml`,
+            },
+            classNames: {
+              button: { ctoa: 'btn-primary' },
+              input: styles['sdk-input'],
             },
           },
           connectionList: {
