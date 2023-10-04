@@ -47,8 +47,14 @@ const TeamSSO: NextPageWithLayout = () => {
               delete: `/api/teams/${team.slug}/saml`,
             },
             classNames: {
-              button: { ctoa: 'btn-primary' },
+              button: { ctoa: 'btn-primary', destructive: 'btn-error' },
               input: styles['sdk-input'],
+              confirmationPrompt: {
+                button: {
+                  ctoa: 'btn-md btn-error',
+                  cancel: 'btn-md btn-outline',
+                },
+              },
             },
           },
           connectionList: {
