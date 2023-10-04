@@ -8,10 +8,12 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
+import {useState } from 'react';
 
 const Join = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const[isactive,wasactive]=useState(true);
 
   const formik = useFormik({
     initialValues: {
@@ -84,7 +86,7 @@ const Join = () => {
           onChange={formik.handleChange}
         />
         <InputWithLabel
-          type="password"
+          type={isactive?"password":"text"}
           label={t('password')}
           name="password"
           placeholder={t('password')}
@@ -92,6 +94,9 @@ const Join = () => {
           error={formik.touched.password ? formik.errors.password : undefined}
           onChange={formik.handleChange}
         />
+        <div className='flex'>
+        <input className='bg-black font-xs mt-2 focus:ring-0' type="checkbox" onClick={()=>{wasactive(!isactive)}}/><span className='block mt-2 text-sm ml-2'>Show Password</span>
+        </div>
       </div>
       <div className="mt-3 space-y-3">
         <Button

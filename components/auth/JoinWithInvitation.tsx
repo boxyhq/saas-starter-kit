@@ -9,6 +9,7 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
+import {useState } from 'react';
 
 const JoinWithInvitation = ({
   inviteToken,
@@ -63,6 +64,8 @@ const JoinWithInvitation = ({
     return <Error />;
   }
 
+  const[isactive,wasactive]=useState(true);
+
   return (
     <form className="space-y-3" onSubmit={formik.handleSubmit}>
       <InputWithLabel
@@ -84,7 +87,7 @@ const JoinWithInvitation = ({
         onChange={formik.handleChange}
       />
       <InputWithLabel
-        type="password"
+        type={isactive?"password":"text"}
         label={t('password')}
         name="password"
         placeholder={t('password')}
@@ -92,6 +95,9 @@ const JoinWithInvitation = ({
         error={formik.touched.password ? formik.errors.password : undefined}
         onChange={formik.handleChange}
       />
+      <div className='flex'>
+        <input className='bg-black font-xs mt-2 focus:ring-0' type="checkbox" onClick={()=>{wasactive(!isactive)}}/><span className='block mt-2 text-sm ml-2'>Show Password</span>
+      </div>
       <Button
         type="submit"
         color="primary"
