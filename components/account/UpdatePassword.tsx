@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 
 import { Card, InputWithLabel } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
-import {useState } from 'react';
 
 const schema = Yup.object().shape({
   currentPassword: Yup.string().required(),
@@ -40,7 +39,6 @@ const UpdatePassword = () => {
       formik.resetForm();
     },
   });
-  const[isactive,wasactive]=useState(true);
 
   return (
     <>
@@ -55,7 +53,7 @@ const UpdatePassword = () => {
             </Card.Header>
             <div className="flex flex-col space-y-3">
               <InputWithLabel
-                type={isactive?"password":"text"}
+                type="password"
                 label={t('current-password')}
                 name="currentPassword"
                 placeholder={t('current-password')}
@@ -68,7 +66,7 @@ const UpdatePassword = () => {
                 onChange={formik.handleChange}
               />
               <InputWithLabel
-                type={isactive?"password":"text"}
+                type="password"
                 label={t('new-password')}
                 name="newPassword"
                 placeholder={t('new-password')}
@@ -80,9 +78,6 @@ const UpdatePassword = () => {
                 }
                 onChange={formik.handleChange}
               />
-              <div className='flex'>
-                 <input className='bg-black font-xs mt-2 focus:ring-0' type="checkbox" onClick={()=>{wasactive(!isactive)}}/><span className='block mt-2 text-sm ml-2'>Show Password</span>
-              </div>
             </div>
           </Card.Body>
           <Card.Footer>
