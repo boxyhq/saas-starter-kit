@@ -42,7 +42,7 @@ const TeamSSO: NextPageWithLayout = () => {
             },
           },
           connectionList: {
-            hideCols: ['tenant', 'product'],
+            cols: ["provider", "type", "status", "actions"],
             getConnectionsUrl: `/api/teams/${team.slug}/saml`,
           },
           createSSOConnection: {

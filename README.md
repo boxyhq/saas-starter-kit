@@ -4,6 +4,22 @@
   <img alt="BoxyHQ Banner" src="https://github.com/boxyhq/jackson/assets/66887028/b40520b7-dbce-400b-88d3-400d1c215ea1">
 </picture>
 
+<h3 align="center">
+  Participating in 
+</h3>
+
+<div align="center">  
+  
+  ![Hacktoberfest](https://ziadoua.github.io/m3-Markdown-Badges/badges/Hacktoberfest2023/hacktoberfest20231.svg)
+</div>
+
+<h3 align="center">
+
+[⬆️ Take a look at our Issues ⬆️](https://github.com/boxyhq/saas-starter-kit/issues)
+</h3>
+
+___
+
 # ⭐ Enterprise SaaS Starter Kit
 
 <p>
@@ -17,6 +33,7 @@
 
 The Open Source Next.js SaaS boilerplate for Enterprise SaaS app development.
 
+Please star ⭐ the repo if you want us to continue developing and improving the SaaS Starter Kit! 😀
 ## 📖 Additional Resources
 
 Video - [BoxyHQ's SaaS Starter Kit: Your Ultimate Enterprise-Compliant Boilerplate](https://www.youtube.com/watch?v=oF8QIwQIhyo) <br>
