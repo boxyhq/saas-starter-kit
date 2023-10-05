@@ -8,6 +8,18 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { NextPageWithLayout } from 'types';
 import styles from 'styles/sdk-override.module.css';
 
+const EDIT_SSO_CSS = {
+  button: { ctoa: 'btn-primary', destructive: 'btn-error' },
+  input: `${styles['sdk-input']} input input-bordered`,
+  confirmationPrompt: {
+    button: {
+      ctoa: 'btn-md btn-error',
+      cancel: 'btn-md btn-outline',
+    },
+  },
+  secretInput: 'input input-bordered',
+};
+
 const TeamSSO: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
 
@@ -36,26 +48,14 @@ const TeamSSO: NextPageWithLayout = () => {
         classNames={{ button: { ctoa: 'btn-primary' } }}
         componentProps={{
           editOIDCConnection: {
-            classNames: {
-              button: { ctoa: 'btn-primary' },
-              input: `${styles['sdk-input']} input input-bordered`,
-            },
+            classNames: EDIT_SSO_CSS,
           },
           editSAMLConnection: {
             urls: {
               patch: `/api/teams/${team.slug}/saml`,
               delete: `/api/teams/${team.slug}/saml`,
             },
-            classNames: {
-              button: { ctoa: 'btn-primary', destructive: 'btn-error' },
-              input: `${styles['sdk-input']} input input-bordered`,
-              confirmationPrompt: {
-                button: {
-                  ctoa: 'btn-md btn-error',
-                  cancel: 'btn-md btn-outline',
-                },
-              },
-            },
+            classNames: EDIT_SSO_CSS,
           },
           connectionList: {
             cols: ['provider', 'type', 'status', 'actions'],
