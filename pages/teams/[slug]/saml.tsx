@@ -38,7 +38,7 @@ const TeamSSO: NextPageWithLayout = () => {
           editOIDCConnection: {
             classNames: {
               button: { ctoa: 'btn-primary' },
-              input: styles['sdk-input'],
+              input: `${styles['sdk-input']} input input-bordered`,
             },
           },
           editSAMLConnection: {
@@ -48,7 +48,7 @@ const TeamSSO: NextPageWithLayout = () => {
             },
             classNames: {
               button: { ctoa: 'btn-primary', destructive: 'btn-error' },
-              input: styles['sdk-input'],
+              input: `${styles['sdk-input']} input input-bordered`,
               confirmationPrompt: {
                 button: {
                   ctoa: 'btn-md btn-error',
