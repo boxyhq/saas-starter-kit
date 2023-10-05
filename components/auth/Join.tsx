@@ -1,4 +1,5 @@
 import { InputWithLabel } from '@/components/shared';
+import InputWithCheckbox from "../shared/InputWithCheckbox";
 import { defaultHeaders } from '@/lib/common';
 import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
@@ -19,12 +20,14 @@ const Join = () => {
       email: '',
       password: '',
       team: '',
+      agreeToTerms: false,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
       password: Yup.string().required().min(8),
       team: Yup.string().required().min(3),
+      agreeToTerms: Yup.boolean().oneOf([true], 'You must agree to the Terms and Conditions.'),
     }),
     onSubmit: async (values) => {
       const response = await fetch('/api/auth/join', {
@@ -91,6 +94,21 @@ const Join = () => {
           value={formik.values.password}
           error={formik.touched.password ? formik.errors.password : undefined}
           onChange={formik.handleChange}
+        />
+
+
+        {/* ADDING CHECKBOX HERE */}
+        <InputWithCheckbox
+          type="checkbox"
+          label={t('termsandconditon')}
+          name="agreeToTerms"
+          placeholder={t('termsandcondition')}
+          value={formik.values.agreeToTerms}
+          error={formik.touched.agreeToTerms ? formik.errors.agreeToTerms : undefined}
+          onChange={(e) => {
+            // Use setFieldValue to update formik.values
+            formik.setFieldValue('agreeToTerms', e.target.checked);
+          }}
         />
       </div>
       <div className="mt-3 space-y-3">
