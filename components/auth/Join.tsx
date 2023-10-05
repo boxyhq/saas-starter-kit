@@ -1,10 +1,11 @@
 import { InputWithLabel } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import type { User } from '@prisma/client';
+import { useState } from 'react';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Button } from 'react-daisyui';
+import { Button, Checkbox } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
@@ -12,6 +13,11 @@ import * as Yup from 'yup';
 const Join = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+
+  const handleAgreeToTerms = () => {
+    setAgreeToTerms(!agreeToTerms);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -97,6 +103,7 @@ const Join = () => {
         <Button
           type="submit"
           color="primary"
+          disabled={!agreeToTerms}
           loading={formik.isSubmitting}
           active={formik.dirty}
           fullWidth
@@ -105,6 +112,16 @@ const Join = () => {
           {t('create-account')}
         </Button>
         <p className="text-sm">{t('sign-up-message')}</p>
+        <div className="flex flex-row items-center gap-2 text-sm">
+          <Checkbox
+            size="sm"
+            color="accent"
+            id="terms"
+            checked={agreeToTerms}
+            onClick={handleAgreeToTerms}
+          />
+          <label htmlFor="terms">{t('agree-to-terms')}</label>
+        </div>
       </div>
     </form>
   );
