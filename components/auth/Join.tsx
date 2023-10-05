@@ -118,7 +118,7 @@ const Join = () => {
             color="accent"
             id="terms"
             checked={agreeToTerms}
-            onClick={handleAgreeToTerms}
+            onChange={handleAgreeToTerms}
           />
           <label htmlFor="terms">{t('agree-to-terms')}</label>
         </div>
