@@ -18,7 +18,7 @@ const FeatureSection = () => {
           <div className="grid grid-cols-1 md:grid-cols-3">
             {features.map((feature: any, index) => {
               return (
-                <div className="card-compact card w-96" key={index}>
+                <div className="card-compact card" key={index}>
                   <div className="card-body">
                     <h2 className="card-title">{feature.name}</h2>
                     <p>{feature.description}</p>

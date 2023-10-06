@@ -25,32 +25,26 @@ const Home: NextPageWithLayout = () => {
           </Link>
         </div>
         <div className="flex-none">
-          <ul className="menu menu-horizontal flex items-center gap-4">
-            <li>
-              <button
-                className="bg-none p-0 w-10 h-10 rounded-lg flex items-center justify-center"
-                onClick={toggleTheme}
-              >
-                <selectedTheme.icon className="w-5 h-5" />
-              </button>
-            </li>
-            <li>
-              <Link
-                href="/auth/join"
-                className="btn btn-primary btn-md text-white"
-              >
-                {t('sign-up')}
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/auth/login"
-                className="btn btn-primary btn-outline btn-md"
-              >
-                {t('sign-in')}
-              </Link>
-            </li>
-          </ul>
+          <div className="menu menu-horizontal flex items-center gap-2 sm:gap-4">
+            <button
+              className=""
+              onClick={toggleTheme}
+            >
+              <selectedTheme.icon className="w-5 h-5" />
+            </button>
+            <Link
+              href="/auth/join"
+              className="btn btn-primary p-2 sm:px-[16px] text-white"
+            >
+              {t('sign-up')}
+            </Link>
+            <Link
+              href="/auth/login"
+              className="btn btn-primary p-2 sm:px-[16px] btn-outline"
+            >
+              {t('sign-in')}
+            </Link>
+          </div>
         </div>
       </div>
       <HeroSection />
@@ -68,7 +62,7 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   // Redirect to login page if landing page is disabled
-  if(env.hideLandingPage) {
+  if (env.hideLandingPage) {
     return {
       redirect: {
         destination: '/auth/login',
