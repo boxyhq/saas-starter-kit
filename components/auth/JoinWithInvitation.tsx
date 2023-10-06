@@ -103,7 +103,7 @@ const JoinWithInvitation = ({
           <span className="checkbox-toggle"></span>
         </div>
         <label className="label">
-          <span className="label-text">Agree to <Link href='/terms-condition' className='text-primary' target="_blank">Terms and conditions</Link></span>
+          <span className="label-text">Agree to <Link href={`${process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}`} className='text-primary' target="_blank">Terms and conditions</Link></span>
         </label>
       </div>
       {(formik.errors.agreeToTerms) && (
