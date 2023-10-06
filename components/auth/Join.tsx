@@ -4,10 +4,11 @@ import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Button } from 'react-daisyui';
+import { Button, Checkbox } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
+import Link from 'next/link';
 
 const Join = () => {
   const router = useRouter();
@@ -19,12 +20,14 @@ const Join = () => {
       email: '',
       password: '',
       team: '',
+      agreeToTerms: false,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
       password: Yup.string().required().min(8),
       team: Yup.string().required().min(3),
+      agreeToTerms: Yup.boolean().oneOf([true], 'You must agree to the Terms and Conditions.'),
     }),
     onSubmit: async (values) => {
       const response = await fetch('/api/auth/join', {
@@ -92,6 +95,25 @@ const Join = () => {
           error={formik.touched.password ? formik.errors.password : undefined}
           onChange={formik.handleChange}
         />
+
+        <div className="form-control flex  flex-row items-center">
+          <div className="space-x-2">
+            <Checkbox type="checkbox" className='checkbox checkbox-primary checkbox-xs' onChange={(e) => {
+              formik.setFieldValue('agreeToTerms', e.target.checked);
+            }} />
+            <span className="checkbox-toggle"></span>
+          </div>
+          <label className="label">
+            <span className="label-text">Agree to <Link href='/terms-condition' className='text-primary' target="_blank">Terms and conditions</Link></span>
+          </label>
+        </div>
+        {(formik.errors.agreeToTerms) && (
+          <label className="label">
+            <span className={`label-text-alt ${formik.errors.agreeToTerms ? 'text-red-500' : ''}`}>
+              {formik.errors.agreeToTerms}
+            </span>
+          </label>
+        )}
       </div>
       <div className="mt-3 space-y-3">
         <Button
