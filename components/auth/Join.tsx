@@ -5,7 +5,7 @@ import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Button } from 'react-daisyui';
+import { Button, Checkbox } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
@@ -98,18 +98,25 @@ const Join = () => {
 
 
         {/* ADDING CHECKBOX HERE */}
-        <InputWithCheckbox
-          type="checkbox"
-          label={t('termsandconditon')}
-          name="agreeToTerms"
-          placeholder={t('termsandcondition')}
-          value={formik.values.agreeToTerms}
-          error={formik.touched.agreeToTerms ? formik.errors.agreeToTerms : undefined}
-          onChange={(e) => {
-            // Use setFieldValue to update formik.values
-            formik.setFieldValue('agreeToTerms', e.target.checked);
-          }}
-        />
+        <div className="form-control flex  flex-row items-center"> {/* DIV FOR CHECKBOX  */}
+          <div className="space-x-2"> {/* Add spacing between checkbox and label */}
+            <Checkbox type="checkbox" className='checkbox checkbox-primary checkbox-xs' onChange={(e) => {
+              // Use setFieldValue to update formik.values
+              formik.setFieldValue('agreeToTerms', e.target.checked);
+            }} />
+            <span className="checkbox-toggle"></span>
+          </div>
+          <label className="label">
+            <span className="label-text">Agree to <a href='/terms-condition' className='text-cyan-600'>Terms and conditions</a></span>
+          </label>
+        </div>
+        {(formik.errors.agreeToTerms) && (
+          <label className="label">
+            <span className={`label-text-alt ${formik.errors.agreeToTerms ? 'text-red-500' : ''}`}>
+              {formik.errors.agreeToTerms}
+            </span>
+          </label>
+        )}
       </div>
       <div className="mt-3 space-y-3">
         <Button
