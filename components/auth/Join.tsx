@@ -8,6 +8,7 @@ import { Button, Checkbox } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
+import Link from 'next/link';
 
 const Join = () => {
   const router = useRouter();
@@ -95,18 +96,15 @@ const Join = () => {
           onChange={formik.handleChange}
         />
 
-
-        {/* ADDING CHECKBOX HERE */}
-        <div className="form-control flex  flex-row items-center"> {/* DIV FOR CHECKBOX  */}
-          <div className="space-x-2"> {/* Add spacing between checkbox and label */}
+        <div className="form-control flex  flex-row items-center">
+          <div className="space-x-2">
             <Checkbox type="checkbox" className='checkbox checkbox-primary checkbox-xs' onChange={(e) => {
-              // Use setFieldValue to update formik.values
               formik.setFieldValue('agreeToTerms', e.target.checked);
             }} />
             <span className="checkbox-toggle"></span>
           </div>
           <label className="label">
-            <span className="label-text">Agree to <a href='/terms-condition' className='text-cyan-600' target="_blank">Terms and conditions</a></span>
+            <span className="label-text">Agree to <Link href='/terms-condition' className='text-primary' target="_blank">Terms and conditions</Link></span>
           </label>
         </div>
         {(formik.errors.agreeToTerms) && (
