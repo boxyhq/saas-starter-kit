@@ -1,5 +1,4 @@
 import { InputWithLabel } from '@/components/shared';
-import InputWithCheckbox from "../shared/InputWithCheckbox";
 import { defaultHeaders } from '@/lib/common';
 import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
