@@ -106,7 +106,7 @@ const Join = () => {
             <span className="checkbox-toggle"></span>
           </div>
           <label className="label">
-            <span className="label-text">Agree to <a href='/terms-condition' className='text-cyan-600'>Terms and conditions</a></span>
+            <span className="label-text">Agree to <a href='/terms-condition' className='text-cyan-600' target="_blank">Terms and conditions</a></span>
           </label>
         </div>
         {(formik.errors.agreeToTerms) && (
