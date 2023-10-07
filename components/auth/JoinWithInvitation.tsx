@@ -34,7 +34,12 @@ const JoinWithInvitation = ({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
       password: Yup.string().required().min(7),
-      agreeToTerms: Yup.boolean().oneOf([true], 'You must agree to the Terms and Conditions.'),
+      agreeToTerms: process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL
+        ? Yup.boolean().oneOf(
+            [true],
+            'You must agree to the Terms and Conditions.'
+          )
+        : Yup.boolean(),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -95,25 +100,43 @@ const JoinWithInvitation = ({
         error={formik.touched.password ? formik.errors.password : undefined}
         onChange={formik.handleChange}
       />
-      <div className="form-control flex  flex-row items-center">
-        <div className="space-x-2">
-          <Checkbox type="checkbox" className='checkbox checkbox-primary checkbox-xs' onChange={(e) => {
-            formik.setFieldValue('agreeToTerms', e.target.checked);
-          }} />
-          <span className="checkbox-toggle"></span>
+      {process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL && (
+        <div className="form-control flex  flex-row items-center">
+          <div className="space-x-2">
+            <Checkbox
+              type="checkbox"
+              className="checkbox checkbox-primary checkbox-xs"
+              onChange={(e) => {
+                formik.setFieldValue('agreeToTerms', e.target.checked);
+              }}
+            />
+            <span className="checkbox-toggle"></span>
+          </div>
+          <label className="label">
+            <span className="label-text">
+              Agree to{' '}
+              <Link
+                href={process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}
+                className="text-primary"
+                target="_blank"
+              >
+                Terms and conditions
+              </Link>
+            </span>
+          </label>
         </div>
+      )}
+      {formik.errors.agreeToTerms && (
         <label className="label">
-          <span className="label-text">Agree to <Link href='/terms-condition' className='text-primary' target="_blank">Terms and conditions</Link></span>
-        </label>
-      </div>
-      {(formik.errors.agreeToTerms) && (
-        <label className="label">
-          <span className={`label-text-alt ${formik.errors.agreeToTerms ? 'text-red-500' : ''}`}>
+          <span
+            className={`label-text-alt ${
+              formik.errors.agreeToTerms ? 'text-red-500' : ''
+            }`}
+          >
             {formik.errors.agreeToTerms}
           </span>
         </label>
       )}
-
       <Button
         type="submit"
         color="primary"
