@@ -34,7 +34,9 @@ const JoinWithInvitation = ({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
       password: Yup.string().required().min(7),
-      agreeToTerms: Yup.boolean().oneOf([true], 'You must agree to the Terms and Conditions.'),
+      agreeToTerms: process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL
+        ? Yup.boolean().oneOf([true], 'You must agree to the Terms and Conditions.')
+        : Yup.boolean(),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {

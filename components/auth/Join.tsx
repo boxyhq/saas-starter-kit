@@ -27,7 +27,9 @@ const Join = () => {
       email: Yup.string().required().email(),
       password: Yup.string().required().min(8),
       team: Yup.string().required().min(3),
-      agreeToTerms: Yup.boolean().oneOf([true], 'You must agree to the Terms and Conditions.'),
+      agreeToTerms: process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL
+        ? Yup.boolean().oneOf([true], 'You must agree to the Terms and Conditions.')
+        : Yup.boolean(),
     }),
     onSubmit: async (values) => {
       const response = await fetch('/api/auth/join', {
