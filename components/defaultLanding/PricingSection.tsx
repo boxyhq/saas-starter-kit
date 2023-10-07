@@ -28,21 +28,26 @@ const PricingSection = () => {
                     <p>{plan.description}</p>
                     <div className="mt-5">
                       <ul className="flex flex-col space-y-2">
-                        {plan.benefits.map((benefit: string, itemIndex: number) => {
-                          return (
-                            <li key={`plan-${index}-benefit-${itemIndex}`} className="flex items-center">
-                              <CheckIcon className="h-5 w-5" />
-                              <span className="ml-1">{benefit}</span>
-                            </li>
-                          );
-                        })}
+                        {plan.benefits.map(
+                          (benefit: string, itemIndex: number) => {
+                            return (
+                              <li
+                                key={`plan-${index}-benefit-${itemIndex}`}
+                                className="flex items-center"
+                              >
+                                <CheckIcon className="h-5 w-5" />
+                                <span className="ml-1">{benefit}</span>
+                              </li>
+                            );
+                          }
+                        )}
                       </ul>
                     </div>
                   </Card.Body>
                   <Card.Actions className="justify-center">
                     <Button
                       color="primary"
-                      className="w-full rounded-md"
+                      className="md:w-full w-3/4 rounded-md"
                       size="md"
                     >
                       {t('buy-now')}
