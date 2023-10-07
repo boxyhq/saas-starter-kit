@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
@@ -74,12 +75,18 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 
 Signup.getLayout = function getLayout(page: ReactElement) {
   return (
-    <AuthLayout
-      heading="Create an account"
-      description="Start your 30-day free trial"
-    >
-      {page}
-    </AuthLayout>
+    <>
+      <Head>
+        <title>BoxyHQ | Login</title>
+      </Head>
+
+      <AuthLayout
+        heading="Create an account"
+        description="Start your 30-day free trial"
+      >
+        {page}
+      </AuthLayout>
+    </>
   );
 };
 

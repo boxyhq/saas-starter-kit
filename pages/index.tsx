@@ -23,7 +23,6 @@ const Home: NextPageWithLayout = () => {
         <title>BoxyHQ</title>
         <meta name="description">Enterprise SaaS Starter Kit</meta>
       </Head>
-
       <div className="container mx-auto">
         <div className="navbar bg-base-100">
           <div className="flex-1">

@@ -3,6 +3,7 @@ import type {
   InferGetServerSidePropsType,
 } from 'next';
 
+import Head from 'next/head';
 import * as Yup from 'yup';
 import Link from 'next/link';
 import { useFormik } from 'formik';
@@ -88,6 +89,10 @@ const Login: NextPageWithLayout<
 
   return (
     <>
+      <Head>
+        <title>BoxyHQ | Login</title>
+      </Head>
+
       {message.text && message.status && (
         <Alert status={message.status}>{t(message.text)}</Alert>
       )}
