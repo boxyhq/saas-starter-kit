@@ -95,18 +95,19 @@ const Join = () => {
           error={formik.touched.password ? formik.errors.password : undefined}
           onChange={formik.handleChange}
         />
-
-        <div className="form-control flex  flex-row items-center">
-          <div className="space-x-2">
-            <Checkbox type="checkbox" className='checkbox checkbox-primary checkbox-xs' onChange={(e) => {
-              formik.setFieldValue('agreeToTerms', e.target.checked);
-            }} />
-            <span className="checkbox-toggle"></span>
-          </div>
-          <label className="label">
-            <span className="label-text">Agree to <Link href={`${process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}`} className='text-primary' target="_blank">Terms and conditions</Link></span>
-          </label>
-        </div>
+        {process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL?.length !== 0 &&
+          (<div className="form-control flex  flex-row items-center">
+            <div className="space-x-2">
+              <Checkbox type="checkbox" className='checkbox checkbox-primary checkbox-xs' onChange={(e) => {
+                formik.setFieldValue('agreeToTerms', e.target.checked);
+              }} />
+              <span className="checkbox-toggle"></span>
+            </div>
+            <label className="label">
+              <span className="label-text">Agree to <Link href={`${process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}`} className='text-primary' target="_blank">Terms and conditions</Link></span>
+            </label>
+          </div>)
+        }
         {(formik.errors.agreeToTerms) && (
           <label className="label">
             <span className={`label-text-alt ${formik.errors.agreeToTerms ? 'text-red-500' : ''}`}>
@@ -115,6 +116,7 @@ const Join = () => {
           </label>
         )}
       </div>
+
       <div className="mt-3 space-y-3">
         <Button
           type="submit"
