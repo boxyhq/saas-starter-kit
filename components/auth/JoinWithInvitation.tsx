@@ -97,7 +97,7 @@ const JoinWithInvitation = ({
         error={formik.touched.password ? formik.errors.password : undefined}
         onChange={formik.handleChange}
       />
-      {process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL?.length !== 0 &&
+      {process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL &&
         (<div className="form-control flex  flex-row items-center">
           <div className="space-x-2">
             <Checkbox type="checkbox" className='checkbox checkbox-primary checkbox-xs' onChange={(e) => {
