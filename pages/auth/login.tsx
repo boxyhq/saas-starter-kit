@@ -64,7 +64,7 @@ const Login: NextPageWithLayout<
     },
     validationSchema: Yup.object().shape({
       email: Yup.string().required().email(),
-      password: Yup.string().required(),
+      password: Yup.string().required().min(8),
     }),
     onSubmit: async (values) => {
       const { email, password } = values;
