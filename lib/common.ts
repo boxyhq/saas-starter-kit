@@ -39,6 +39,13 @@ export const extractAuthToken = (req: NextApiRequest): string | null => {
   return authHeader ? authHeader.split(' ')[1] : null;
 };
 
+export const domainRegex =
+  /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/;
+
+export const validateDomain = (domain: string): boolean => {
+  return domainRegex.test(domain);
+};
+
 export const validateEmail = (email: string): boolean => {
   const re = /\S+@\S+\.\S+/;
   return re.test(email);

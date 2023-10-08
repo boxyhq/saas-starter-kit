@@ -1,4 +1,4 @@
-import { slugify } from '@/lib/common';
+import { slugify, validateDomain } from '@/lib/common';
 import { ApiError } from '@/lib/errors';
 import { getSession } from '@/lib/session';
 import { createTeam, getTeams, isTeamExists } from 'models/team';
@@ -46,10 +46,14 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Create a team
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name } = req.body;
+  const { name, domain } = req.body;
 
   const session = await getSession(req, res);
   const slug = slugify(name);
+
+  if (!validateDomain(domain)) {
+    throw new ApiError(400, 'Invalid domain name');
+  }
 
   if (await isTeamExists([{ slug }])) {
     throw new ApiError(400, 'A team with the name already exists.');
