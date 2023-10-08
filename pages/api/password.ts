@@ -1,4 +1,5 @@
 import { hashPassword, verifyPassword } from '@/lib/auth';
+import { getPasswordValidationErrMsg, validatePassword } from '@/lib/common';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -41,6 +42,20 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await prisma.user.findFirstOrThrow({
     where: { id: session?.user.id },
   });
+
+  if (!currentPassword || !validatePassword(currentPassword)) {
+    throw new ApiError(
+      422,
+      `Current ${getPasswordValidationErrMsg(currentPassword).toLowerCase()}`
+    );
+  }
+
+  if (!newPassword || !validatePassword(newPassword)) {
+    throw new ApiError(
+      422,
+      `New ${getPasswordValidationErrMsg(newPassword).toLowerCase()}`
+    );
+  }
 
   if (!(await verifyPassword(currentPassword, user.password as string))) {
     throw new ApiError(400, 'Your current password is incorrect');
