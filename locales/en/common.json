@@ -205,5 +205,6 @@
   "login-title": "Login | BoxyHQ",
   "forgot-password-title": "Reset Password | BoxyHQ",
   "magic-link-title": "Login With Magic Link | BoxyHQ",
-  "resend-token-title": "Resend Email Token | BoxyHQ"
+  "resend-token-title": "Resend Email Token | BoxyHQ",
+  "invitation-title": "You've been invited to join "
 }
