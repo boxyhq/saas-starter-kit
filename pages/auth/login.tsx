@@ -23,6 +23,7 @@ import GithubButton from '@/components/auth/GithubButton';
 import GoogleButton from '@/components/auth/GoogleButton';
 import { Alert, InputWithLabel } from '@/components/shared';
 import { authProviderEnabled } from '@/lib/auth';
+import Head from "next/head";
 
 interface Message {
   text: string | null;
@@ -88,6 +89,9 @@ const Login: NextPageWithLayout<
 
   return (
     <>
+      <Head>
+        <title>{t('login-title')}</title>
+      </Head>
       {message.text && message.status && (
         <Alert status={message.status}>{t(message.text)}</Alert>
       )}

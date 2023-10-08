@@ -10,13 +10,20 @@ import FeatureSection from '@/components/defaultLanding/FeatureSection';
 import PricingSection from '@/components/defaultLanding/PricingSection';
 import useTheme from 'hooks/useTheme';
 import env from '@/lib/env';
+import Head from "next/head";
 
 const Home: NextPageWithLayout = () => {
   const { toggleTheme, selectedTheme } = useTheme();
 
   const { t } = useTranslation('common');
 
+
   return (
+    <>
+      <Head>
+        <title>{t('homepage-title')}</title>
+      </Head>
+
     <div className="container mx-auto">
       <div className="navbar bg-base-100">
         <div className="flex-1">
@@ -60,7 +67,8 @@ const Home: NextPageWithLayout = () => {
       <PricingSection />
       <div className="divider"></div>
       <FAQSection />
-    </div>
+      </div>
+      </>
   );
 };
 
