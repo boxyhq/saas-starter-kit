@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Head from 'next/head';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
@@ -40,6 +41,15 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 
   return (
     <>
+			<Head>
+				<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<meta name="robots" content="index, follow" />
+				<meta name="keywords" content="Sign up to BoxyHQ's saas-starter-kit, saas-starter-kit, BoxyHQ saas-starter-kit signup page, Join saas-starter-kit, saas-starter-kit new user" />
+				<meta name="description" content="Welcome to BoxyHQ's saas-starter-kit sign up page. Join BoxyHQ's saas-starter-kit by clicking on 'Continue to Github button' or by entering your email and password. Kickstart your enterprise app development with Next.js SaaS Starter Kit" />
+				<title>Join BoxyHQ's Saas Starter Kit</title>
+			</Head>
+
       <div className="rounded p-6 border">
         <div className="flex gap-2 flex-wrap">
           {authProviders.github && <GithubButton />}
