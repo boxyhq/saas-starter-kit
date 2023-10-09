@@ -25,7 +25,7 @@ const Home: NextPageWithLayout = () => {
 				<meta name="robots" content="index, follow" />
 				<meta name="keywords" content="BoxyHQ's saas-starter-kit, saas-starter-kit, BoxyHQ saas-starter-kit, NextJS saas-starter-kit" />
 				<meta name="description" content="Welcome to BoxyHQ's saas-starter-kit. Kickstart your enterprise app development with Next.js SaaS Starter Kit" />
-				<title>BoxyHQ's Saas Starter Kit</title>
+				<title>BoxyHQ&apos;s Saas Starter Kit</title>
 			</Head>
 
 			<div className="container mx-auto">

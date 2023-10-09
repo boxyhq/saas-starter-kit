@@ -47,7 +47,7 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 				<meta name="robots" content="index, follow" />
 				<meta name="keywords" content="Sign up to BoxyHQ's saas-starter-kit, saas-starter-kit, BoxyHQ saas-starter-kit signup page, Join saas-starter-kit, saas-starter-kit new user" />
 				<meta name="description" content="Welcome to BoxyHQ's saas-starter-kit sign up page. Join BoxyHQ's saas-starter-kit by clicking on 'Continue to Github button' or by entering your email and password. Kickstart your enterprise app development with Next.js SaaS Starter Kit" />
-				<title>Join BoxyHQ's Saas Starter Kit</title>
+				<title>Join BoxyHQ&apos;s Saas Starter Kit</title>
 			</Head>
 
       <div className="rounded p-6 border">

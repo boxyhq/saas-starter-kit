@@ -95,7 +95,7 @@ const Login: NextPageWithLayout<
 				<meta name="robots" content="index, follow" />
 				<meta name="keywords" content="Login to BoxyHQ's saas-starter-kit, saas-starter-kit, BoxyHQ saas-starter-kit login page, login saas-starter-kit, saas-starter-kit login user" />
 				<meta name="description" content="Welcome to BoxyHQ's saas-starter-kit login page. Resume your BoxyHQ's saas-starter-kit journey by clicking on 'Continue to Github button' or by entering your email and password." />
-				<title>Login to BoxyHQ's Saas Starter Kit</title>
+				<title>Login to BoxyHQ&apos;s Saas Starter Kit</title>
 	    </Head>
 
       {message.text && message.status && (
