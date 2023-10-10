@@ -61,7 +61,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { name, slug, domain } = req.body;
 
-  if (!validateDomain(domain)) {
+  if (domain?.length > 0 && !validateDomain(domain)) {
     throw new ApiError(400, 'Invalid domain name');
   }
 
