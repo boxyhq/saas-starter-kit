@@ -1,5 +1,5 @@
 import { InputWithLabel } from '@/components/shared';
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, passwordPolicies } from '@/lib/common';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -21,7 +21,7 @@ const ResetPassword = () => {
       confirmPassword: '',
     },
     validationSchema: Yup.object().shape({
-      password: Yup.string().required().min(8),
+      password: Yup.string().required().min(passwordPolicies.minLength),
       confirmPassword: Yup.string().test(
         'passwords-match',
         'Passwords must match',
