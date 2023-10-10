@@ -16,7 +16,7 @@ import { inferSSRProps } from '@/lib/inferSSRProps';
 import GithubButton from '@/components/auth/GithubButton';
 import GoogleButton from '@/components/auth/GoogleButton';
 import JoinWithInvitation from '@/components/auth/JoinWithInvitation';
-import Head from "next/head";
+import Head from 'next/head';
 
 const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   inviteToken,

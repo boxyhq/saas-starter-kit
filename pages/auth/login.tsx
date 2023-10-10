@@ -23,7 +23,7 @@ import GithubButton from '@/components/auth/GithubButton';
 import GoogleButton from '@/components/auth/GoogleButton';
 import { Alert, InputWithLabel } from '@/components/shared';
 import { authProviderEnabled } from '@/lib/auth';
-import Head from "next/head";
+import Head from 'next/head';
 
 interface Message {
   text: string | null;
