@@ -78,8 +78,10 @@ const Members = ({ team }: { team: Team }) => {
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-center">
-        <div className='space-y-3'>
-          <h2 className="text-xl font-medium leading-none tracking-tight">Members</h2>
+        <div className="space-y-3">
+          <h2 className="text-xl font-medium leading-none tracking-tight">
+            Members
+          </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Team members and their roles.
           </p>

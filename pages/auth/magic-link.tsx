@@ -79,7 +79,7 @@ const Login: NextPageWithLayout<
               loading={formik.isSubmitting}
               active={formik.dirty}
               fullWidth
-              size='md'
+              size="md"
             >
               {t('send-magic-link')}
             </Button>

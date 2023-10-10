@@ -44,7 +44,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
       }
     );
 
-    const json = (await response.json()) as ApiResponse
+    const json = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
       toast.error(json.error.message);

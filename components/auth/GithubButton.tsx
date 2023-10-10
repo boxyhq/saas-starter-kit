@@ -13,7 +13,7 @@ const GithubButton = () => {
           callbackUrl: '/dashboard',
         });
       }}
-      size='md'
+      size="md"
     >
       <svg
         className="mr-2 -ml-1 h-4 w-4"
