@@ -9,7 +9,7 @@ import { defaultHeaders } from '@/lib/common';
 
 const schema = Yup.object().shape({
   currentPassword: Yup.string().required(),
-  newPassword: Yup.string().required().min(7),
+  newPassword: Yup.string().required().min(8),
 });
 
 const UpdatePassword = () => {

@@ -33,7 +33,7 @@ const JoinWithInvitation = ({
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
-      password: Yup.string().required().min(7),
+      password: Yup.string().required().min(8),
       agreeToTerms: process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL
         ? Yup.boolean().oneOf(
             [true],
