@@ -29,10 +29,11 @@ Please follow these simple steps to get a local copy up and running.
 
 ### 1. Setup
 
-Clone or fork this GitHub repository
+- [Fork](https://github.com/boxyhq/saas-starter-kit/fork) the repository
+- Clone the repository by using this command:
 
 ```bash
-git clone https://github.com/boxyhq/saas-starter-kit.git
+git clone https://github.com/<your_github_username>/saas-starter-kit.git
 ```
 
 ### 2. Go to the project folder
