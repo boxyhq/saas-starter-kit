@@ -68,7 +68,7 @@
     "@types/jest": "29.5.5",
     "@types/mixpanel-browser": "2.47.3",
     "@types/mocha": "10.0.2",
-    "@types/node": "20.8.3",
+    "@types/node": "20.8.4",
     "@types/nodemailer": "6.4.11",
     "@types/react": "18.2.27",
     "@types/uuid": "9.0.5",
