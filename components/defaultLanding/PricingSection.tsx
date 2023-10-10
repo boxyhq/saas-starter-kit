@@ -47,7 +47,7 @@ const PricingSection = () => {
                   <Card.Actions className="justify-center">
                     <Button
                       color="primary"
-                      className="w-full rounded-md"
+                      className="md:w-full w-3/4 rounded-md"
                       size="md"
                     >
                       {t('buy-now')}

@@ -70,6 +70,8 @@ const env = {
   otel: {
     prefix: process.env.OTEL_PREFIX || 'boxyhq.saas',
   },
+
+  hideLandingPage: process.env.HIDE_LANDING_PAGE === 'true' ? true : false,
 };
 
 export default env;
