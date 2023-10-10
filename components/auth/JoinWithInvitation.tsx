@@ -1,5 +1,5 @@
 import { Error, InputWithLabel, Loading } from '@/components/shared';
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, passwordPolicies } from '@/lib/common';
 import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
 import useInvitation from 'hooks/useInvitation';
@@ -33,7 +33,7 @@ const JoinWithInvitation = ({
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
-      password: Yup.string().required().min(8),
+      password: Yup.string().required().min(passwordPolicies.minLength),
       agreeToTerms: process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL
         ? Yup.boolean().oneOf(
             [true],
