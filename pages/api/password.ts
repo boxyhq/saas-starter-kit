@@ -1,4 +1,8 @@
-import { hashPassword, verifyPassword } from '@/lib/auth';
+import {
+  hashPassword,
+  validatePasswordPolicy,
+  verifyPassword,
+} from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -45,6 +49,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await verifyPassword(currentPassword, user.password as string))) {
     throw new ApiError(400, 'Your current password is incorrect');
   }
+
+  validatePasswordPolicy(newPassword);
 
   await prisma.user.update({
     where: { id: session?.user.id },

@@ -24,7 +24,6 @@ const TeamSSO: NextPageWithLayout = () => {
     return <Error message={t('team-not-found')} />;
   }
 
-
   return (
     <>
       <TeamTab activeTab="saml" team={team} />
@@ -42,7 +41,7 @@ const TeamSSO: NextPageWithLayout = () => {
             },
           },
           connectionList: {
-            cols: ["provider", "type", "status", "actions"],
+            cols: ['provider', 'type', 'status', 'actions'],
             getConnectionsUrl: `/api/teams/${team.slug}/saml`,
           },
           createSSOConnection: {
