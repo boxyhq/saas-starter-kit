@@ -90,12 +90,11 @@ const Login: NextPageWithLayout<
   return (
     <>
       <Head>
-				<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-				<meta name="robots" content="index, follow" />
-				<meta name="keywords" content="Login to BoxyHQ's saas-starter-kit, saas-starter-kit, BoxyHQ saas-starter-kit login page, login saas-starter-kit, saas-starter-kit login user" />
-				<meta name="description" content="Welcome to BoxyHQ's saas-starter-kit login page. Resume your BoxyHQ's saas-starter-kit journey by clicking on 'Continue to Github button' or by entering your email and password." />
-				<title>Login to BoxyHQ&apos;s Saas Starter Kit</title>
+		    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+		    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		    <meta name="robots" content="index, follow" />
+		    <meta name="keywords" content="Login to BoxyHQ's saas-starter-kit, saas-starter-kit, BoxyHQ saas-starter-kit login page, login saas-starter-kit, saas-starter-kit login user" />				<meta name="description" content="Welcome to BoxyHQ's saas-starter-kit login page. Resume your BoxyHQ's saas-starter-kit journey by clicking on 'Continue to Github button' or by entering your email and password." />
+		    <title>Login to BoxyHQ&apos;s Saas Starter Kit</title>
 	    </Head>
 
       {message.text && message.status && (
