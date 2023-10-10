@@ -8,7 +8,7 @@ import { Card, InputWithLabel } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 
 const schema = Yup.object().shape({
-  currentPassword: Yup.string().required().min(8),
+  currentPassword: Yup.string().required(),
   newPassword: Yup.string().required().min(8),
 });
 

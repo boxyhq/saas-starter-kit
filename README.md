@@ -82,10 +82,11 @@ Please follow these simple steps to get a local copy up and running.
 
 #### 1. Setup
 
-Clone or fork this GitHub repository
+- [Fork](https://github.com/boxyhq/saas-starter-kit/fork) the repository
+- Clone the repository by using this command:
 
 ```bash
-git clone https://github.com/boxyhq/saas-starter-kit.git
+git clone https://github.com/<your_github_username>/saas-starter-kit.git
 ```
 
 #### 2. Go to the project folder
@@ -138,7 +139,7 @@ Prisma Studio is a visual editor for the data in your database.
 npx prisma studio
 ```
 
-#### 8. Testing
+#### 9. Testing
 
 We are using [Playwright](https://playwright.dev/) to execute E2E tests. Add all tests inside the `/tests` folder.
 
