@@ -1,5 +1,5 @@
 import { hashPassword } from '@/lib/auth';
-import { getPasswordValidationErrMsg, validatePassword } from '@/lib/common';
+import { validatePassword } from '@/lib/common';
 import { prisma } from '@/lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from 'next/dist/server/api-utils';
@@ -38,7 +38,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (!password || !validatePassword(password)) {
-    throw new ApiError(422, getPasswordValidationErrMsg(password));
+    throw new ApiError(422, 'Password does not meet requirements');
   }
 
   const passwordReset = await prisma.passwordReset.findUnique({

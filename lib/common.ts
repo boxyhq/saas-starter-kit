@@ -73,40 +73,6 @@ export const validatePassword = (password: string): boolean => {
   return true;
 };
 
-export const getPasswordValidationErrMsg = (password: string): string => {
-  // Password should not be empty
-  if (!password) {
-    return 'Password does not meet requirements.';
-  }
-
-  // Password should be at least 8 characters long
-  if (password.length < 8) {
-    return 'Password must have at least 8 characters.';
-  }
-
-  // Password should have at least one lowercase letter
-  if (!/[a-z]/.test(password)) {
-    return 'Password must have at least one lowercase letter.';
-  }
-
-  // Password should have at least one uppercase letter
-  if (!/[A-Z]/.test(password)) {
-    return 'Password must have at least one uppercase letter.';
-  }
-
-  // Password should have at least one number
-  if (!/\d/.test(password)) {
-    return 'Password must have at least one number.';
-  }
-
-  // Password should have at least one special character
-  if (!/[^a-zA-Z0-9]/.test(password)) {
-    return 'Password must have at least one special character.';
-  }
-
-  return 'Password does not meet requirements.';
-};
-
 export const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
 };
