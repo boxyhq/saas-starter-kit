@@ -193,8 +193,8 @@ export const authOptions: NextAuthOptions = {
 
     async jwt({ token, user, trigger, session }) {
       if (trigger === 'update' && session?.user.name) {
-        const updateUsername = { ...user, name: session.user.name }
-        return { ...token, ...updateUsername }
+        const updateUsername = { ...user, name: session.user.name };
+        return { ...token, ...updateUsername };
       }
       return { ...token, ...user };
     },
