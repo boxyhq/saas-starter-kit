@@ -1,9 +1,9 @@
 import { compare, hash } from 'bcryptjs';
 
 import env from './env';
+import { ApiError } from './errors';
 import type { AUTH_PROVIDER } from 'types';
 import { passwordPolicies } from './common';
-import { ApiError } from 'next/dist/server/api-utils';
 
 export async function hashPassword(password: string) {
   return await hash(password, 12);
