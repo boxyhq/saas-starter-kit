@@ -36,7 +36,7 @@ export const validatePasswordPolicy = (password: string) => {
 
   if (password.length < minLength) {
     throw new ApiError(
-      400,
+      422,
       `Password must have at least ${minLength} characters.`
     );
   }
