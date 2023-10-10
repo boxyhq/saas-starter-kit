@@ -8,6 +8,8 @@ import {
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import { validateDomain } from '@/lib/common';
+import { ApiError } from '@/lib/errors';
 
 export default async function handler(
   req: NextApiRequest,
@@ -57,10 +59,16 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team', 'update');
 
+  const { name, slug, domain } = req.body;
+
+  if (domain?.length > 0 && !validateDomain(domain)) {
+    throw new ApiError(400, 'Invalid domain name');
+  }
+
   const updatedTeam = await updateTeam(teamMember.team.slug, {
-    name: req.body.name,
-    slug: req.body.slug,
-    domain: req.body.domain,
+    name,
+    slug,
+    domain,
   });
 
   sendAudit({
