@@ -51,7 +51,7 @@ const Home: NextPageWithLayout = () => {
               <li>
                 <Link
                   href="/auth/login"
-                  className="btn btn-primary btn-outline px-2 sm:px-4 btn-md"
+                  className="btn btn-primary dark:border-zinc-600 dark:border-2 dark:text-zinc-200 btn-outline px-2 sm:px-4 btn-md"
                 >
                   {t('sign-in')}
                 </Link>
