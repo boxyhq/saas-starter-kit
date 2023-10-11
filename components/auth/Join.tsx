@@ -10,14 +10,14 @@ import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 import Link from 'next/link';
-import {MdVisibility,MdVisibilityOff} from "react-icons/md";
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 const Join = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
-  const  handlepasswordvisibility=()=>{
-    setIsPasswordVisible(prev=>!prev)
-   }
+  const handlepasswordvisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -95,22 +95,27 @@ const Join = () => {
           error={formik.touched.email ? formik.errors.email : undefined}
           onChange={formik.handleChange}
         />
-       <div className="relative flex">
-      <InputWithLabel
-    type={isPasswordVisible ? 'text' : 'password'}
-  label={t('password')}
-  name="password"
-  placeholder={t('password')}
-  value={formik.values.password}
-  error={formik.touched.password ? formik.errors.password : undefined}
-  onChange={formik.handleChange}
-/>
- <button onClick={handlepasswordvisibility} className="flex pointer items-center absolute  right-2 top-[50px]">
-        {
-          isPasswordVisible?<MdVisibility  size={18}/>:<MdVisibilityOff size={18}/>
-        }
-      </button>
-      </div>
+        <div className="relative flex">
+          <InputWithLabel
+            type={isPasswordVisible ? 'text' : 'password'}
+            label={t('password')}
+            name="password"
+            placeholder={t('password')}
+            value={formik.values.password}
+            error={formik.touched.password ? formik.errors.password : undefined}
+            onChange={formik.handleChange}
+          />
+          <button
+            onClick={handlepasswordvisibility}
+            className="flex pointer items-center absolute  right-2 top-[50px]"
+          >
+            {isPasswordVisible ? (
+              <MdVisibility size={18} />
+            ) : (
+              <MdVisibilityOff size={18} />
+            )}
+          </button>
+        </div>
         {process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL && (
           <div className="form-control flex  flex-row items-center">
             <div className="space-x-2">
