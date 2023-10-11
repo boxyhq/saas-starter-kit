@@ -45,6 +45,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <Themer
           overrideTheme={{
             '--primary-color': colors.blue['500'],
+            '--primary-hover': colors.blue['600'],
             '--primary-color-50': colors.blue['50'],
             '--primary-color-100': colors.blue['100'],
             '--primary-color-200': colors.blue['200'],
