@@ -32,7 +32,9 @@ export default function AuthLayout({
             </h2>
           )}
           {description && (
-            <p className="mt-2 text-center text-gray-600 dark:text-white">{t(description)}</p>
+            <p className="mt-2 text-center text-gray-600 dark:text-white">
+              {t(description)}
+            </p>
           )}
         </div>
         {children}

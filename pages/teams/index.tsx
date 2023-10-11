@@ -4,7 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { NextPageWithLayout } from 'types';
 
 const AllTeams: NextPageWithLayout = () => {
-  return <Teams />
+  return <Teams />;
 };
 
 export async function getStaticProps({ locale }: GetServerSidePropsContext) {

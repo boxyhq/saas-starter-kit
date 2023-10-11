@@ -16,9 +16,10 @@
 <h3 align="center">
 
 [⬆️ Take a look at our Issues ⬆️](https://github.com/boxyhq/saas-starter-kit/issues)
+
 </h3>
 
-___
+---
 
 # ⭐ Enterprise SaaS Starter Kit
 
@@ -34,6 +35,7 @@ ___
 The Open Source Next.js SaaS boilerplate for Enterprise SaaS app development.
 
 Please star ⭐ the repo if you want us to continue developing and improving the SaaS Starter Kit! 😀
+
 ## 📖 Additional Resources
 
 Video - [BoxyHQ's SaaS Starter Kit: Your Ultimate Enterprise-Compliant Boilerplate](https://www.youtube.com/watch?v=oF8QIwQIhyo) <br>

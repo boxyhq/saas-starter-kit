@@ -110,9 +110,9 @@ const InviteMember = ({
           >
             {t('send-invite')}
           </Button>
-        </Modal.Actions >
-      </form >
-    </Modal >
+        </Modal.Actions>
+      </form>
+    </Modal>
   );
 };
 
