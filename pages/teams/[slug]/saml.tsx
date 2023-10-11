@@ -13,7 +13,7 @@ const EDIT_SSO_CSS = {
   input: `${styles['sdk-input']} input input-bordered`,
   confirmationPrompt: {
     button: {
-      ctoa: 'btn-md btn-error',
+      ctoa: 'btn-md',
       cancel: 'btn-md btn-outline',
     },
   },
