@@ -14,7 +14,7 @@ import { type ReactElement, useEffect, useState } from 'react';
 import type { ComponentStatus } from 'react-daisyui/dist/types';
 import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
+
 import env from '@/lib/env';
 import { getParsedCookie } from '@/lib/cookie';
 import type { NextPageWithLayout } from 'types';
@@ -24,7 +24,7 @@ import GoogleButton from '@/components/auth/GoogleButton';
 import { Alert, InputWithLabel } from '@/components/shared';
 import { authProviderEnabled } from '@/lib/auth';
 import Head from 'next/head';
-
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 interface Message {
   text: string | null;
   status: ComponentStatus | null;
@@ -39,7 +39,7 @@ const Login: NextPageWithLayout<
   const [message, setMessage] = useState<Message>({ text: null, status: null });
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
 
-  const handlepasswordvisibility = () => {
+  const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
   const { error, success } = router.query as { error: string; success: string };
@@ -134,13 +134,14 @@ const Login: NextPageWithLayout<
                   onChange={formik.handleChange}
                 />
                 <button
-                  onClick={handlepasswordvisibility}
+                  onClick={handlePasswordVisibility}
                   className="flex pointer items-center absolute  right-2 top-[50px]"
+                  type="button"
                 >
                   {isPasswordVisible ? (
-                    <MdVisibility size={18} />
+                    <EyeIcon className="h-6 w-6 text-white" />
                   ) : (
-                    <MdVisibilityOff size={18} />
+                    <EyeSlashIcon className="h-6 w-6 text-white" />
                   )}
                 </button>
               </div>

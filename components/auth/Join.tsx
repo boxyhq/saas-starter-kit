@@ -10,12 +10,12 @@ import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 import Link from 'next/link';
-import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 const Join = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
-  const handlepasswordvisibility = () => {
+  const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
   const formik = useFormik({
@@ -106,13 +106,14 @@ const Join = () => {
             onChange={formik.handleChange}
           />
           <button
-            onClick={handlepasswordvisibility}
-            className="flex pointer items-center absolute  right-2 top-[50px]"
+            onClick={handlePasswordVisibility}
+            className="flex pointer items-center text-white absolute  right-2 top-[50px]"
+            type="button"
           >
             {isPasswordVisible ? (
-              <MdVisibility size={18} />
+              <EyeIcon className="h-6 w-6 text-white" />
             ) : (
-              <MdVisibilityOff size={18} />
+              <EyeSlashIcon className="h-6 w-6 text-white" />
             )}
           </button>
         </div>
