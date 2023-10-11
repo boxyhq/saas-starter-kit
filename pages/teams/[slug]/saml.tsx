@@ -18,6 +18,7 @@ const EDIT_SSO_CSS = {
     },
   },
   secretInput: 'input input-bordered',
+  section: 'mb-8',
 };
 
 const TeamSSO: NextPageWithLayout = () => {
