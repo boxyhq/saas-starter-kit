@@ -34,7 +34,7 @@ const Signup: NextPageWithLayout<
     if (error) {
       toast.error(t(error));
     }
-  }, [router.query]);
+  }, [error]);
 
   if (status === 'loading') {
     return <Loading />;

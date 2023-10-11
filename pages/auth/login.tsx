@@ -51,9 +51,11 @@ const Login: NextPageWithLayout<
     if (success) {
       setMessage({ text: success, status: 'success' });
     }
-  }, [router, router.query]);
+  }, [error, success]);
 
-  const redirectUrl = token ? `/invitations/${token}` : env.redirectAfterSignIn;
+  const redirectUrl = token
+    ? `/invitations/${token}`
+    : env.redirectIfAuthenticated;
 
   const formik = useFormik({
     initialValues: {

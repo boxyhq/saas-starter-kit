@@ -11,7 +11,7 @@ const GithubButton = () => {
       className="btn-outline w-full"
       onClick={() => {
         signIn('github', {
-          callbackUrl: env.redirectAfterSignIn,
+          callbackUrl: env.redirectIfAuthenticated,
         });
       }}
       size="md"

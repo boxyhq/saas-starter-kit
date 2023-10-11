@@ -37,7 +37,7 @@ const Login: NextPageWithLayout<
         email: values.email,
         csrfToken,
         redirect: false,
-        callbackUrl: env.redirectAfterSignIn,
+        callbackUrl: env.redirectIfAuthenticated,
       });
 
       formik.resetForm();

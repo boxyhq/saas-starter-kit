@@ -2,7 +2,6 @@ const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
   product: 'boxyhq',
-  redirectAfterSignIn: '/dashboard',
   redirectIfAuthenticated: '/dashboard',
 
   // SAML Jackson configuration
