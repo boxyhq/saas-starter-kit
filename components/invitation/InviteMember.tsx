@@ -100,7 +100,12 @@ const InviteMember = ({
               </select>
             </div>
             {formik.touched.email && formik.errors.email && (
-              <div className="text-red-600">{formik.errors.email}</div>
+              <span
+                className="text-red-600"
+                style={{ position: 'absolute', left: 30, bottom: 55 }}
+              >
+                {formik.errors.email}
+              </span>
             )}
           </div>
         </Modal.Body>
