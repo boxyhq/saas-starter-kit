@@ -14,7 +14,7 @@ import { type ReactElement, useEffect, useState } from 'react';
 import type { ComponentStatus } from 'react-daisyui/dist/types';
 import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
+import {MdVisibility,MdVisibilityOff} from "react-icons/md"
 import env from '@/lib/env';
 import { getParsedCookie } from '@/lib/cookie';
 import type { NextPageWithLayout } from 'types';
@@ -37,7 +37,11 @@ const Login: NextPageWithLayout<
   const { status } = useSession();
   const { t } = useTranslation('common');
   const [message, setMessage] = useState<Message>({ text: null, status: null });
-
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
+  
+  const  handlepasswordvisibility=()=>{
+   setIsPasswordVisible(prev=>!prev)
+  }
   const { error, success } = router.query as { error: string; success: string };
 
   useEffect(() => {
@@ -116,17 +120,23 @@ const Login: NextPageWithLayout<
                 error={formik.touched.email ? formik.errors.email : undefined}
                 onChange={formik.handleChange}
               />
-              <InputWithLabel
-                type="password"
-                label="Password"
-                name="password"
-                placeholder="Password"
-                value={formik.values.password}
-                error={
-                  formik.touched.password ? formik.errors.password : undefined
-                }
-                onChange={formik.handleChange}
-              />
+             
+              <div className="relative flex">
+<InputWithLabel
+    type={isPasswordVisible ? 'text' : 'password'}
+    label="Password"
+  name="password"
+  placeholder="Password"
+  value={formik.values.password}
+  error={formik.touched.password ? formik.errors.password : undefined}
+  onChange={formik.handleChange}
+/>
+ <button onClick={handlepasswordvisibility} className="flex pointer items-center absolute  right-2 top-[50px]">
+        {
+          isPasswordVisible?<MdVisibility  size={18}/>:<MdVisibilityOff size={18}/>
+        }
+      </button>
+      </div>
               <p className="text-sm text-gray-600 text-right">
                 <Link
                   href="/auth/forgot-password"
