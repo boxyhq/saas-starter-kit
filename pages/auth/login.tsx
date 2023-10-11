@@ -53,7 +53,7 @@ const Login: NextPageWithLayout<
     }
   }, [router, router.query]);
 
-  const redirectUrl =  token ? `/invitations/${token}` : env.redirectAfterSignIn;
+  const redirectUrl = token ? `/invitations/${token}` : env.redirectAfterSignIn;
 
   const formik = useFormik({
     initialValues: {
@@ -72,7 +72,7 @@ const Login: NextPageWithLayout<
         password,
         csrfToken,
         redirect: false,
-        callbackUrl: redirectUrl
+        callbackUrl: redirectUrl,
       });
 
       formik.resetForm();
