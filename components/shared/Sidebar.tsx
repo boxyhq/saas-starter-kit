@@ -5,7 +5,7 @@ import {
   RectangleStackIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import { forwardRef } from 'react';
+import { forwardRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
@@ -18,10 +18,18 @@ interface SidebarMenus {
 
 export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
   function Sidebar({ isCollapsed }, ref) {
-    const router = useRouter();
+    const { asPath, isReady, query } = useRouter();
     const { t } = useTranslation('common');
+    const [activePathname, setActivePathname] = useState<null | string>(null);
 
-    const { slug } = router.query as { slug: string };
+    const { slug } = query as { slug: string };
+
+    useEffect(() => {
+      if (isReady && asPath) {
+        const activePathname = new URL(asPath, location.href).pathname;
+        setActivePathname(activePathname);
+      }
+    }, [asPath, isReady]);
 
     const sidebarMenus: SidebarMenus = {
       personal: [
@@ -29,19 +37,19 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
           name: t('all-teams'),
           href: '/teams',
           icon: RectangleStackIcon,
-          active: router.asPath === '/teams',
+          active: activePathname === '/teams',
         },
         {
           name: t('account'),
           href: '/settings/account',
           icon: UserCircleIcon,
-          active: router.asPath === '/settings/account',
+          active: activePathname === '/settings/account',
         },
         {
           name: t('password'),
           href: '/settings/password',
           icon: LockClosedIcon,
-          active: router.asPath === '/settings/password',
+          active: activePathname === '/settings/password',
         },
       ],
       team: [
@@ -49,15 +57,15 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
           name: t('all-products'),
           href: `/teams/${slug}/products`,
           icon: CodeBracketIcon,
-          active: router.asPath === `/teams/${slug}/products`,
+          active: activePathname === `/teams/${slug}/products`,
         },
         {
           name: t('settings'),
           href: `/teams/${slug}/settings`,
           icon: Cog6ToothIcon,
           active:
-            router.asPath.startsWith(`/teams/${slug}`) &&
-            !router.asPath.includes('products'),
+            activePathname?.startsWith(`/teams/${slug}`) &&
+            !activePathname.includes('products'),
         },
       ],
     };
