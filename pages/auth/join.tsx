@@ -25,7 +25,10 @@ const Signup: NextPageWithLayout<
   const { status } = useSession();
   const { t } = useTranslation('common');
 
-  const { error } = router.query;
+  const { error, token } = router.query as {
+    error: string;
+    token: string;
+  };
 
   useEffect(() => {
     if (error) {
@@ -56,14 +59,7 @@ const Signup: NextPageWithLayout<
           authProviders.credentials && <div className="divider">or</div>}
 
         {authProviders.credentials && (
-          <Join />
-          // <>
-          //   {inviteToken ? (
-          //     <JoinWithInvitation inviteToken={inviteToken} next={next} />
-          //   ) : (
-          //     <Join />
-          //   )}
-          // </>
+          <>{token ? <JoinWithInvitation inviteToken={token} /> : <Join />}</>
         )}
       </div>
       <p className="text-center text-sm text-gray-600">

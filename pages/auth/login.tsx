@@ -37,7 +37,11 @@ const Login: NextPageWithLayout<
   const { t } = useTranslation('common');
   const [message, setMessage] = useState<Message>({ text: null, status: null });
 
-  const { error, success } = router.query as { error: string; success: string };
+  const { error, success, token } = router.query as {
+    error: string;
+    success: string;
+    token: string;
+  };
 
   useEffect(() => {
     if (error) {
@@ -48,6 +52,8 @@ const Login: NextPageWithLayout<
       setMessage({ text: success, status: 'success' });
     }
   }, [router, router.query]);
+
+  const redirectUrl =  token ? `/invitations/${token}` : env.redirectAfterSignIn;
 
   const formik = useFormik({
     initialValues: {
@@ -66,7 +72,7 @@ const Login: NextPageWithLayout<
         password,
         csrfToken,
         redirect: false,
-        callbackUrl: env.redirectAfterSignIn,
+        callbackUrl: redirectUrl
       });
 
       formik.resetForm();
@@ -83,7 +89,7 @@ const Login: NextPageWithLayout<
   }
 
   if (status === 'authenticated') {
-    router.push(env.redirectIfAuthenticated);
+    router.push(redirectUrl);
   }
 
   return (

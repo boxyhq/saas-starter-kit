@@ -76,7 +76,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                 variant="outline"
                 fullWidth
                 onClick={() => {
-                  router.push(`/auth/join`);
+                  router.push(`/auth/join?token=${invitation.token}`);
                 }}
                 size="md"
               >
@@ -86,7 +86,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                 variant="outline"
                 fullWidth
                 onClick={() => {
-                  router.push(`/auth/login`);
+                  router.push(`/auth/login?token=${invitation.token}`);
                 }}
                 size="md"
               >

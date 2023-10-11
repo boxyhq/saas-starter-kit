@@ -11,13 +11,7 @@ import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 import Link from 'next/link';
 
-const JoinWithInvitation = ({
-  inviteToken,
-  next,
-}: {
-  inviteToken: string;
-  next: string;
-}) => {
+const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
 
@@ -59,7 +53,8 @@ const JoinWithInvitation = ({
       formik.resetForm();
       toast.success(t('successfully-joined'));
 
-      return next ? router.push(next) : router.push('/auth/login');
+      router.push(`/auth/login?token=${inviteToken}`);
+      return;
     },
   });
 
