@@ -20,7 +20,8 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
   function Sidebar({ isCollapsed }, ref) {
     const router = useRouter();
     const { t } = useTranslation('common');
-    const { slug } = router.query;
+
+    const { slug } = router.query as { slug: string };
 
     const sidebarMenus: SidebarMenus = {
       personal: [
@@ -28,16 +29,19 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
           name: t('all-teams'),
           href: '/teams',
           icon: RectangleStackIcon,
+          active: router.asPath === '/teams',
         },
         {
           name: t('account'),
           href: '/settings/account',
           icon: UserCircleIcon,
+          active: router.asPath === '/settings/account',
         },
         {
           name: t('password'),
           href: '/settings/password',
           icon: LockClosedIcon,
+          active: router.asPath === '/settings/password',
         },
       ],
       team: [
@@ -45,16 +49,21 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
           name: t('all-products'),
           href: `/teams/${slug}/products`,
           icon: CodeBracketIcon,
+          active: router.asPath === `/teams/${slug}/products`,
         },
         {
           name: t('settings'),
           href: `/teams/${slug}/settings`,
           icon: Cog6ToothIcon,
+          active:
+            router.asPath.startsWith(`/teams/${slug}`) &&
+            !router.asPath.includes('products'),
         },
       ],
     };
 
     const menus = sidebarMenus[slug ? 'team' : 'personal'];
+
     return (
       <>
         <aside
@@ -74,21 +83,13 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
                   <ul className="space-y-1">
                     {menus.map((menu) => (
                       <li key={menu.name}>
-                        <SidebarItem
-                          href={menu.href}
-                          name={t(menu.name)}
-                          icon={menu.icon}
-                          active={router.asPath === menu.href}
-                          items={menu.items}
-                        />
+                        <SidebarItem {...menu} />
                         <div className="flex-1">
                           <div className="mt-1 space-y-1">
                             {menu?.items?.map((submenu) => (
                               <SidebarItem
                                 key={submenu.name}
-                                href={submenu.href}
-                                name={submenu.name}
-                                active={router.asPath === submenu.href}
+                                {...submenu}
                                 className="pl-8"
                               />
                             ))}
