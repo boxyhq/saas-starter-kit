@@ -15,7 +15,6 @@ export const recordMetric = (metric: AppEvent) => {
     !process.env.OTEL_EXPORTER_OTLP_METRICS_HEADERS ||
     !process.env.OTEL_EXPORTER_OTLP_METRICS_PROTOCOL
   ) {
-    console.log('No metrics endpoint found, skipping metric recording');
     return;
   }
 

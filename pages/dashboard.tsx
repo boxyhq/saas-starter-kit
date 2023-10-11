@@ -5,21 +5,26 @@ import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import type { NextPageWithLayout } from 'types';
 
 const Dashboard: NextPageWithLayout = () => {
   const router = useRouter();
-  const { teams } = useTeams();
+  const { teams, isLoading } = useTeams();
   const { t } = useTranslation('common');
   const { data: session } = useSession();
 
-  if (teams) {
+  useEffect(() => {
+    if (isLoading || !teams) {
+      return;
+    }
+
     if (teams.length > 0) {
       router.push(`/teams/${teams[0].slug}/settings`);
     } else {
       router.push('teams?newTeam=true');
     }
-  }
+  }, [router, teams]);
 
   return (
     <Card>

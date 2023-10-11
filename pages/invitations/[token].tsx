@@ -52,7 +52,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
       return;
     }
 
-    router.push('/teams/switch');
+    router.push('/dashboard');
   };
 
   return (
