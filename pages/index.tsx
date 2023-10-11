@@ -68,13 +68,13 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   // Redirect to login page if landing page is disabled
-  if(env.hideLandingPage) {
+  if (env.hideLandingPage) {
     return {
       redirect: {
         destination: '/auth/login',
         permanent: true,
       },
-    }
+    };
   }
 
   const { locale } = context;
