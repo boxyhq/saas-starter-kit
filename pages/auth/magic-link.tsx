@@ -10,6 +10,7 @@ import type {
 import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
@@ -60,6 +61,9 @@ const Login: NextPageWithLayout<
 
   return (
     <>
+      <Head>
+        <title>{t('magic-link-title')}</title>
+      </Head>
       <div className="rounded p-6 border">
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">
@@ -79,7 +83,7 @@ const Login: NextPageWithLayout<
               loading={formik.isSubmitting}
               active={formik.dirty}
               fullWidth
-              size='md'
+              size="md"
             >
               {t('send-magic-link')}
             </Button>

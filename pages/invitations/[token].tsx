@@ -7,6 +7,7 @@ import type { GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import { Button } from 'react-daisyui';
@@ -44,7 +45,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
       }
     );
 
-    const json = (await response.json()) as ApiResponse
+    const json = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
       toast.error(json.error.message);
@@ -56,6 +57,9 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
 
   return (
     <>
+      <Head>
+        <title>{`${t('invitation-title')} ${invitation.team.name}`}</title>
+      </Head>
       <div className="rounded p-6 border">
         <div className="flex flex-col items-center space-y-3">
           <h2 className="font-bold">{`${invitation.team.name} ${t(

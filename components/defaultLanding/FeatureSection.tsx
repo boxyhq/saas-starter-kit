@@ -5,7 +5,7 @@ import features from './data/features.json';
 const FeatureSection = () => {
   const { t } = useTranslation('common');
   return (
-    <section className="py-6">
+    <section className="py-6 px-2">
       <div className="flex flex-col justify-center space-y-6">
         <h2 className="text-center text-4xl font-bold normal-case">
           {t('features')}
@@ -15,10 +15,10 @@ const FeatureSection = () => {
           industry.
         </p>
         <div className="flex items-center justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-3">
+          <div className="grid grid-cols-1 xl:grid-cols-3 md:grid-cols-2">
             {features.map((feature: any, index) => {
               return (
-                <div className="card-compact card w-96" key={index}>
+                <div className="card-compact card" key={index}>
                   <div className="card-body">
                     <h2 className="card-title">{feature.name}</h2>
                     <p>{feature.description}</p>

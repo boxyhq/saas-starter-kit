@@ -198,5 +198,13 @@
   "interface-theme": "Interface theme",
   "verify-your-account": "Verify your account",
   "verify-account-expired": "This verification link is expired. Please enter the email address associated with your account, and we'll send you another verification link.",
-  "verify-account-link-sent": "Verification link sent. Please check your email."
+  "verify-account-link-sent": "Verification link sent. Please check your email.",
+  "terms-and-conditon": "Agree to Terms and conditions",
+  "homepage-title": "Enterprise SaaS Starter Kit by BoxyHQ",
+  "sign-up-title": "Sign Up | BoxyHQ ",
+  "login-title": "Login | BoxyHQ",
+  "forgot-password-title": "Reset Password | BoxyHQ",
+  "magic-link-title": "Login With Magic Link | BoxyHQ",
+  "resend-token-title": "Resend Email Token | BoxyHQ",
+  "invitation-title": "You've been invited to join "
 }

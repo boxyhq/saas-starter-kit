@@ -123,9 +123,9 @@ const CreateDirectory = ({
           >
             {t('create-directory')}
           </Button>
-        </Modal.Actions >
-      </form >
-    </Modal >
+        </Modal.Actions>
+      </form>
+    </Modal>
   );
 };
 

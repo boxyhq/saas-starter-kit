@@ -16,6 +16,7 @@ import { inferSSRProps } from '@/lib/inferSSRProps';
 import GithubButton from '@/components/auth/GithubButton';
 import GoogleButton from '@/components/auth/GoogleButton';
 import JoinWithInvitation from '@/components/auth/JoinWithInvitation';
+import Head from 'next/head';
 
 const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   inviteToken,
@@ -40,6 +41,9 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 
   return (
     <>
+      <Head>
+        <title>{t('sign-up-title')}</title>
+      </Head>
       <div className="rounded p-6 border">
         <div className="flex gap-2 flex-wrap">
           {authProviders.github && <GithubButton />}

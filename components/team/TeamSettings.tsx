@@ -1,5 +1,5 @@
 import { Card, InputWithLabel } from '@/components/shared';
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, domainRegex } from '@/lib/common';
 import { Team } from '@prisma/client';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
@@ -25,7 +25,9 @@ const TeamSettings = ({ team }: { team: Team }) => {
     validationSchema: Yup.object().shape({
       name: Yup.string().required('Name is required'),
       slug: Yup.string().required('Slug is required'),
-      domain: Yup.string().nullable(),
+      domain: Yup.string().nullable().matches(domainRegex, {
+        message: 'Invalid domain: ${value}',
+      }),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -53,9 +55,7 @@ const TeamSettings = ({ team }: { team: Team }) => {
         <Card>
           <Card.Body>
             <Card.Header>
-              <Card.Title>
-                Team Settings
-              </Card.Title>
+              <Card.Title>Team Settings</Card.Title>
               <Card.Description>
                 Team settings and configuration.
               </Card.Description>

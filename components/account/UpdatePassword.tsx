@@ -5,11 +5,11 @@ import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 
 import { Card, InputWithLabel } from '@/components/shared';
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, passwordPolicies } from '@/lib/common';
 
 const schema = Yup.object().shape({
   currentPassword: Yup.string().required(),
-  newPassword: Yup.string().required().min(7),
+  newPassword: Yup.string().required().min(passwordPolicies.minLength),
 });
 
 const UpdatePassword = () => {
