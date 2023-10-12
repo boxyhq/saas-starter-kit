@@ -11,9 +11,11 @@ export const eventTypes = [
 const EventTypes = ({
   onChange,
   values,
+  error
 }: {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   values: WebookFormSchema['eventTypes'];
+  error:string|undefined;
 }) => {
   const events: ReactElement[] = [];
 
@@ -33,7 +35,10 @@ const EventTypes = ({
     );
   });
 
-  return <>{events}</>;
+  return <>
+  {events}
+  <div className='text-[12px] text-red-500'>{error}</div>
+  </>;
 };
 
 export default EventTypes;

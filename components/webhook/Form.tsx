@@ -26,7 +26,7 @@ const Form = ({
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       url: Yup.string().required().url(),
-      eventTypes: Yup.array(),
+      eventTypes: Yup.array().required().min(1),
     }),
     initialValues,
     enableReinitialize: true,
@@ -86,6 +86,7 @@ const Form = ({
                   <EventTypes
                     onChange={formik.handleChange}
                     values={initialValues['eventTypes']}
+                    error={formik.errors.eventTypes}
                   />
                 </div>
               </div>
