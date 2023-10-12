@@ -167,7 +167,7 @@ const Login: NextPageWithLayout<
               >
                 {t('sign-in')}
               </Button>
-              <AgreeMessage />
+              <AgreeMessage text="sign-in" />
             </div>
           </form>
         )}
