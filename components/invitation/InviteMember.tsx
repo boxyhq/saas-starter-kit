@@ -80,9 +80,12 @@ const InviteMember = ({
               <Input
                 name="email"
                 className="flex-grow"
-                color={formik.touched.email && formik.errors.email  ? "error" : 'primary'}
+                color={
+                  formik.touched.email && formik.errors.email
+                    ? 'error'
+                    : 'primary'
+                }
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
                 value={formik.values.email}
                 placeholder="jackson@boxyhq.com"
                 required
@@ -103,7 +106,12 @@ const InviteMember = ({
             {formik.touched.email && formik.errors.email && (
               <span
                 className="text-red-600"
-                style={{ position: 'absolute', left: 30, bottom: 55 , fontSize : "0.75em" }}
+                style={{
+                  position: 'absolute',
+                  left: 30,
+                  bottom: 55,
+                  fontSize: '0.75em',
+                }}
               >
                 {formik.errors.email}
               </span>
