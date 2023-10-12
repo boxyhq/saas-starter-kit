@@ -10,10 +10,14 @@ import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 import Link from 'next/link';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+
+import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
+
 const Join = () => {
+ 
   const router = useRouter();
   const { t } = useTranslation('common');
+  
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
   const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -105,17 +109,7 @@ const Join = () => {
             error={formik.touched.password ? formik.errors.password : undefined}
             onChange={formik.handleChange}
           />
-          <button
-            onClick={handlePasswordVisibility}
-            className="flex pointer items-center text-white absolute  right-2 top-[50px]"
-            type="button"
-          >
-            {isPasswordVisible ? (
-              <EyeIcon className="h-6 w-6 text-white" />
-            ) : (
-              <EyeSlashIcon className="h-6 w-6 text-white" />
-            )}
-          </button>
+          <TogglePasswordVisibility isPasswordVisible={isPasswordVisible} handlePasswordVisibility={handlePasswordVisibility}/>
         </div>
         {process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL && (
           <div className="form-control flex  flex-row items-center">

@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 import Link from 'next/link';
+import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
 
 const JoinWithInvitation = ({
   inviteToken,
@@ -20,7 +21,11 @@ const JoinWithInvitation = ({
 }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
 
+  const handlePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
   const { isLoading, isError, invitation } = useInvitation(inviteToken);
 
   const formik = useFormik({
@@ -92,7 +97,7 @@ const JoinWithInvitation = ({
         onChange={formik.handleChange}
       />
       <InputWithLabel
-        type="password"
+        type={isPasswordVisible ? 'text' : 'password'}
         label={t('password')}
         name="password"
         placeholder={t('password')}
@@ -100,6 +105,7 @@ const JoinWithInvitation = ({
         error={formik.touched.password ? formik.errors.password : undefined}
         onChange={formik.handleChange}
       />
+       <TogglePasswordVisibility isPasswordVisible={isPasswordVisible} handlePasswordVisibility={handlePasswordVisibility}/>
       {process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL && (
         <div className="form-control flex  flex-row items-center">
           <div className="space-x-2">

@@ -24,7 +24,8 @@ import GoogleButton from '@/components/auth/GoogleButton';
 import { Alert, InputWithLabel } from '@/components/shared';
 import { authProviderEnabled } from '@/lib/auth';
 import Head from 'next/head';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import TogglePasswordVisibility from '@/components/shared/TogglePasswordVisibility';
+
 interface Message {
   text: string | null;
   status: ComponentStatus | null;
@@ -133,17 +134,7 @@ const Login: NextPageWithLayout<
                   }
                   onChange={formik.handleChange}
                 />
-                <button
-                  onClick={handlePasswordVisibility}
-                  className="flex pointer items-center absolute  right-2 top-[50px]"
-                  type="button"
-                >
-                  {isPasswordVisible ? (
-                    <EyeIcon className="h-6 w-6 text-white" />
-                  ) : (
-                    <EyeSlashIcon className="h-6 w-6 text-white" />
-                  )}
-                </button>
+                  <TogglePasswordVisibility isPasswordVisible={isPasswordVisible} handlePasswordVisibility={handlePasswordVisibility}/>
               </div>
               <p className="text-sm text-gray-600 text-right">
                 <Link
