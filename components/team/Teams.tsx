@@ -27,7 +27,7 @@ const Teams = () => {
     if (newTeam) {
       setCreateTeamVisible(true);
     }
-  }, [router.query]);
+  }, [newTeam]);
 
   const leaveTeam = async (team: Team) => {
     const response = await fetch(`/api/teams/${team.slug}/members`, {
