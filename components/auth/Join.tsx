@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { InputWithLabel } from '@/components/shared';
 import { defaultHeaders, passwordPolicies } from '@/lib/common';
 import type { User } from '@prisma/client';
@@ -9,10 +10,16 @@ import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 import Link from 'next/link';
+import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
 
 const Join = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
+
+  const handlePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -91,15 +98,21 @@ const Join = () => {
           error={formik.touched.email ? formik.errors.email : undefined}
           onChange={formik.handleChange}
         />
-        <InputWithLabel
-          type="password"
-          label={t('password')}
-          name="password"
-          placeholder={t('password')}
-          value={formik.values.password}
-          error={formik.touched.password ? formik.errors.password : undefined}
-          onChange={formik.handleChange}
-        />
+        <div className="relative flex">
+          <InputWithLabel
+            type={isPasswordVisible ? 'text' : 'password'}
+            label={t('password')}
+            name="password"
+            placeholder={t('password')}
+            value={formik.values.password}
+            error={formik.touched.password ? formik.errors.password : undefined}
+            onChange={formik.handleChange}
+          />
+          <TogglePasswordVisibility
+            isPasswordVisible={isPasswordVisible}
+            handlePasswordVisibility={handlePasswordVisibility}
+          />
+        </div>
         {process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL && (
           <div className="form-control flex  flex-row items-center">
             <div className="space-x-2">

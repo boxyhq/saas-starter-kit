@@ -5,7 +5,7 @@ import {
   RectangleStackIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import { forwardRef } from 'react';
+import { forwardRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
@@ -18,9 +18,18 @@ interface SidebarMenus {
 
 export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
   function Sidebar({ isCollapsed }, ref) {
-    const router = useRouter();
+    const { asPath, isReady, query } = useRouter();
     const { t } = useTranslation('common');
-    const { slug } = router.query;
+    const [activePathname, setActivePathname] = useState<null | string>(null);
+
+    const { slug } = query as { slug: string };
+
+    useEffect(() => {
+      if (isReady && asPath) {
+        const activePathname = new URL(asPath, location.href).pathname;
+        setActivePathname(activePathname);
+      }
+    }, [asPath, isReady]);
 
     const sidebarMenus: SidebarMenus = {
       personal: [
@@ -28,16 +37,19 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
           name: t('all-teams'),
           href: '/teams',
           icon: RectangleStackIcon,
+          active: activePathname === '/teams',
         },
         {
           name: t('account'),
           href: '/settings/account',
           icon: UserCircleIcon,
+          active: activePathname === '/settings/account',
         },
         {
           name: t('password'),
           href: '/settings/password',
           icon: LockClosedIcon,
+          active: activePathname === '/settings/password',
         },
       ],
       team: [
@@ -45,16 +57,21 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
           name: t('all-products'),
           href: `/teams/${slug}/products`,
           icon: CodeBracketIcon,
+          active: activePathname === `/teams/${slug}/products`,
         },
         {
           name: t('settings'),
           href: `/teams/${slug}/settings`,
           icon: Cog6ToothIcon,
+          active:
+            activePathname?.startsWith(`/teams/${slug}`) &&
+            !activePathname.includes('products'),
         },
       ],
     };
 
     const menus = sidebarMenus[slug ? 'team' : 'personal'];
+
     return (
       <>
         <aside
@@ -74,21 +91,13 @@ export default forwardRef<HTMLElement, { isCollapsed: boolean }>(
                   <ul className="space-y-1">
                     {menus.map((menu) => (
                       <li key={menu.name}>
-                        <SidebarItem
-                          href={menu.href}
-                          name={t(menu.name)}
-                          icon={menu.icon}
-                          active={router.asPath === menu.href}
-                          items={menu.items}
-                        />
+                        <SidebarItem {...menu} />
                         <div className="flex-1">
                           <div className="mt-1 space-y-1">
                             {menu?.items?.map((submenu) => (
                               <SidebarItem
                                 key={submenu.name}
-                                href={submenu.href}
-                                name={submenu.name}
-                                active={router.asPath === submenu.href}
+                                {...submenu}
                                 className="pl-8"
                               />
                             ))}
