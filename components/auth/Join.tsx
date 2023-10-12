@@ -151,7 +151,6 @@ const Join = () => {
           </label>
         )}
       </div>
-
       <div className="mt-3 space-y-3">
         <Button
           type="submit"
@@ -163,7 +162,6 @@ const Join = () => {
         >
           {t('create-account')}
         </Button>
-        <p className="text-sm">{t('sign-up-message')}</p>
       </div>
     </form>
   );

@@ -8,6 +8,11 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { NextPageWithLayout } from 'types';
 import styles from 'styles/sdk-override.module.css';
 
+const CREATE_SSO_CSS = {
+  input: `${styles['sdk-input']} input input-bordered`,
+  button: { ctoa: 'btn-primary' },
+};
+
 const EDIT_SSO_CSS = {
   button: { ctoa: 'btn-primary', destructive: 'btn-error' },
   input: `${styles['sdk-input']} input input-bordered`,
@@ -69,20 +74,14 @@ const TeamSSO: NextPageWithLayout = () => {
                 urls: {
                   save: `/api/teams/${team.slug}/saml`,
                 },
-                classNames: {
-                  input: styles['sdk-input'],
-                  button: { ctoa: 'btn-primary' },
-                },
+                classNames: CREATE_SSO_CSS,
               },
               oidc: {
                 variant: 'basic',
                 urls: {
                   save: '',
                 },
-                classNames: {
-                  input: styles['sdk-input'],
-                  button: { ctoa: 'btn-primary' },
-                },
+                classNames: CREATE_SSO_CSS,
               },
             },
           },

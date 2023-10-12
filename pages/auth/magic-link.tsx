@@ -1,6 +1,5 @@
 import { AuthLayout } from '@/components/layouts';
-import { InputWithLabel } from '@/components/shared';
-import { getParsedCookie } from '@/lib/cookie';
+import { InputWithLabel, Loading } from '@/components/shared';
 import env from '@/lib/env';
 import { useFormik } from 'formik';
 import type {
@@ -21,14 +20,10 @@ import * as Yup from 'yup';
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ csrfToken, redirectAfterSignIn }) => {
+> = ({ csrfToken }) => {
   const { status } = useSession();
   const router = useRouter();
   const { t } = useTranslation('common');
-
-  if (status === 'authenticated') {
-    router.push(redirectAfterSignIn);
-  }
 
   const formik = useFormik({
     initialValues: {
@@ -42,7 +37,7 @@ const Login: NextPageWithLayout<
         email: values.email,
         csrfToken,
         redirect: false,
-        callbackUrl: redirectAfterSignIn,
+        callbackUrl: env.redirectIfAuthenticated,
       });
 
       formik.resetForm();
@@ -58,6 +53,14 @@ const Login: NextPageWithLayout<
       }
     },
   });
+
+  if (status === 'loading') {
+    return <Loading />;
+  }
+
+  if (status === 'authenticated') {
+    router.push(env.redirectIfAuthenticated);
+  }
 
   return (
     <>
@@ -123,15 +126,12 @@ Login.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res, locale }: GetServerSidePropsContext = context;
-
-  const cookieParsed = getParsedCookie(req, res);
+  const { locale }: GetServerSidePropsContext = context;
 
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       csrfToken: await getCsrfToken(context),
-      redirectAfterSignIn: cookieParsed.url ?? env.redirectAfterSignIn,
     },
   };
 };

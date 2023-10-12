@@ -16,12 +16,11 @@ import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import env from '@/lib/env';
-import { getParsedCookie } from '@/lib/cookie';
 import type { NextPageWithLayout } from 'types';
 import { AuthLayout } from '@/components/layouts';
 import GithubButton from '@/components/auth/GithubButton';
 import GoogleButton from '@/components/auth/GoogleButton';
-import { Alert, InputWithLabel } from '@/components/shared';
+import { Alert, InputWithLabel, Loading } from '@/components/shared';
 import { authProviderEnabled } from '@/lib/auth';
 import Head from 'next/head';
 import TogglePasswordVisibility from '@/components/shared/TogglePasswordVisibility';
@@ -33,14 +32,18 @@ interface Message {
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ csrfToken, redirectAfterSignIn, authProviders }) => {
+> = ({ csrfToken, authProviders }) => {
   const router = useRouter();
   const { status } = useSession();
   const { t } = useTranslation('common');
   const [message, setMessage] = useState<Message>({ text: null, status: null });
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
 
-  const { error, success } = router.query as { error: string; success: string };
+  const { error, success, token } = router.query as {
+    error: string;
+    success: string;
+    token: string;
+  };
 
   const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -54,15 +57,11 @@ const Login: NextPageWithLayout<
     if (success) {
       setMessage({ text: success, status: 'success' });
     }
-  }, [router, router.query]);
+  }, [error, success]);
 
-  if (status === 'authenticated') {
-    router.push('/');
-  }
-
-  if (status === 'authenticated') {
-    router.push(redirectAfterSignIn);
-  }
+  const redirectUrl = token
+    ? `/invitations/${token}`
+    : env.redirectIfAuthenticated;
 
   const formik = useFormik({
     initialValues: {
@@ -81,7 +80,7 @@ const Login: NextPageWithLayout<
         password,
         csrfToken,
         redirect: false,
-        callbackUrl: redirectAfterSignIn,
+        callbackUrl: redirectUrl,
       });
 
       formik.resetForm();
@@ -92,6 +91,14 @@ const Login: NextPageWithLayout<
       }
     },
   });
+
+  if (status === 'loading') {
+    return <Loading />;
+  }
+
+  if (status === 'authenticated') {
+    router.push(redirectUrl);
+  }
 
   return (
     <>
@@ -205,15 +212,12 @@ Login.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res, locale }: GetServerSidePropsContext = context;
-
-  const cookieParsed = getParsedCookie(req, res);
+  const { locale }: GetServerSidePropsContext = context;
 
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       csrfToken: await getCsrfToken(context),
-      redirectAfterSignIn: cookieParsed.url ?? env.redirectAfterSignIn,
       authProviders: authProviderEnabled(),
     },
   };
