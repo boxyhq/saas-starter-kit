@@ -24,7 +24,7 @@ const Dashboard: NextPageWithLayout = () => {
     } else {
       router.push('teams?newTeam=true');
     }
-  }, [router, teams]);
+  }, [isLoading, router, teams]);
 
   return (
     <Card>
