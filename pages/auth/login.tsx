@@ -24,6 +24,7 @@ import GoogleButton from '@/components/auth/GoogleButton';
 import { Alert, InputWithLabel } from '@/components/shared';
 import { authProviderEnabled } from '@/lib/auth';
 import Head from 'next/head';
+import TogglePasswordVisibility from '@/components/shared/TogglePasswordVisibility';
 
 interface Message {
   text: string | null;
@@ -37,8 +38,13 @@ const Login: NextPageWithLayout<
   const { status } = useSession();
   const { t } = useTranslation('common');
   const [message, setMessage] = useState<Message>({ text: null, status: null });
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
 
   const { error, success } = router.query as { error: string; success: string };
+
+  const handlePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
 
   useEffect(() => {
     if (error) {
@@ -116,17 +122,23 @@ const Login: NextPageWithLayout<
                 error={formik.touched.email ? formik.errors.email : undefined}
                 onChange={formik.handleChange}
               />
-              <InputWithLabel
-                type="password"
-                label="Password"
-                name="password"
-                placeholder="Password"
-                value={formik.values.password}
-                error={
-                  formik.touched.password ? formik.errors.password : undefined
-                }
-                onChange={formik.handleChange}
-              />
+              <div className="relative flex">
+                <InputWithLabel
+                  type={isPasswordVisible ? 'text' : 'password'}
+                  label="Password"
+                  name="password"
+                  placeholder="Password"
+                  value={formik.values.password}
+                  error={
+                    formik.touched.password ? formik.errors.password : undefined
+                  }
+                  onChange={formik.handleChange}
+                />
+                <TogglePasswordVisibility
+                  isPasswordVisible={isPasswordVisible}
+                  handlePasswordVisibility={handlePasswordVisibility}
+                />
+              </div>
               <p className="text-sm text-gray-600 text-right">
                 <Link
                   href="/auth/forgot-password"
