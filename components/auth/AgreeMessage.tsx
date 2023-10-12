@@ -1,12 +1,12 @@
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 
-const AgreeMessage = () => {
+const AgreeMessage = ({ text }) => {
   const { t } = useTranslation('common');
 
   return (
     <p className="text-sm">
-      {t('agree-message-part', { button: 'Create Account' })}{' '}
+      {t('agree-message-part', { button: t(text) })}{' '}
       <Link
         rel="noopener noreferrer"
         target="_blank"

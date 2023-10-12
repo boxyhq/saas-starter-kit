@@ -112,7 +112,7 @@ const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
         >
           {t('create-account')}
         </Button>
-        <AgreeMessage />
+        <AgreeMessage text="create-account" />
       </div>
     </form>
   );
