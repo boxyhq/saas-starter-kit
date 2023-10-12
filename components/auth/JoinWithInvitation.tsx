@@ -13,16 +13,10 @@ import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
 import { useState } from 'react';
 import AgreeMessage from './AgreeMessage';
 
-const JoinWithInvitation = ({
-  inviteToken,
-  next,
-}: {
-  inviteToken: string;
-  next: string;
-}) => {
+const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
-  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const { isLoading, isError, invitation } = useInvitation(inviteToken);
 
   const handlePasswordVisibility = () => {
@@ -58,7 +52,8 @@ const JoinWithInvitation = ({
       formik.resetForm();
       toast.success(t('successfully-joined'));
 
-      return next ? router.push(next) : router.push('/auth/login');
+      router.push(`/auth/login?token=${inviteToken}`);
+      return;
     },
   });
 

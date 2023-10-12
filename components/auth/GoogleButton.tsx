@@ -1,6 +1,7 @@
 import { signIn } from 'next-auth/react';
 import { Button } from 'react-daisyui';
 import { useTranslation } from 'next-i18next';
+import env from '@/lib/env';
 
 const GoogleButton = () => {
   const { t } = useTranslation('common');
@@ -10,7 +11,7 @@ const GoogleButton = () => {
       className="btn-outline w-full"
       onClick={() => {
         signIn('google', {
-          callbackUrl: '/dashboard',
+          callbackUrl: env.redirectIfAuthenticated,
         });
       }}
       size="md"
