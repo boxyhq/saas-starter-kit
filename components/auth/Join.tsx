@@ -15,7 +15,7 @@ import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
 const Join = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
-  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
   const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);

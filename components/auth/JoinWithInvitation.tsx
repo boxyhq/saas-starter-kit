@@ -16,7 +16,7 @@ import { useState } from 'react';
 const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
-  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const { isLoading, isError, invitation } = useInvitation(inviteToken);
 
   const handlePasswordVisibility = () => {

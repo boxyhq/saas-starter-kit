@@ -37,7 +37,7 @@ const Login: NextPageWithLayout<
   const { status } = useSession();
   const { t } = useTranslation('common');
   const [message, setMessage] = useState<Message>({ text: null, status: null });
-  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
   const { error, success, token } = router.query as {
     error: string;
