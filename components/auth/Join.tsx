@@ -14,10 +14,9 @@ import Link from 'next/link';
 import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
 
 const Join = () => {
- 
   const router = useRouter();
   const { t } = useTranslation('common');
-  
+
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
   const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -109,7 +108,10 @@ const Join = () => {
             error={formik.touched.password ? formik.errors.password : undefined}
             onChange={formik.handleChange}
           />
-          <TogglePasswordVisibility isPasswordVisible={isPasswordVisible} handlePasswordVisibility={handlePasswordVisibility}/>
+          <TogglePasswordVisibility
+            isPasswordVisible={isPasswordVisible}
+            handlePasswordVisibility={handlePasswordVisibility}
+          />
         </div>
         {process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL && (
           <div className="form-control flex  flex-row items-center">

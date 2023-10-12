@@ -134,7 +134,10 @@ const Login: NextPageWithLayout<
                   }
                   onChange={formik.handleChange}
                 />
-                  <TogglePasswordVisibility isPasswordVisible={isPasswordVisible} handlePasswordVisibility={handlePasswordVisibility}/>
+                <TogglePasswordVisibility
+                  isPasswordVisible={isPasswordVisible}
+                  handlePasswordVisibility={handlePasswordVisibility}
+                />
               </div>
               <p className="text-sm text-gray-600 text-right">
                 <Link

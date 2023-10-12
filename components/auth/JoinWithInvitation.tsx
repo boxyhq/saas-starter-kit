@@ -105,7 +105,10 @@ const JoinWithInvitation = ({
         error={formik.touched.password ? formik.errors.password : undefined}
         onChange={formik.handleChange}
       />
-       <TogglePasswordVisibility isPasswordVisible={isPasswordVisible} handlePasswordVisibility={handlePasswordVisibility}/>
+      <TogglePasswordVisibility
+        isPasswordVisible={isPasswordVisible}
+        handlePasswordVisibility={handlePasswordVisibility}
+      />
       {process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL && (
         <div className="form-control flex  flex-row items-center">
           <div className="space-x-2">
