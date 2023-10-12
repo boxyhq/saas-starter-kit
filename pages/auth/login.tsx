@@ -40,10 +40,11 @@ const Login: NextPageWithLayout<
   const [message, setMessage] = useState<Message>({ text: null, status: null });
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
 
+  const { error, success } = router.query as { error: string; success: string };
+
   const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
-  const { error, success } = router.query as { error: string; success: string };
 
   useEffect(() => {
     if (error) {
@@ -121,7 +122,6 @@ const Login: NextPageWithLayout<
                 error={formik.touched.email ? formik.errors.email : undefined}
                 onChange={formik.handleChange}
               />
-
               <div className="relative flex">
                 <InputWithLabel
                   type={isPasswordVisible ? 'text' : 'password'}

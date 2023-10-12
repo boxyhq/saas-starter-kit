@@ -10,17 +10,17 @@ import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 import Link from 'next/link';
-
 import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
 
 const Join = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
-
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
+
   const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
+
   const formik = useFormik({
     initialValues: {
       name: '',
