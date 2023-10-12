@@ -25,6 +25,7 @@ import { Alert, InputWithLabel } from '@/components/shared';
 import { authProviderEnabled } from '@/lib/auth';
 import Head from 'next/head';
 import TogglePasswordVisibility from '@/components/shared/TogglePasswordVisibility';
+import AgreeMessage from '@/components/auth/AgreeMessage';
 
 interface Message {
   text: string | null;
@@ -148,7 +149,7 @@ const Login: NextPageWithLayout<
                 </Link>
               </p>
             </div>
-            <div className="mt-4">
+            <div className="mt-3 space-y-3">
               <Button
                 type="submit"
                 color="primary"
@@ -159,6 +160,7 @@ const Login: NextPageWithLayout<
               >
                 {t('sign-in')}
               </Button>
+              <AgreeMessage />
             </div>
           </form>
         )}
