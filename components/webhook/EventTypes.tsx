@@ -11,11 +11,11 @@ export const eventTypes = [
 const EventTypes = ({
   onChange,
   values,
-  error,
+ error
 }: {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   values: WebookFormSchema['eventTypes'];
-  error: string | undefined;
+  error:string | string[] | undefined;
 }) => {
   const events: ReactElement[] = [];
 
