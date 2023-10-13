@@ -24,15 +24,7 @@ const Dashboard: NextPageWithLayout = () => {
     }
   }, [isLoading, router, teams]);
 
-  if (isLoading || sessionStatus === 'loading' || !teams) {
-    return <Loading />;
-  }
-
-  return null;
-};
-
-Dashboard.getLayout = function getLayout(page: ReactElement) {
-  return page;
+  return <Loading />;
 };
 
 export async function getStaticProps({ locale }: GetServerSidePropsContext) {
