@@ -27,8 +27,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         track_pageview: true,
       });
     }
-    // persist theme
-    applyTheme(localStorage.getItem('theme') as Theme);
+
+    if (env.darkModeEnabled) {
+      applyTheme(localStorage.getItem('theme') as Theme);
+    }
   }, []);
 
   const getLayout =

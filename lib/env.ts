@@ -72,6 +72,8 @@ const env = {
   },
 
   hideLandingPage: process.env.HIDE_LANDING_PAGE === 'true' ? true : false,
+
+  darkModeEnabled: process.env.NEXT_PUBLIC_DARK_MODE === 'true' ? true : false,
 };
 
 export default env;
