@@ -24,6 +24,7 @@ import { Alert, InputWithLabel, Loading } from '@/components/shared';
 import { authProviderEnabled } from '@/lib/auth';
 import Head from 'next/head';
 import TogglePasswordVisibility from '@/components/shared/TogglePasswordVisibility';
+import AgreeMessage from '@/components/auth/AgreeMessage';
 
 interface Message {
   text: string | null;
@@ -37,7 +38,7 @@ const Login: NextPageWithLayout<
   const { status } = useSession();
   const { t } = useTranslation('common');
   const [message, setMessage] = useState<Message>({ text: null, status: null });
-  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
   const { error, success, token } = router.query as {
     error: string;
@@ -155,7 +156,7 @@ const Login: NextPageWithLayout<
                 </Link>
               </p>
             </div>
-            <div className="mt-4">
+            <div className="mt-3 space-y-3">
               <Button
                 type="submit"
                 color="primary"
@@ -166,6 +167,7 @@ const Login: NextPageWithLayout<
               >
                 {t('sign-in')}
               </Button>
+              <AgreeMessage text="sign-in" />
             </div>
           </form>
         )}
