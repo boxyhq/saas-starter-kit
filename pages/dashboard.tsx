@@ -1,16 +1,14 @@
 import { Loading } from '@/components/shared';
 import useTeams from 'hooks/useTeams';
 import { GetServerSidePropsContext } from 'next';
-import { useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
-import { useEffect, type ReactElement } from 'react';
+import { useEffect } from 'react';
 import type { NextPageWithLayout } from 'types';
 
 const Dashboard: NextPageWithLayout = () => {
   const router = useRouter();
   const { teams, isLoading } = useTeams();
-  const { status: sessionStatus } = useSession();
 
   useEffect(() => {
     if (isLoading || !teams) {
