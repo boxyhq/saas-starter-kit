@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import NextLink from 'next/link';
+import { useTranslation } from 'next-i18next';
 
 export interface SidebarMenuItem {
   name: string;
@@ -17,6 +18,7 @@ const SidebarItem = ({
   active,
   className,
 }: SidebarMenuItem) => {
+  const { t } = useTranslation('common');
   const Icon = icon;
 
   return (
@@ -30,7 +32,7 @@ const SidebarItem = ({
     >
       <div className="flex gap-2">
         {Icon && <Icon className="h-5 w-5" />}
-        <span>{name}</span>
+        <span>{t(name)}</span>
       </div>
     </NextLink>
   );

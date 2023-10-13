@@ -1,6 +1,5 @@
 import { AuthLayout } from '@/components/layouts';
-import { InputWithLabel } from '@/components/shared';
-import { getParsedCookie } from '@/lib/cookie';
+import { InputWithLabel, Loading } from '@/components/shared';
 import env from '@/lib/env';
 import { useFormik } from 'formik';
 import type {
@@ -10,6 +9,7 @@ import type {
 import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
@@ -20,14 +20,10 @@ import * as Yup from 'yup';
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ csrfToken, redirectAfterSignIn }) => {
+> = ({ csrfToken }) => {
   const { status } = useSession();
   const router = useRouter();
   const { t } = useTranslation('common');
-
-  if (status === 'authenticated') {
-    router.push(redirectAfterSignIn);
-  }
 
   const formik = useFormik({
     initialValues: {
@@ -41,7 +37,7 @@ const Login: NextPageWithLayout<
         email: values.email,
         csrfToken,
         redirect: false,
-        callbackUrl: redirectAfterSignIn,
+        callbackUrl: env.redirectIfAuthenticated,
       });
 
       formik.resetForm();
@@ -58,8 +54,19 @@ const Login: NextPageWithLayout<
     },
   });
 
+  if (status === 'loading') {
+    return <Loading />;
+  }
+
+  if (status === 'authenticated') {
+    router.push(env.redirectIfAuthenticated);
+  }
+
   return (
     <>
+      <Head>
+        <title>{t('magic-link-title')}</title>
+      </Head>
       <div className="rounded p-6 border">
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">
@@ -79,7 +86,7 @@ const Login: NextPageWithLayout<
               loading={formik.isSubmitting}
               active={formik.dirty}
               fullWidth
-              size='md'
+              size="md"
             >
               {t('send-magic-link')}
             </Button>
@@ -119,15 +126,12 @@ Login.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res, locale }: GetServerSidePropsContext = context;
-
-  const cookieParsed = getParsedCookie(req, res);
+  const { locale }: GetServerSidePropsContext = context;
 
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       csrfToken: await getCsrfToken(context),
-      redirectAfterSignIn: cookieParsed.url ?? env.redirectAfterSignIn,
     },
   };
 };

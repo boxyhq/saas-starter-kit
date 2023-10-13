@@ -28,9 +28,9 @@ const InviteMember = ({
       role: availableRoles[0].id,
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string().email().required(),
+      email: Yup.string().email().required('Email is a required field'), // Added error message
       role: Yup.string()
-        .required()
+        .required('Role is required')
         .oneOf(availableRoles.map((r) => r.id)),
     }),
     onSubmit: async (values) => {
@@ -80,6 +80,11 @@ const InviteMember = ({
               <Input
                 name="email"
                 className="flex-grow"
+                color={
+                  formik.touched.email && formik.errors.email
+                    ? 'error'
+                    : 'primary'
+                }
                 onChange={formik.handleChange}
                 value={formik.values.email}
                 placeholder="jackson@boxyhq.com"
@@ -98,6 +103,19 @@ const InviteMember = ({
                 ))}
               </select>
             </div>
+            {formik.touched.email && formik.errors.email && (
+              <span
+                className="text-red-600"
+                style={{
+                  position: 'absolute',
+                  left: 30,
+                  bottom: 55,
+                  fontSize: '0.75em',
+                }}
+              >
+                {formik.errors.email}
+              </span>
+            )}
           </div>
         </Modal.Body>
         <Modal.Actions>
@@ -110,9 +128,9 @@ const InviteMember = ({
           >
             {t('send-invite')}
           </Button>
-        </Modal.Actions >
-      </form >
-    </Modal >
+        </Modal.Actions>
+      </form>
+    </Modal>
   );
 };
 

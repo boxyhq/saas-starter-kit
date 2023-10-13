@@ -9,7 +9,10 @@
   "dont-have-an-account": "Don`t have an account?",
   "create-a-free-account": "Create a free account",
   "sign-up": "Sign up",
-  "sign-up-message": "Signing up signifies that you have read and agree to the Terms of Service and our Privacy Policy.",
+  "agree-message-part": "By clicking {{button}}, you agree to our ",
+  "terms": "Terms and Conditions",
+  "privacy": "Privacy Statement",
+  "and": "and",
   "sign-in": "Sign in",
   "sign-in-with-email": "Sign in with Email",
   "sign-in-with-password": "Sign in with Password",
@@ -199,5 +202,12 @@
   "verify-your-account": "Verify your account",
   "verify-account-expired": "This verification link is expired. Please enter the email address associated with your account, and we'll send you another verification link.",
   "verify-account-link-sent": "Verification link sent. Please check your email.",
-  "terms-and-conditon": "Agree to Terms and conditions"
+  "terms-and-conditon": "Agree to Terms and conditions",
+  "homepage-title": "Enterprise SaaS Starter Kit by BoxyHQ",
+  "sign-up-title": "Sign Up | BoxyHQ ",
+  "login-title": "Login | BoxyHQ",
+  "forgot-password-title": "Reset Password | BoxyHQ",
+  "magic-link-title": "Login With Magic Link | BoxyHQ",
+  "resend-token-title": "Resend Email Token | BoxyHQ",
+  "invitation-title": "You've been invited to join "
 }

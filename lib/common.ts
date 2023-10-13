@@ -87,3 +87,7 @@ export const copyToClipboard = (text: string) => {
 export const defaultHeaders = {
   'Content-Type': 'application/json',
 };
+
+export const passwordPolicies = {
+  minLength: 8,
+};

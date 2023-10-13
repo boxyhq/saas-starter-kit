@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { Role } from '@prisma/client';
 import { getAccount } from 'models/account';
-import { addTeamMember, getTeam, getTeamRoles } from 'models/team';
+import { addTeamMember, getTeam } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import NextAuth, { Account, NextAuthOptions, Profile, User } from 'next-auth';
 import BoxyHQSAMLProvider from 'next-auth/providers/boxyhq-saml';
@@ -181,11 +181,6 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token && session) {
         session.user.id = token.sub as string;
-
-        if (token.sub) {
-          const roles = await getTeamRoles(token.sub as string);
-          session.user.roles = roles;
-        }
       }
 
       return session;
@@ -193,8 +188,8 @@ export const authOptions: NextAuthOptions = {
 
     async jwt({ token, user, trigger, session }) {
       if (trigger === 'update' && session?.user.name) {
-        const updateUsername = { ...user, name: session.user.name }
-        return { ...token, ...updateUsername }
+        const updateUsername = { ...user, name: session.user.name };
+        return { ...token, ...updateUsername };
       }
       return { ...token, ...user };
     },

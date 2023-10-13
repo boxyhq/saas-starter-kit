@@ -2,31 +2,19 @@ import { AuthLayout } from '@/components/layouts';
 import { InputWithLabel } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import { useFormik } from 'formik';
-import type {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
-import { useSession } from 'next-auth/react';
+import type { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse, NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
 
-const ForgotPassword: NextPageWithLayout<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = () => {
-  const { status } = useSession();
-  const router = useRouter();
+const ForgotPassword: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
-
-  if (status === 'authenticated') {
-    router.push('/dashboard');
-  }
 
   const formik = useFormik({
     initialValues: {
@@ -56,6 +44,9 @@ const ForgotPassword: NextPageWithLayout<
 
   return (
     <>
+      <Head>
+        <title>{t('forgot-password-title')}</title>
+      </Head>
       <div className="rounded p-6 border">
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">

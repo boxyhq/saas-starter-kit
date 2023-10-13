@@ -7,6 +7,7 @@ import type { GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import { Button } from 'react-daisyui';
@@ -44,18 +45,21 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
       }
     );
 
-    const json = (await response.json()) as ApiResponse
+    const json = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
       toast.error(json.error.message);
       return;
     }
 
-    router.push('/teams/switch');
+    router.push('/dashboard');
   };
 
   return (
     <>
+      <Head>
+        <title>{`${t('invitation-title')} ${invitation.team.name}`}</title>
+      </Head>
       <div className="rounded p-6 border">
         <div className="flex flex-col items-center space-y-3">
           <h2 className="font-bold">{`${invitation.team.name} ${t(
@@ -72,7 +76,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                 variant="outline"
                 fullWidth
                 onClick={() => {
-                  router.push(`/auth/join`);
+                  router.push(`/auth/join?token=${invitation.token}`);
                 }}
                 size="md"
               >
@@ -82,7 +86,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                 variant="outline"
                 fullWidth
                 onClick={() => {
-                  router.push(`/auth/login`);
+                  router.push(`/auth/login?token=${invitation.token}`);
                 }}
                 size="md"
               >

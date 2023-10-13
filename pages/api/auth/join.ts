@@ -1,4 +1,4 @@
-import { hashPassword } from '@/lib/auth';
+import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
 import { generateToken, slugify } from '@/lib/common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { prisma } from '@/lib/prisma';
@@ -45,9 +45,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new ApiError(400, 'An user with this email already exists.');
   }
 
-  if (password.length < 8) {
-    throw new ApiError(400, 'Password must have at least 8 characters.');
-  }
+  validatePasswordPolicy(password);
 
   if (env.disableNonBusinessEmailSignup && !isBusinessEmail(email)) {
     throw new ApiError(

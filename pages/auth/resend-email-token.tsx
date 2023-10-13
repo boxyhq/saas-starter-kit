@@ -4,6 +4,7 @@ import { defaultHeaders } from '@/lib/common';
 import { useFormik } from 'formik';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState, type ReactElement, useEffect } from 'react';
 import { Button } from 'react-daisyui';
@@ -63,6 +64,9 @@ const VerifyAccount: NextPageWithLayout<
 
   return (
     <>
+      <Head>
+        <title>{t('resend-token-title')}</title>
+      </Head>
       {message.text && message.status && (
         <Alert status={message.status}>{t(message.text)}</Alert>
       )}

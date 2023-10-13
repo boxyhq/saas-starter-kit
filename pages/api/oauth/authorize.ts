@@ -29,9 +29,8 @@ const handleAuthorize = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const requestParams = req.method === 'GET' ? req.query : req.body;
 
-  const { redirect_url, authorize_form } = await oauthController.authorize(
-    requestParams
-  );
+  const { redirect_url, authorize_form } =
+    await oauthController.authorize(requestParams);
 
   if (redirect_url) {
     res.redirect(302, redirect_url);
