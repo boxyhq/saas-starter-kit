@@ -9,6 +9,8 @@ import {
 import EmailLayout from './EmailLayout';
 import app from '@/lib/app';
 import env from '@/lib/env';
+import { useTranslation } from 'next-i18next';
+
 
 interface WelcomeEmailProps {
   name: string;
@@ -17,17 +19,19 @@ interface WelcomeEmailProps {
 }
 
 const WelcomeEmail = ({ name, subject, team }: WelcomeEmailProps) => {
+  const { t } = useTranslation('common');
+
   return (
     <Html>
       <Head />
       <Preview>{subject}</Preview>
       <EmailLayout>
-        <Text>Hi {name},</Text>
+        <Text>{t('Hi-name',{name})}</Text>
         <Text>
-          You have been successfully signed up to {app.name} on team{' '}
+        {t('successfull-signed-up',{app})}
           <b>{team}</b>.
         </Text>
-        <Text>Click the below link to login now:</Text>
+        <Text>{t('link-login')}</Text>
         <Container className="text-center">
           <Button
             href={`${env.appUrl}/auth/login`}
@@ -35,7 +39,7 @@ const WelcomeEmail = ({ name, subject, team }: WelcomeEmailProps) => {
             pY={16}
             className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
           >
-            Login to your account
+            {t('Login')}
           </Button>
         </Container>
       </EmailLayout>

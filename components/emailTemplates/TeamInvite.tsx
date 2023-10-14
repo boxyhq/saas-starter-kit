@@ -8,6 +8,8 @@ import {
 } from '@react-email/components';
 import EmailLayout from './EmailLayout';
 import { Team } from '@prisma/client';
+import { useTranslation } from 'next-i18next';
+
 
 interface TeamInviteEmailProps {
   team: Team;
@@ -16,14 +18,16 @@ interface TeamInviteEmailProps {
 }
 
 const TeamInviteEmail = ({ team, invitationLink }: TeamInviteEmailProps) => {
+  const { t } = useTranslation('common');
+
   return (
     <Html>
       <Head />
-      <Preview>Team Invitation</Preview>
+      <Preview>{t('Team-Invitation')}</Preview>
       <EmailLayout>
-        <Text>You have been invited to join the team at {team.name}.</Text>
+        <Text>{t('Team-Invitation',{team})}</Text>
         <Text>
-          Click the link below to accept the invitation and join the team:
+        {t('Team-Invitation-description')}
         </Text>
 
         <Container className="text-center">
@@ -33,7 +37,7 @@ const TeamInviteEmail = ({ team, invitationLink }: TeamInviteEmailProps) => {
             pY={16}
             className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
           >
-            Join team
+            {t('Join-team')}
           </Button>
         </Container>
       </EmailLayout>

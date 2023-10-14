@@ -8,6 +8,8 @@ import {
   Preview,
   Text,
 } from '@react-email/components';
+import { useTranslation } from 'next-i18next';
+
 import EmailLayout from './EmailLayout';
 
 interface ResetPasswordEmailProps {
@@ -15,14 +17,15 @@ interface ResetPasswordEmailProps {
 }
 
 const ResetPasswordEmail = ({ url }: ResetPasswordEmailProps) => {
+  const { t } = useTranslation('common');
+
   return (
     <Html>
       <Head />
-      <Preview>Reset Your {app.name} Password</Preview>
+      <Preview>{t('Reset-password-Text', {app})}</Preview>
       <EmailLayout>
         <Text>
-          We have received a request to reset your {app.name} password. If you
-          did not request a password reset, please ignore this email.
+        {t('Reset-password-description', {app})}
         </Text>
         <Text>To reset your password, please click on the link below:</Text>
 
@@ -33,7 +36,7 @@ const ResetPasswordEmail = ({ url }: ResetPasswordEmailProps) => {
             pY={16}
             className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
           >
-            Reset password
+            {t('Reset-password')}
           </Button>
         </Container>
 

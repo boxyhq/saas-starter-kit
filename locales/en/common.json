@@ -209,5 +209,21 @@
   "forgot-password-title": "Reset Password | BoxyHQ",
   "magic-link-title": "Login With Magic Link | BoxyHQ",
   "resend-token-title": "Resend Email Token | BoxyHQ",
-  "invitation-title": "You've been invited to join "
+  "invitation-title": "You've been invited to join ",
+  "Reset-password-Text": "Reset Your {{app.name}} Password",
+  "Reset-password": "Reset password",
+  "Reset-password-description": "We have received a request to reset your {{app.name}} password. If you did not request a password reset, please ignore this email.",
+  "Team-Invitation": "Team Invitation",
+  "Team-Invitation-text":"You have been invited to join the team at {{team.name}}.",
+  "Team-Invitation-description":"Click the link below to accept the invitation and join the team:",
+  "Join-team":"Join team",
+  "Confirm-your-account":"Confirm your account!",
+  "pre-Confirm-account":"Before we can get started, we need to confirm your account.",
+  "Confirm-account-description":" Thank you for signing up for {{app.name}}. To confirm your account, please click the link below:",
+  "Confirm-account":"Confirm account",
+  "no-create-account":"If you did not create an account, no further action is required.",
+  "Hi-name":"Hi {{name}},",
+  "successfull-signed-up":"You have been successfully signed up to {{app.name}} on team",
+  "link-login":"Click the below link to login now:",
+  "Login":"Login to your account"
 }
