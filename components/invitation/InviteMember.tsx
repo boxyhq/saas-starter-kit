@@ -83,7 +83,7 @@ const InviteMember = ({
                 color={
                   formik.touched.email && formik.errors.email
                     ? 'error'
-                    : 'primary'
+                    : undefined
                 }
                 onChange={formik.handleChange}
                 value={formik.values.email}
@@ -91,7 +91,7 @@ const InviteMember = ({
                 required
               />
               <select
-                className="select-bordered select flex-grow"
+                className="select-bordered select flex-grow rounded"
                 name="role"
                 onChange={formik.handleChange}
                 required
