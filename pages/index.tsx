@@ -32,14 +32,16 @@ const Home: NextPageWithLayout = () => {
           </div>
           <div className="flex-none">
             <ul className="menu menu-horizontal flex items-center gap-2 sm:gap-4">
-              <li>
-                <button
-                  className="bg-none p-0 rounded-lg flex items-center justify-center"
-                  onClick={toggleTheme}
-                >
-                  <selectedTheme.icon className="w-5 h-5" />
-                </button>
-              </li>
+              {env.darkModeEnabled && (
+                <li>
+                  <button
+                    className="bg-none p-0 rounded-lg flex items-center justify-center"
+                    onClick={toggleTheme}
+                  >
+                    <selectedTheme.icon className="w-5 h-5" />
+                  </button>
+                </li>
+              )}
               <li>
                 <Link
                   href="/auth/join"
