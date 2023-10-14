@@ -15,7 +15,7 @@ const EventTypes = ({
 }: {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   values: WebookFormSchema['eventTypes'];
-  error: string | string[] | undefined;
+  error: string;
 }) => {
   const events: ReactElement[] = [];
 
@@ -38,7 +38,7 @@ const EventTypes = ({
   return (
     <>
       {events}
-      <div className="text-[12px] text-red-500">{error}</div>
+      <div className="text-[10px] text-red-500">{error}</div>
     </>
   );
 };
