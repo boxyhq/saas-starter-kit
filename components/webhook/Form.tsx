@@ -26,9 +26,7 @@ const Form = ({
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       url: Yup.string().required().url(),
-      eventTypes: Yup.array()
-        .min(1)
-        .required('Please choose at least one event type.'),
+      eventTypes: Yup.array().min(1, 'Please choose at least one event type'),
     }),
     initialValues,
     enableReinitialize: true,
