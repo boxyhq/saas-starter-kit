@@ -19,7 +19,7 @@ const FAQSection = () => {
           <div className="grid grid-cols-1">
             {faqs.map((faq, index) => {
               return (
-                <Card key={index} className="border-none">
+                <Card key={index} className="border-2 border-zinc-500">
                   <Card.Body className="items-left">
                     <Card.Title tag="h2">Q. {faq.question}</Card.Title>
                     <p>A. {faq.answer}</p>
