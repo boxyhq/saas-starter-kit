@@ -92,7 +92,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
                 <td>{new Date(invitation.createdAt).toDateString()}</td>
                 <td>
                   <Button
-                    size="xs"
+                    size="sm"
                     color="error"
                     variant="outline"
                     onClick={() => {

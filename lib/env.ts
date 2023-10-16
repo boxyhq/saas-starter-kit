@@ -2,7 +2,7 @@ const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
   product: 'boxyhq',
-  redirectAfterSignIn: '/teams/switch',
+  redirectIfAuthenticated: '/dashboard',
 
   // SAML Jackson configuration
   saml: {
@@ -72,6 +72,8 @@ const env = {
   },
 
   hideLandingPage: process.env.HIDE_LANDING_PAGE === 'true' ? true : false,
+
+  darkModeEnabled: process.env.NEXT_PUBLIC_DARK_MODE === 'false' ? false : true,
 };
 
 export default env;

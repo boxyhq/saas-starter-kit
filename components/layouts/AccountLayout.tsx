@@ -1,5 +1,6 @@
-import { Navbar, Sidebar } from '@/components/shared';
+import { Loading, Navbar, Sidebar } from '@/components/shared';
 import useCollapse from 'hooks/useCollapse';
+import { useSession } from 'next-auth/react';
 import React, { ElementRef, MouseEventHandler, useRef } from 'react';
 
 interface AccountLayoutProps {
@@ -10,9 +11,19 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
   const sidebarRef = useRef<ElementRef<'aside'>>(null);
   const [collapse, setCollapse] = useCollapse(sidebarRef, 'dashboard-wrapper');
 
+  const { status } = useSession();
+
   const toggleSidebar: MouseEventHandler<HTMLButtonElement> = () => {
     setCollapse((prev) => !prev);
   };
+
+  if (status === 'loading') {
+    return <Loading />;
+  }
+
+  if (status === 'unauthenticated') {
+    return <p>Access Denied</p>;
+  }
 
   return (
     <>

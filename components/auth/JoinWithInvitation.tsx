@@ -5,41 +5,34 @@ import { useFormik } from 'formik';
 import useInvitation from 'hooks/useInvitation';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Button, Checkbox } from 'react-daisyui';
+import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
-import Link from 'next/link';
+import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
+import { useState } from 'react';
+import AgreeMessage from './AgreeMessage';
 
-const JoinWithInvitation = ({
-  inviteToken,
-  next,
-}: {
-  inviteToken: string;
-  next: string;
-}) => {
+const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
-
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const { isLoading, isError, invitation } = useInvitation(inviteToken);
+
+  const handlePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
 
   const formik = useFormik({
     initialValues: {
       name: '',
       email: invitation?.email,
       password: '',
-      agreeToTerms: false,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
       password: Yup.string().required().min(passwordPolicies.minLength),
-      agreeToTerms: process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL
-        ? Yup.boolean().oneOf(
-            [true],
-            'You must agree to the Terms and Conditions.'
-          )
-        : Yup.boolean(),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -59,7 +52,8 @@ const JoinWithInvitation = ({
       formik.resetForm();
       toast.success(t('successfully-joined'));
 
-      return next ? router.push(next) : router.push('/auth/login');
+      router.push(`/auth/login?token=${inviteToken}`);
+      return;
     },
   });
 
@@ -91,64 +85,34 @@ const JoinWithInvitation = ({
         error={formik.touched.email ? formik.errors.email : undefined}
         onChange={formik.handleChange}
       />
-      <InputWithLabel
-        type="password"
-        label={t('password')}
-        name="password"
-        placeholder={t('password')}
-        value={formik.values.password}
-        error={formik.touched.password ? formik.errors.password : undefined}
-        onChange={formik.handleChange}
-      />
-      {process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL && (
-        <div className="form-control flex  flex-row items-center">
-          <div className="space-x-2">
-            <Checkbox
-              type="checkbox"
-              className="checkbox checkbox-primary checkbox-xs"
-              onChange={(e) => {
-                formik.setFieldValue('agreeToTerms', e.target.checked);
-              }}
-            />
-            <span className="checkbox-toggle"></span>
-          </div>
-          <label className="label">
-            <span className="label-text">
-              Agree to{' '}
-              <Link
-                href={process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}
-                className="text-primary"
-                target="_blank"
-              >
-                Terms and conditions
-              </Link>
-            </span>
-          </label>
-        </div>
-      )}
-      {formik.errors.agreeToTerms && (
-        <label className="label">
-          <span
-            className={`label-text-alt ${
-              formik.errors.agreeToTerms ? 'text-red-500' : ''
-            }`}
-          >
-            {formik.errors.agreeToTerms}
-          </span>
-        </label>
-      )}
-      <Button
-        type="submit"
-        color="primary"
-        loading={formik.isSubmitting}
-        active={formik.dirty}
-        fullWidth
-        size="md"
-      >
-        {t('create-account')}
-      </Button>
-      <div>
-        <p className="text-sm">{t('sign-up-message')}</p>
+      <div className="relative flex">
+        <InputWithLabel
+          type={isPasswordVisible ? 'text' : 'password'}
+          label={t('password')}
+          name="password"
+          placeholder={t('password')}
+          value={formik.values.password}
+          error={formik.touched.password ? formik.errors.password : undefined}
+          onChange={formik.handleChange}
+        />
+        <TogglePasswordVisibility
+          isPasswordVisible={isPasswordVisible}
+          handlePasswordVisibility={handlePasswordVisibility}
+        />
+      </div>
+
+      <div className="mt-3 space-y-3">
+        <Button
+          type="submit"
+          color="primary"
+          loading={formik.isSubmitting}
+          active={formik.dirty}
+          fullWidth
+          size="md"
+        >
+          {t('create-account')}
+        </Button>
+        <AgreeMessage text="create-account" />
       </div>
     </form>
   );
