@@ -46,7 +46,7 @@ const Form = ({
         type="button"
         size="sm"
         shape="circle"
-        className="absolute right-2 top-2 rounded-full"
+        className="absolute right-2 top-2 rounded-full btn-outline"
         onClick={toggleVisible}
       >
         ✕
