@@ -11,7 +11,7 @@ import {
 import app from '@/lib/app';
 
 interface EmailLayoutProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const EmailLayout = ({ children }: EmailLayoutProps) => {

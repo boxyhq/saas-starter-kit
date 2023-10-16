@@ -25,7 +25,7 @@ const TeamInviteEmail = ({ team, invitationLink }: TeamInviteEmailProps) => {
       <Head />
       <Preview>{t('team-invitation')}</Preview>
       <EmailLayout>
-        <Text>{t('team-invitation',{team})}</Text>
+        <Text>{t('team-invitation-text',{team})}</Text>
         <Text>
         {t('team-invitation-description')}
         </Text>
