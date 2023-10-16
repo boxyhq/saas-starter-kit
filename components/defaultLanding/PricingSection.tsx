@@ -20,7 +20,7 @@ const PricingSection = () => {
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {plans.map((plan, index) => {
               return (
-                <Card key={`plan-${index}`} className="rounded-md">
+                <Card key={`plan-${index}`} className="rounded-md border-2 border-zinc-700 dark:border-zinc-500">
                   <Card.Body>
                     <Card.Title tag="h2">
                       {plan.currency} {plan.amount} / {plan.duration}
