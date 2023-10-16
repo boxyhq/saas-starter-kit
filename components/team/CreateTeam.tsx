@@ -52,6 +52,18 @@ const CreateTeam = ({
 
   return (
     <Modal open={visible}>
+      <Button
+        type="button"
+        size="sm"
+        shape="circle"
+        className="absolute right-2 top-2 rounded-full btn-outline"
+        onClick={() => {
+          setVisible(!visible);
+        }}
+        aria-label={t('close')}
+      >
+        ✕
+      </Button>
       <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header className="font-bold">{t('create-team')}</Modal.Header>
         <Modal.Body>

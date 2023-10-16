@@ -122,20 +122,23 @@ const Members = ({ team }: { team: Team }) => {
                     <span>{member.role}</span>
                   )}
                 </td>
-                {canRemoveMember(member) && (
-                  <td>
+                <td>
+                  {canRemoveMember(member) ? (
                     <Button
+                      size="sm"
+                      color="error"
                       variant="outline"
                       onClick={() => {
                         setSelectedMember(member);
                         setConfirmationDialogVisible(true);
                       }}
-                      size="md"
                     >
                       {t('remove')}
                     </Button>
-                  </td>
-                )}
+                  ) : (
+                    <span>-</span>
+                  )}
+                </td>
               </tr>
             );
           })}
