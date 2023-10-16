@@ -22,10 +22,10 @@ const ResetPasswordEmail = ({ url }: ResetPasswordEmailProps) => {
   return (
     <Html>
       <Head />
-      <Preview>{t('Reset-password-Text', {app})}</Preview>
+      <Preview>{t('reset-password-text', {app})}</Preview>
       <EmailLayout>
         <Text>
-        {t('Reset-password-description', {app})}
+        {t('reset-password-description', {app})}
         </Text>
         <Text>To reset your password, please click on the link below:</Text>
 
@@ -36,7 +36,7 @@ const ResetPasswordEmail = ({ url }: ResetPasswordEmailProps) => {
             pY={16}
             className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
           >
-            {t('Reset-password')}
+            {t('reset-password')}
           </Button>
         </Container>
 

@@ -23,11 +23,11 @@ const TeamInviteEmail = ({ team, invitationLink }: TeamInviteEmailProps) => {
   return (
     <Html>
       <Head />
-      <Preview>{t('Team-Invitation')}</Preview>
+      <Preview>{t('team-invitation')}</Preview>
       <EmailLayout>
-        <Text>{t('Team-Invitation',{team})}</Text>
+        <Text>{t('team-invitation',{team})}</Text>
         <Text>
-        {t('Team-Invitation-description')}
+        {t('team-invitation-description')}
         </Text>
 
         <Container className="text-center">
@@ -37,7 +37,7 @@ const TeamInviteEmail = ({ team, invitationLink }: TeamInviteEmailProps) => {
             pY={16}
             className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
           >
-            {t('Join-team')}
+            {t('join-team')}
           </Button>
         </Container>
       </EmailLayout>

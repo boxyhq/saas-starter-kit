@@ -26,7 +26,7 @@ const WelcomeEmail = ({ name, subject, team }: WelcomeEmailProps) => {
       <Head />
       <Preview>{subject}</Preview>
       <EmailLayout>
-        <Text>{t('Hi-name',{name})}</Text>
+        <Text>{t('hi-name',{name})}</Text>
         <Text>
         {t('successfull-signed-up',{app})}
           <b>{team}</b>.
@@ -39,7 +39,7 @@ const WelcomeEmail = ({ name, subject, team }: WelcomeEmailProps) => {
             pY={16}
             className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
           >
-            {t('Login')}
+            {t('login-acc')}
           </Button>
         </Container>
       </EmailLayout>

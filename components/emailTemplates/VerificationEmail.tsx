@@ -28,11 +28,11 @@ const VerificationEmail = ({
       <Head />
       <Preview>{subject}</Preview>
       <EmailLayout>
-        <Heading as="h2">{t('Confirm-your-account')}</Heading>
+        <Heading as="h2">{t('confirm-your-account')}</Heading>
 
-        <Text>{t('pre-Confirm-account')}</Text>
+        <Text>{t('pre-confirm-account')}</Text>
         <Text>
-        {t('Confirm-account-description',{app})}
+        {t('confirm-account-description',{app})}
         </Text>
 
         <Container className="text-center">
@@ -42,7 +42,7 @@ const VerificationEmail = ({
             pY={16}
             className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
           >
-            {t('Confirm-account')}
+            {t('confirm-account')}
           </Button>
         </Container>
 
