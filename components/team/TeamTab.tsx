@@ -10,6 +10,7 @@ import type { Team } from '@prisma/client';
 import classNames from 'classnames';
 import useCanAccess from 'hooks/useCanAccess';
 import Link from 'next/link';
+import useTeamFeatures from 'hooks/useTeamFeatures';
 
 interface TeamTabProps {
   activeTab: string;
@@ -20,7 +21,12 @@ interface TeamTabProps {
 const TeamTab = (props: TeamTabProps) => {
   const { activeTab, team, heading } = props;
 
+  const { features, isLoading } = useTeamFeatures();
   const { canAccess } = useCanAccess();
+
+  if (isLoading || !features) {
+    return null;
+  }
 
   const navigations = [
     {
@@ -40,7 +46,10 @@ const TeamTab = (props: TeamTabProps) => {
     });
   }
 
-  if (canAccess('team_sso', ['create', 'update', 'read', 'delete'])) {
+  if (
+    features.sso &&
+    canAccess('team_sso', ['create', 'update', 'read', 'delete'])
+  ) {
     navigations.push({
       name: 'Single Sign-On',
       href: `/teams/${team.slug}/saml`,
@@ -49,7 +58,10 @@ const TeamTab = (props: TeamTabProps) => {
     });
   }
 
-  if (canAccess('team_dsync', ['create', 'update', 'read', 'delete'])) {
+  if (
+    features.dsync &&
+    canAccess('team_dsync', ['create', 'update', 'read', 'delete'])
+  ) {
     navigations.push({
       name: 'Directory Sync',
       href: `/teams/${team.slug}/directory-sync`,
@@ -58,7 +70,10 @@ const TeamTab = (props: TeamTabProps) => {
     });
   }
 
-  if (canAccess('team_audit_log', ['create', 'update', 'read', 'delete'])) {
+  if (
+    features.auditLog &&
+    canAccess('team_audit_log', ['create', 'update', 'read', 'delete'])
+  ) {
     navigations.push({
       name: 'Audit Logs',
       href: `/teams/${team.slug}/audit-logs`,
@@ -67,7 +82,10 @@ const TeamTab = (props: TeamTabProps) => {
     });
   }
 
-  if (canAccess('team_webhook', ['create', 'update', 'read', 'delete'])) {
+  if (
+    features.webhook &&
+    canAccess('team_webhook', ['create', 'update', 'read', 'delete'])
+  ) {
     navigations.push({
       name: 'Webhooks',
       href: `/teams/${team.slug}/webhooks`,
@@ -76,7 +94,10 @@ const TeamTab = (props: TeamTabProps) => {
     });
   }
 
-  if (canAccess('team_api_key', ['create', 'update', 'read', 'delete'])) {
+  if (
+    features.apiKey &&
+    canAccess('team_api_key', ['create', 'update', 'read', 'delete'])
+  ) {
     navigations.push({
       name: 'API Keys',
       href: `/teams/${team.slug}/api-keys`,

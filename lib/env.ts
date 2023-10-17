@@ -74,6 +74,14 @@ const env = {
   hideLandingPage: process.env.HIDE_LANDING_PAGE === 'true' ? true : false,
 
   darkModeEnabled: process.env.NEXT_PUBLIC_DARK_MODE === 'false' ? false : true,
+
+  teamFeatures: {
+    sso: process.env.TEAM_SSO === 'false' ? false : true,
+    dsync: process.env.TEAM_DSYNC === 'false' ? false : true,
+    webhook: process.env.TEAM_WEBHOOK === 'false' ? false : true,
+    apiKey: process.env.TEAM_API_KEY === 'false' ? false : true,
+    auditLog: process.env.TEAM_AUDIT_LOG === 'false' ? false : true,
+  },
 };
 
 export default env;

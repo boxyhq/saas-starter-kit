@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
 import type { ApiResponse, NextPageWithLayout } from 'types';
+import env from '@/lib/env';
 
 const DirectorySync: NextPageWithLayout = () => {
   const router = useRouter();
@@ -111,6 +112,12 @@ const DirectorySync: NextPageWithLayout = () => {
 export async function getServerSideProps({
   locale,
 }: GetServerSidePropsContext) {
+  if (!env.teamFeatures.dsync) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),

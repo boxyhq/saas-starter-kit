@@ -6,6 +6,7 @@ import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { NextPageWithLayout } from 'types';
+import env from '@/lib/env';
 
 const WebhookList: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
@@ -34,6 +35,12 @@ const WebhookList: NextPageWithLayout = () => {
 export async function getServerSideProps({
   locale,
 }: GetServerSidePropsContext) {
+  if (!env.teamFeatures.webhook) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),

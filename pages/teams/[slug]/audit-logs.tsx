@@ -68,6 +68,12 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  if (!env.teamFeatures.auditLog) {
+    return {
+      notFound: true,
+    };
+  }
+
   const { locale, req, res, query } = context;
 
   const session = await getSession(req, res);
