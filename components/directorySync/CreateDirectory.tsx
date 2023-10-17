@@ -70,7 +70,7 @@ const CreateDirectory = ({
         type="button"
         size="sm"
         shape="circle"
-        className="absolute right-2 top-2 rounded-full"
+        className="absolute right-2 top-2 btn-outline rounded-full"
         onClick={toggleVisible}
         aria-label={t('close')}
       >
