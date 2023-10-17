@@ -10,23 +10,17 @@ import type { Team } from '@prisma/client';
 import classNames from 'classnames';
 import useCanAccess from 'hooks/useCanAccess';
 import Link from 'next/link';
-import useTeamFeatures from 'hooks/useTeamFeatures';
+import { TeamFeature } from 'types';
 
 interface TeamTabProps {
   activeTab: string;
   team: Team;
   heading?: string;
+  teamFeatures: TeamFeature;
 }
 
-const TeamTab = (props: TeamTabProps) => {
-  const { activeTab, team, heading } = props;
-
-  const { features, isLoading } = useTeamFeatures();
+const TeamTab = ({ activeTab, team, heading, teamFeatures }: TeamTabProps) => {
   const { canAccess } = useCanAccess();
-
-  if (isLoading || !features) {
-    return null;
-  }
 
   const navigations = [
     {
@@ -47,7 +41,7 @@ const TeamTab = (props: TeamTabProps) => {
   }
 
   if (
-    features.sso &&
+    teamFeatures.sso &&
     canAccess('team_sso', ['create', 'update', 'read', 'delete'])
   ) {
     navigations.push({
@@ -59,7 +53,7 @@ const TeamTab = (props: TeamTabProps) => {
   }
 
   if (
-    features.dsync &&
+    teamFeatures.dsync &&
     canAccess('team_dsync', ['create', 'update', 'read', 'delete'])
   ) {
     navigations.push({
@@ -71,7 +65,7 @@ const TeamTab = (props: TeamTabProps) => {
   }
 
   if (
-    features.auditLog &&
+    teamFeatures.auditLog &&
     canAccess('team_audit_log', ['create', 'update', 'read', 'delete'])
   ) {
     navigations.push({
@@ -83,7 +77,7 @@ const TeamTab = (props: TeamTabProps) => {
   }
 
   if (
-    features.webhook &&
+    teamFeatures.webhook &&
     canAccess('team_webhook', ['create', 'update', 'read', 'delete'])
   ) {
     navigations.push({
@@ -95,7 +89,7 @@ const TeamTab = (props: TeamTabProps) => {
   }
 
   if (
-    features.apiKey &&
+    teamFeatures.apiKey &&
     canAccess('team_api_key', ['create', 'update', 'read', 'delete'])
   ) {
     navigations.push({

@@ -1,13 +1,13 @@
 import { PendingInvitations } from '@/components/invitation';
 import { Error, Loading } from '@/components/shared';
 import { Members, TeamTab } from '@/components/team';
+import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import type { NextPageWithLayout } from 'types';
 
-const TeamMembers: NextPageWithLayout = () => {
+const TeamMembers = ({ teamFeatures }) => {
   const { t } = useTranslation('common');
   const { isLoading, isError, team } = useTeam();
 
@@ -25,7 +25,7 @@ const TeamMembers: NextPageWithLayout = () => {
 
   return (
     <>
-      <TeamTab activeTab="members" team={team} />
+      <TeamTab activeTab="members" team={team} teamFeatures={teamFeatures} />
       <div className="space-y-6">
         <Members team={team} />
         <PendingInvitations team={team} />
@@ -40,6 +40,7 @@ export async function getServerSideProps({
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+      teamFeatures: env.teamFeatures,
     },
   };
 }

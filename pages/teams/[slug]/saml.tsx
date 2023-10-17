@@ -5,7 +5,6 @@ import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import type { NextPageWithLayout } from 'types';
 import styles from 'styles/sdk-override.module.css';
 import env from '@/lib/env';
 
@@ -27,7 +26,7 @@ const EDIT_SSO_CSS = {
   section: 'mb-8',
 };
 
-const TeamSSO: NextPageWithLayout = () => {
+const TeamSSO = ({ teamFeatures }) => {
   const { t } = useTranslation('common');
 
   const { isLoading, isError, team } = useTeam();
@@ -46,7 +45,7 @@ const TeamSSO: NextPageWithLayout = () => {
 
   return (
     <>
-      <TeamTab activeTab="saml" team={team} />
+      <TeamTab activeTab="saml" team={team} teamFeatures={teamFeatures} />
       <ConnectionsWrapper
         urls={{ spMetadata: '/well-known/saml-configuration' }}
         copyDoneCallback={() => {
@@ -104,6 +103,7 @@ export async function getServerSideProps({
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+      teamFeatures: env.teamFeatures,
     },
   };
 }
