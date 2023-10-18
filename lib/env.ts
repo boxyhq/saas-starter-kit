@@ -74,6 +74,11 @@ const env = {
   hideLandingPage: process.env.HIDE_LANDING_PAGE === 'true' ? true : false,
 
   darkModeEnabled: process.env.NEXT_PUBLIC_DARK_MODE === 'false' ? false : true,
+
+  recaptcha: {
+    siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+    secretKey: process.env.RECAPTCHA_SECRET_KEY,
+  }
 };
 
 export default env;

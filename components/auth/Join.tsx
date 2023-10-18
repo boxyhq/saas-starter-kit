@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { InputWithLabel } from '@/components/shared';
 import { defaultHeaders, passwordPolicies } from '@/lib/common';
 import type { User } from '@prisma/client';
@@ -11,10 +11,12 @@ import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
 import AgreeMessage from './AgreeMessage';
+import GoogleReCAPTCHA from '../shared/GoogleReCAPTCHA';
 
 const Join = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const [recaptchaToken, setRecaptchaToken] = useState<string>('');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
   const handlePasswordVisibility = () => {
@@ -38,7 +40,10 @@ const Join = () => {
       const response = await fetch('/api/auth/join', {
         method: 'POST',
         headers: defaultHeaders,
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          recaptchaToken,
+        }),
       });
 
       const json = (await response.json()) as ApiResponse<
@@ -60,6 +65,8 @@ const Join = () => {
       }
     },
   });
+
+  console.log({ recaptchaToken });
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -106,6 +113,7 @@ const Join = () => {
             handlePasswordVisibility={handlePasswordVisibility}
           />
         </div>
+        <GoogleReCAPTCHA onChange={setRecaptchaToken} />
       </div>
       <div className="mt-3 space-y-3">
         <Button

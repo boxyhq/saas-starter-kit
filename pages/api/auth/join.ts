@@ -9,6 +9,7 @@ import { createTeam, isTeamExists } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import { validateRecaptcha } from '@/lib/recaptcha';
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,7 +38,9 @@ export default async function handler(
 
 // Signup the user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, password, team } = req.body;
+  const { name, email, password, team, recaptchaToken } = req.body;
+
+  await validateRecaptcha(recaptchaToken);
 
   const existingUser = await getUser({ email });
 
