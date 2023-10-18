@@ -60,7 +60,7 @@
     "@testing-library/jest-dom": "6.1.4",
     "@testing-library/react": "14.0.0",
     "@trivago/prettier-plugin-sort-imports": "4.2.0",
-    "@types/bcryptjs": "2.4.4",
+    "@types/bcryptjs": "2.4.5",
     "@types/crypto-js": "4.1.2",
     "@types/jest": "29.5.6",
     "@types/mixpanel-browser": "2.47.3",
