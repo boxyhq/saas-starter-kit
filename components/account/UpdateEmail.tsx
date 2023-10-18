@@ -44,9 +44,9 @@ const UpdateEmail = ({ user }: { user: User }) => {
       <Card>
         <Card.Body>
           <Card.Header>
-            <Card.Title>Email Address</Card.Title>
+            <Card.Title>{t('email-address')}</Card.Title>
             <Card.Description>
-              The email address you use to sign in to your account.
+              {t('email-address-description')}
             </Card.Description>
           </Card.Header>
           <Input

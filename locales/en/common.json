@@ -209,5 +209,13 @@
   "forgot-password-title": "Reset Password | BoxyHQ",
   "magic-link-title": "Login With Magic Link | BoxyHQ",
   "resend-token-title": "Resend Email Token | BoxyHQ",
-  "invitation-title": "You've been invited to join "
+  "invitation-title": "You've been invited to join ",
+  "email-address": "Email Address",
+  "email-address-description": "The email address you use to sign in to your account.",
+  "name-appearance": "This is how your name will appear in the interface.",
+  "change-password-text": "You can change your password here.",
+  "change-theme": "This will change the theme of the app.",
+  "avatar": "Avatar",
+  "custom-avatar": "Click on the avatar to upload a custom one from your files.",
+  "avatar-type": "Accepted file types: .png, .jpg. Max file size: 2MB."
 }
