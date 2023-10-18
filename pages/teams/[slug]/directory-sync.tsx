@@ -13,9 +13,10 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
-import type { ApiResponse, NextPageWithLayout } from 'types';
+import type { ApiResponse } from 'types';
+import env from '@/lib/env';
 
-const DirectorySync: NextPageWithLayout = () => {
+const DirectorySync = ({ teamFeatures }) => {
   const router = useRouter();
   const { slug } = router.query as { slug: string };
 
@@ -67,7 +68,11 @@ const DirectorySync: NextPageWithLayout = () => {
 
   return (
     <>
-      <TeamTab activeTab="directory-sync" team={team} />
+      <TeamTab
+        activeTab="directory-sync"
+        team={team}
+        teamFeatures={teamFeatures}
+      />
       <Card>
         <Card.Body>
           <div className="mb-3 flex items-center justify-between">
@@ -111,9 +116,16 @@ const DirectorySync: NextPageWithLayout = () => {
 export async function getServerSideProps({
   locale,
 }: GetServerSidePropsContext) {
+  if (!env.teamFeatures.dsync) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+      teamFeatures: env.teamFeatures,
     },
   };
 }

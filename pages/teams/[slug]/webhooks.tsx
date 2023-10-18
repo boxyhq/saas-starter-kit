@@ -5,9 +5,9 @@ import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import type { NextPageWithLayout } from 'types';
+import env from '@/lib/env';
 
-const WebhookList: NextPageWithLayout = () => {
+const WebhookList = ({ teamFeatures }) => {
   const { t } = useTranslation('common');
   const { isLoading, isError, team } = useTeam();
 
@@ -25,7 +25,7 @@ const WebhookList: NextPageWithLayout = () => {
 
   return (
     <>
-      <TeamTab activeTab="webhooks" team={team} />
+      <TeamTab activeTab="webhooks" team={team} teamFeatures={teamFeatures} />
       <Webhooks team={team} />
     </>
   );
@@ -34,9 +34,16 @@ const WebhookList: NextPageWithLayout = () => {
 export async function getServerSideProps({
   locale,
 }: GetServerSidePropsContext) {
+  if (!env.teamFeatures.webhook) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+      teamFeatures: env.teamFeatures,
     },
   };
 }

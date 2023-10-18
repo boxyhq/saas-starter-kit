@@ -1,3 +1,4 @@
+import env from '@/lib/env';
 import jackson from '@/lib/jackson';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -5,6 +6,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (!env.teamFeatures.sso) {
+    res.status(404).json({ error: { message: 'Not Found' } });
+  }
+
   const { method } = req;
 
   try {

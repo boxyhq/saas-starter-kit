@@ -3,6 +3,8 @@ import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import env from '@/lib/env';
+import { ApiError } from '@/lib/errors';
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,6 +13,10 @@ export default async function handler(
   const { method } = req;
 
   try {
+    if (!env.teamFeatures.apiKey) {
+      throw new ApiError(404, 'Not Found');
+    }
+
     switch (method) {
       case 'DELETE':
         await handleDELETE(req, res);

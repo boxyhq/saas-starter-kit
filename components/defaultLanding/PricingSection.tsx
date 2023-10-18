@@ -20,7 +20,10 @@ const PricingSection = () => {
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {plans.map((plan, index) => {
               return (
-                <Card key={`plan-${index}`} className="rounded-md">
+                <Card
+                  key={`plan-${index}`}
+                  className="rounded-md dark:border-gray-200 border border-gray-300"
+                >
                   <Card.Body>
                     <Card.Title tag="h2">
                       {plan.currency} {plan.amount} / {plan.duration}
@@ -44,7 +47,7 @@ const PricingSection = () => {
                       </ul>
                     </div>
                   </Card.Body>
-                  <Card.Actions className="justify-center">
+                  <Card.Actions className="justify-center m-2">
                     <Button
                       color="primary"
                       className="md:w-full w-3/4 rounded-md"

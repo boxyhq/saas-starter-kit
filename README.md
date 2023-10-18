@@ -210,6 +210,14 @@ Please try to create bug reports that are:
 - [Youtube](https://www.youtube.com/@boxyhq) (Watch community events and tutorials)
 - [GitHub Issues](https://github.com/boxyhq/saas-starter-kit/issues) (Contributions, report issues, and product ideas)
 
+## 🌍 Contributors
+
+<a href="https://github.com/boxyhq/saas-starter-kit/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=boxyhq/saas-starter-kit" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
+
 ## 🛡️ License
 
 [Apache 2.0 License](https://github.com/boxyhq/saas-starter-kit/blob/main/LICENSE)
