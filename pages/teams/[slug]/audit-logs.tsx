@@ -32,6 +32,7 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   auditLogToken,
   retracedHost,
   error,
+  teamFeatures,
 }) => {
   const { t } = useTranslation('common');
   const { canAccess } = useCanAccess();
@@ -51,7 +52,7 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 
   return (
     <>
-      <TeamTab activeTab="audit-logs" team={team} />
+      <TeamTab activeTab="audit-logs" team={team} teamFeatures={teamFeatures} />
       <Card>
         <Card.Body>
           {canAccess('team_audit_log', ['read']) && auditLogToken && (
@@ -68,6 +69,12 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  if (!env.teamFeatures.auditLog) {
+    return {
+      notFound: true,
+    };
+  }
+
   const { locale, req, res, query } = context;
 
   const session = await getSession(req, res);
@@ -90,6 +97,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         error: null,
         auditLogToken: auditLogToken ?? '',
         retracedHost: env.retraced.url ?? '',
+        teamFeatures: env.teamFeatures,
       },
     };
   } catch (error: unknown) {
@@ -102,6 +110,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
         auditLogToken: null,
         retracedHost: null,
+        teamFeatures: env.teamFeatures,
       },
     };
   }

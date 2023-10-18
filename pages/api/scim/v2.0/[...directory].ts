@@ -1,5 +1,6 @@
 import { hashPassword } from '@/lib/auth';
 import { createRandomString, extractAuthToken } from '@/lib/common';
+import env from '@/lib/env';
 import jackson from '@/lib/jackson';
 import { prisma } from '@/lib/prisma';
 import type {
@@ -15,6 +16,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (!env.teamFeatures.dsync) {
+    res.status(404).json({ error: { message: 'Not Found' } });
+  }
+
   const { directorySync } = await jackson();
 
   const { method, query, body } = req;
