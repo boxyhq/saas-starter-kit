@@ -46,7 +46,7 @@ const UpdateEmail = ({ user }: { user: User }) => {
           <Card.Header>
             <Card.Title>{t('email-address')}</Card.Title>
             <Card.Description>
-            {t('email-address-description')}
+              {t('email-address-description')}
             </Card.Description>
           </Card.Header>
           <Input

@@ -47,9 +47,7 @@ const UpdatePassword = () => {
           <Card.Body>
             <Card.Header>
               <Card.Title>{t('password')}</Card.Title>
-              <Card.Description>
-              {t('change-password-text')}
-              </Card.Description>
+              <Card.Description>{t('change-password-text')}</Card.Description>
             </Card.Header>
             <div className="flex flex-col space-y-3">
               <InputWithLabel

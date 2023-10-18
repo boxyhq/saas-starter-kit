@@ -55,9 +55,7 @@ const UpdateName = ({ user }: { user: User }) => {
         <Card.Body>
           <Card.Header>
             <Card.Title>{t('name')}</Card.Title>
-            <Card.Description>
-            {t('name-appearance')}
-            </Card.Description>
+            <Card.Description>{t('name-appearance')}</Card.Description>
           </Card.Header>
           <Input
             type="text"
