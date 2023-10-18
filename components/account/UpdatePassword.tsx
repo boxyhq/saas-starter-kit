@@ -46,9 +46,9 @@ const UpdatePassword = () => {
         <Card>
           <Card.Body>
             <Card.Header>
-              <Card.Title>Password</Card.Title>
+              <Card.Title>{t('password')}</Card.Title>
               <Card.Description>
-                You can change your password here.
+              {t('change-password-text')}
               </Card.Description>
             </Card.Header>
             <div className="flex flex-col space-y-3">
