@@ -4,9 +4,11 @@ import { ConnectionsWrapper } from '@boxyhq/react-ui/sso';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
+import toast from 'react-hot-toast';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from 'styles/sdk-override.module.css';
 import env from '@/lib/env';
+import { useRouter } from 'next/router';
 
 const CREATE_SSO_CSS = {
   input: `${styles['sdk-input']} input input-bordered`,
@@ -30,6 +32,7 @@ const EDIT_SSO_CSS = {
 
 const TeamSSO = ({ teamFeatures }) => {
   const { t } = useTranslation('common');
+  const router = useRouter();
 
   const { isLoading, isError, team } = useTeam();
 
@@ -64,6 +67,14 @@ const TeamSSO = ({ teamFeatures }) => {
               delete: `/api/teams/${team.slug}/saml`,
             },
             classNames: EDIT_SSO_CSS,
+            successCallback({ operation }) {
+              if (operation === 'UPDATE') {
+                toast.success('SAML connection updated successfully.');
+              } else if (operation === 'DELETE') {
+                toast.success('SAML connection deleted successfully.');
+              }
+              router.push(`/teams/${team.slug}/saml`);
+            },
           },
           connectionList: {
             cols: ['provider', 'type', 'status', 'actions'],
@@ -77,6 +88,10 @@ const TeamSSO = ({ teamFeatures }) => {
                   save: `/api/teams/${team.slug}/saml`,
                 },
                 classNames: CREATE_SSO_CSS,
+                successCallback() {
+                  toast.success('SAML connection created successfully.');
+                  router.push(`/teams/${team.slug}/saml`);
+                },
               },
               oidc: {
                 variant: 'basic',
