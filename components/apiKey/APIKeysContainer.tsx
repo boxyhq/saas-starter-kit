@@ -3,8 +3,9 @@ import { TeamTab } from '@/components/team';
 import useTeam from 'hooks/useTeam';
 import { useTranslation } from 'next-i18next';
 import APIKeys from './APIKeys';
+import { TeamFeature } from 'types';
 
-const APIKeysContainer = () => {
+const APIKeysContainer = ({ teamFeatures }: { teamFeatures: TeamFeature }) => {
   const { t } = useTranslation('common');
 
   const { isLoading, isError, team } = useTeam();
@@ -23,7 +24,7 @@ const APIKeysContainer = () => {
 
   return (
     <>
-      <TeamTab activeTab="api-keys" team={team} />
+      <TeamTab activeTab="api-keys" team={team} teamFeatures={teamFeatures} />
       <APIKeys team={team} />
     </>
   );

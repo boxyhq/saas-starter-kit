@@ -10,7 +10,7 @@ import { useState, type ReactElement, useEffect } from 'react';
 import { Button } from 'react-daisyui';
 import type { ComponentStatus } from 'react-daisyui/dist/types';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { ApiResponse, NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
 

@@ -1,4 +1,5 @@
 import env from '@/lib/env';
+import { ApiError } from '@/lib/errors';
 import jackson from '@/lib/jackson';
 import { sendAudit } from '@/lib/retraced';
 import { throwIfNoTeamAccess } from 'models/team';
@@ -12,6 +13,10 @@ export default async function handler(
   const { method } = req;
 
   try {
+    if (!env.teamFeatures.sso) {
+      throw new ApiError(404, 'Not Found');
+    }
+
     switch (method) {
       case 'GET':
         await handleGET(req, res);

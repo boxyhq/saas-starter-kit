@@ -75,6 +75,14 @@ const env = {
 
   darkModeEnabled: process.env.NEXT_PUBLIC_DARK_MODE === 'false' ? false : true,
 
+  teamFeatures: {
+    sso: process.env.FEATURE_TEAM_SSO === 'false' ? false : true,
+    dsync: process.env.FEATURE_TEAM_DSYNC === 'false' ? false : true,
+    webhook: process.env.FEATURE_TEAM_WEBHOOK === 'false' ? false : true,
+    apiKey: process.env.FEATURE_TEAM_API_KEY === 'false' ? false : true,
+    auditLog: process.env.FEATURE_TEAM_AUDIT_LOG === 'false' ? false : true,
+  },
+
   recaptcha: {
     siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
     secretKey: process.env.RECAPTCHA_SECRET_KEY,
