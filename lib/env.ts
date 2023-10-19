@@ -82,6 +82,11 @@ const env = {
     apiKey: process.env.FEATURE_TEAM_API_KEY === 'false' ? false : true,
     auditLog: process.env.FEATURE_TEAM_AUDIT_LOG === 'false' ? false : true,
   },
+
+  recaptcha: {
+    siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+    secretKey: process.env.RECAPTCHA_SECRET_KEY,
+  },
 };
 
 export default env;
