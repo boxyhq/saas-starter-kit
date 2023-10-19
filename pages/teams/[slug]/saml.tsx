@@ -11,11 +11,13 @@ import env from '@/lib/env';
 const CREATE_SSO_CSS = {
   input: `${styles['sdk-input']} input input-bordered`,
   button: { ctoa: 'btn-primary' },
+  textarea: styles['sdk-input'],
 };
 
 const EDIT_SSO_CSS = {
   button: { ctoa: 'btn-primary', destructive: 'btn-error' },
   input: `${styles['sdk-input']} input input-bordered`,
+  textarea: styles['sdk-input'],
   confirmationPrompt: {
     button: {
       ctoa: 'btn-md',
