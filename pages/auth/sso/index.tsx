@@ -1,5 +1,5 @@
 import { AuthLayout } from '@/components/layouts';
-import { InputWithLabel } from '@/components/shared';
+import { InputWithLabel, Loading } from '@/components/shared';
 import env from '@/lib/env';
 import { useFormik } from 'formik';
 import { GetServerSidePropsContext } from 'next';
@@ -47,11 +47,11 @@ const SSO: NextPageWithLayout = () => {
   });
 
   if (status === 'loading') {
-    return null;
+    return <Loading />;
   }
 
   if (status === 'authenticated') {
-    router.push('/dashboard');
+    router.push(env.redirectIfAuthenticated);
   }
 
   return (
@@ -75,7 +75,7 @@ const SSO: NextPageWithLayout = () => {
               loading={formik.isSubmitting}
               active={formik.dirty}
               fullWidth
-              size='md'
+              size="md"
             >
               {t('continue-with-saml-sso')}
             </Button>

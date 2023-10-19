@@ -54,8 +54,6 @@ const APIKeys = ({ team }: APIKeysProps) => {
 
   const apiKeys = data?.data ?? [];
 
-  console.log({ createModalVisible });
-
   return (
     <WithLoadingAndError isLoading={isLoading} error={error}>
       <div className="space-y-3">

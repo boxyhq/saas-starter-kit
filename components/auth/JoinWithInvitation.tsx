@@ -1,5 +1,5 @@
 import { Error, InputWithLabel, Loading } from '@/components/shared';
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, passwordPolicies } from '@/lib/common';
 import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
 import useInvitation from 'hooks/useInvitation';
@@ -9,18 +9,19 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
+import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
+import { useState } from 'react';
+import AgreeMessage from './AgreeMessage';
 
-const JoinWithInvitation = ({
-  inviteToken,
-  next,
-}: {
-  inviteToken: string;
-  next: string;
-}) => {
+const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
-
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const { isLoading, isError, invitation } = useInvitation(inviteToken);
+
+  const handlePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -31,7 +32,7 @@ const JoinWithInvitation = ({
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
-      password: Yup.string().required().min(7),
+      password: Yup.string().required().min(passwordPolicies.minLength),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -51,7 +52,8 @@ const JoinWithInvitation = ({
       formik.resetForm();
       toast.success(t('successfully-joined'));
 
-      return next ? router.push(next) : router.push('/auth/login');
+      router.push(`/auth/login?token=${inviteToken}`);
+      return;
     },
   });
 
@@ -83,27 +85,34 @@ const JoinWithInvitation = ({
         error={formik.touched.email ? formik.errors.email : undefined}
         onChange={formik.handleChange}
       />
-      <InputWithLabel
-        type="password"
-        label={t('password')}
-        name="password"
-        placeholder={t('password')}
-        value={formik.values.password}
-        error={formik.touched.password ? formik.errors.password : undefined}
-        onChange={formik.handleChange}
-      />
-      <Button
-        type="submit"
-        color="primary"
-        loading={formik.isSubmitting}
-        active={formik.dirty}
-        fullWidth
-        size="md"
-      >
-        {t('create-account')}
-      </Button>
-      <div>
-        <p className="text-sm">{t('sign-up-message')}</p>
+      <div className="relative flex">
+        <InputWithLabel
+          type={isPasswordVisible ? 'text' : 'password'}
+          label={t('password')}
+          name="password"
+          placeholder={t('password')}
+          value={formik.values.password}
+          error={formik.touched.password ? formik.errors.password : undefined}
+          onChange={formik.handleChange}
+        />
+        <TogglePasswordVisibility
+          isPasswordVisible={isPasswordVisible}
+          handlePasswordVisibility={handlePasswordVisibility}
+        />
+      </div>
+
+      <div className="mt-3 space-y-3">
+        <Button
+          type="submit"
+          color="primary"
+          loading={formik.isSubmitting}
+          active={formik.dirty}
+          fullWidth
+          size="md"
+        >
+          {t('create-account')}
+        </Button>
+        <AgreeMessage text="create-account" />
       </div>
     </form>
   );

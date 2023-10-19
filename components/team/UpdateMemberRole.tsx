@@ -35,7 +35,7 @@ const UpdateMemberRole = ({ team, member }: UpdateMemberRoleProps) => {
 
   return (
     <select
-      className="rounded-md text-sm"
+      className="select select-bordered select-sm rounded"
       onChange={(e) => updateRole(member, e.target.value)}
     >
       {availableRoles.map((role) => (

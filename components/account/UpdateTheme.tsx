@@ -2,18 +2,18 @@ import { ChevronUpDownIcon } from '@heroicons/react/24/outline';
 
 import { Card } from '@/components/shared';
 import useTheme from 'hooks/useTheme';
+import { useTranslation } from 'next-i18next';
 
 const UpdateTheme = () => {
   const { setTheme, themes, selectedTheme, applyTheme } = useTheme();
+  const { t } = useTranslation('common');
 
   return (
     <Card>
       <Card.Body>
         <Card.Header>
-          <Card.Title>Theme</Card.Title>
-          <Card.Description>
-            This will change the theme of the app.
-          </Card.Description>
+          <Card.Title>{t('theme')}</Card.Title>
+          <Card.Description>{t('change-theme')}</Card.Description>
         </Card.Header>
         <div className="dropdown w-60">
           <div

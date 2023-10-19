@@ -16,13 +16,15 @@ import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import env from '@/lib/env';
-import { getParsedCookie } from '@/lib/cookie';
 import type { NextPageWithLayout } from 'types';
 import { AuthLayout } from '@/components/layouts';
 import GithubButton from '@/components/auth/GithubButton';
 import GoogleButton from '@/components/auth/GoogleButton';
-import { Alert, InputWithLabel } from '@/components/shared';
+import { Alert, InputWithLabel, Loading } from '@/components/shared';
 import { authProviderEnabled } from '@/lib/auth';
+import Head from 'next/head';
+import TogglePasswordVisibility from '@/components/shared/TogglePasswordVisibility';
+import AgreeMessage from '@/components/auth/AgreeMessage';
 
 interface Message {
   text: string | null;
@@ -31,13 +33,22 @@ interface Message {
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ csrfToken, redirectAfterSignIn, authProviders }) => {
+> = ({ csrfToken, authProviders }) => {
   const router = useRouter();
   const { status } = useSession();
   const { t } = useTranslation('common');
   const [message, setMessage] = useState<Message>({ text: null, status: null });
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
-  const { error, success } = router.query as { error: string; success: string };
+  const { error, success, token } = router.query as {
+    error: string;
+    success: string;
+    token: string;
+  };
+
+  const handlePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
 
   useEffect(() => {
     if (error) {
@@ -47,15 +58,11 @@ const Login: NextPageWithLayout<
     if (success) {
       setMessage({ text: success, status: 'success' });
     }
-  }, [router, router.query]);
+  }, [error, success]);
 
-  if (status === 'authenticated') {
-    router.push('/');
-  }
-
-  if (status === 'authenticated') {
-    router.push(redirectAfterSignIn);
-  }
+  const redirectUrl = token
+    ? `/invitations/${token}`
+    : env.redirectIfAuthenticated;
 
   const formik = useFormik({
     initialValues: {
@@ -74,7 +81,7 @@ const Login: NextPageWithLayout<
         password,
         csrfToken,
         redirect: false,
-        callbackUrl: redirectAfterSignIn,
+        callbackUrl: redirectUrl,
       });
 
       formik.resetForm();
@@ -86,8 +93,19 @@ const Login: NextPageWithLayout<
     },
   });
 
+  if (status === 'loading') {
+    return <Loading />;
+  }
+
+  if (status === 'authenticated') {
+    router.push(redirectUrl);
+  }
+
   return (
     <>
+      <Head>
+        <title>{t('login-title')}</title>
+      </Head>
       {message.text && message.status && (
         <Alert status={message.status}>{t(message.text)}</Alert>
       )}
@@ -112,17 +130,23 @@ const Login: NextPageWithLayout<
                 error={formik.touched.email ? formik.errors.email : undefined}
                 onChange={formik.handleChange}
               />
-              <InputWithLabel
-                type="password"
-                label="Password"
-                name="password"
-                placeholder="Password"
-                value={formik.values.password}
-                error={
-                  formik.touched.password ? formik.errors.password : undefined
-                }
-                onChange={formik.handleChange}
-              />
+              <div className="relative flex">
+                <InputWithLabel
+                  type={isPasswordVisible ? 'text' : 'password'}
+                  label="Password"
+                  name="password"
+                  placeholder="Password"
+                  value={formik.values.password}
+                  error={
+                    formik.touched.password ? formik.errors.password : undefined
+                  }
+                  onChange={formik.handleChange}
+                />
+                <TogglePasswordVisibility
+                  isPasswordVisible={isPasswordVisible}
+                  handlePasswordVisibility={handlePasswordVisibility}
+                />
+              </div>
               <p className="text-sm text-gray-600 text-right">
                 <Link
                   href="/auth/forgot-password"
@@ -132,7 +156,7 @@ const Login: NextPageWithLayout<
                 </Link>
               </p>
             </div>
-            <div className="mt-4">
+            <div className="mt-3 space-y-3">
               <Button
                 type="submit"
                 color="primary"
@@ -143,6 +167,7 @@ const Login: NextPageWithLayout<
               >
                 {t('sign-in')}
               </Button>
+              <AgreeMessage text="sign-in" />
             </div>
           </form>
         )}
@@ -189,15 +214,12 @@ Login.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res, locale }: GetServerSidePropsContext = context;
-
-  const cookieParsed = getParsedCookie(req, res);
+  const { locale }: GetServerSidePropsContext = context;
 
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       csrfToken: await getCsrfToken(context),
-      redirectAfterSignIn: cookieParsed.url ?? env.redirectAfterSignIn,
       authProviders: authProviderEnabled(),
     },
   };

@@ -3,43 +3,52 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { type ReactElement, useEffect } from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Join from '@/components/auth/Join';
-import { getParsedCookie } from '@/lib/cookie';
 import type { NextPageWithLayout } from 'types';
 import { authProviderEnabled } from '@/lib/auth';
 import { AuthLayout } from '@/components/layouts';
-import { inferSSRProps } from '@/lib/inferSSRProps';
 import GithubButton from '@/components/auth/GithubButton';
 import GoogleButton from '@/components/auth/GoogleButton';
 import JoinWithInvitation from '@/components/auth/JoinWithInvitation';
+import Head from 'next/head';
+import { Loading } from '@/components/shared';
+import env from '@/lib/env';
 
-const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
-  inviteToken,
-  next,
-  authProviders,
-}) => {
+const Signup: NextPageWithLayout<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ authProviders }) => {
   const router = useRouter();
   const { status } = useSession();
   const { t } = useTranslation('common');
 
-  const { error } = router.query;
+  const { error, token } = router.query as {
+    error: string;
+    token: string;
+  };
 
   useEffect(() => {
     if (error) {
       toast.error(t(error));
     }
-  }, [router.query]);
+  }, [error]);
+
+  if (status === 'loading') {
+    return <Loading />;
+  }
 
   if (status === 'authenticated') {
-    router.push('/');
+    router.push(env.redirectIfAuthenticated);
   }
 
   return (
     <>
+      <Head>
+        <title>{t('sign-up-title')}</title>
+      </Head>
       <div className="rounded p-6 border">
         <div className="flex gap-2 flex-wrap">
           {authProviders.github && <GithubButton />}
@@ -50,13 +59,7 @@ const Signup: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
           authProviders.credentials && <div className="divider">or</div>}
 
         {authProviders.credentials && (
-          <>
-            {inviteToken ? (
-              <JoinWithInvitation inviteToken={inviteToken} next={next} />
-            ) : (
-              <Join />
-            )}
-          </>
+          <>{token ? <JoinWithInvitation inviteToken={token} /> : <Join />}</>
         )}
       </div>
       <p className="text-center text-sm text-gray-600">
@@ -86,15 +89,11 @@ Signup.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res, locale }: GetServerSidePropsContext = context;
-
-  const cookieParsed = getParsedCookie(req, res);
+  const { locale }: GetServerSidePropsContext = context;
 
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
-      inviteToken: cookieParsed.token,
-      next: cookieParsed.url ?? '/auth/login',
       authProviders: authProviderEnabled(),
     },
   };

@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { InputWithLabel } from '@/components/shared';
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, passwordPolicies } from '@/lib/common';
 import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
@@ -8,10 +9,17 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
+import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
+import AgreeMessage from './AgreeMessage';
 
 const Join = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+
+  const handlePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -23,7 +31,7 @@ const Join = () => {
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required().email(),
-      password: Yup.string().required().min(8),
+      password: Yup.string().required().min(passwordPolicies.minLength),
       team: Yup.string().required().min(3),
     }),
     onSubmit: async (values) => {
@@ -83,15 +91,21 @@ const Join = () => {
           error={formik.touched.email ? formik.errors.email : undefined}
           onChange={formik.handleChange}
         />
-        <InputWithLabel
-          type="password"
-          label={t('password')}
-          name="password"
-          placeholder={t('password')}
-          value={formik.values.password}
-          error={formik.touched.password ? formik.errors.password : undefined}
-          onChange={formik.handleChange}
-        />
+        <div className="relative flex">
+          <InputWithLabel
+            type={isPasswordVisible ? 'text' : 'password'}
+            label={t('password')}
+            name="password"
+            placeholder={t('password')}
+            value={formik.values.password}
+            error={formik.touched.password ? formik.errors.password : undefined}
+            onChange={formik.handleChange}
+          />
+          <TogglePasswordVisibility
+            isPasswordVisible={isPasswordVisible}
+            handlePasswordVisibility={handlePasswordVisibility}
+          />
+        </div>
       </div>
       <div className="mt-3 space-y-3">
         <Button
@@ -104,7 +118,7 @@ const Join = () => {
         >
           {t('create-account')}
         </Button>
-        <p className="text-sm">{t('sign-up-message')}</p>
+        <AgreeMessage text="create-account" />
       </div>
     </form>
   );

@@ -20,7 +20,10 @@ const PricingSection = () => {
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {plans.map((plan, index) => {
               return (
-                <Card key={`plan-${index}`} className="rounded-md">
+                <Card
+                  key={`plan-${index}`}
+                  className="rounded-md dark:border-gray-200 border border-gray-300"
+                >
                   <Card.Body>
                     <Card.Title tag="h2">
                       {plan.currency} {plan.amount} / {plan.duration}
@@ -28,21 +31,26 @@ const PricingSection = () => {
                     <p>{plan.description}</p>
                     <div className="mt-5">
                       <ul className="flex flex-col space-y-2">
-                        {plan.benefits.map((benefit: string, itemIndex: number) => {
-                          return (
-                            <li key={`plan-${index}-benefit-${itemIndex}`} className="flex items-center">
-                              <CheckIcon className="h-5 w-5" />
-                              <span className="ml-1">{benefit}</span>
-                            </li>
-                          );
-                        })}
+                        {plan.benefits.map(
+                          (benefit: string, itemIndex: number) => {
+                            return (
+                              <li
+                                key={`plan-${index}-benefit-${itemIndex}`}
+                                className="flex items-center"
+                              >
+                                <CheckIcon className="h-5 w-5" />
+                                <span className="ml-1">{benefit}</span>
+                              </li>
+                            );
+                          }
+                        )}
                       </ul>
                     </div>
                   </Card.Body>
-                  <Card.Actions className="justify-center">
+                  <Card.Actions className="justify-center m-2">
                     <Button
                       color="primary"
-                      className="w-full rounded-md"
+                      className="md:w-full w-3/4 rounded-md"
                       size="md"
                     >
                       {t('buy-now')}

@@ -4,6 +4,7 @@ import { sendAudit } from '@/lib/retraced';
 import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { ApiError } from '@/lib/errors';
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,6 +13,10 @@ export default async function handler(
   const { method } = req;
 
   try {
+    if (!env.teamFeatures.dsync) {
+      throw new ApiError(404, 'Not Found');
+    }
+
     switch (method) {
       case 'GET':
         await handleGET(req, res);

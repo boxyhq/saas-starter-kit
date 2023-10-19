@@ -5,9 +5,28 @@ import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import type { NextPageWithLayout } from 'types';
+import styles from 'styles/sdk-override.module.css';
+import env from '@/lib/env';
 
-const TeamSSO: NextPageWithLayout = () => {
+const CREATE_SSO_CSS = {
+  input: `${styles['sdk-input']} input input-bordered`,
+  button: { ctoa: 'btn-primary' },
+};
+
+const EDIT_SSO_CSS = {
+  button: { ctoa: 'btn-primary', destructive: 'btn-error' },
+  input: `${styles['sdk-input']} input input-bordered`,
+  confirmationPrompt: {
+    button: {
+      ctoa: 'btn-md',
+      cancel: 'btn-md btn-outline',
+    },
+  },
+  secretInput: 'input input-bordered',
+  section: 'mb-8',
+};
+
+const TeamSSO = ({ teamFeatures }) => {
   const { t } = useTranslation('common');
 
   const { isLoading, isError, team } = useTeam();
@@ -24,25 +43,28 @@ const TeamSSO: NextPageWithLayout = () => {
     return <Error message={t('team-not-found')} />;
   }
 
-
   return (
     <>
-      <TeamTab activeTab="saml" team={team} />
+      <TeamTab activeTab="saml" team={team} teamFeatures={teamFeatures} />
       <ConnectionsWrapper
         urls={{ spMetadata: '/well-known/saml-configuration' }}
         copyDoneCallback={() => {
           /** show toast */
         }}
+        classNames={{ button: { ctoa: 'btn-primary' } }}
         componentProps={{
-          editOIDCConnection: {},
+          editOIDCConnection: {
+            classNames: EDIT_SSO_CSS,
+          },
           editSAMLConnection: {
             urls: {
               patch: `/api/teams/${team.slug}/saml`,
               delete: `/api/teams/${team.slug}/saml`,
             },
+            classNames: EDIT_SSO_CSS,
           },
           connectionList: {
-            cols: ["provider", "type", "status", "actions"],
+            cols: ['provider', 'type', 'status', 'actions'],
             getConnectionsUrl: `/api/teams/${team.slug}/saml`,
           },
           createSSOConnection: {
@@ -52,12 +74,14 @@ const TeamSSO: NextPageWithLayout = () => {
                 urls: {
                   save: `/api/teams/${team.slug}/saml`,
                 },
+                classNames: CREATE_SSO_CSS,
               },
               oidc: {
                 variant: 'basic',
                 urls: {
                   save: '',
                 },
+                classNames: CREATE_SSO_CSS,
               },
             },
           },
@@ -70,9 +94,16 @@ const TeamSSO: NextPageWithLayout = () => {
 export async function getServerSideProps({
   locale,
 }: GetServerSidePropsContext) {
+  if (!env.teamFeatures.sso) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+      teamFeatures: env.teamFeatures,
     },
   };
 }

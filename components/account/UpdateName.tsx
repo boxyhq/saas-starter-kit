@@ -8,6 +8,7 @@ import type { ApiResponse } from 'types';
 import { Card } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import { User } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 
 const schema = Yup.object().shape({
   name: Yup.string().required(),
@@ -15,6 +16,7 @@ const schema = Yup.object().shape({
 
 const UpdateName = ({ user }: { user: User }) => {
   const { t } = useTranslation('common');
+  const { data: session, update } = useSession();
 
   const formik = useFormik({
     initialValues: {
@@ -35,6 +37,14 @@ const UpdateName = ({ user }: { user: User }) => {
         return;
       }
 
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          name: json.data.name,
+        },
+      });
+
       toast.success(t('successfully-updated'));
     },
   });
@@ -44,10 +54,8 @@ const UpdateName = ({ user }: { user: User }) => {
       <Card>
         <Card.Body>
           <Card.Header>
-            <Card.Title>Name</Card.Title>
-            <Card.Description>
-              This is how your name will appear in the interface.
-            </Card.Description>
+            <Card.Title>{t('name')}</Card.Title>
+            <Card.Description>{t('name-appearance')}</Card.Description>
           </Card.Header>
           <Input
             type="text"
