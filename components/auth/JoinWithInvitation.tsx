@@ -17,7 +17,7 @@ const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
-  const { isLoading, isError, invitation } = useInvitation(inviteToken);
+  const { isLoading, isError } = useInvitation(inviteToken);
 
   const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -26,12 +26,10 @@ const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
   const formik = useFormik({
     initialValues: {
       name: '',
-      email: invitation?.email,
       password: '',
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
-      email: Yup.string().required().email(),
       password: Yup.string().required().min(passwordPolicies.minLength),
     }),
     enableReinitialize: true,
@@ -39,7 +37,10 @@ const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
       const response = await fetch('/api/auth/join', {
         method: 'POST',
         headers: defaultHeaders,
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          inviteToken,
+        }),
       });
 
       const json = (await response.json()) as ApiResponse<User>;
@@ -76,15 +77,6 @@ const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
         error={formik.touched.name ? formik.errors.name : undefined}
         onChange={formik.handleChange}
       />
-      <InputWithLabel
-        type="email"
-        label={t('email')}
-        name="email"
-        placeholder={t('your-email')}
-        value={formik.values.email}
-        error={formik.touched.email ? formik.errors.email : undefined}
-        onChange={formik.handleChange}
-      />
       <div className="relative flex">
         <InputWithLabel
           type={isPasswordVisible ? 'text' : 'password'}
@@ -100,7 +92,6 @@ const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
           handlePasswordVisibility={handlePasswordVisibility}
         />
       </div>
-
       <div className="mt-3 space-y-3">
         <Button
           type="submit"
