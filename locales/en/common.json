@@ -29,7 +29,7 @@
   "successfully-updated": "Changes saved successfully.",
   "all-teams": "All Teams",
   "team-invite": "is inviting you to join their team.",
-  "successfully-joined": "You have successfully joined the team.",
+  "successfully-joined": "You have successfully created your account.",
   "invitation-sent": "Invitation sent!",
   "invitation-deleted": "Invitation deleted",
   "send-invite": "Send Invite",
@@ -217,5 +217,6 @@
   "change-theme": "This will change the theme of the app.",
   "avatar": "Avatar",
   "custom-avatar": "Click on the avatar to upload a custom one from your files.",
-  "avatar-type": "Accepted file types: .png, .jpg. Max file size: 2MB."
+  "avatar-type": "Accepted file types: .png, .jpg. Max file size: 2MB.",
+  "confirm-your-email": "Please confirm your email address before you can continue."
 }

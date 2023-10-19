@@ -8,7 +8,7 @@ export const createUser = async (param: {
   name: string;
   email: string;
   password?: string;
-  emailVerified: Date | null;
+  emailVerified?: Date | null;
 }) => {
   const { name, email, password, emailVerified } = param;
 
@@ -17,7 +17,7 @@ export const createUser = async (param: {
       name,
       email,
       password: password ? password : '',
-      emailVerified,
+      emailVerified: emailVerified ? emailVerified : null,
     },
   });
 };

@@ -1,9 +1,4 @@
-import {
-  Error,
-  InputWithLabel,
-  Loading,
-  WithLoadingAndError,
-} from '@/components/shared';
+import { InputWithLabel, WithLoadingAndError } from '@/components/shared';
 import { defaultHeaders, passwordPolicies } from '@/lib/common';
 import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
