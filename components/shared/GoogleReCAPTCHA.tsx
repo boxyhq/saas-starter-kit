@@ -3,12 +3,11 @@ import env from '@/lib/env';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 interface Props {
+  recaptchaRef: React.RefObject<ReCAPTCHA>;
   onChange: (token: string) => void;
 }
 
-const GoogleReCAPTCHA = ({ onChange }: Props) => {
-  const ref = React.createRef();
-
+const GoogleReCAPTCHA = ({ recaptchaRef, onChange }: Props) => {
   if (!env.recaptcha.siteKey) {
     return null;
   }
@@ -16,7 +15,7 @@ const GoogleReCAPTCHA = ({ onChange }: Props) => {
   return (
     <div className="pt-4">
       <ReCAPTCHA
-        ref={ref}
+        ref={recaptchaRef}
         onChange={onChange}
         sitekey={env.recaptcha.siteKey}
       />

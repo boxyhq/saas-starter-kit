@@ -78,7 +78,7 @@ const env = {
   recaptcha: {
     siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
     secretKey: process.env.RECAPTCHA_SECRET_KEY,
-  }
+  },
 };
 
 export default env;

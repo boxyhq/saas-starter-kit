@@ -12,12 +12,14 @@ import * as Yup from 'yup';
 import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
 import AgreeMessage from './AgreeMessage';
 import GoogleReCAPTCHA from '../shared/GoogleReCAPTCHA';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const Join = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
-  const [recaptchaToken, setRecaptchaToken] = useState<string>('');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+  const [recaptchaToken, setRecaptchaToken] = useState<string>('');
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -50,6 +52,8 @@ const Join = () => {
         User & { confirmEmail: boolean }
       >;
 
+      recaptchaRef.current?.reset();
+
       if (!response.ok) {
         toast.error(json.error.message);
         return;
@@ -65,8 +69,6 @@ const Join = () => {
       }
     },
   });
-
-  console.log({ recaptchaToken });
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -113,7 +115,10 @@ const Join = () => {
             handlePasswordVisibility={handlePasswordVisibility}
           />
         </div>
-        <GoogleReCAPTCHA onChange={setRecaptchaToken} />
+        <GoogleReCAPTCHA
+          recaptchaRef={recaptchaRef}
+          onChange={setRecaptchaToken}
+        />
       </div>
       <div className="mt-3 space-y-3">
         <Button

@@ -15,6 +15,7 @@ import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import { isAuthProviderEnabled } from '@/lib/auth';
 import type { Provider } from 'next-auth/providers';
+import { validateRecaptcha } from '@/lib/recaptcha';
 
 const adapter = PrismaAdapter(prisma);
 
@@ -27,13 +28,16 @@ if (isAuthProviderEnabled('credentials')) {
       credentials: {
         email: { type: 'email' },
         password: { type: 'password' },
+        recaptchaToken: { type: 'text' },
       },
       async authorize(credentials) {
         if (!credentials) {
           throw new Error('no-credentials');
         }
 
-        const { email, password } = credentials;
+        const { email, password, recaptchaToken } = credentials;
+
+        await validateRecaptcha(recaptchaToken);
 
         if (!email || !password) {
           return null;
