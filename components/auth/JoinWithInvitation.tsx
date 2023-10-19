@@ -1,4 +1,9 @@
-import { Error, InputWithLabel, Loading } from '@/components/shared';
+import {
+  Error,
+  InputWithLabel,
+  Loading,
+  WithLoadingAndError,
+} from '@/components/shared';
 import { defaultHeaders, passwordPolicies } from '@/lib/common';
 import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
@@ -52,60 +57,52 @@ const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
 
       formik.resetForm();
       toast.success(t('successfully-joined'));
-
       router.push(`/auth/login?token=${inviteToken}`);
-      return;
     },
   });
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (isError) {
-    return <Error />;
-  }
-
   return (
-    <form className="space-y-3" onSubmit={formik.handleSubmit}>
-      <InputWithLabel
-        type="text"
-        label={t('name')}
-        name="name"
-        placeholder={t('your-name')}
-        value={formik.values.name}
-        error={formik.touched.name ? formik.errors.name : undefined}
-        onChange={formik.handleChange}
-      />
-      <div className="relative flex">
+    <WithLoadingAndError isLoading={isLoading} error={isError}>
+      <form className="space-y-3" onSubmit={formik.handleSubmit}>
         <InputWithLabel
-          type={isPasswordVisible ? 'text' : 'password'}
-          label={t('password')}
-          name="password"
-          placeholder={t('password')}
-          value={formik.values.password}
-          error={formik.touched.password ? formik.errors.password : undefined}
+          type="text"
+          label={t('name')}
+          name="name"
+          placeholder={t('your-name')}
+          value={formik.values.name}
+          error={formik.touched.name ? formik.errors.name : undefined}
           onChange={formik.handleChange}
         />
-        <TogglePasswordVisibility
-          isPasswordVisible={isPasswordVisible}
-          handlePasswordVisibility={handlePasswordVisibility}
-        />
-      </div>
-      <div className="mt-3 space-y-3">
-        <Button
-          type="submit"
-          color="primary"
-          loading={formik.isSubmitting}
-          active={formik.dirty}
-          fullWidth
-          size="md"
-        >
-          {t('create-account')}
-        </Button>
-        <AgreeMessage text="create-account" />
-      </div>
-    </form>
+        <div className="relative flex">
+          <InputWithLabel
+            type={isPasswordVisible ? 'text' : 'password'}
+            label={t('password')}
+            name="password"
+            placeholder={t('password')}
+            value={formik.values.password}
+            error={formik.touched.password ? formik.errors.password : undefined}
+            onChange={formik.handleChange}
+          />
+          <TogglePasswordVisibility
+            isPasswordVisible={isPasswordVisible}
+            handlePasswordVisibility={handlePasswordVisibility}
+          />
+        </div>
+        <div className="mt-3 space-y-3">
+          <Button
+            type="submit"
+            color="primary"
+            loading={formik.isSubmitting}
+            active={formik.dirty}
+            fullWidth
+            size="md"
+          >
+            {t('create-account')}
+          </Button>
+          <AgreeMessage text="create-account" />
+        </div>
+      </form>
+    </WithLoadingAndError>
   );
 };
 

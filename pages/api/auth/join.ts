@@ -9,6 +9,7 @@ import { createTeam, isTeamExists } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import { getInvitation } from 'models/invitation';
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,27 +38,33 @@ export default async function handler(
 
 // Signup the user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, password, team } = req.body;
+  const { name, email, password, team, inviteToken } = req.body;
 
-  const existingUser = await getUser({ email });
+  // If inviteToken is present, use the email from the invitation instead of the email in the request body (if present)
+  const emailToUse = inviteToken
+    ? (await getInvitation({ token: inviteToken })).email
+    : email;
 
-  if (existingUser) {
-    throw new ApiError(400, 'An user with this email already exists.');
-  }
-
-  validatePasswordPolicy(password);
-
-  if (env.disableNonBusinessEmailSignup && !isBusinessEmail(email)) {
+  if (env.disableNonBusinessEmailSignup && !isBusinessEmail(emailToUse)) {
     throw new ApiError(
       400,
       `We currently only accept work email addresses for sign-up. Please use your work email to create an account. If you don't have a work email, feel free to contact our support team for assistance.`
     );
   }
 
-  // Create a new team
-  if (team) {
-    const slug = slugify(team);
+  if (await getUser({ email: emailToUse })) {
+    throw new ApiError(400, 'An user with this email already exists.');
+  }
 
+  validatePasswordPolicy(password);
+
+  // Check if team name is available
+  if (!inviteToken) {
+    if (!team) {
+      throw new ApiError(400, 'A team name is required.');
+    }
+
+    const slug = slugify(team);
     const nameCollisions = await isTeamExists([{ name: team }, { slug }]);
 
     if (nameCollisions > 0) {
@@ -67,11 +74,14 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const user = await createUser({
     name,
-    email,
+    email: emailToUse,
     password: await hashPassword(password),
+    emailVerified: inviteToken ? new Date() : null,
   });
 
-  if (team) {
+  // Create team if user is not invited
+  // So we can create the team with the user as the owner
+  if (!inviteToken) {
     const slug = slugify(team);
 
     await createTeam({
@@ -82,12 +92,12 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Send account verification email
-  if (env.confirmEmail) {
+  if (env.confirmEmail && !user.emailVerified) {
     const verificationToken = await prisma.verificationToken.create({
       data: {
-        identifier: email,
+        identifier: user.email,
         token: generateToken(),
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 24 hours
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       },
     });
 

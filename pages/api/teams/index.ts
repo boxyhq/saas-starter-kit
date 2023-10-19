@@ -4,6 +4,7 @@ import { getSession } from '@/lib/session';
 import { createTeam, getTeams, isTeamExists } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import env from '@/lib/env';
 
 export default async function handler(
   req: NextApiRequest,
