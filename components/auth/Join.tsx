@@ -14,7 +14,11 @@ import AgreeMessage from './AgreeMessage';
 import GoogleReCAPTCHA from '../shared/GoogleReCAPTCHA';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-const Join = () => {
+interface JoinProps {
+  recaptchaSiteKey: string | null;
+}
+
+const Join = ({ recaptchaSiteKey }: JoinProps) => {
   const router = useRouter();
   const { t } = useTranslation('common');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
@@ -118,6 +122,7 @@ const Join = () => {
         <GoogleReCAPTCHA
           recaptchaRef={recaptchaRef}
           onChange={setRecaptchaToken}
+          siteKey={recaptchaSiteKey}
         />
       </div>
       <div className="mt-3 space-y-3">

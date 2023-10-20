@@ -35,7 +35,7 @@ interface Message {
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ csrfToken, authProviders }) => {
+> = ({ csrfToken, authProviders, recaptchaSiteKey }) => {
   const router = useRouter();
   const { status } = useSession();
   const { t } = useTranslation('common');
@@ -170,6 +170,7 @@ const Login: NextPageWithLayout<
               <GoogleReCAPTCHA
                 recaptchaRef={recaptchaRef}
                 onChange={setRecaptchaToken}
+                siteKey={recaptchaSiteKey}
               />
             </div>
             <div className="mt-3 space-y-3">
@@ -237,6 +238,7 @@ export const getServerSideProps = async (
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       csrfToken: await getCsrfToken(context),
       authProviders: authProviderEnabled(),
+      recaptchaSiteKey: env.recaptcha.siteKey,
     },
   };
 };
