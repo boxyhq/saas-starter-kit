@@ -13,6 +13,7 @@ import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
+import Head from 'next/head';
 
 const SSO: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
@@ -56,6 +57,9 @@ const SSO: NextPageWithLayout = () => {
 
   return (
     <>
+      <Head>
+        <title>Sign in with SAML SSO</title>
+      </Head>
       <div className="rounded p-6 border">
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">
