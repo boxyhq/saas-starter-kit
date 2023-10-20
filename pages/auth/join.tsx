@@ -20,7 +20,7 @@ import env from '@/lib/env';
 
 const Signup: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ authProviders }) => {
+> = ({ authProviders, recaptchaSiteKey }) => {
   const router = useRouter();
   const { status } = useSession();
   const { t } = useTranslation('common');
@@ -59,7 +59,16 @@ const Signup: NextPageWithLayout<
           authProviders.credentials && <div className="divider">or</div>}
 
         {authProviders.credentials && (
-          <>{token ? <JoinWithInvitation inviteToken={token} /> : <Join />}</>
+          <>
+            {token ? (
+              <JoinWithInvitation
+                inviteToken={token}
+                recaptchaSiteKey={recaptchaSiteKey}
+              />
+            ) : (
+              <Join recaptchaSiteKey={recaptchaSiteKey} />
+            )}
+          </>
         )}
       </div>
       <p className="text-center text-sm text-gray-600">
@@ -95,6 +104,7 @@ export const getServerSideProps = async (
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       authProviders: authProviderEnabled(),
+      recaptchaSiteKey: env.recaptcha.siteKey,
     },
   };
 };

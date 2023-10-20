@@ -84,8 +84,8 @@ const env = {
   },
 
   recaptcha: {
-    siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
-    secretKey: process.env.RECAPTCHA_SECRET_KEY,
+    siteKey: process.env.RECAPTCHA_SITE_KEY || null,
+    secretKey: process.env.RECAPTCHA_SECRET_KEY || null,
   },
 };
 

@@ -2,7 +2,10 @@ import { AuthLayout } from '@/components/layouts';
 import { InputWithLabel } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import { useFormik } from 'formik';
-import type { GetServerSidePropsContext } from 'next';
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
@@ -14,8 +17,11 @@ import type { ApiResponse, NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
 import GoogleReCAPTCHA from '@/components/shared/GoogleReCAPTCHA';
 import ReCAPTCHA from 'react-google-recaptcha';
+import env from '@/lib/env';
 
-const ForgotPassword: NextPageWithLayout = () => {
+const ForgotPassword: NextPageWithLayout<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ recaptchaSiteKey }) => {
   const { t } = useTranslation('common');
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [recaptchaToken, setRecaptchaToken] = useState<string>('');
@@ -71,6 +77,7 @@ const ForgotPassword: NextPageWithLayout = () => {
             <GoogleReCAPTCHA
               recaptchaRef={recaptchaRef}
               onChange={setRecaptchaToken}
+              siteKey={recaptchaSiteKey}
             />
           </div>
           <div className="mt-4">
@@ -112,6 +119,7 @@ export const getServerSideProps = async (
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+      recaptchaSiteKey: env.recaptcha.siteKey,
     },
   };
 };

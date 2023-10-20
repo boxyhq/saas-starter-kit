@@ -15,7 +15,15 @@ import AgreeMessage from './AgreeMessage';
 import GoogleReCAPTCHA from '../shared/GoogleReCAPTCHA';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
+interface JoinWithInvitationProps {
+  inviteToken: string;
+  recaptchaSiteKey: string | null;
+}
+
+const JoinWithInvitation = ({
+  inviteToken,
+  recaptchaSiteKey,
+}: JoinWithInvitationProps) => {
   const router = useRouter();
   const { t } = useTranslation('common');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
@@ -111,6 +119,7 @@ const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
       <GoogleReCAPTCHA
         recaptchaRef={recaptchaRef}
         onChange={setRecaptchaToken}
+        siteKey={recaptchaSiteKey}
       />
       <div className="mt-3 space-y-3">
         <Button
