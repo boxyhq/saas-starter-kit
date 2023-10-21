@@ -89,8 +89,8 @@ const CreateAPIKeyForm = ({
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder='My API Key'
-          className='text-sm'
+          placeholder="My API Key"
+          className="text-sm"
         />
       </Modal.Body>
       <Modal.Footer>
@@ -119,7 +119,11 @@ const DisplayAPIKey = ({ apiKey, closeModal }: DisplayAPIKeyProps) => {
       <Modal.Header>{t('new-api-key')}</Modal.Header>
       <Modal.Description>{t('new-api-warning')}</Modal.Description>
       <Modal.Body>
-        <InputWithCopyButton label={t('api-key')} value={apiKey} className='text-sm' />
+        <InputWithCopyButton
+          label={t('api-key')}
+          value={apiKey}
+          className="text-sm"
+        />
       </Modal.Body>
       <Modal.Footer>
         <Button type="button" variant="outline" onClick={closeModal} size="md">
