@@ -78,7 +78,7 @@ const TeamSSO = ({ teamFeatures }) => {
           },
           connectionList: {
             cols: ['provider', 'type', 'status', 'actions'],
-            getConnectionsUrl: `/api/teams/${team.slug}/saml`,
+            urls: { get: `/api/teams/${team.slug}/saml` },
           },
           createSSOConnection: {
             componentProps: {
