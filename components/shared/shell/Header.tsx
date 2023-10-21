@@ -17,8 +17,8 @@ interface HeaderProps {
 }
 
 const Header = ({ setSidebarOpen }: HeaderProps) => {
+  const { toggleTheme } = useTheme();
   const { status, data } = useSession();
-  const { toggleTheme, selectedTheme } = useTheme();
 
   if (status === 'loading' || !data) {
     return null;
