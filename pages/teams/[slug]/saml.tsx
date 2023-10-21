@@ -60,6 +60,17 @@ const TeamSSO = ({ teamFeatures }) => {
         componentProps={{
           editOIDCConnection: {
             classNames: EDIT_SSO_CSS,
+            successCallback({ operation }) {
+              if (operation === 'UPDATE') {
+                toast.success('OIDC connection updated successfully.');
+              } else if (operation === 'DELETE') {
+                toast.success('OIDC connection deleted successfully.');
+              }
+              router.push(`/teams/${team.slug}/saml`);
+            },
+            errorCallback: (message) => {
+              toast.error(message);
+            },
           },
           editSAMLConnection: {
             urls: {
@@ -75,6 +86,9 @@ const TeamSSO = ({ teamFeatures }) => {
               }
               router.push(`/teams/${team.slug}/saml`);
             },
+            errorCallback: (message) => {
+              toast.error(message);
+            },
           },
           connectionList: {
             cols: ['provider', 'type', 'status', 'actions'],
@@ -88,6 +102,9 @@ const TeamSSO = ({ teamFeatures }) => {
                   save: `/api/teams/${team.slug}/saml`,
                 },
                 classNames: CREATE_SSO_CSS,
+                errorCallback: (message) => {
+                  toast.error(message);
+                },
                 successCallback() {
                   toast.success('SAML connection created successfully.');
                   router.push(`/teams/${team.slug}/saml`);
@@ -99,6 +116,13 @@ const TeamSSO = ({ teamFeatures }) => {
                   save: '',
                 },
                 classNames: CREATE_SSO_CSS,
+                errorCallback: (message) => {
+                  toast.error(message);
+                },
+                successCallback() {
+                  toast.success('OIDC connection created successfully.');
+                  router.push(`/teams/${team.slug}/saml`);
+                },
               },
             },
           },
