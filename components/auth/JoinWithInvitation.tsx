@@ -10,14 +10,26 @@ import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import AgreeMessage from './AgreeMessage';
+import GoogleReCAPTCHA from '../shared/GoogleReCAPTCHA';
+import ReCAPTCHA from 'react-google-recaptcha';
 
-const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
+interface JoinWithInvitationProps {
+  inviteToken: string;
+  recaptchaSiteKey: string | null;
+}
+
+const JoinWithInvitation = ({
+  inviteToken,
+  recaptchaSiteKey,
+}: JoinWithInvitationProps) => {
   const router = useRouter();
   const { t } = useTranslation('common');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const { isLoading, isError, invitation } = useInvitation(inviteToken);
+  const [recaptchaToken, setRecaptchaToken] = useState<string>('');
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -39,10 +51,15 @@ const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
       const response = await fetch('/api/auth/join', {
         method: 'POST',
         headers: defaultHeaders,
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          recaptchaToken,
+        }),
       });
 
       const json = (await response.json()) as ApiResponse<User>;
+
+      recaptchaRef.current?.reset();
 
       if (!response.ok) {
         toast.error(json.error.message);
@@ -51,7 +68,6 @@ const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
 
       formik.resetForm();
       toast.success(t('successfully-joined'));
-
       router.push(`/auth/login?token=${inviteToken}`);
       return;
     },
@@ -100,7 +116,11 @@ const JoinWithInvitation = ({ inviteToken }: { inviteToken: string }) => {
           handlePasswordVisibility={handlePasswordVisibility}
         />
       </div>
-
+      <GoogleReCAPTCHA
+        recaptchaRef={recaptchaRef}
+        onChange={setRecaptchaToken}
+        siteKey={recaptchaSiteKey}
+      />
       <div className="mt-3 space-y-3">
         <Button
           type="submit"

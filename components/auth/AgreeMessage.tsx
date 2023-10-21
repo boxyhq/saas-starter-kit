@@ -5,7 +5,7 @@ const AgreeMessage = ({ text }) => {
   const { t } = useTranslation('common');
 
   return (
-    <p className="text-sm">
+    <p className="text-sm text-center">
       {t('agree-message-part', { button: t(text) })}{' '}
       <Link
         rel="noopener noreferrer"

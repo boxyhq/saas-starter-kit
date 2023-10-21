@@ -2,19 +2,29 @@ import { AuthLayout } from '@/components/layouts';
 import { InputWithLabel } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import { useFormik } from 'formik';
-import type { GetServerSidePropsContext } from 'next';
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import Link from 'next/link';
-import type { ReactElement } from 'react';
+import { useRef, type ReactElement, useState } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse, NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
+import GoogleReCAPTCHA from '@/components/shared/GoogleReCAPTCHA';
+import ReCAPTCHA from 'react-google-recaptcha';
+import env from '@/lib/env';
 
-const ForgotPassword: NextPageWithLayout = () => {
+const ForgotPassword: NextPageWithLayout<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ recaptchaSiteKey }) => {
   const { t } = useTranslation('common');
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [recaptchaToken, setRecaptchaToken] = useState<string>('');
 
   const formik = useFormik({
     initialValues: {
@@ -27,17 +37,22 @@ const ForgotPassword: NextPageWithLayout = () => {
       const response = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: defaultHeaders,
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          recaptchaToken,
+        }),
       });
 
       const json = (await response.json()) as ApiResponse;
+
+      formik.resetForm();
+      recaptchaRef.current?.reset();
 
       if (!response.ok) {
         toast.error(json.error.message);
         return;
       }
 
-      formik.resetForm();
       toast.success(t('password-reset-link-sent'));
     },
   });
@@ -58,6 +73,11 @@ const ForgotPassword: NextPageWithLayout = () => {
               value={formik.values.email}
               error={formik.touched.email ? formik.errors.email : undefined}
               onChange={formik.handleChange}
+            />
+            <GoogleReCAPTCHA
+              recaptchaRef={recaptchaRef}
+              onChange={setRecaptchaToken}
+              siteKey={recaptchaSiteKey}
             />
           </div>
           <div className="mt-4">
@@ -99,6 +119,7 @@ export const getServerSideProps = async (
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+      recaptchaSiteKey: env.recaptcha.siteKey,
     },
   };
 };

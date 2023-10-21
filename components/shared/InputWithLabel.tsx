@@ -1,7 +1,7 @@
 import { Input, InputProps } from 'react-daisyui';
 
 interface InputWithLabelProps extends InputProps {
-  label: string;
+  label: string | React.ReactNode;
   error?: string;
   descriptionText?: string;
 }
@@ -17,9 +17,13 @@ const InputWithLabel = (props: InputWithLabelProps) => {
 
   return (
     <div className="form-control w-full">
-      <label className="label">
-        <span className="label-text">{label}</span>
-      </label>
+      {typeof label === 'string' ? (
+        <label className="label">
+          <span className="label-text">{label}</span>
+        </label>
+      ) : (
+        label
+      )}
       <Input className={classes.join(' ')} {...rest} />
       {(error || descriptionText) && (
         <label className="label">
