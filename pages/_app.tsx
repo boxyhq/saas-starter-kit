@@ -13,7 +13,7 @@ import { useEffect } from 'react';
 import env from '@/lib/env';
 import { Theme, applyTheme } from '@/lib/theme';
 import { Themer } from '@boxyhq/react-ui/shared';
-import AppShell from '@/components/shared/shell/AppShell';
+import { AccountLayout } from '@/components/layouts';
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const { session, ...props } = pageProps;
@@ -34,7 +34,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }, []);
 
   const getLayout =
-    Component.getLayout || ((page) => <AppShell>{page}</AppShell>);
+    Component.getLayout || ((page) => <AccountLayout>{page}</AccountLayout>);
 
   return (
     <>
