@@ -27,7 +27,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
   const user = data.user;
 
   return (
-    <div className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b px-4 sm:gap-x-6 sm:px-6 lg:px-8">
+    <div className="sticky top-0 z-50 flex h-14 shrink-0 items-center border-b px-4 sm:gap-x-6 sm:px-6 lg:px-8 bg-white">
       <button
         type="button"
         className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
