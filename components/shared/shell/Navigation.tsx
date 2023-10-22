@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { TeamNavigation, UserNavigation } from './NavigationItems';
+import TeamNavigation from './TeamNavigation';
+import UserNavigation from './UserNavigation';
 
 const Navigation = () => {
   const { asPath, isReady, query } = useRouter();

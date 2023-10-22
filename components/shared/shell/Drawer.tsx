@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React from 'react';
 import TeamDropdown from '../TeamDropdown';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -16,7 +15,7 @@ const Drawer = ({ sidebarOpen, setSidebarOpen }: DrawerProps) => {
       {sidebarOpen && (
         <div className="relative z-50 lg:hidden">
           <div className="fixed inset-0 bg-gray-600/80" />
-          <div className={classNames('fixed inset-0 flex')}>
+          <div className="fixed inset-0 flex">
             <div className="relative mr-16 flex w-full max-w-xs flex-1">
               <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
                 <button
