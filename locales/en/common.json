@@ -177,12 +177,12 @@
   "avatar": "Avatar",
   "custom-avatar": "Click on the avatar to upload a custom one from your files.",
   "avatar-type": "Accepted file types: .png, .jpg. Max file size: 2MB.",
-  "pending-invitations":"Pending Invitations",
-  "description-invitations":"Invitations that have been sent to users but have not yet been accepted.",
-  "require_email":"Email is a required field",
-  "required_role":"Role is required",
-  "team_listed":"Your teams are listed here.",
-  "team_settings":"Team Settings",
-  "team_settings_config":"Team settings and configuration.",
-  "resend_link":"Resend Link"
+  "pending-invitations": "Pending Invitations",
+  "description-invitations": "Invitations that have been sent to users but have not yet been accepted.",
+  "require_email": "Email is a required field",
+  "required_role": "Role is required",
+  "team_listed": "Your teams are listed here.",
+  "team_settings": "Team Settings",
+  "team_settings_config": "Team settings and configuration.",
+  "resend_link": "Resend Link"
 }
