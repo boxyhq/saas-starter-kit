@@ -71,7 +71,7 @@
     "@types/react": "18.2.31",
     "@types/uuid": "9.0.6",
     "@typescript-eslint/eslint-plugin": "6.9.0",
-    "@typescript-eslint/parser": "6.8.0",
+    "@typescript-eslint/parser": "6.9.0",
     "daisyui": "2.52.0",
     "eslint": "8.52.0",
     "eslint-config-next": "13.5.6",
