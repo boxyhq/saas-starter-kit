@@ -21,6 +21,8 @@ const InviteMember = ({
 }) => {
   const { mutateInvitation } = useInvitations(team.slug);
   const { t } = useTranslation('common');
+  const require_email: string = t('require_email');
+  const required_role: string = t('required_role');
 
   const formik = useFormik({
     initialValues: {
@@ -28,9 +30,9 @@ const InviteMember = ({
       role: availableRoles[0].id,
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string().email().required('Email is a required field'), // Added error message
+      email: Yup.string().email().required(require_email), // Added error message
       role: Yup.string()
-        .required('Role is required')
+        .required(required_role)
         .oneOf(availableRoles.map((r) => r.id)),
     }),
     onSubmit: async (values) => {
