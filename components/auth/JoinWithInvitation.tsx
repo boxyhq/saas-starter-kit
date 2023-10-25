@@ -1,4 +1,9 @@
-import { InputWithLabel, WithLoadingAndError } from '@/components/shared';
+import {
+  Error,
+  InputWithLabel,
+  Loading,
+  WithLoadingAndError,
+} from '@/components/shared';
 import { defaultHeaders, passwordPolicies } from '@/lib/common';
 import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
@@ -27,7 +32,7 @@ const JoinWithInvitation = ({
   const router = useRouter();
   const { t } = useTranslation('common');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
-  const { isLoading, isError, invitation } = useInvitation(inviteToken);
+  const { isLoading, error, invitation } = useInvitation();
   const [recaptchaToken, setRecaptchaToken] = useState<string>('');
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
@@ -52,6 +57,7 @@ const JoinWithInvitation = ({
         body: JSON.stringify({
           ...values,
           recaptchaToken,
+          inviteToken,
         }),
       });
 
@@ -70,9 +76,16 @@ const JoinWithInvitation = ({
     },
   });
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error || !invitation) {
+    return <Error message={error.message} />;
+  }
+
   return (
-    <WithLoadingAndError isLoading={isLoading} error={isError}>
-      
+    <WithLoadingAndError isLoading={isLoading} error={error}>
       <form className="space-y-3" onSubmit={formik.handleSubmit}>
         <InputWithLabel
           type="text"
@@ -82,6 +95,12 @@ const JoinWithInvitation = ({
           value={formik.values.name}
           error={formik.touched.name ? formik.errors.name : undefined}
           onChange={formik.handleChange}
+        />
+        <InputWithLabel
+          type="email"
+          label={t('email')}
+          value={invitation.email}
+          disabled
         />
         <div className="relative flex">
           <InputWithLabel

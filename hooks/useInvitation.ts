@@ -1,18 +1,22 @@
-import fetcher from '@/lib/fetcher';
-import { Invitation, Team } from '@prisma/client';
 import useSWR from 'swr';
+import fetcher from '@/lib/fetcher';
+import { useRouter } from 'next/router';
 import type { ApiResponse } from 'types';
+import { Invitation, Team } from '@prisma/client';
 
-const useInvitation = (token: string) => {
-  const url = `/api/invitations/${token}`;
+type Response = ApiResponse<Invitation & { team: Team }>;
 
-  const { data, error, isLoading } = useSWR<
-    ApiResponse<Invitation & { team: Team }>
-  >(token ? url : null, fetcher);
+const useInvitation = (token?: string) => {
+  const { query, isReady } = useRouter();
+
+  const { data, error, isLoading } = useSWR<Response>(() => {
+    const inviteToken = token || (isReady ? query.token : null);
+    return inviteToken ? `/api/invitations/${inviteToken}` : null;
+  }, fetcher);
 
   return {
     isLoading,
-    isError: error,
+    error,
     invitation: data?.data,
   };
 };

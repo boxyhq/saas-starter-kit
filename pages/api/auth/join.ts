@@ -43,7 +43,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await validateRecaptcha(recaptchaToken);
 
-  // If inviteToken is present, use the email from the invitation instead of the email in the request body (if present)
+  // If inviteToken is present, use the email from the invitation instead of the email in the request body
   const emailToUse = inviteToken
     ? (await getInvitation({ token: inviteToken })).email
     : email;
@@ -112,7 +112,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   res.status(201).json({
     data: {
       user,
-      confirmEmail: env.confirmEmail,
+      confirmEmail: env.confirmEmail && !user.emailVerified,
     },
   });
 };
