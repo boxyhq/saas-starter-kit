@@ -28,9 +28,9 @@ const InviteMember = ({
       role: availableRoles[0].id,
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string().email().required('Email is a required field'), // Added error message
+      email: Yup.string().email().required(t('require-email')), // Added error message
       role: Yup.string()
-        .required('Role is required')
+        .required(t('required-role'))
         .oneOf(availableRoles.map((r) => r.id)),
     }),
     onSubmit: async (values) => {

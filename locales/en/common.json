@@ -176,5 +176,13 @@
   "change-theme": "This will change the theme of the app.",
   "avatar": "Avatar",
   "custom-avatar": "Click on the avatar to upload a custom one from your files.",
-  "avatar-type": "Accepted file types: .png, .jpg. Max file size: 2MB."
+  "avatar-type": "Accepted file types: .png, .jpg. Max file size: 2MB.",
+  "pending-invitations": "Pending Invitations",
+  "description-invitations": "Invitations that have been sent to users but have not yet been accepted.",
+  "require-email": "Email is a required field",
+  "required-role": "Role is required",
+  "team-listed": "Your teams are listed here.",
+  "team-settings": "Team Settings",
+  "team-settings-config": "Team settings and configuration.",
+  "resend-link": "Resend Link"
 }
