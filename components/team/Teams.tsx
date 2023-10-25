@@ -55,7 +55,7 @@ const Teams = () => {
               {t('all-teams')}
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Your teams are listed here.
+              {t('team-listed')}
             </p>
           </div>
           <Button
