@@ -76,6 +76,7 @@ const TeamSSO = ({ teamFeatures }) => {
             urls: {
               patch: `/api/teams/${team.slug}/saml`,
               delete: `/api/teams/${team.slug}/saml`,
+              get: `/api/teams/${team.slug}/saml`,
             },
             classNames: EDIT_SSO_CSS,
             successCallback({ operation }) {
