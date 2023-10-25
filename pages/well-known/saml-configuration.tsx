@@ -18,10 +18,10 @@ const SPConfig: NextPageWithLayout<
         <div className="w-full rounded border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800 md:w-1/2">
           <div className="flex flex-col space-y-3">
             <h2 className="font-bold text-gray-700 md:text-xl">
-              {t('sp_saml_config_title')}
+              {t('sp-saml-config-title')}
             </h2>
             <p className="text-sm leading-6 text-gray-800">
-              {t('sp_saml_config_description')}
+              {t('sp-saml-config-description')}
             </p>
             <p className="text-sm leading-6 text-gray-600">
               Refer to our&nbsp;
@@ -40,13 +40,13 @@ const SPConfig: NextPageWithLayout<
             <div className="form-control w-full">
               <InputWithCopyButton
                 value={config.acsUrl}
-                label={t('sp_acs_url')}
+                label={t('sp-acs-url')}
               />
             </div>
             <div className="form-control w-full">
               <InputWithCopyButton
                 value={config.entityId}
-                label={t('sp_entity_id')}
+                label={t('sp-entity-id')}
               />
             </div>
             <div className="form-control w-full">
@@ -60,7 +60,7 @@ const SPConfig: NextPageWithLayout<
             <div className="form-control w-full">
               <div className="flex flex-col">
                 <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">
-                  {t('assertion_signature')}
+                  {t('assertion-signature')}
                 </label>
                 <p className="text-sm">{config.assertionSignature}</p>
               </div>
@@ -68,7 +68,7 @@ const SPConfig: NextPageWithLayout<
             <div className="form-control w-full">
               <div className="flex flex-col">
                 <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">
-                  {t('signature_algorithm')}
+                  {t('signature-algorithm')}
                 </label>
                 <p className="text-sm">{config.signatureAlgorithm}</p>
               </div>
@@ -76,7 +76,7 @@ const SPConfig: NextPageWithLayout<
             <div className="form-control w-full">
               <div className="flex flex-col">
                 <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">
-                  {t('assertion_encryption')}
+                  {t('assertion-encryption')}
                 </label>
                 <p className="text-sm">
                   If you want to encrypt the assertion, you can&nbsp;

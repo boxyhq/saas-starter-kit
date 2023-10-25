@@ -10,6 +10,7 @@ import { createUser, getUser } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { getInvitation } from 'models/invitation';
+import { validateRecaptcha } from '@/lib/recaptcha';
 
 export default async function handler(
   req: NextApiRequest,
@@ -38,7 +39,9 @@ export default async function handler(
 
 // Signup the user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, password, team, inviteToken } = req.body;
+  const { name, email, password, team, inviteToken, recaptchaToken } = req.body;
+
+  await validateRecaptcha(recaptchaToken);
 
   // If inviteToken is present, use the email from the invitation instead of the email in the request body (if present)
   const emailToUse = inviteToken

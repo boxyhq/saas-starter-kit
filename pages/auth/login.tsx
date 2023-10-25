@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import { Button } from 'react-daisyui';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { type ReactElement, useEffect, useState } from 'react';
+import React, { type ReactElement, useEffect, useState, useRef } from 'react';
 import type { ComponentStatus } from 'react-daisyui/dist/types';
 import { getCsrfToken, signIn, useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -25,6 +25,8 @@ import { authProviderEnabled } from '@/lib/auth';
 import Head from 'next/head';
 import TogglePasswordVisibility from '@/components/shared/TogglePasswordVisibility';
 import AgreeMessage from '@/components/auth/AgreeMessage';
+import GoogleReCAPTCHA from '@/components/shared/GoogleReCAPTCHA';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 interface Message {
   text: string | null;
@@ -33,12 +35,14 @@ interface Message {
 
 const Login: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ csrfToken, authProviders }) => {
+> = ({ csrfToken, authProviders, recaptchaSiteKey }) => {
   const router = useRouter();
   const { status } = useSession();
   const { t } = useTranslation('common');
+  const [recaptchaToken, setRecaptchaToken] = useState<string>('');
   const [message, setMessage] = useState<Message>({ text: null, status: null });
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const { error, success, token } = router.query as {
     error: string;
@@ -82,9 +86,11 @@ const Login: NextPageWithLayout<
         csrfToken,
         redirect: false,
         callbackUrl: redirectUrl,
+        recaptchaToken,
       });
 
       formik.resetForm();
+      recaptchaRef.current?.reset();
 
       if (!response?.ok) {
         toast.error(t(response?.error));
@@ -120,7 +126,7 @@ const Login: NextPageWithLayout<
 
         {authProviders.credentials && (
           <form onSubmit={formik.handleSubmit}>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <InputWithLabel
                 type="email"
                 label="Email"
@@ -133,10 +139,24 @@ const Login: NextPageWithLayout<
               <div className="relative flex">
                 <InputWithLabel
                   type={isPasswordVisible ? 'text' : 'password'}
-                  label="Password"
                   name="password"
                   placeholder="Password"
                   value={formik.values.password}
+                  label={
+                    <label className="label">
+                      <span className="label-text">Password</span>
+                      <span className="label-text-alt">
+                        <p className="text-sm text-gray-600">
+                          <Link
+                            href="/auth/forgot-password"
+                            className="text-primary hover:text-primary-focus"
+                          >
+                            {t('forgot-password')}
+                          </Link>
+                        </p>
+                      </span>
+                    </label>
+                  }
                   error={
                     formik.touched.password ? formik.errors.password : undefined
                   }
@@ -147,14 +167,11 @@ const Login: NextPageWithLayout<
                   handlePasswordVisibility={handlePasswordVisibility}
                 />
               </div>
-              <p className="text-sm text-gray-600 text-right">
-                <Link
-                  href="/auth/forgot-password"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
-                >
-                  {t('forgot-password')}
-                </Link>
-              </p>
+              <GoogleReCAPTCHA
+                recaptchaRef={recaptchaRef}
+                onChange={setRecaptchaToken}
+                siteKey={recaptchaSiteKey}
+              />
             </div>
             <div className="mt-3 space-y-3">
               <Button
@@ -221,6 +238,7 @@ export const getServerSideProps = async (
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       csrfToken: await getCsrfToken(context),
       authProviders: authProviderEnabled(),
+      recaptchaSiteKey: env.recaptcha.siteKey,
     },
   };
 };
