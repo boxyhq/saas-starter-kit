@@ -102,7 +102,7 @@ const Login: NextPageWithLayout<
           </Link>
         </div>
       </div>
-      <p className="text-center text-sm text-gray-600">
+      <p className="text-center text-sm text-gray-600 mt-3">
         {t('dont-have-an-account')}
         <Link
           href="/auth/join"

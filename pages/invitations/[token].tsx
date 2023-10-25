@@ -113,7 +113,7 @@ AcceptTeamInvitation.getLayout = function getLayout(page: ReactElement) {
   return (
     <AuthLayout
       heading="Accept team invite"
-      description="Check out the our website if you'd like to learn more before diving in."
+      // description="Check out the our website if you'd like to learn more before diving in."
     >
       {page}
     </AuthLayout>
@@ -126,20 +126,20 @@ export const getServerSideProps = async (
   const { req, res, query, locale }: GetServerSidePropsContext = context;
   const { token } = query;
 
-  setCookie(
-    'pending-invite',
-    {
-      token,
-      url: context.resolvedUrl,
-    },
-    {
-      req,
-      res,
-      maxAge: 60 * 6 * 24,
-      httpOnly: true,
-      sameSite: 'lax',
-    }
-  );
+  // setCookie(
+  //   'pending-invite',
+  //   {
+  //     token,
+  //     url: context.resolvedUrl,
+  //   },
+  //   {
+  //     req,
+  //     res,
+  //     maxAge: 60 * 6 * 24,
+  //     httpOnly: true,
+  //     sameSite: 'lax',
+  //   }
+  // );
 
   return {
     props: {

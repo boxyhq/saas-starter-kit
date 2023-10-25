@@ -71,7 +71,7 @@ const Signup: NextPageWithLayout<
           </>
         )}
       </div>
-      <p className="text-center text-sm text-gray-600">
+      <p className="text-center text-sm text-gray-600 mt-3">
         {t('already-have-an-account')}
         <Link
           href="/auth/login"
