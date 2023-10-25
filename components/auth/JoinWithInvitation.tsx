@@ -72,6 +72,7 @@ const JoinWithInvitation = ({
 
   return (
     <WithLoadingAndError isLoading={isLoading} error={isError}>
+      
       <form className="space-y-3" onSubmit={formik.handleSubmit}>
         <InputWithLabel
           type="text"
@@ -102,20 +103,7 @@ const JoinWithInvitation = ({
           onChange={setRecaptchaToken}
           siteKey={recaptchaSiteKey}
         />
-        <div className="mt-3 space-y-3">
-          <Button
-            type="submit"
-            color="primary"
-            loading={formik.isSubmitting}
-            active={formik.dirty}
-            fullWidth
-            size="md"
-          >
-            {t('create-account')}
-          </Button>
-          <AgreeMessage text="create-account" />
-        </div>
-        <div className="mt-3 space-y-3">
+        <div className="space-y-3">
           <Button
             type="submit"
             color="primary"
