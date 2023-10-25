@@ -21,8 +21,8 @@ const InviteMember = ({
 }) => {
   const { mutateInvitation } = useInvitations(team.slug);
   const { t } = useTranslation('common');
-  const require_email: string = t('require_email');
-  const required_role: string = t('required_role');
+  const require_email: string = t('require-email');
+  const required_role: string = t('required-role');
 
   const formik = useFormik({
     initialValues: {

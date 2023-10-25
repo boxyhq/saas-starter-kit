@@ -55,8 +55,8 @@ const TeamSettings = ({ team }: { team: Team }) => {
         <Card>
           <Card.Body>
             <Card.Header>
-              <Card.Title>{t('team_settings')}</Card.Title>
-              <Card.Description>{t('team_settings_config')}</Card.Description>
+              <Card.Title>{t('team-settings')}</Card.Title>
+              <Card.Description>{t('team-settings-config')}</Card.Description>
             </Card.Header>
             <div className="flex flex-col gap-4">
               <InputWithLabel

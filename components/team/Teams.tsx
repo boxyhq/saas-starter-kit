@@ -55,7 +55,7 @@ const Teams = () => {
               {t('all-teams')}
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              {t('team_listed')}
+              {t('team-listed')}
             </p>
           </div>
           <Button

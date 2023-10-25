@@ -92,7 +92,7 @@ const VerifyAccount: NextPageWithLayout<
               fullWidth
               size="md"
             >
-              {t('resend_link')}
+              {t('resend-link')}
             </Button>
           </div>
         </form>
