@@ -16,7 +16,12 @@ export const getInvitation = async (
   return await prisma.invitation.findUniqueOrThrow({
     where: key,
     include: {
-      team: true,
+      team: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 };
