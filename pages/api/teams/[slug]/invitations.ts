@@ -9,6 +9,7 @@ import {
   deleteInvitation,
   getInvitation,
   getInvitations,
+  isInvitationExpired,
 } from 'models/invitation';
 import { addTeamMember, throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
@@ -143,6 +144,10 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const invitation = await getInvitation({ token: inviteToken });
 
+  if (await isInvitationExpired(invitation)) {
+    throw new ApiError(400, 'Invitation expired. Please request a new one.');
+  }
+
   const session = await getSession(req, res);
   const userId = session?.user?.id as string;
 
@@ -160,7 +165,6 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   );
 
   await sendEvent(invitation.team.id, 'member.created', teamMember);
-
   await deleteInvitation({ token: inviteToken });
 
   recordMetric('member.created');

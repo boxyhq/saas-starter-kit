@@ -9,7 +9,7 @@ import { createTeam, isTeamExists } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
-import { getInvitation } from 'models/invitation';
+import { getInvitation, isInvitationExpired } from 'models/invitation';
 import { validateRecaptcha } from '@/lib/recaptcha';
 
 export default async function handler(
@@ -43,10 +43,16 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await validateRecaptcha(recaptchaToken);
 
-  // If inviteToken is present, use the email from the invitation instead of the email in the request body
-  const emailToUse = inviteToken
-    ? (await getInvitation({ token: inviteToken })).email
-    : email;
+  const invitation = inviteToken
+    ? await getInvitation({ token: inviteToken })
+    : null;
+
+  if (invitation && (await isInvitationExpired(invitation))) {
+    throw new ApiError(400, 'Invitation expired. Please request a new one.');
+  }
+
+  // If invitation is present, use the email from the invitation instead of the email in the request body
+  const emailToUse = invitation ? invitation.email : email;
 
   if (env.disableNonBusinessEmailSignup && !isBusinessEmail(emailToUse)) {
     throw new ApiError(
@@ -62,7 +68,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   validatePasswordPolicy(password);
 
   // Check if team name is available
-  if (!inviteToken) {
+  if (!invitation) {
     if (!team) {
       throw new ApiError(400, 'A team name is required.');
     }
@@ -79,12 +85,12 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     name,
     email: emailToUse,
     password: await hashPassword(password),
-    emailVerified: inviteToken ? new Date() : null,
+    emailVerified: invitation ? new Date() : null,
   });
 
   // Create team if user is not invited
   // So we can create the team with the user as the owner
-  if (!inviteToken) {
+  if (!invitation) {
     const slug = slugify(team);
 
     await createTeam({
