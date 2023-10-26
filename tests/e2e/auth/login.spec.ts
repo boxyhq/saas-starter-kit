@@ -2,23 +2,26 @@ import { expect, test } from '@playwright/test';
 import { prisma } from '@/lib/prisma';
 
 const userCred = {
-  name: 'test',
+  name: 'Test',
+  team: 'Test Team',
   email: 'test@ggxd.com',
   password: 'Test123#',
   emailVerified: new Date(),
 };
 
-test.beforeEach(async () => {
-  await prisma.user.create({
-    data: userCred,
-  });
-
-  console.log('user created');
-});
-
 test('Should navigate to login page', async ({ page }) => {
-  await page.goto('/auth/login');
+  await page.goto('/auth/join');
+  await expect(page).toHaveURL('/auth/join');
+  await expect(page.getByRole('heading',{name: "Create an account"})).toBeVisible()
+  await page.getByPlaceholder('Your name').fill(userCred.name)
+  await page.getByPlaceholder('Team Name').fill(userCred.team);
+  await page.getByPlaceholder('example@boxyhq.com').fill(userCred.email);
+  await page.getByPlaceholder('Password').fill(userCred.password)
+  await page.getByRole('button',{name: 'Create Account'}).click()
+
+  // Login
   await expect(page).toHaveURL('/auth/login');
+  await expect(page.getByRole('heading',{name:"Welcome back"})).toBeVisible()
   await page.getByPlaceholder('Email').fill(userCred.email);
   await page.getByPlaceholder('Password').fill(userCred.password);
   await page.getByRole('button', { name: 'Sign in' }).click();
