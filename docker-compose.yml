@@ -9,12 +9,3 @@ services:
       POSTGRES_DB: saas-starter-kit
     ports:
       - 5432:5432
-  test-db:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: testpassword
-      POSTGRES_USER: testuser
-      POSTGRES_DB: saas-starter-kit
-    ports:
-      - 5432:5432
