@@ -215,7 +215,7 @@ const Login: NextPageWithLayout<
       <p className="text-center text-sm text-gray-600 mt-3">
         {t('dont-have-an-account')}
         <Link
-          href={`/auth/join?token=${token}`}
+          href={`/auth/join${params}`}
           className="font-medium text-indigo-600 hover:text-indigo-500"
         >
           &nbsp;{t('create-a-free-account')}
