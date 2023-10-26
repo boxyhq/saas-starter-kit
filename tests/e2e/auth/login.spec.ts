@@ -3,8 +3,8 @@ import { prisma } from '@/lib/prisma';
 
 const userCred = {
   name: 'Test',
-  team: 'Test Team',
-  email: 'test@ggxd.com',
+  team: 'Test Teamg',
+  email: 'test@gggxd.com',
   password: 'Test123#',
   emailVerified: new Date(),
 };
@@ -13,7 +13,7 @@ test('Should navigate to login page', async ({ page }) => {
   await page.goto('/auth/join');
   await expect(page).toHaveURL('/auth/join');
   await expect(
-    page.getByRole('heading', { name: 'Create an account' })
+    page.getByRole('heading', { name: 'Get started' })
   ).toBeVisible();
   await page.getByPlaceholder('Your name').fill(userCred.name);
   await page.getByPlaceholder('Team Name').fill(userCred.team);
