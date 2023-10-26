@@ -185,5 +185,6 @@
   "team-listed": "Your teams are listed here.",
   "team-settings": "Team Settings",
   "team-settings-config": "Team settings and configuration.",
-  "resend-link": "Resend Link"
+  "resend-link": "Resend Link",
+  "expires-at": "Expires At"
 }
