@@ -3,6 +3,7 @@ import { getSession } from '@/lib/session';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { ApiError } from '@/lib/errors';
+import env from '@/lib/env';
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,6 +31,7 @@ export default async function handler(
 }
 
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
+  const allowEmailChange = env.confirmEmail === false;
   const session = await getSession(req, res);
   const toUpdate = {};
 
@@ -37,7 +39,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     toUpdate['name'] = req.body.name;
   }
 
-  if ('email' in req.body && req.body.email) {
+  // Only allow email change if confirmEmail is false
+  if ('email' in req.body && req.body.email && allowEmailChange) {
     toUpdate['email'] = req.body.email;
   }
 

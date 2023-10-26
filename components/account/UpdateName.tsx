@@ -14,7 +14,7 @@ const schema = Yup.object().shape({
   name: Yup.string().required(),
 });
 
-const UpdateName = ({ user }: { user: User }) => {
+const UpdateName = ({ user }: { user: Partial<User> }) => {
   const { t } = useTranslation('common');
   const { data: session, update } = useSession();
 
@@ -22,6 +22,7 @@ const UpdateName = ({ user }: { user: User }) => {
     initialValues: {
       name: user.name,
     },
+    enableReinitialize: true,
     validationSchema: schema,
     onSubmit: async (values) => {
       const response = await fetch('/api/users', {
