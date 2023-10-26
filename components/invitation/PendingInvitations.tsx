@@ -71,9 +71,9 @@ const PendingInvitations = ({ team }: { team: Team }) => {
       <table className="text-sm table w-full border-b dark:border-base-200">
         <thead className="bg-base-200">
           <tr>
-            <th colSpan={2}>{t('email')}</th>
+            <th>{t('email')}</th>
             <th>{t('role')}</th>
-            <th>{t('created-at')}</th>
+            <th>{t('expires-at')}</th>
             <th>{t('action')}</th>
           </tr>
         </thead>
@@ -81,14 +81,14 @@ const PendingInvitations = ({ team }: { team: Team }) => {
           {invitations.map((invitation) => {
             return (
               <tr key={invitation.token}>
-                <td colSpan={2}>
+                <td>
                   <div className="flex items-center justify-start space-x-2">
                     <LetterAvatar name={invitation.email} />
                     <span>{invitation.email}</span>
                   </div>
                 </td>
                 <td>{invitation.role}</td>
-                <td>{new Date(invitation.createdAt).toDateString()}</td>
+                <td>{new Date(invitation.expires).toDateString()}</td>
                 <td>
                   <Button
                     size="sm"
