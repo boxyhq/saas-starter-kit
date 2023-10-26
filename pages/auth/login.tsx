@@ -146,14 +146,12 @@ const Login: NextPageWithLayout<
                     <label className="label">
                       <span className="label-text">Password</span>
                       <span className="label-text-alt">
-                        <p className="text-sm text-gray-600">
-                          <Link
-                            href="/auth/forgot-password"
-                            className="text-primary hover:text-primary-focus"
-                          >
-                            {t('forgot-password')}
-                          </Link>
-                        </p>
+                        <Link
+                          href="/auth/forgot-password"
+                          className="text-sm text-primary hover:text-primary-focus"
+                        >
+                          {t('forgot-password')}
+                        </Link>
                       </span>
                     </label>
                   }
@@ -211,7 +209,7 @@ const Login: NextPageWithLayout<
         {t('dont-have-an-account')}
         <Link
           href="/auth/join"
-          className="font-medium text-indigo-600 hover:text-indigo-500"
+          className="font-medium text-primary hover:text-primary-focus"
         >
           &nbsp;{t('create-a-free-account')}
         </Link>
