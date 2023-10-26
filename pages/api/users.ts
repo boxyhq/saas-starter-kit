@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { ApiError } from '@/lib/errors';
 import env from '@/lib/env';
+import { getUser } from 'models/user';
 
 export default async function handler(
   req: NextApiRequest,
@@ -41,6 +42,12 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Only allow email change if confirmEmail is false
   if ('email' in req.body && req.body.email && allowEmailChange) {
+    const user = await getUser({ email: req.body.email });
+
+    if (user && user.id !== session?.user.id) {
+      throw new ApiError(400, 'Email already in use.');
+    }
+
     toUpdate['email'] = req.body.email;
   }
 
