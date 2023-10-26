@@ -12,16 +12,20 @@ const userCred = {
 test('Should navigate to login page', async ({ page }) => {
   await page.goto('/auth/join');
   await expect(page).toHaveURL('/auth/join');
-  await expect(page.getByRole('heading',{name: "Create an account"})).toBeVisible()
-  await page.getByPlaceholder('Your name').fill(userCred.name)
+  await expect(
+    page.getByRole('heading', { name: 'Create an account' })
+  ).toBeVisible();
+  await page.getByPlaceholder('Your name').fill(userCred.name);
   await page.getByPlaceholder('Team Name').fill(userCred.team);
   await page.getByPlaceholder('example@boxyhq.com').fill(userCred.email);
-  await page.getByPlaceholder('Password').fill(userCred.password)
-  await page.getByRole('button',{name: 'Create Account'}).click()
+  await page.getByPlaceholder('Password').fill(userCred.password);
+  await page.getByRole('button', { name: 'Create Account' }).click();
 
   // Login
   await expect(page).toHaveURL('/auth/login');
-  await expect(page.getByRole('heading',{name:"Welcome back"})).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Welcome back' })
+  ).toBeVisible();
   await page.getByPlaceholder('Email').fill(userCred.email);
   await page.getByPlaceholder('Password').fill(userCred.password);
   await page.getByRole('button', { name: 'Sign in' }).click();
