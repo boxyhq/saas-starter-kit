@@ -25,7 +25,7 @@
   "successfully-updated": "Changes saved successfully.",
   "all-teams": "All Teams",
   "team-invite": "is inviting you to join their team.",
-  "successfully-joined": "You have successfully joined the team.",
+  "successfully-joined": "You have successfully created your account.",
   "invitation-sent": "Invitation sent!",
   "invitation-deleted": "Invitation deleted",
   "send-invite": "Send Invite",
@@ -177,6 +177,7 @@
   "avatar": "Avatar",
   "custom-avatar": "Click on the avatar to upload a custom one from your files.",
   "avatar-type": "Accepted file types: .png, .jpg. Max file size: 2MB.",
+  "confirm-your-email": "Please confirm your email address before you can continue.",
   "pending-invitations": "Pending Invitations",
   "description-invitations": "Invitations that have been sent to users but have not yet been accepted.",
   "require-email": "Email is a required field",
@@ -184,5 +185,6 @@
   "team-listed": "Your teams are listed here.",
   "team-settings": "Team Settings",
   "team-settings-config": "Team settings and configuration.",
-  "resend-link": "Resend Link"
+  "resend-link": "Resend Link",
+  "expires-at": "Expires At"
 }

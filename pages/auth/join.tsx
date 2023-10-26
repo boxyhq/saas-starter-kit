@@ -44,6 +44,8 @@ const Signup: NextPageWithLayout<
     router.push(env.redirectIfAuthenticated);
   }
 
+  const params = token ? `?token=${token}` : '';
+
   return (
     <>
       <Head>
@@ -71,10 +73,10 @@ const Signup: NextPageWithLayout<
           </>
         )}
       </div>
-      <p className="text-center text-sm text-gray-600">
+      <p className="text-center text-sm text-gray-600 mt-3">
         {t('already-have-an-account')}
         <Link
-          href="/auth/login"
+          href={`/auth/login/${params}`}
           className="font-medium text-primary hover:text-primary-focus"
         >
           &nbsp;{t('sign-in')}
@@ -86,10 +88,7 @@ const Signup: NextPageWithLayout<
 
 Signup.getLayout = function getLayout(page: ReactElement) {
   return (
-    <AuthLayout
-      heading="Create an account"
-      description="Start your 30-day free trial"
-    >
+    <AuthLayout heading="Get started" description="Create a new account">
       {page}
     </AuthLayout>
   );
@@ -98,7 +97,7 @@ Signup.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { locale }: GetServerSidePropsContext = context;
+  const { locale } = context;
 
   return {
     props: {

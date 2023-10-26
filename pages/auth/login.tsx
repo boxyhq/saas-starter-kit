@@ -107,6 +107,8 @@ const Login: NextPageWithLayout<
     router.push(redirectUrl);
   }
 
+  const params = token ? `?token=${token}` : '';
+
   return (
     <>
       <Head>
@@ -193,7 +195,10 @@ const Login: NextPageWithLayout<
 
         <div className="space-y-3">
           {authProviders.email && (
-            <Link href="/auth/magic-link" className="btn-outline btn w-full">
+            <Link
+              href={`/auth/magic-link${params}`}
+              className="btn-outline btn w-full"
+            >
               &nbsp;{t('sign-in-with-email')}
             </Link>
           )}
@@ -205,10 +210,10 @@ const Login: NextPageWithLayout<
           )}
         </div>
       </div>
-      <p className="text-center text-sm text-gray-600">
+      <p className="text-center text-sm text-gray-600 mt-3">
         {t('dont-have-an-account')}
         <Link
-          href="/auth/join"
+          href={`/auth/join${params}`}
           className="font-medium text-primary hover:text-primary-focus"
         >
           &nbsp;{t('create-a-free-account')}
@@ -229,7 +234,7 @@ Login.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { locale }: GetServerSidePropsContext = context;
+  const { locale } = context;
 
   return {
     props: {
