@@ -9,7 +9,7 @@ import type { User } from '@prisma/client';
 import { Card } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 
-const UploadAvatar = ({ user }: { user: User }) => {
+const UploadAvatar = ({ user }: { user: Partial<User> }) => {
   const { t } = useTranslation('common');
   const [dragActive, setDragActive] = useState(false);
   const [image, setImage] = useState<string | null>();
