@@ -4,6 +4,7 @@ import { signOut } from 'next-auth/react';
 import { MouseEventHandler } from 'react';
 import useTheme from 'hooks/useTheme';
 import app from '@/lib/app';
+import env from '@/lib/env';
 
 export default function Navbar({
   toggleSidebar,
@@ -57,12 +58,14 @@ export default function Navbar({
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <button
-              className="p-0 w-10 h-10 rounded-lg flex items-center justify-center hover:bg-slate-200 dark:hover:bg-gray-200 dark:hover:text-black"
-              onClick={toggleTheme}
-            >
-              <selectedTheme.icon className="w-5 h-5" />
-            </button>
+            {env.darkModeEnabled && (
+              <button
+                className="p-0 w-10 h-10 rounded-lg flex items-center justify-center hover:bg-slate-200 dark:hover:bg-gray-200 dark:hover:text-black"
+                onClick={toggleTheme}
+              >
+                <selectedTheme.icon className="w-5 h-5" />
+              </button>
+            )}
             <Button size="sm" variant="outline" onClick={() => signOut()}>
               Sign Out
             </Button>

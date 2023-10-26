@@ -91,10 +91,10 @@ const UploadAvatar = ({ user }: { user: User }) => {
       <Card>
         <Card.Body>
           <Card.Header>
-            <Card.Title>Avatar</Card.Title>
+            <Card.Title>{t('avatar')}</Card.Title>
             <Card.Description>
-              Click on the avatar to upload a custom one from your files. <br />{' '}
-              Accepted file types: .png, .jpg. Max file size: 2MB.
+              {t('custom-avatar')} <br />
+              {t('avatar-type')}
             </Card.Description>
           </Card.Header>
           <div>

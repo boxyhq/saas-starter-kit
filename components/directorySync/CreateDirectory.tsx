@@ -70,7 +70,7 @@ const CreateDirectory = ({
         type="button"
         size="sm"
         shape="circle"
-        className="absolute right-2 top-2 rounded-full"
+        className="absolute right-2 top-2 btn-outline rounded-full"
         onClick={toggleVisible}
         aria-label={t('close')}
       >
@@ -123,9 +123,9 @@ const CreateDirectory = ({
           >
             {t('create-directory')}
           </Button>
-        </Modal.Actions >
-      </form >
-    </Modal >
+        </Modal.Actions>
+      </form>
+    </Modal>
   );
 };
 

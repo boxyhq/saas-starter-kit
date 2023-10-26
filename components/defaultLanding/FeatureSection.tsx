@@ -15,10 +15,13 @@ const FeatureSection = () => {
           industry.
         </p>
         <div className="flex items-center justify-center">
-          <div className="grid grid-cols-1 xl:grid-cols-3 md:grid-cols-2">
+          <div className="grid grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-2">
             {features.map((feature: any, index) => {
               return (
-                <div className="card-compact card" key={index}>
+                <div
+                  className="card-compact card dark:border-gray-200 border border-gray-300"
+                  key={index}
+                >
                   <div className="card-body">
                     <h2 className="card-title">{feature.name}</h2>
                     <p>{feature.description}</p>

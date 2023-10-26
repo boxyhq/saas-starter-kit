@@ -16,11 +16,11 @@ const FAQSection = () => {
           industry.
         </p>
         <div className="flex items-center justify-center">
-          <div className="grid grid-cols-1">
+          <div className="grid grid-cols-1 gap-2">
             {faqs.map((faq, index) => {
               return (
                 <Card key={index} className="border-none">
-                  <Card.Body className="items-left">
+                  <Card.Body className="items-left dark:border-gray-200 border border-gray-300">
                     <Card.Title tag="h2">Q. {faq.question}</Card.Title>
                     <p>A. {faq.answer}</p>
                   </Card.Body>

@@ -2,7 +2,7 @@ const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
   product: 'boxyhq',
-  redirectAfterSignIn: '/teams/switch',
+  redirectIfAuthenticated: '/dashboard',
 
   // SAML Jackson configuration
   saml: {
@@ -72,6 +72,21 @@ const env = {
   },
 
   hideLandingPage: process.env.HIDE_LANDING_PAGE === 'true' ? true : false,
+
+  darkModeEnabled: process.env.NEXT_PUBLIC_DARK_MODE === 'false' ? false : true,
+
+  teamFeatures: {
+    sso: process.env.FEATURE_TEAM_SSO === 'false' ? false : true,
+    dsync: process.env.FEATURE_TEAM_DSYNC === 'false' ? false : true,
+    webhook: process.env.FEATURE_TEAM_WEBHOOK === 'false' ? false : true,
+    apiKey: process.env.FEATURE_TEAM_API_KEY === 'false' ? false : true,
+    auditLog: process.env.FEATURE_TEAM_AUDIT_LOG === 'false' ? false : true,
+  },
+
+  recaptcha: {
+    siteKey: process.env.RECAPTCHA_SITE_KEY || null,
+    secretKey: process.env.RECAPTCHA_SECRET_KEY || null,
+  },
 };
 
 export default env;

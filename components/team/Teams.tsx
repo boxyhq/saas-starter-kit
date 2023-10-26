@@ -27,7 +27,7 @@ const Teams = () => {
     if (newTeam) {
       setCreateTeamVisible(true);
     }
-  }, [router.query]);
+  }, [newTeam]);
 
   const leaveTeam = async (team: Team) => {
     const response = await fetch(`/api/teams/${team.slug}/members`, {
@@ -55,7 +55,7 @@ const Teams = () => {
               {t('all-teams')}
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Your teams are listed here.
+              {t('team-listed')}
             </p>
           </div>
           <Button

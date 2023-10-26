@@ -1,4 +1,4 @@
-import { hashPassword } from '@/lib/auth';
+import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
 import { generateToken, slugify } from '@/lib/common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { prisma } from '@/lib/prisma';
@@ -9,6 +9,7 @@ import { createTeam, isTeamExists } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import { validateRecaptcha } from '@/lib/recaptcha';
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,7 +38,9 @@ export default async function handler(
 
 // Signup the user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, password, team } = req.body;
+  const { name, email, password, team, recaptchaToken } = req.body;
+
+  await validateRecaptcha(recaptchaToken);
 
   const existingUser = await getUser({ email });
 
@@ -45,9 +48,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new ApiError(400, 'An user with this email already exists.');
   }
 
-  if (password.length < 8) {
-    throw new ApiError(400, 'Password must have at least 8 characters.');
-  }
+  validatePasswordPolicy(password);
 
   if (env.disableNonBusinessEmailSignup && !isBusinessEmail(email)) {
     throw new ApiError(

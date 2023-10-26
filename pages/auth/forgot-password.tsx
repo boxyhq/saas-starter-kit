@@ -6,27 +6,25 @@ import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
-import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import type { ReactElement } from 'react';
+import { useRef, type ReactElement, useState } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse, NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
+import GoogleReCAPTCHA from '@/components/shared/GoogleReCAPTCHA';
+import ReCAPTCHA from 'react-google-recaptcha';
+import env from '@/lib/env';
 
 const ForgotPassword: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = () => {
-  const { status } = useSession();
-  const router = useRouter();
+> = ({ recaptchaSiteKey }) => {
   const { t } = useTranslation('common');
-
-  if (status === 'authenticated') {
-    router.push('/dashboard');
-  }
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [recaptchaToken, setRecaptchaToken] = useState<string>('');
 
   const formik = useFormik({
     initialValues: {
@@ -39,23 +37,31 @@ const ForgotPassword: NextPageWithLayout<
       const response = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: defaultHeaders,
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          recaptchaToken,
+        }),
       });
 
       const json = (await response.json()) as ApiResponse;
+
+      formik.resetForm();
+      recaptchaRef.current?.reset();
 
       if (!response.ok) {
         toast.error(json.error.message);
         return;
       }
 
-      formik.resetForm();
       toast.success(t('password-reset-link-sent'));
     },
   });
 
   return (
     <>
+      <Head>
+        <title>{t('forgot-password-title')}</title>
+      </Head>
       <div className="rounded p-6 border">
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">
@@ -67,6 +73,11 @@ const ForgotPassword: NextPageWithLayout<
               value={formik.values.email}
               error={formik.touched.email ? formik.errors.email : undefined}
               onChange={formik.handleChange}
+            />
+            <GoogleReCAPTCHA
+              recaptchaRef={recaptchaRef}
+              onChange={setRecaptchaToken}
+              siteKey={recaptchaSiteKey}
             />
           </div>
           <div className="mt-4">
@@ -108,6 +119,7 @@ export const getServerSideProps = async (
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+      recaptchaSiteKey: env.recaptcha.siteKey,
     },
   };
 };

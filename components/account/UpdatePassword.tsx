@@ -5,11 +5,11 @@ import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 
 import { Card, InputWithLabel } from '@/components/shared';
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, passwordPolicies } from '@/lib/common';
 
 const schema = Yup.object().shape({
   currentPassword: Yup.string().required(),
-  newPassword: Yup.string().required().min(8),
+  newPassword: Yup.string().required().min(passwordPolicies.minLength),
 });
 
 const UpdatePassword = () => {
@@ -46,10 +46,8 @@ const UpdatePassword = () => {
         <Card>
           <Card.Body>
             <Card.Header>
-              <Card.Title>Password</Card.Title>
-              <Card.Description>
-                You can change your password here.
-              </Card.Description>
+              <Card.Title>{t('password')}</Card.Title>
+              <Card.Description>{t('change-password-text')}</Card.Description>
             </Card.Header>
             <div className="flex flex-col space-y-3">
               <InputWithLabel

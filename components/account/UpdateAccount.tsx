@@ -3,6 +3,7 @@ import UploadAvatar from './UploadAvatar';
 import UpdateName from './UpdateName';
 import UpdateEmail from './UpdateEmail';
 import UpdateTheme from './UpdateTheme';
+import env from '@/lib/env';
 
 const UpdateAccount = ({ user }: { user: User }) => {
   return (
@@ -10,7 +11,7 @@ const UpdateAccount = ({ user }: { user: User }) => {
       <UpdateName user={user} />
       <UpdateEmail user={user} />
       <UploadAvatar user={user} />
-      <UpdateTheme />
+      {env.darkModeEnabled && <UpdateTheme />}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import { validateRecaptcha } from '@/lib/recaptcha';
 
 export default async function handler(
   req: NextApiRequest,
@@ -29,7 +30,9 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email } = req.body;
+  const { email, recaptchaToken } = req.body;
+
+  await validateRecaptcha(recaptchaToken);
 
   if (!email || !validateEmail(email)) {
     throw new ApiError(422, 'The e-mail address you entered is invalid');
