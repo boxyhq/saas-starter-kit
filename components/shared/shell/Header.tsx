@@ -39,7 +39,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
       <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
         <div className="relative flex flex-1"></div>
         <div className="flex items-center gap-x-4 lg:gap-x-6">
-          <div className="dropdown dropdown-end dropdown-hover">
+          <div className="dropdown dropdown-end">
             <div className="flex items-center cursor-pointer" tabIndex={0}>
               <span className="hidden lg:flex lg:items-center">
                 <button
@@ -58,7 +58,13 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
               tabIndex={0}
               className="dropdown-content z-[1] menu p-2 shadow bg-base-100 border rounded w-40 space-y-1"
             >
-              <li>
+              <li
+                onClick={() => {
+                  if (document.activeElement) {
+                    (document.activeElement as HTMLElement).blur();
+                  }
+                }}
+              >
                 <Link
                   href="/settings/account"
                   className="block px-2 py-1 text-sm leading-6 text-gray-900 cursor-pointer"
