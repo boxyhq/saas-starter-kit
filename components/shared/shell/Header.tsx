@@ -42,12 +42,12 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
           <div className="dropdown dropdown-end dropdown-hover">
             <div className="flex items-center cursor-pointer" tabIndex={0}>
               <span className="hidden lg:flex lg:items-center">
-                <span
+                <button
                   className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                   aria-hidden="true"
                 >
                   {user.name}
-                </span>
+                </button>
                 <ChevronDownIcon
                   className="ml-2 h-5 w-5 text-gray-400"
                   aria-hidden="true"
