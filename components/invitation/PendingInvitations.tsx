@@ -62,19 +62,18 @@ const PendingInvitations = ({ team }: { team: Team }) => {
     <div className="space-y-3">
       <div className="space-y-3">
         <h2 className="text-xl font-medium leading-none tracking-tight">
-          Pending Invitations
+          {t('pending-invitations')}
         </h2>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Invitations that have been sent to users but have not yet been
-          accepted.
+          {t('description-invitations')}
         </p>
       </div>
       <table className="text-sm table w-full border-b dark:border-base-200">
         <thead className="bg-base-200">
           <tr>
-            <th colSpan={2}>{t('email')}</th>
+            <th>{t('email')}</th>
             <th>{t('role')}</th>
-            <th>{t('created-at')}</th>
+            <th>{t('expires-at')}</th>
             <th>{t('action')}</th>
           </tr>
         </thead>
@@ -82,14 +81,14 @@ const PendingInvitations = ({ team }: { team: Team }) => {
           {invitations.map((invitation) => {
             return (
               <tr key={invitation.token}>
-                <td colSpan={2}>
+                <td>
                   <div className="flex items-center justify-start space-x-2">
                     <LetterAvatar name={invitation.email} />
                     <span>{invitation.email}</span>
                   </div>
                 </td>
                 <td>{invitation.role}</td>
-                <td>{new Date(invitation.createdAt).toDateString()}</td>
+                <td>{new Date(invitation.expires).toDateString()}</td>
                 <td>
                   <Button
                     size="sm"

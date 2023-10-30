@@ -13,7 +13,12 @@ const schema = Yup.object().shape({
   email: Yup.string().required(),
 });
 
-const UpdateEmail = ({ user }: { user: User }) => {
+interface UpdateEmailProps {
+  user: Partial<User>;
+  allowEmailChange: boolean;
+}
+
+const UpdateEmail = ({ user, allowEmailChange }: UpdateEmailProps) => {
   const { t } = useTranslation('common');
 
   const formik = useFormik({
@@ -57,6 +62,7 @@ const UpdateEmail = ({ user }: { user: User }) => {
             onChange={formik.handleChange}
             className="w-full max-w-md"
             required
+            disabled={!allowEmailChange}
           />
         </Card.Body>
         <Card.Footer>
