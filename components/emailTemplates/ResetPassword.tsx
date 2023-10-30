@@ -1,5 +1,4 @@
 import app from '@/lib/app';
-import env from '@/lib/env';
 import {
   Button,
   Container,
@@ -12,31 +11,36 @@ import EmailLayout from './EmailLayout';
 
 interface ResetPasswordEmailProps {
   url: string;
+  subject: string;
+  email: string;
 }
 
-const ResetPasswordEmail = ({ url }: ResetPasswordEmailProps) => {
+const ResetPasswordEmail = ({
+  url,
+  subject,
+  email,
+}: ResetPasswordEmailProps) => {
   return (
     <Html>
       <Head />
-      <Preview>Reset Your {app.name} Password</Preview>
+      <Preview>{subject}</Preview>
       <EmailLayout>
         <Text>
-          We have received a request to reset your {app.name} password. If you
-          did not request a password reset, please ignore this email.
+          We received a request to reset the password for the {app.name} account
+          associated with {email}.
         </Text>
-        <Text>To reset your password, please click on the link below:</Text>
-
         <Container className="text-center">
           <Button
-            href={`${env.appUrl}/auth/reset-password/${url}`}
-            pX={20}
-            pY={16}
-            className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
+            href={url}
+            className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-3 py-3"
           >
-            Reset password
+            Reset your password
           </Button>
         </Container>
-
+        <Text>
+          Please ignore this email if you did not request a password reset. No
+          changes have been made to your account.
+        </Text>
         <Text>
           This link will expire in 60 minutes. After that, you will need to
           request another password reset.

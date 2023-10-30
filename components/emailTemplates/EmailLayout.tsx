@@ -26,12 +26,9 @@ const EmailLayout = ({ children }: EmailLayoutProps) => {
             alt={app.name}
             className="my-8 mx-auto"
           />
-
+          <Section>{children}</Section>
           <Section>
-            {children}
-
             <Hr className="border border-solid border-[#eaeaea] my-[20px] mx-0 w-full" />
-
             <Text className="my-0 text-center text-xs text-[#666666]">
               <span className="block">{app.name}</span>
               <span className="block">{app.location}</span>
