@@ -8,6 +8,7 @@ import {
 } from '@react-email/components';
 import EmailLayout from './EmailLayout';
 import { Team } from '@prisma/client';
+import app from '@/lib/app';
 
 interface TeamInviteEmailProps {
   team: Team;
@@ -25,7 +26,7 @@ const TeamInviteEmail = ({
       <Head />
       <Preview>{subject}</Preview>
       <EmailLayout>
-        <Text>You have been invited to join {team.name}.</Text>
+        <Text>You have been invited to join the {team.name} team on {app.name}.</Text>
         <Text>
           Click the button below to accept the invitation and join the team.
         </Text>
@@ -34,7 +35,7 @@ const TeamInviteEmail = ({
             href={invitationLink}
             className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-3 py-3"
           >
-            Join team
+            Join the team
           </Button>
         </Container>
         <Text>

@@ -24,7 +24,7 @@ const VerificationEmail = ({
       <Head />
       <Preview>{subject}</Preview>
       <EmailLayout>
-        <Heading as="h2">Confirm your account!</Heading>
+        <Heading as="h2">Confirm your account</Heading>
         <Text>
           Thank you for signing up for {app.name}. To confirm your account,
           please click the button below.
@@ -38,7 +38,7 @@ const VerificationEmail = ({
           </Button>
         </Container>
         <Text>
-          If you did not create an account, no further action is required.
+          If you didn't create an account, no further action is required.
         </Text>
       </EmailLayout>
     </Html>
