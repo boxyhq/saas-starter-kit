@@ -2,7 +2,7 @@
   "get-started": "Get Started",
   "login": "Login using an existing account",
   "email-login-error": "Something went wrong while sending the email. Please try again later.",
-  "email-login-success": "A sign in link has been sent to your email address. The link will expire in 24 hours.",
+  "email-login-success": "A sign in link has been sent to your email address. The link will expire in 60 minutes.",
   "dont-have-an-account": "Don't have an account?",
   "create-a-free-account": "Create a free account",
   "sign-up": "Sign up",
