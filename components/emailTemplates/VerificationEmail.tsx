@@ -38,7 +38,7 @@ const VerificationEmail = ({
           </Button>
         </Container>
         <Text>
-          If you didn't create an account, no further action is required.
+          {`If you didn't create an account, no further action is required.`}
         </Text>
       </EmailLayout>
     </Html>
