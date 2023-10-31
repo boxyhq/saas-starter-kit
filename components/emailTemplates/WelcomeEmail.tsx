@@ -31,9 +31,7 @@ const WelcomeEmail = ({ name, subject, team }: WelcomeEmailProps) => {
         <Container className="text-center">
           <Button
             href={`${env.appUrl}/auth/login`}
-            pX={20}
-            pY={16}
-            className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
+            className="bg-brand text-white font-medium py-2 px-4 rounded"
           >
             Login to your account
           </Button>
