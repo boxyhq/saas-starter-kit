@@ -34,7 +34,9 @@ const MagicLink = ({ subject, url }: MagicLinkProps) => {
             Log in to {app.name}
           </Button>
         </Container>
-        <Text>{`If you didn't request this email, you can safely ignore it.`}</Text>
+        <Text>
+          If you did not request this email, you can safely ignore it.
+        </Text>
       </EmailLayout>
     </Html>
   );
