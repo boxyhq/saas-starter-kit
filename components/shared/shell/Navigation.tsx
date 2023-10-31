@@ -16,13 +16,17 @@ const Navigation = () => {
     }
   }, [asPath, isReady]);
 
+  const Navigation = () => {
+    if (slug) {
+      return <TeamNavigation activePathname={activePathname} slug={slug} />;
+    } else {
+      return <UserNavigation activePathname={activePathname} />;
+    }
+  };
+
   return (
     <nav className="flex flex-1 flex-col">
-      {slug ? (
-        <TeamNavigation slug={slug} activePathname={activePathname} />
-      ) : (
-        <UserNavigation activePathname={activePathname} />
-      )}
+      <Navigation />
     </nav>
   );
 };
