@@ -16,6 +16,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import { isAuthProviderEnabled } from '@/lib/auth';
 import type { Provider } from 'next-auth/providers';
 import { validateRecaptcha } from '@/lib/recaptcha';
+import { sendMagicLink } from '@/lib/email/sendMagicLink';
 
 const adapter = PrismaAdapter(prisma);
 
@@ -119,6 +120,10 @@ if (isAuthProviderEnabled('email')) {
         },
       },
       from: env.smtp.from,
+      maxAge: 1 * 60 * 60, // 1 hour
+      sendVerificationRequest: async ({ identifier, url }) => {
+        await sendMagicLink(identifier, url);
+      },
     })
   );
 }
