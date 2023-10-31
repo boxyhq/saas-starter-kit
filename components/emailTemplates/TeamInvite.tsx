@@ -26,7 +26,9 @@ const TeamInviteEmail = ({
       <Head />
       <Preview>{subject}</Preview>
       <EmailLayout>
-        <Text>You have been invited to join the {team.name} team on {app.name}.</Text>
+        <Text>
+          You have been invited to join the {team.name} team on {app.name}.
+        </Text>
         <Text>
           Click the button below to accept the invitation and join the team.
         </Text>
