@@ -8,34 +8,41 @@ import {
 } from '@react-email/components';
 import EmailLayout from './EmailLayout';
 import { Team } from '@prisma/client';
+import app from '@/lib/app';
 
 interface TeamInviteEmailProps {
   team: Team;
   invitationLink: string;
-  userFirstname?: string;
+  subject: string;
 }
 
-const TeamInviteEmail = ({ team, invitationLink }: TeamInviteEmailProps) => {
+const TeamInviteEmail = ({
+  team,
+  invitationLink,
+  subject,
+}: TeamInviteEmailProps) => {
   return (
     <Html>
       <Head />
-      <Preview>Team Invitation</Preview>
+      <Preview>{subject}</Preview>
       <EmailLayout>
-        <Text>You have been invited to join the team at {team.name}.</Text>
         <Text>
-          Click the link below to accept the invitation and join the team:
+          You have been invited to join the {team.name} team on {app.name}.
         </Text>
-
+        <Text>
+          Click the button below to accept the invitation and join the team.
+        </Text>
         <Container className="text-center">
           <Button
             href={invitationLink}
-            pX={20}
-            pY={16}
-            className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
+            className="bg-brand text-white font-medium py-2 px-4 rounded"
           >
-            Join team
+            Join the team
           </Button>
         </Container>
+        <Text>
+          You have 7 days to accept this invitation before it expires.
+        </Text>
       </EmailLayout>
     </Html>
   );

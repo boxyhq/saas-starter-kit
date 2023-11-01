@@ -24,25 +24,19 @@ const VerificationEmail = ({
       <Head />
       <Preview>{subject}</Preview>
       <EmailLayout>
-        <Heading as="h2">Confirm your account!</Heading>
-
-        <Text>Before we can get started, we need to confirm your account.</Text>
+        <Heading as="h2">Confirm your account</Heading>
         <Text>
           Thank you for signing up for {app.name}. To confirm your account,
-          please click the link below:
+          please click the button below.
         </Text>
-
         <Container className="text-center">
           <Button
             href={verificationLink}
-            pX={20}
-            pY={16}
-            className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
+            className="bg-brand text-white font-medium py-2 px-4 rounded"
           >
             Confirm account
           </Button>
         </Container>
-
         <Text>
           If you did not create an account, no further action is required.
         </Text>
