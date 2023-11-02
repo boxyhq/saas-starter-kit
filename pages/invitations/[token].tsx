@@ -1,7 +1,6 @@
 import { AuthLayout } from '@/components/layouts';
 import { Error, Loading } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
-import { setCookie } from 'cookies-next';
 import useInvitation from 'hooks/useInvitation';
 import type { GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
@@ -13,26 +12,20 @@ import type { ReactElement } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse, NextPageWithLayout } from 'types';
+import { signOut } from 'next-auth/react';
 
 const AcceptTeamInvitation: NextPageWithLayout = () => {
-  const { status } = useSession();
+  const { status, data } = useSession();
   const router = useRouter();
   const { t } = useTranslation('common');
-
-  const { token } = router.query;
-
-  const { isLoading, isError, invitation } = useInvitation(token as string);
+  const { isLoading, error, invitation } = useInvitation();
 
   if (isLoading) {
     return <Loading />;
   }
 
-  if (isError) {
-    return <Error message={isError.message} />;
-  }
-
-  if (!invitation) {
-    return null;
+  if (error || !invitation) {
+    return <Error message={error.message} />;
   }
 
   const acceptInvitation = async () => {
@@ -55,23 +48,23 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
     router.push('/dashboard');
   };
 
+  const emailMatch = data?.user?.email === invitation.email;
+
   return (
     <>
       <Head>
         <title>{`${t('invitation-title')} ${invitation.team.name}`}</title>
       </Head>
       <div className="rounded p-6 border">
-        <div className="flex flex-col items-center space-y-3">
-          <h2 className="font-bold">{`${invitation.team.name} ${t(
-            'team-invite'
-          )}`}</h2>
-          <h3 className="text-center">
-            {status === 'authenticated'
-              ? t('accept-invite')
-              : t('invite-create-account')}
-          </h3>
-          {status === 'unauthenticated' ? (
+        <div className="flex flex-col items-center space-y-6">
+          <h2 className="font-bold">
+            {`${invitation.team.name} ${t('team-invite')}`}
+          </h2>
+
+          {/* User not authenticated */}
+          {status === 'unauthenticated' && (
             <>
+              <h3 className="text-center">{t('invite-create-account')}</h3>
               <Button
                 variant="outline"
                 fullWidth
@@ -93,15 +86,44 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
                 {t('login')}
               </Button>
             </>
-          ) : (
-            <Button
-              onClick={acceptInvitation}
-              fullWidth
-              color="primary"
-              size="md"
-            >
-              {t('accept-invitation')}
-            </Button>
+          )}
+
+          {/* User authenticated and email matches */}
+          {status === 'authenticated' && emailMatch && (
+            <>
+              <h3 className="text-center">{t('accept-invite')}</h3>
+              <Button
+                onClick={acceptInvitation}
+                fullWidth
+                color="primary"
+                size="md"
+              >
+                {t('accept-invitation')}
+              </Button>
+            </>
+          )}
+
+          {/* User authenticated and email does not match */}
+          {status === 'authenticated' && !emailMatch && (
+            <>
+              <p className="text-sm text-center">{`Your email address ${data?.user?.email} does not match the email address this invitation was sent to.`}</p>
+              <p className="text-sm text-center">
+                To accept this invitation, you will need to sign out and then
+                sign in or create a new account using the same email address
+                used in the invitation.
+              </p>
+              <Button
+                fullWidth
+                color="error"
+                size="md"
+                variant="outline"
+                onClick={() => {
+                  signOut();
+                }}
+              >
+                Sign out
+              </Button>
+            </>
           )}
         </div>
       </div>
@@ -110,36 +132,13 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
 };
 
 AcceptTeamInvitation.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <AuthLayout
-      heading="Accept team invite"
-      description="Check out the our website if you'd like to learn more before diving in."
-    >
-      {page}
-    </AuthLayout>
-  );
+  return <AuthLayout>{page}</AuthLayout>;
 };
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res, query, locale }: GetServerSidePropsContext = context;
-  const { token } = query;
-
-  setCookie(
-    'pending-invite',
-    {
-      token,
-      url: context.resolvedUrl,
-    },
-    {
-      req,
-      res,
-      maxAge: 60 * 6 * 24,
-      httpOnly: true,
-      sameSite: 'lax',
-    }
-  );
+  const { locale } = context;
 
   return {
     props: {
