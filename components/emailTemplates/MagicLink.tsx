@@ -2,43 +2,44 @@ import {
   Button,
   Container,
   Head,
+  Heading,
   Html,
   Preview,
   Text,
 } from '@react-email/components';
 import EmailLayout from './EmailLayout';
 import app from '@/lib/app';
-import env from '@/lib/env';
 
-interface WelcomeEmailProps {
-  name: string;
-  team: string;
+interface MagicLinkProps {
   subject: string;
+  url: string;
 }
 
-const WelcomeEmail = ({ name, subject, team }: WelcomeEmailProps) => {
+const MagicLink = ({ subject, url }: MagicLinkProps) => {
   return (
     <Html>
       <Head />
       <Preview>{subject}</Preview>
       <EmailLayout>
-        <Text>Hi {name},</Text>
+        <Heading as="h2">Log in to {app.name}</Heading>
         <Text>
-          You have been successfully signed up to {app.name} on team{' '}
-          <b>{team}</b>.
+          Click the button below to log in to your {app.name} account. This
+          button will expire in 60 minutes.
         </Text>
-        <Text>Click the below link to login now:</Text>
         <Container className="text-center">
           <Button
-            href={`${env.appUrl}/auth/login`}
+            href={url}
             className="bg-brand text-white font-medium py-2 px-4 rounded"
           >
-            Login to your account
+            Log in to {app.name}
           </Button>
         </Container>
+        <Text>
+          If you did not request this email, you can safely ignore it.
+        </Text>
       </EmailLayout>
     </Html>
   );
 };
 
-export default WelcomeEmail;
+export default MagicLink;

@@ -8,14 +8,16 @@ export const createUser = async (param: {
   name: string;
   email: string;
   password?: string;
+  emailVerified?: Date | null;
 }) => {
-  const { name, email, password } = param;
+  const { name, email, password, emailVerified } = param;
 
   return await prisma.user.create({
     data: {
       name,
       email,
       password: password ? password : '',
+      emailVerified: emailVerified ? emailVerified : null,
     },
   });
 };

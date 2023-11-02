@@ -3,11 +3,19 @@ import type { FormikConfig } from 'formik';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-import { Button, Modal } from 'react-daisyui';
+import { Button } from 'react-daisyui';
 import type { WebookFormSchema } from 'types';
 import * as Yup from 'yup';
-
+import Modal from '../shared/Modal';
 import EventTypes from './EventTypes';
+
+interface FormProps {
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
+  initialValues: WebookFormSchema;
+  onSubmit: FormikConfig<WebookFormSchema>['onSubmit'];
+  title: string;
+}
 
 const Form = ({
   visible,
@@ -15,13 +23,7 @@ const Form = ({
   initialValues,
   onSubmit,
   title,
-}: {
-  visible: boolean;
-  setVisible: (visible: boolean) => void;
-  initialValues: WebookFormSchema;
-  onSubmit: FormikConfig<WebookFormSchema>['onSubmit'];
-  title: string;
-}) => {
+}: FormProps) => {
   const formik = useFormik<WebookFormSchema>({
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
@@ -31,6 +33,7 @@ const Form = ({
     initialValues,
     enableReinitialize: true,
     onSubmit,
+    validateOnBlur: false,
   });
 
   const { t } = useTranslation('common');
@@ -41,59 +44,58 @@ const Form = ({
   };
 
   return (
-    <Modal open={visible}>
-      <Button
-        type="button"
-        size="sm"
-        shape="circle"
-        className="absolute right-2 top-2 rounded-full btn-outline"
-        onClick={toggleVisible}
-      >
-        ✕
-      </Button>
+    <Modal open={visible} close={toggleVisible}>
       <form onSubmit={formik.handleSubmit} method="POST">
-        <Modal.Header className="font-bold">{title}</Modal.Header>
+        <Modal.Header>{title}</Modal.Header>
+        <Modal.Description>{t('webhook-create-desc')}</Modal.Description>
         <Modal.Body>
-          <div className="mt-2 flex flex-col space-y-4">
-            <p>{t('webhook-create-desc')}</p>
-            <div className="flex flex-col space-y-2">
-              <InputWithLabel
-                name="name"
-                label="Description"
-                onChange={formik.handleChange}
-                value={formik.values.name}
-                placeholder="Description of what this endpoint is used for."
-                error={formik.errors.name}
-              />
-              <InputWithLabel
-                name="url"
-                label="Endpoint"
-                onChange={formik.handleChange}
-                value={formik.values.url}
-                placeholder="https://api.example.com/svix-webhooks"
-                error={formik.errors.url}
-                descriptionText="The endpoint URL must be HTTPS"
-              />
-              <div className="divider"></div>
-              <div className="form-control w-full">
-                <label className="label">
-                  <span className="label-text">{t('events-to-send')}</span>
-                </label>
-                <p className="ml-1 mb-3 text-sm font-normal text-gray-500">
-                  {t('events-description')}
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  <EventTypes
-                    onChange={formik.handleChange}
-                    values={initialValues['eventTypes']}
-                    error={formik.errors.eventTypes}
-                  />
-                </div>
+          <div className="flex flex-col space-y-3">
+            <InputWithLabel
+              name="name"
+              label="Description"
+              onChange={formik.handleChange}
+              value={formik.values.name}
+              placeholder="Description of what this endpoint is used for."
+              error={formik.errors.name}
+            />
+            <InputWithLabel
+              name="url"
+              label="Endpoint"
+              onChange={formik.handleChange}
+              value={formik.values.url}
+              placeholder="https://api.example.com/svix-webhooks"
+              error={formik.errors.url}
+              descriptionText="The endpoint URL must be HTTPS"
+            />
+            <div className="divider"></div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">{t('events-to-send')}</span>
+              </label>
+              <p className="ml-1 mb-3 text-sm font-normal text-gray-500">
+                {t('events-description')}
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                <EventTypes
+                  onChange={formik.handleChange}
+                  values={initialValues['eventTypes']}
+                  error={formik.errors.eventTypes}
+                />
               </div>
             </div>
           </div>
         </Modal.Body>
-        <Modal.Actions>
+        <Modal.Footer>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setVisible(!visible);
+            }}
+            size="md"
+          >
+            {t('close')}
+          </Button>
           <Button
             type="submit"
             color="primary"
@@ -103,7 +105,7 @@ const Form = ({
           >
             {t('create-webhook')}
           </Button>
-        </Modal.Actions>
+        </Modal.Footer>
       </form>
     </Modal>
   );

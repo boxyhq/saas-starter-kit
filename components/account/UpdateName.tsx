@@ -9,19 +9,22 @@ import { Card } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import { User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const schema = Yup.object().shape({
   name: Yup.string().required(),
 });
 
-const UpdateName = ({ user }: { user: User }) => {
+const UpdateName = ({ user }: { user: Partial<User> }) => {
   const { t } = useTranslation('common');
-  const { data: session, update } = useSession();
+  const { update } = useSession();
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
       name: user.name,
     },
+    enableReinitialize: true,
     validationSchema: schema,
     onSubmit: async (values) => {
       const response = await fetch('/api/users', {
@@ -38,13 +41,10 @@ const UpdateName = ({ user }: { user: User }) => {
       }
 
       await update({
-        ...session,
-        user: {
-          ...session?.user,
-          name: json.data.name,
-        },
+        name: json.data.name,
       });
 
+      router.replace('/settings/account');
       toast.success(t('successfully-updated'));
     },
   });
