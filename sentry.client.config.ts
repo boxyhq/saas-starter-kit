@@ -1,11 +1,11 @@
 import * as Sentry from '@sentry/nextjs';
-
-const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
+import packageJson from './package.json';
 
 Sentry.init({
-  dsn: SENTRY_DSN,
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   tracesSampleRate: 1,
   debug: false,
+  release: packageJson.version,
 
   // Capture Replay for 10% of all sessions,
   // plus for 100% of sessions with an error
