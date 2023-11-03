@@ -1,9 +1,7 @@
 import * as Sentry from '@sentry/nextjs';
-import packageJson from './package.json';
 
 Sentry.init({
-  dsn: process.env.SENTRY_DSN,
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   tracesSampleRate: 1,
   debug: false,
-  release: packageJson.version,
 });
