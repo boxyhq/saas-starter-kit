@@ -68,7 +68,7 @@
     "@types/mocha": "10.0.3",
     "@types/node": "20.8.10",
     "@types/nodemailer": "6.4.13",
-    "@types/react": "18.2.34",
+    "@types/react": "18.2.35",
     "@types/uuid": "9.0.6",
     "@typescript-eslint/eslint-plugin": "6.9.1",
     "@typescript-eslint/parser": "6.9.1",
