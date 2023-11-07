@@ -29,6 +29,7 @@ import { sendMagicLink } from '@/lib/email/sendMagicLink';
 
 const adapter = PrismaAdapter(prisma);
 const providers: Provider[] = [];
+const sessionTokenCookie = 'next-auth.session-token';
 
 if (isAuthProviderEnabled('credentials')) {
   providers.push(
@@ -140,6 +141,12 @@ export const getAuthOptions = (
   req: NextApiRequest | GetServerSidePropsContext['req'],
   res: NextApiResponse | GetServerSidePropsContext['res']
 ) => {
+  const isCredentialsProviderCallback =
+    req.query.nextauth?.includes('callback') &&
+    req.query.nextauth.includes('credentials') &&
+    req.method === 'POST' &&
+    env.nextAuth.sessionStrategy === 'database';
+
   const authOptions: NextAuthOptions = {
     adapter,
     providers,
@@ -153,9 +160,6 @@ export const getAuthOptions = (
     secret: env.nextAuth.secret,
     callbacks: {
       async signIn({ user, account, profile }) {
-        // console.log({ user, account, profile });
-        // console.log({ q: req.query.nextauth, url: req.url });
-
         if (!user || !user.email || !account) {
           return false;
         }
@@ -164,18 +168,12 @@ export const getAuthOptions = (
           return '/auth/login?error=allow-only-work-email';
         }
 
-        // Login via email and password
-        if (
-          req.query.nextauth?.includes('callback') &&
-          req.query.nextauth.includes('credentials') &&
-          req.method === 'POST'
-        ) {
+        // Handle credentials provider
+        if (isCredentialsProviderCallback) {
           const sessionToken = uuidv4();
-          const sessionExpiry = 30 * 24 * 60 * 60;
+          const sessionExpiry = 30 * 24 * 60 * 60; // TODO: Make this configurable
 
           if (adapter.createSession) {
-            console.log('Creating session');
-
             await adapter.createSession({
               sessionToken,
               userId: user.id,
@@ -183,17 +181,16 @@ export const getAuthOptions = (
             });
           }
 
-          setCookie('next-auth.session-token', sessionToken, {
+          setCookie(sessionTokenCookie, sessionToken, {
             req,
             res,
             expires: fromDate(sessionExpiry),
           });
         }
 
-        // Login via email and password
-        // if (account?.provider === 'credentials') {
-        //   return true;
-        // }
+        if (account?.provider === 'credentials') {
+          return true;
+        }
 
         const existingUser = await getUser({ email: user.email });
 
@@ -231,16 +228,17 @@ export const getAuthOptions = (
       async session({ session, token, user }) {
         // When using JWT for sessions, the JWT payload (token) is provided.
         // When using database sessions, the User (user) object is provided.
-
-        // console.log({ session, token, user });
-
-        if (session) {
-          if (token) {
-            session.user.id = token.sub as string;
-          } else if (user) {
-            session.user.id = user.id;
-          }
+        if (session && (token || user)) {
+          session.user.id = token?.sub || user?.id;
         }
+
+        // if (session) {
+        //   if (token) {
+        //     session.user.id = token.sub as string;
+        //   } else if (user) {
+        //     session.user.id = user.id;
+        //   }
+        // }
 
         return session;
       },
@@ -255,33 +253,15 @@ export const getAuthOptions = (
     },
     jwt: {
       encode: async (params) => {
-        if (
-          req.query.nextauth?.includes('callback') &&
-          req.query.nextauth.includes('credentials') &&
-          req.method === 'POST'
-        ) {
-          const cookie = getCookie('next-auth.session-token', { req, res });
-
-          console.log({ cookie });
-
-          if (cookie) {
-            return cookie;
-          }
-
-          return '';
+        if (isCredentialsProviderCallback) {
+          return getCookie(sessionTokenCookie, { req, res }) || '';
         }
 
         return encode(params);
       },
-      decode: async (params) => {
-        console.log({ Info: 'Before Decoding JWT' });
 
-        if (
-          req.query.nextauth?.includes('callback') &&
-          req.query.nextauth.includes('credentials') &&
-          req.method === 'POST'
-        ) {
-          console.log({ Info: 'After Decoding JWT' });
+      decode: async (params) => {
+        if (isCredentialsProviderCallback) {
           return null;
         }
 
@@ -320,6 +300,7 @@ const linkToTeam = async (profile: Profile, userId: string) => {
     if (env.groupPrefix) {
       role = role.replace(env.groupPrefix, '');
     }
+
     // Owner > Admin > Member
     if (
       role.toUpperCase() === Role.ADMIN &&
@@ -328,6 +309,7 @@ const linkToTeam = async (profile: Profile, userId: string) => {
       userRole = Role.ADMIN;
       continue;
     }
+
     if (role.toUpperCase() === Role.OWNER) {
       userRole = Role.OWNER;
       break;
