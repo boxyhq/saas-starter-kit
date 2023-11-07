@@ -10,36 +10,58 @@ const unAuthenticatedRoutes = [
   '/api/auth/**',
   '/api/oauth/**',
   '/api/scim/v2.0/**',
+  '/api/invitations/*',
   '/auth/**',
   '/invitations/*',
-  '/api/invitations/*',
   '/terms-condition',
 ];
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  console.log({ pathname });
+
   // Bypass routes that don't require authentication
   if (micromatch.isMatch(pathname, unAuthenticatedRoutes)) {
     return NextResponse.next();
   }
 
-  const token = await getToken({
-    req,
-  });
+  // Fetch session
+  const session = await getSession(req);
+  // console.log(JSON.stringify(session, null, 2));
 
-  // No token, redirect to signin page
-  if (!token) {
-    const url = new URL('/auth/login', req.url);
-    url.searchParams.set('callbackUrl ', encodeURI(req.url));
+  const redirectUrl = new URL('/auth/login', req.url);
+  redirectUrl.searchParams.set('callbackUrl', encodeURI(req.url));
 
-    return NextResponse.redirect(url);
+  if (!session) {
+    return NextResponse.redirect(redirectUrl);
   }
+
+  // const token = await getToken({
+  //   req,
+  // });
+
+  // if (!token) {
+  //   return NextResponse.redirect(redirectUrl);
+  // }
 
   // All good, let the request through
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/auth/session).*)'],
+};
+
+const getSession = async (req: NextRequest) => {
+  const url = new URL('/api/auth/session', req.url);
+
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      cookie: req.headers.get('cookie') || '',
+    },
+  });
+
+  return await response.json();
 };

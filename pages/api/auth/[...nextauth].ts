@@ -7,7 +7,13 @@ import { Role } from '@prisma/client';
 import { getAccount } from 'models/account';
 import { addTeamMember, getTeam } from 'models/team';
 import { createUser, getUser } from 'models/user';
-import NextAuth, { Account, NextAuthOptions, Profile, User } from 'next-auth';
+import NextAuth, {
+  Account,
+  NextAuthOptions,
+  Profile,
+  SessionOptions,
+  User,
+} from 'next-auth';
 import BoxyHQSAMLProvider from 'next-auth/providers/boxyhq-saml';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import EmailProvider from 'next-auth/providers/email';
@@ -136,11 +142,13 @@ export const authOptions: NextAuthOptions = {
     verifyRequest: '/auth/verify-request',
   },
   session: {
-    strategy: 'jwt',
+    strategy: 'database',
   },
   secret: env.nextAuth.secret,
   callbacks: {
     async signIn({ user, account, profile }) {
+      console.log({ user, account, profile });
+
       if (!user || !user.email || !account) {
         return false;
       }
@@ -151,6 +159,7 @@ export const authOptions: NextAuthOptions = {
 
       // Login via email and password
       if (account?.provider === 'credentials') {
+        console.log('credentials');
         return true;
       }
 
@@ -187,9 +196,18 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
 
-    async session({ session, token }) {
-      if (token && session) {
-        session.user.id = token.sub as string;
+    async session({ session, token, user }) {
+      // When using JWT for sessions, the JWT payload (token) is provided.
+      // When using database sessions, the User (user) object is provided.
+
+      console.log({ session, token, user });
+
+      if (session) {
+        if (token) {
+          session.user.id = token.sub as string;
+        } else if (user) {
+          session.user.id = user.id;
+        }
       }
 
       return session;
