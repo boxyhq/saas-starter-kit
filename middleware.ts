@@ -53,7 +53,7 @@ export default async function middleware(req: NextRequest) {
 
     const session = await response.json();
 
-    if (!session) {
+    if (!session.user) {
       return NextResponse.redirect(redirectUrl);
     }
   }

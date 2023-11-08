@@ -62,6 +62,7 @@ const UpdatePassword = () => {
                     : undefined
                 }
                 onChange={formik.handleChange}
+                className="text-sm"
               />
               <InputWithLabel
                 type="password"
@@ -75,6 +76,7 @@ const UpdatePassword = () => {
                     : undefined
                 }
                 onChange={formik.handleChange}
+                className="text-sm"
               />
             </div>
           </Card.Body>

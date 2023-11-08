@@ -29,8 +29,9 @@ import { sendMagicLink } from '@/lib/email/sendMagicLink';
 
 const adapter = PrismaAdapter(prisma);
 const providers: Provider[] = [];
-const sessionTokenCookieName = 'next-auth.session-token';
 const sessionMaxAge = 30 * 24 * 60 * 60; // 30 days
+
+export const sessionTokenCookieName = 'next-auth.session-token';
 
 if (isAuthProviderEnabled('credentials')) {
   providers.push(
