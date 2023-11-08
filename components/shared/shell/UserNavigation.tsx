@@ -1,5 +1,4 @@
 import {
-  LockClosedIcon,
   RectangleStackIcon,
   ShieldCheckIcon,
   UserCircleIcon,
