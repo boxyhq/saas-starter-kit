@@ -29,7 +29,8 @@ import { sendMagicLink } from '@/lib/email/sendMagicLink';
 
 const adapter = PrismaAdapter(prisma);
 const providers: Provider[] = [];
-const sessionTokenCookie = 'next-auth.session-token';
+const sessionTokenCookieName = 'next-auth.session-token';
+const sessionMaxAge = 30 * 24 * 60 * 60; // 30 days
 
 if (isAuthProviderEnabled('credentials')) {
   providers.push(
@@ -142,8 +143,9 @@ export const getAuthOptions = (
   res: NextApiResponse | GetServerSidePropsContext['res']
 ) => {
   const isCredentialsProviderCallback =
-    req.query.nextauth?.includes('callback') &&
-    req.query.nextauth.includes('credentials') &&
+    (req as NextApiRequest).query &&
+    (req as NextApiRequest).query.nextauth?.includes('callback') &&
+    (req as NextApiRequest).query.nextauth?.includes('credentials') &&
     req.method === 'POST' &&
     env.nextAuth.sessionStrategy === 'database';
 
@@ -156,6 +158,7 @@ export const getAuthOptions = (
     },
     session: {
       strategy: env.nextAuth.sessionStrategy,
+      maxAge: sessionMaxAge,
     },
     secret: env.nextAuth.secret,
     callbacks: {
@@ -171,20 +174,20 @@ export const getAuthOptions = (
         // Handle credentials provider
         if (isCredentialsProviderCallback) {
           const sessionToken = uuidv4();
-          const sessionExpiry = 30 * 24 * 60 * 60; // TODO: Make this configurable
+          const expires = new Date(Date.now() + sessionMaxAge * 1000);
 
           if (adapter.createSession) {
             await adapter.createSession({
               sessionToken,
               userId: user.id,
-              expires: fromDate(sessionExpiry),
+              expires,
             });
           }
 
-          setCookie(sessionTokenCookie, sessionToken, {
+          setCookie(sessionTokenCookieName, sessionToken, {
             req,
             res,
-            expires: fromDate(sessionExpiry),
+            expires,
           });
         }
 
@@ -232,14 +235,6 @@ export const getAuthOptions = (
           session.user.id = token?.sub || user?.id;
         }
 
-        // if (session) {
-        //   if (token) {
-        //     session.user.id = token.sub as string;
-        //   } else if (user) {
-        //     session.user.id = user.id;
-        //   }
-        // }
-
         return session;
       },
 
@@ -254,7 +249,7 @@ export const getAuthOptions = (
     jwt: {
       encode: async (params) => {
         if (isCredentialsProviderCallback) {
-          return getCookie(sessionTokenCookie, { req, res }) || '';
+          return getCookie(sessionTokenCookieName, { req, res }) || '';
         }
 
         return encode(params);
@@ -317,8 +312,4 @@ const linkToTeam = async (profile: Profile, userId: string) => {
   }
 
   await addTeamMember(team.id, userId, userRole);
-};
-
-const fromDate = (time, date = Date.now()) => {
-  return new Date(date + time * 1000);
 };
