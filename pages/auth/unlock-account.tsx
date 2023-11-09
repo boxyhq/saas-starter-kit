@@ -1,3 +1,4 @@
+import { Button } from 'react-daisyui';
 import type { GetServerSidePropsContext } from 'next';
 import { useState, type ReactElement, useEffect } from 'react';
 import type { ComponentStatus } from 'react-daisyui/dist/types';
@@ -7,15 +8,15 @@ import {
   getVerificationToken,
   isVerificationTokenExpired,
 } from 'models/verificationToken';
-import { unlockAccount } from '@/lib/accountLock';
 import { Alert } from '@/components/shared';
-import { AuthLayout } from '@/components/layouts';
-import { Button } from 'react-daisyui';
 import { defaultHeaders } from '@/lib/common';
+import { AuthLayout } from '@/components/layouts';
+import { unlockAccount } from '@/lib/accountLock';
 
 interface UnlockAccountProps {
-  token: string;
+  email: string;
   error: string;
+  expiredToken: string;
   enableRequestNewToken: boolean;
 }
 
@@ -25,8 +26,9 @@ interface Message {
 }
 
 const UnlockAccount = ({
-  token,
+  email,
   error,
+  expiredToken,
   enableRequestNewToken,
 }: UnlockAccountProps) => {
   const [loading, setLoading] = useState(false);
@@ -52,7 +54,7 @@ const UnlockAccount = ({
       const response = await fetch(`/api/auth/unlock-account`, {
         method: 'POST',
         headers: defaultHeaders,
-        body: JSON.stringify({ expiredToken: token }),
+        body: JSON.stringify({ email, expiredToken }),
       });
 
       if (!response.ok) {
@@ -115,7 +117,8 @@ export const getServerSideProps = async ({
         error:
           'The link is invalid or has already been used. Please contact support if you need further assistance.',
         enableRequestNewToken: false,
-        token,
+        email: null,
+        expiredToken: null,
       },
     };
   }
@@ -126,7 +129,8 @@ export const getServerSideProps = async ({
         error:
           'The link has expired. Please request a new one if you still need to unlock your account.',
         enableRequestNewToken: true,
-        token,
+        email: verificationToken.identifier,
+        expiredToken: verificationToken.token,
       },
     };
   }

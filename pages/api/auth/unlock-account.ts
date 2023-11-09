@@ -1,13 +1,9 @@
 import { z } from 'zod';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { ApiError } from '@/lib/errors';
-import {
-  deleteVerificationToken,
-  getVerificationToken,
-  isVerificationTokenExpired,
-} from 'models/verificationToken';
 import { getUser } from 'models/user';
+import { ApiError } from '@/lib/errors';
+import { deleteVerificationToken } from 'models/verificationToken';
 import { isAccountLocked, sendLockoutEmail } from '@/lib/accountLock';
 
 export default async function handler(
@@ -36,24 +32,13 @@ export default async function handler(
 // Resend unlock account email
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const resendLinkRequest = z.object({
+    email: z.string(),
     expiredToken: z.string(),
   });
 
-  const { expiredToken } = resendLinkRequest.parse(req.body);
+  const { email, expiredToken } = resendLinkRequest.parse(req.body);
 
-  const expiredVerificationToken = await getVerificationToken(expiredToken);
-
-  if (!expiredVerificationToken) {
-    throw new ApiError(400, 'Unauthorized request');
-  }
-
-  if (!isVerificationTokenExpired(expiredVerificationToken)) {
-    throw new ApiError(400, 'Exisiting token is not expired');
-  }
-
-  await deleteVerificationToken(expiredToken);
-
-  const user = await getUser({ email: expiredVerificationToken.identifier });
+  const user = await getUser({ email });
 
   if (!user) {
     throw new ApiError(400, 'User not found');
@@ -62,10 +47,11 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!isAccountLocked(user)) {
     throw new ApiError(
       400,
-      'Your account is already unlocked. Please try logging in.'
+      'Your account is already active. Please try logging in.'
     );
   }
 
+  await deleteVerificationToken(expiredToken);
   await sendLockoutEmail(user, true);
 
   res.status(204).end();
