@@ -72,6 +72,7 @@ const CreateTeam = ({ visible, setVisible }: CreateTeamProps) => {
             variant="outline"
             onClick={() => {
               setVisible(!visible);
+              router.push(`/teams`);
             }}
             size="md"
           >
