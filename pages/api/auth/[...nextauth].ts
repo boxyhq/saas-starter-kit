@@ -18,6 +18,7 @@ import type { Provider } from 'next-auth/providers';
 import { validateRecaptcha } from '@/lib/recaptcha';
 import { sendMagicLink } from '@/lib/email/sendMagicLink';
 import {
+  clearLoginAttempts,
   exceededLoginAttemptsThreshold,
   incrementLoginAttempts,
 } from '@/lib/accountLock';
@@ -76,6 +77,8 @@ if (isAuthProviderEnabled('credentials')) {
 
           throw new Error('invalid-credentials');
         }
+
+        await clearLoginAttempts(user);
 
         return {
           id: user.id,
