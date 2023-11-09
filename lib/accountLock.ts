@@ -19,6 +19,13 @@ export const incrementLoginAttempts = async (user: User) => {
   });
 
   if (exceededLoginAttemptsThreshold(updatedUser)) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        lockedAt: new Date(),
+      },
+    });
+
     await sendLockoutEmail(user);
   }
 
