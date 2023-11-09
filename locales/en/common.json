@@ -186,5 +186,7 @@
   "team-settings": "Team Settings",
   "team-settings-config": "Team settings and configuration.",
   "resend-link": "Resend Link",
-  "expires-at": "Expires At"
+  "expires-at": "Expires At",
+  "exceeded-login-attempts": "Your account has been locked after too many failed login attempts. We sent you an email with a link to unlock it.",
+  "something-went-wrong": "Something went wrong. Please try again later."
 }
