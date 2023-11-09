@@ -188,5 +188,6 @@
   "resend-link": "Resend Link",
   "expires-at": "Expires At",
   "exceeded-login-attempts": "Your account has been locked after too many failed login attempts. We sent you an email with a link to unlock it.",
-  "something-went-wrong": "Something went wrong. Please try again later."
+  "something-went-wrong": "Something went wrong. Please try again later.",
+  "account-unlocked": "Your account has been unlocked. Please try logging in again. Contact support if you need further assistance."
 }

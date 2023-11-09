@@ -7,7 +7,8 @@ import { sendEmail } from './email/sendEmail';
 import { createVerificationToken } from 'models/verificationToken';
 import AccountLocked from '@/components/emailTemplates/AccountLocked';
 
-const MAX_LOGIN_ATTEMPTS = 3;
+const MAX_LOGIN_ATTEMPTS = 3; // TODO: Read from env
+const UNLOCK_ACCOUNT_TOKEN_EXPIRATION = 24 * 60 * 60 * 1000; // 24 hours
 
 export const incrementLoginAttempts = async (user: User) => {
   const updatedUser = await prisma.user.update({
@@ -52,17 +53,15 @@ export const unlockAccount = async (email: string) => {
   });
 };
 
-export const exceededLoginAttemptsThreshold = (user: User) => {
-  return user.invalid_login_attempts >= MAX_LOGIN_ATTEMPTS;
-};
-
-export const sendLockoutEmail = async (user: User) => {
+export const sendLockoutEmail = async (user: User, resending = false) => {
   const verificationToken = await createVerificationToken({
     identifier: user.email,
-    expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 24 hours
+    expires: new Date(Date.now() + UNLOCK_ACCOUNT_TOKEN_EXPIRATION),
   });
 
-  const subject = `Your ${app.name} account has been locked`;
+  const subject = resending
+    ? `Unlock your ${app.name} account`
+    : `Your ${app.name} account has been locked`;
 
   const token = encodeURIComponent(verificationToken.token);
   const url = `${app.url}/auth/unlock-account?token=${token}`;
@@ -74,4 +73,12 @@ export const sendLockoutEmail = async (user: User) => {
     subject,
     html,
   });
+};
+
+export const exceededLoginAttemptsThreshold = (user: User) => {
+  return user.invalid_login_attempts >= MAX_LOGIN_ATTEMPTS;
+};
+
+export const isAccountLocked = (user: User) => {
+  return !!user.lockedAt && exceededLoginAttemptsThreshold(user);
 };
