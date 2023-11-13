@@ -29,7 +29,7 @@ yarn-error.log*
 .env.local
 .env.development.local
 .env.test.local
-.env.jackson.productIdion.local
+.env.production.local
 
 # vercel
 .vercel
