@@ -1,15 +1,7 @@
 const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
-  // product: 'boxyhq',
   redirectIfAuthenticated: '/dashboard',
-
-  // SAML Jackson configuration
-  // saml: {
-  //   issuer: 'https://saml.boxyhq.com',
-  //   path: '/api/oauth/saml',
-  //   callback: `${process.env.APP_URL}`,
-  // },
 
   // SMTP configuration for NextAuth
   smtp: {
