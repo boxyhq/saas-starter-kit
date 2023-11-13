@@ -69,8 +69,8 @@ const Login: NextPageWithLayout<
 
   const formik = useFormik({
     initialValues: {
-      email: 'kiran@boxyhq.com',
-      password: '122',
+      email: '',
+      password: '',
     },
     validationSchema: Yup.object().shape({
       email: Yup.string().required().email(),
@@ -93,12 +93,7 @@ const Login: NextPageWithLayout<
       formik.resetForm();
       recaptchaRef.current?.reset();
 
-      if (!response) {
-        setMessage({ text: t('something-went-wrong'), status: 'error' });
-        return;
-      }
-
-      if (!response.ok) {
+      if (response && !response.ok) {
         setMessage({ text: response.error, status: 'error' });
         return;
       }
