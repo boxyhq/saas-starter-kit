@@ -97,7 +97,7 @@ if (isAuthProviderEnabled('saml')) {
   providers.push(
     BoxyHQSAMLProvider({
       authorization: { params: { scope: '' } },
-      issuer: env.appUrl,
+      issuer: env.jackson.selfHosted ? env.jackson.url : env.appUrl,
       clientId: 'dummy',
       clientSecret: 'dummy',
       allowDangerousEmailAccountLinking: true,

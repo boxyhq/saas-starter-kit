@@ -1,7 +1,15 @@
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
-import jackson from '@/lib/jackson';
 import { sendAudit } from '@/lib/retraced';
+import {
+  createSSOConnection,
+  deleteSSOConnections,
+  getSSOConnections,
+  updateSSOConnection,
+  createSSOSchema,
+  updateSSOSchema,
+  deleteSSOSchema,
+} from '@/lib/jackson/sso';
 import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -37,44 +45,39 @@ export default async function handler(
         });
     }
   } catch (err: any) {
+    console.error(err);
+
     const message = err.message || 'Something went wrong';
     const status = err.status || 500;
-    console.error(err);
+
     res.status(status).json({ error: { message } });
   }
 }
 
-// Get the SAML connection for the team.
+// Get the SSO connection for the team.
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
+
   throwIfNotAllowed(teamMember, 'team_sso', 'read');
 
-  const { apiController } = await jackson();
-
-  const connections = await apiController.getConnections({
+  const connections = await getSSOConnections({
     tenant: teamMember.teamId,
-    product: env.product,
   });
 
   res.json({ data: connections });
 };
 
-// Create a SAML connection for the team.
+// Create a SSO connection for the team
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
+
   throwIfNotAllowed(teamMember, 'team_sso', 'create');
 
-  const { metadataUrl, encodedRawMetadata } = req.body;
+  const params = createSSOSchema.parse(req.body);
 
-  const { apiController } = await jackson();
-
-  const connection = await apiController.createSAMLConnection({
-    encodedRawMetadata,
-    metadataUrl,
-    defaultRedirectUrl: env.saml.callback,
-    redirectUrl: env.saml.callback,
+  const connection = await createSSOConnection({
+    ...params,
     tenant: teamMember.teamId,
-    product: env.product,
   });
 
   sendAudit({
@@ -89,28 +92,14 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
+
   throwIfNotAllowed(teamMember, 'team_sso', 'create');
 
-  const {
-    metadataUrl,
-    encodedRawMetadata,
-    clientID,
-    clientSecret,
-    deactivated,
-  } = req.body;
+  const params = updateSSOSchema.parse(req.body);
 
-  const { apiController } = await jackson();
-
-  const connection = await apiController.updateSAMLConnection({
-    clientID,
-    clientSecret,
-    encodedRawMetadata,
-    metadataUrl,
-    deactivated,
-    defaultRedirectUrl: env.saml.callback,
-    redirectUrl: env.saml.callback,
+  const connection = await updateSSOConnection({
+    ...params,
     tenant: teamMember.teamId,
-    product: env.product,
   });
 
   sendAudit({
@@ -125,16 +114,12 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
+
   throwIfNotAllowed(teamMember, 'team_sso', 'delete');
 
-  const { clientID, clientSecret } = req.query as {
-    clientID: string;
-    clientSecret: string;
-  };
+  const params = deleteSSOSchema.parse(req.query);
 
-  const { apiController } = await jackson();
-
-  await apiController.deleteConnections({ clientID, clientSecret });
+  await deleteSSOConnections(params);
 
   sendAudit({
     action: 'sso.connection.delete',

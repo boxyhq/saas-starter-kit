@@ -30,7 +30,7 @@ const EDIT_SSO_CSS = {
   section: 'mb-8',
 };
 
-const TeamSSO = ({ teamFeatures }) => {
+const TeamSSO = ({ teamFeatures, SPConfigURL }) => {
   const { t } = useTranslation('common');
   const router = useRouter();
 
@@ -52,7 +52,7 @@ const TeamSSO = ({ teamFeatures }) => {
     <>
       <TeamTab activeTab="saml" team={team} teamFeatures={teamFeatures} />
       <ConnectionsWrapper
-        urls={{ spMetadata: '/well-known/saml-configuration' }}
+        urls={{ spMetadata: SPConfigURL }}
         copyDoneCallback={() => {
           /** show toast */
         }}
@@ -141,10 +141,15 @@ export async function getServerSideProps({
     };
   }
 
+  const SPConfigURL = env.jackson.selfHosted
+    ? `${env.jackson.url}/well-known/saml-configuration`
+    : '/well-known/saml-configuration';
+
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       teamFeatures: env.teamFeatures,
+      SPConfigURL,
     },
   };
 }
