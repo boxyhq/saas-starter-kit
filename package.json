@@ -29,6 +29,7 @@
     "@react-email/components": "0.0.11",
     "@retracedhq/logs-viewer": "2.5.2",
     "@retracedhq/retraced": "0.7.1",
+    "@sentry/nextjs": "7.80.0",
     "@tailwindcss/typography": "0.5.10",
     "autoprefixer": "10.4.16",
     "bcryptjs": "2.4.3",
