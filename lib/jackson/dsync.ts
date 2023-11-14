@@ -11,8 +11,8 @@ import { ApiResponse } from 'types';
 import { ApiError } from '@/lib/errors';
 import { options } from './config';
 import { prisma } from '@/lib/prisma';
-import { Role, Team, User } from '@prisma/client';
-import { addTeamMember, deleteTeam, removeTeamMember } from 'models/team';
+import { Role } from '@prisma/client';
+import { addTeamMember, removeTeamMember } from 'models/team';
 import { deleteUser, getUser } from 'models/user';
 
 export const createDirectorySchema = z.object({
@@ -180,6 +180,7 @@ export const handleSCIMEvents = async (event: DirectorySyncEvent) => {
       return;
     }
 
+    // Deactivation of user by removing them from the team
     if (active === false) {
       await removeTeamMember(teamId, user.id);
 
@@ -204,6 +205,9 @@ export const handleSCIMEvents = async (event: DirectorySyncEvent) => {
         name,
       },
     });
+
+    // Reactivation of user by adding them back to the team
+    await addTeamMember(teamId, user.id, Role.MEMBER);
   }
 
   // User has been removed
