@@ -26,6 +26,11 @@ import { prisma } from '@/lib/prisma';
 import { isAuthProviderEnabled } from '@/lib/auth';
 import { validateRecaptcha } from '@/lib/recaptcha';
 import { sendMagicLink } from '@/lib/email/sendMagicLink';
+import {
+  clearLoginAttempts,
+  exceededLoginAttemptsThreshold,
+  incrementLoginAttempts,
+} from '@/lib/accountLock';
 
 const adapter = PrismaAdapter(prisma);
 const providers: Provider[] = [];
@@ -61,6 +66,10 @@ if (isAuthProviderEnabled('credentials')) {
           throw new Error('invalid-credentials');
         }
 
+        if (exceededLoginAttemptsThreshold(user)) {
+          throw new Error('exceeded-login-attempts');
+        }
+
         if (env.confirmEmail && !user.emailVerified) {
           throw new Error('confirm-your-email');
         }
@@ -71,8 +80,16 @@ if (isAuthProviderEnabled('credentials')) {
         );
 
         if (!hasValidPassword) {
+          if (
+            exceededLoginAttemptsThreshold(await incrementLoginAttempts(user))
+          ) {
+            throw new Error('exceeded-login-attempts');
+          }
+
           throw new Error('invalid-credentials');
         }
+
+        await clearLoginAttempts(user);
 
         return {
           id: user.id,
