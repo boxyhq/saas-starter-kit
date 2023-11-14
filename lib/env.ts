@@ -1,3 +1,5 @@
+import type { SessionStrategy } from 'next-auth';
+
 const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
@@ -15,6 +17,8 @@ const env = {
   // NextAuth configuration
   nextAuth: {
     secret: process.env.NEXTAUTH_SECRET,
+    sessionStrategy: (process.env.NEXTAUTH_SESSION_STRATEGY ||
+      'jwt') as SessionStrategy,
   },
 
   // Svix
