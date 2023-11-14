@@ -55,10 +55,16 @@ const env = {
     url: process.env.JACKSON_URL,
     apiKey: process.env.JACKSON_API_KEY,
     productId: process.env.JACKSON_PRODUCT_ID || 'boxyhq',
-    callback: `${process.env.APP_URL}`,
-    issuer: 'https://saml.boxyhq.com',
-    path: '/api/oauth/saml',
     selfHosted: process.env.JACKSON_URL !== undefined,
+    sso: {
+      callback: `${process.env.APP_URL}`,
+      issuer: 'https://saml.boxyhq.com',
+      path: '/api/oauth/saml',
+    },
+    dsync: {
+      webhook_url: `${process.env.APP_URL}/api/webhooks/dsync`,
+      webhook_secret: process.env.JACKSON_WEBHOOK_SECRET,
+    },
   },
 
   // Users will need to confirm their email before accessing the app feature

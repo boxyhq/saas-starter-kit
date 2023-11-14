@@ -16,6 +16,7 @@ const unAuthenticatedRoutes = [
   '/auth/**',
   '/invitations/*',
   '/terms-condition',
+  '/api/webhooks/dsync'
 ];
 
 export default async function middleware(req: NextRequest) {

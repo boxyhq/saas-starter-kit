@@ -70,8 +70,8 @@ export const createSSOConnection = async (
 ) => {
   const body = {
     ...params,
-    defaultRedirectUrl: env.jackson.callback,
-    redirectUrl: env.jackson.callback,
+    defaultRedirectUrl: env.jackson.sso.callback,
+    redirectUrl: env.jackson.sso.callback,
     product: env.jackson.productId,
   };
 
