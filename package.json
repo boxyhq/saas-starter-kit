@@ -38,7 +38,7 @@
     "crypto-js": "4.2.0",
     "formik": "2.4.5",
     "i18next": "22.5.1",
-    "mixpanel-browser": "2.47.0",
+    "mixpanel-browser": "2.48.0",
     "moment": "2.29.4",
     "next": "14.0.2",
     "next-auth": "4.24.5",
