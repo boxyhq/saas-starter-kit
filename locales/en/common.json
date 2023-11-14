@@ -187,6 +187,8 @@
   "team-settings-config": "Team settings and configuration.",
   "resend-link": "Resend Link",
   "expires-at": "Expires At",
+  "exceeded-login-attempts": "Your account has been locked after too many failed login attempts. We sent you an email with a link to unlock it.",
+  "account-unlocked": "Your account has been unlocked. Please try logging in again. Contact support if you need further assistance.",
   "security": "Security",
   "browser-sessions": "Browser Sessions",
   "manage-sessions": "Manage and logout your active sessions on other browsers and devices.",

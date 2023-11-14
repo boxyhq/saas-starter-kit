@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from 'next/dist/server/api-utils';
 import { recordMetric } from '@/lib/metrics';
+import { unlockAccount } from '@/lib/accountLock';
 
 export default async function handler(
   req: NextApiRequest,
@@ -58,17 +59,22 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const hashedPassword = await hashPassword(password);
 
-  await Promise.all([
-    prisma.user.update({
-      where: { email: passwordReset.email },
-      data: {
-        password: hashedPassword,
-      },
-    }),
-    prisma.passwordReset.delete({
-      where: { token },
-    }),
-  ]);
+  const updatedUser = await prisma.user.update({
+    where: { email: passwordReset.email },
+    data: {
+      password: hashedPassword,
+    },
+  });
+
+  if (!updatedUser) {
+    throw new ApiError(500, 'Error updating password. Please try again.');
+  }
+
+  await unlockAccount(updatedUser);
+
+  await prisma.passwordReset.delete({
+    where: { token },
+  });
 
   recordMetric('user.password.reset');
 
