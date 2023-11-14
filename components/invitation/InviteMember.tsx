@@ -92,6 +92,7 @@ const InviteMember = ({
             variant="outline"
             onClick={() => {
               setVisible(!visible);
+              formik.resetForm();
             }}
             size="md"
           >

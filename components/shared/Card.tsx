@@ -21,16 +21,16 @@ const Description = ({ children }: { children: React.ReactNode }) => {
 };
 
 const Header = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex gap-3 flex-col">{children}</div>;
+  return <div className="flex gap-2 flex-col">{children}</div>;
 };
 
 const Body = ({ children }: { children: React.ReactNode }) => {
-  return <div className="card-body dark:bg-black gap-6 p-6">{children}</div>;
+  return <div className="card-body dark:bg-black gap-4 p-6">{children}</div>;
 };
 
 const Footer = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="card-actions justify-end dark:border-gray-600 p-3 border-t bg-gray-50 dark:bg-black">
+    <div className="card-actions justify-end dark:border-gray-600 p-2 border-t bg-gray-50 dark:bg-black">
       {children}
     </div>
   );

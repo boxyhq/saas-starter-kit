@@ -1,14 +1,16 @@
 import type { NextPageWithLayout } from 'types';
-import type { GetServerSidePropsContext } from 'next';
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { getSession } from '@/lib/session';
 import { getUserBySession } from 'models/user';
-import { inferSSRProps } from '@/lib/inferSSRProps';
 import { UpdateAccount } from '@/components/account';
 import env from '@/lib/env';
 
-type AccountProps = inferSSRProps<typeof getServerSideProps>;
+type AccountProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const Account: NextPageWithLayout<AccountProps> = ({
   user,

@@ -57,7 +57,20 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { email, role } = req.body;
 
-  const invitationExists = await prisma.invitation.findFirst({
+  const memberExists = await prisma.teamMember.count({
+    where: {
+      teamId: teamMember.teamId,
+      user: {
+        email,
+      },
+    },
+  });
+
+  if (memberExists) {
+    throw new ApiError(400, 'This user is already a member of the team.');
+  }
+
+  const invitationExists = await prisma.invitation.count({
     where: {
       email,
       teamId: teamMember.teamId,
@@ -76,7 +89,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   await sendEvent(teamMember.teamId, 'invitation.created', invitation);
-
   await sendTeamInviteEmail(teamMember.team, invitation);
 
   sendAudit({

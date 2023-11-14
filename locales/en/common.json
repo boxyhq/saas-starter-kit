@@ -188,5 +188,14 @@
   "resend-link": "Resend Link",
   "expires-at": "Expires At",
   "exceeded-login-attempts": "Your account has been locked after too many failed login attempts. We sent you an email with a link to unlock it.",
-  "account-unlocked": "Your account has been unlocked. Please try logging in again. Contact support if you need further assistance."
+  "account-unlocked": "Your account has been unlocked. Please try logging in again. Contact support if you need further assistance.",
+  "security": "Security",
+  "browser-sessions": "Browser Sessions",
+  "manage-sessions": "Manage and logout your active sessions on other browsers and devices.",
+  "this-browser": "This browser",
+  "other": "Other",
+  "remove-browser-session": "Remove Browser Session",
+  "remove-other-browser-session-warning": "Once removed you will be logged out of the app on that browser.",
+  "remove-current-browser-session-warning": "You are about to remove your current session. Once you do this, you will be logged out of the app.",
+  "session-removed": "Browser session removed."
 }
