@@ -12,6 +12,7 @@ import { Alert } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import { AuthLayout } from '@/components/layouts';
 import { unlockAccount } from '@/lib/accountLock';
+import { getUser } from 'models/user';
 
 interface UnlockAccountProps {
   email: string;
@@ -123,6 +124,14 @@ export const getServerSideProps = async ({
     };
   }
 
+  const user = await getUser({ email: verificationToken.identifier });
+
+  if (!user) {
+    return {
+      notFound: true,
+    };
+  }
+
   if (isVerificationTokenExpired(verificationToken)) {
     return {
       props: {
@@ -136,7 +145,7 @@ export const getServerSideProps = async ({
   }
 
   await Promise.allSettled([
-    unlockAccount(verificationToken.identifier),
+    unlockAccount(user),
     deleteVerificationToken(verificationToken.token),
   ]);
 
