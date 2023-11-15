@@ -37,8 +37,8 @@ export const getSSOConnections = async ({
   tenant,
   clientID,
 }: {
-  clientID?: string;
   tenant?: string;
+  clientID?: string;
 }) => {
   let params;
   if (tenant) {
