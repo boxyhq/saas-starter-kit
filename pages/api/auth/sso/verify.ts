@@ -1,5 +1,4 @@
-import env from '@/lib/env';
-import jackson from '@/lib/jackson';
+import { getSSOConnections } from '@/lib/jackson/sso';
 import { getTeam } from 'models/team';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -28,8 +27,6 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { apiController } = await jackson();
-
   const { slug } = JSON.parse(req.body) as { slug: string };
 
   if (!slug) {
@@ -42,10 +39,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error('Team not found.');
   }
 
-  const connections = await apiController.getConnections({
-    tenant: team.id,
-    product: env.product,
-  });
+  const connections = await getSSOConnections({ tenant: team.id });
 
   if (!connections || connections.length === 0) {
     throw new Error('No SSO connections found for this team.');

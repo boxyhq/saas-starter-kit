@@ -42,7 +42,7 @@ const SSO: NextPageWithLayout = () => {
 
       await signIn('boxyhq-saml', undefined, {
         tenant: data.teamId,
-        product: env.product,
+        product: env.jackson.productId,
       });
     },
   });

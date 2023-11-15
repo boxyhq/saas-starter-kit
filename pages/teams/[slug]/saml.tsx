@@ -23,7 +23,7 @@ const SSO_CSS = {
   section: 'mb-8',
 };
 
-const TeamSSO = ({ teamFeatures }) => {
+const TeamSSO = ({ teamFeatures, baseURL }) => {
   const { t } = useTranslation('common');
 
   const { isLoading, isError, team } = useTeam();
@@ -45,11 +45,11 @@ const TeamSSO = ({ teamFeatures }) => {
       <TeamTab activeTab="saml" team={team} teamFeatures={teamFeatures} />
       <ConnectionsWrapper
         urls={{
-          spMetadata: '/well-known/saml-configuration',
-          get: `/api/teams/${team.slug}/saml`,
-          post: `/api/teams/${team.slug}/saml`,
-          patch: `/api/teams/${team.slug}/saml`,
-          delete: `/api/teams/${team.slug}/saml`,
+          spMetadata: `${baseURL}/well-known/saml-configuration`,
+          get: `${baseURL}/api/teams/${team.slug}/saml`,
+          post: `${baseURL}/api/teams/${team.slug}/saml`,
+          patch: `${baseURL}/api/teams/${team.slug}/saml`,
+          delete: `${baseURL}/api/teams/${team.slug}/saml`,
         }}
         successCallback={({
           operation,
@@ -93,10 +93,13 @@ export async function getServerSideProps({
     };
   }
 
+  const baseURL = env.jackson.selfHosted ? env.jackson.url : '';
+
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       teamFeatures: env.teamFeatures,
+      baseURL,
     },
   };
 }
