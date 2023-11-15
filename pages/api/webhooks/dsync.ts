@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import crypto from 'crypto';
 
-import { handleSCIMEvents } from '@/lib/jackson/dsync';
+import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
+import { handleEvents } from '@/lib/jackson/dsyncEvents';
 
-// TODO: Verify the request signature
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -13,7 +14,13 @@ export default async function handler(
       throw new ApiError(400, `Method ${req.method} Not Allowed`);
     }
 
-    await handleSCIMEvents(req.body);
+    if (!verifyWebhookSignature(req)) {
+      console.error('Signature verification failed.');
+      res.end();
+      return;
+    }
+
+    await handleEvents(req.body);
 
     res.end();
   } catch (error: any) {
@@ -21,3 +28,22 @@ export default async function handler(
     res.end();
   }
 }
+
+const verifyWebhookSignature = (req: NextApiRequest) => {
+  const signatureHeader = req.headers['boxyhq-signature'] as string;
+
+  if (!signatureHeader) {
+    return false;
+  }
+
+  const [t, s] = signatureHeader.split(',');
+  const timestamp = parseInt(t.split('=')[1]);
+  const signature = s.split('=')[1];
+
+  const expectedSignature = crypto
+    .createHmac('sha256', env.jackson.dsync.webhook_secret as string)
+    .update(`${timestamp}.${JSON.stringify(req.body)}`)
+    .digest('hex');
+
+  return signature === expectedSignature;
+};

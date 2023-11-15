@@ -4,7 +4,7 @@ import type { DirectorySyncRequest } from '@boxyhq/saml-jackson';
 import env from '@/lib/env';
 import jackson from '@/lib/jackson';
 import { extractAuthToken } from '@/lib/common';
-import { handleSCIMEvents } from '@/lib/jackson/dsync';
+import { handleEvents } from '@/lib/jackson/dsyncEvents';
 
 export default async function handler(
   req: NextApiRequest,
@@ -40,7 +40,7 @@ export default async function handler(
 
   const { status, data } = await directorySync.requests.handle(
     request,
-    handleSCIMEvents
+    handleEvents
   );
 
   res.status(status).json(data);
