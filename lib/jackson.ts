@@ -10,8 +10,8 @@ import env from './env';
 
 const opts = {
   externalUrl: env.appUrl,
-  samlPath: env.saml.path,
-  samlAudience: env.saml.issuer,
+  samlPath: env.jackson.sso.path,
+  samlAudience: env.jackson.sso.issuer,
   db: {
     engine: 'sql',
     type: 'postgres',

@@ -13,6 +13,7 @@ const unAuthenticatedRoutes = [
   '/api/oauth/**',
   '/api/scim/v2.0/**',
   '/api/invitations/*',
+  '/api/webhooks/dsync',
   '/auth/**',
   '/invitations/*',
   '/terms-condition',

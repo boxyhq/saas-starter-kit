@@ -10,8 +10,6 @@ import AccountLocked from '@/components/emailTemplates/AccountLocked';
 
 const UNLOCK_ACCOUNT_TOKEN_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-console.log({ maxLoginAttempts: env.maxLoginAttempts });
-
 export const incrementLoginAttempts = async (user: User) => {
   const updatedUser = await prisma.user.update({
     where: { id: user.id },

@@ -1,16 +1,10 @@
-import { hashPassword } from '@/lib/auth';
-import { createRandomString, extractAuthToken } from '@/lib/common';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { DirectorySyncRequest } from '@boxyhq/saml-jackson';
+
 import env from '@/lib/env';
 import jackson from '@/lib/jackson';
-import { prisma } from '@/lib/prisma';
-import type {
-  DirectorySyncEvent,
-  DirectorySyncRequest,
-} from '@boxyhq/saml-jackson';
-import { Role } from '@prisma/client';
-import { addTeamMember } from 'models/team';
-import { deleteUser, getUser } from 'models/user';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { extractAuthToken } from '@/lib/common';
+import { handleEvents } from '@/lib/jackson/dsyncEvents';
 
 export default async function handler(
   req: NextApiRequest,
@@ -51,65 +45,3 @@ export default async function handler(
 
   res.status(status).json(data);
 }
-
-// Handle the SCIM events
-const handleEvents = async (event: DirectorySyncEvent) => {
-  const { event: action, tenant: teamId, data } = event;
-
-  // User has been created
-  if (action === 'user.created' && 'email' in data) {
-    const user = await prisma.user.upsert({
-      where: {
-        email: data.email,
-      },
-      update: {
-        name: `${data.first_name} ${data.last_name}`,
-      },
-      create: {
-        name: `${data.first_name} ${data.last_name}`,
-        email: data.email,
-        password: await hashPassword(createRandomString()),
-      },
-    });
-
-    await addTeamMember(teamId, user.id, Role.MEMBER);
-  }
-
-  // User has been updated
-  if (action === 'user.updated' && 'email' in data) {
-    if (data.active === true) {
-      const user = await prisma.user.upsert({
-        where: {
-          email: data.email,
-        },
-        update: {
-          name: `${data.first_name} ${data.last_name}`,
-        },
-        create: {
-          name: `${data.first_name} ${data.last_name}`,
-          email: data.email,
-          password: await hashPassword(createRandomString()),
-        },
-      });
-
-      await addTeamMember(teamId, user.id, Role.MEMBER);
-
-      return;
-    }
-
-    const user = await getUser({ email: data.email });
-
-    if (!user) {
-      return;
-    }
-
-    if (data.active === false) {
-      await deleteUser({ id: user.id });
-    }
-  }
-
-  // User has been removed
-  if (action === 'user.deleted' && 'email' in data) {
-    await deleteUser({ email: data.email });
-  }
-};

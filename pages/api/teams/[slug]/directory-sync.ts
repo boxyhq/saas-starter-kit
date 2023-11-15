@@ -1,10 +1,16 @@
 import env from '@/lib/env';
-import jackson from '@/lib/jackson';
 import { sendAudit } from '@/lib/retraced';
 import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from '@/lib/errors';
+import {
+  createDirectoryConnection,
+  createDirectorySchema,
+  deleteDirectoryConnection,
+  deleteDirectorySchema,
+  getDirectoryConnections,
+} from '@/lib/jackson/dsync';
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,12 +34,14 @@ export default async function handler(
         await handleDELETE(req, res);
         break;
       default:
-        res.setHeader('Allow', 'GET, POST');
+        res.setHeader('Allow', 'GET, POST, DELETE');
         res.status(405).json({
           error: { message: `Method ${method} Not Allowed` },
         });
     }
   } catch (error: any) {
+    console.error(error);
+
     const message = error.message || 'Something went wrong';
     const status = error.status || 500;
 
@@ -43,40 +51,27 @@ export default async function handler(
 
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
+
   throwIfNotAllowed(teamMember, 'team_dsync', 'read');
 
-  const { directorySync } = await jackson();
+  const connections = await getDirectoryConnections({
+    tenant: teamMember.teamId,
+  });
 
-  const { data, error } = await directorySync.directories.getByTenantAndProduct(
-    teamMember.teamId,
-    env.product
-  );
-
-  if (error) {
-    throw error;
-  }
-
-  res.status(200).json({ data });
+  res.status(200).json({ data: connections });
 };
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
+
   throwIfNotAllowed(teamMember, 'team_dsync', 'create');
 
-  const { name, provider } = req.body;
+  const body = createDirectorySchema.parse(req.body);
 
-  const { directorySync } = await jackson();
-
-  const { data, error } = await directorySync.directories.create({
-    name,
-    type: provider,
+  const connection = await createDirectoryConnection({
+    ...body,
     tenant: teamMember.teamId,
-    product: env.product,
   });
-
-  if (error) {
-    throw error;
-  }
 
   sendAudit({
     action: 'dsync.connection.create',
@@ -85,18 +80,17 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  res.status(201).json({ data });
+  res.status(201).json({ data: connection });
 };
 
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
+
   throwIfNotAllowed(teamMember, 'team_dsync', 'delete');
 
-  const { dsyncId } = req.query as { dsyncId: string };
+  const params = deleteDirectorySchema.parse(req.query);
 
-  const { directorySync } = await jackson();
-
-  await directorySync.directories.delete(dsyncId);
+  await deleteDirectoryConnection(params);
 
   sendAudit({
     action: 'dsync.connection.delete',
