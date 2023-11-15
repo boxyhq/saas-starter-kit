@@ -51,6 +51,13 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { apiController } = await jackson();
 
+  if (req.query.clientID) {
+    const connections = await apiController.getConnections({
+      clientID: req.query.clientID as string,
+    });
+    return res.json({ data: connections });
+  }
+
   const connections = await apiController.getConnections({
     tenant: teamMember.teamId,
     product: env.product,
