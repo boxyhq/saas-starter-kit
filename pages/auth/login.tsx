@@ -6,7 +6,6 @@ import type {
 import * as Yup from 'yup';
 import Link from 'next/link';
 import { useFormik } from 'formik';
-import toast from 'react-hot-toast';
 import { Button } from 'react-daisyui';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -80,6 +79,8 @@ const Login: NextPageWithLayout<
     onSubmit: async (values) => {
       const { email, password } = values;
 
+      setMessage({ text: null, status: null });
+
       const response = await signIn('credentials', {
         email,
         password,
@@ -92,8 +93,8 @@ const Login: NextPageWithLayout<
       formik.resetForm();
       recaptchaRef.current?.reset();
 
-      if (!response?.ok) {
-        toast.error(t(response?.error));
+      if (response && !response.ok) {
+        setMessage({ text: response.error, status: 'error' });
         return;
       }
     },
@@ -115,7 +116,9 @@ const Login: NextPageWithLayout<
         <title>{t('login-title')}</title>
       </Head>
       {message.text && message.status && (
-        <Alert status={message.status}>{t(message.text)}</Alert>
+        <Alert status={message.status} className="mb-5">
+          {t(message.text)}
+        </Alert>
       )}
       <div className="rounded p-6 border">
         <div className="flex gap-2 flex-wrap">

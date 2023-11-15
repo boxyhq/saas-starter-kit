@@ -49,3 +49,5 @@ yarn-error.log*
 .eslintcache
 
 .vscode
+# Sentry Config File
+.sentryclirc

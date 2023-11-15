@@ -1,3 +1,5 @@
+import type { SessionStrategy } from 'next-auth';
+
 const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
@@ -23,6 +25,8 @@ const env = {
   // NextAuth configuration
   nextAuth: {
     secret: process.env.NEXTAUTH_SECRET,
+    sessionStrategy: (process.env.NEXTAUTH_SESSION_STRATEGY ||
+      'jwt') as SessionStrategy,
   },
 
   // Svix
@@ -87,6 +91,8 @@ const env = {
     siteKey: process.env.RECAPTCHA_SITE_KEY || null,
     secretKey: process.env.RECAPTCHA_SECRET_KEY || null,
   },
+
+  maxLoginAttempts: Number(process.env.MAX_LOGIN_ATTEMPTS) || 5,
 };
 
 export default env;
