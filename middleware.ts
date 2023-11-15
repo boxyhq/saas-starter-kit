@@ -13,10 +13,11 @@ const unAuthenticatedRoutes = [
   '/api/oauth/**',
   '/api/scim/v2.0/**',
   '/api/invitations/*',
+  '/api/webhooks/dsync',
   '/auth/**',
   '/invitations/*',
   '/terms-condition',
-  '/api/webhooks/dsync',
+  '/unlock-account',
 ];
 
 export default async function middleware(req: NextRequest) {

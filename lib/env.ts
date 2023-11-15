@@ -100,6 +100,8 @@ const env = {
     siteKey: process.env.RECAPTCHA_SITE_KEY || null,
     secretKey: process.env.RECAPTCHA_SECRET_KEY || null,
   },
+
+  maxLoginAttempts: Number(process.env.MAX_LOGIN_ATTEMPTS) || 5,
 };
 
 export default env;
