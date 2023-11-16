@@ -60,6 +60,13 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_sso', 'read');
 
+  if (req.query.clientId) {
+    const connections = await getSSOConnections({
+      clientID: req.query.clientID as string,
+    });
+    return res.json({ data: connections });
+  }
+
   const connections = await getSSOConnections({
     tenant: teamMember.teamId,
   });

@@ -33,12 +33,19 @@ export const deleteSSOSchema = z.object({
 });
 
 // Fetch SSO connections for a team
-export const getSSOConnections = async ({ tenant }: { tenant: string }) => {
-  const params = {
-    tenant,
-    product: env.jackson.productId,
-  };
-
+export const getSSOConnections = async ({
+  tenant,
+  clientID,
+}: {
+  tenant?: string;
+  clientID?: string;
+}) => {
+  let params;
+  if (tenant) {
+    params = { tenant, product: env.jackson.productId };
+  } else {
+    params = { clientID };
+  }
   if (env.jackson.selfHosted) {
     const query = new URLSearchParams(params);
 

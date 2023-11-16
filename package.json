@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@boxyhq/metrics": "0.2.6",
-    "@boxyhq/react-ui": "3.3.16",
+    "@boxyhq/react-ui": "3.3.18",
     "@boxyhq/saml-jackson": "1.14.3",
     "@heroicons/react": "2.0.18",
     "@hookform/resolvers": "3.3.2",
