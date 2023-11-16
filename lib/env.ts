@@ -1,15 +1,9 @@
+import type { SessionStrategy } from 'next-auth';
+
 const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
-  product: 'boxyhq',
   redirectIfAuthenticated: '/dashboard',
-
-  // SAML Jackson configuration
-  saml: {
-    issuer: 'https://saml.boxyhq.com',
-    path: '/api/oauth/saml',
-    callback: `${process.env.APP_URL}`,
-  },
 
   // SMTP configuration for NextAuth
   smtp: {
@@ -23,6 +17,8 @@ const env = {
   // NextAuth configuration
   nextAuth: {
     secret: process.env.NEXTAUTH_SECRET,
+    sessionStrategy: (process.env.NEXTAUTH_SESSION_STRATEGY ||
+      'jwt') as SessionStrategy,
   },
 
   // Svix
@@ -53,6 +49,23 @@ const env = {
   },
 
   groupPrefix: process.env.GROUP_PREFIX,
+
+  // SAML Jackson configuration
+  jackson: {
+    url: process.env.JACKSON_URL,
+    apiKey: process.env.JACKSON_API_KEY,
+    productId: process.env.JACKSON_PRODUCT_ID || 'boxyhq',
+    selfHosted: process.env.JACKSON_URL !== undefined,
+    sso: {
+      callback: `${process.env.APP_URL}`,
+      issuer: 'https://saml.boxyhq.com',
+      path: '/api/oauth/saml',
+    },
+    dsync: {
+      webhook_url: `${process.env.APP_URL}/api/webhooks/dsync`,
+      webhook_secret: process.env.JACKSON_WEBHOOK_SECRET,
+    },
+  },
 
   // Users will need to confirm their email before accessing the app feature
   confirmEmail: process.env.CONFIRM_EMAIL === 'true',
@@ -87,6 +100,8 @@ const env = {
     siteKey: process.env.RECAPTCHA_SITE_KEY || null,
     secretKey: process.env.RECAPTCHA_SECRET_KEY || null,
   },
+
+  maxLoginAttempts: Number(process.env.MAX_LOGIN_ATTEMPTS) || 5,
 };
 
 export default env;

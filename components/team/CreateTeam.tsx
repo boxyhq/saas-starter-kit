@@ -51,8 +51,13 @@ const CreateTeam = ({ visible, setVisible }: CreateTeamProps) => {
     },
   });
 
+  const onClose = () => {
+    setVisible(false);
+    router.push(`/teams`);
+  };
+
   return (
-    <Modal open={visible} close={() => setVisible(false)}>
+    <Modal open={visible} close={onClose}>
       <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header>{t('create-team')}</Modal.Header>
         <Modal.Description>{t('members-of-a-team')}</Modal.Description>
@@ -67,14 +72,7 @@ const CreateTeam = ({ visible, setVisible }: CreateTeamProps) => {
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setVisible(!visible);
-            }}
-            size="md"
-          >
+          <Button type="button" variant="outline" onClick={onClose} size="md">
             {t('close')}
           </Button>
           <Button

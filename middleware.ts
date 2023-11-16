@@ -3,6 +3,8 @@ import { getToken } from 'next-auth/jwt';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+import env from './lib/env';
+
 // Add routes that don't require authentication
 const unAuthenticatedRoutes = [
   '/api/hello',
@@ -10,10 +12,12 @@ const unAuthenticatedRoutes = [
   '/api/auth/**',
   '/api/oauth/**',
   '/api/scim/v2.0/**',
+  '/api/invitations/*',
+  '/api/webhooks/dsync',
   '/auth/**',
   '/invitations/*',
-  '/api/invitations/*',
   '/terms-condition',
+  '/unlock-account',
 ];
 
 export default async function middleware(req: NextRequest) {
@@ -24,16 +28,36 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const token = await getToken({
-    req,
-  });
+  const redirectUrl = new URL('/auth/login', req.url);
+  redirectUrl.searchParams.set('callbackUrl', encodeURI(req.url));
 
-  // No token, redirect to signin page
-  if (!token) {
-    const url = new URL('/auth/login', req.url);
-    url.searchParams.set('callbackUrl ', encodeURI(req.url));
+  // JWT strategy
+  if (env.nextAuth.sessionStrategy === 'jwt') {
+    const token = await getToken({
+      req,
+    });
 
-    return NextResponse.redirect(url);
+    if (!token) {
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
+  // Database strategy
+  else if (env.nextAuth.sessionStrategy === 'database') {
+    const url = new URL('/api/auth/session', req.url);
+
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        cookie: req.headers.get('cookie') || '',
+      },
+    });
+
+    const session = await response.json();
+
+    if (!session.user) {
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   // All good, let the request through
@@ -41,5 +65,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/auth/session).*)'],
 };
