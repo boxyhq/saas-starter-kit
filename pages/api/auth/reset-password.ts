@@ -72,6 +72,11 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await unlockAccount(updatedUser);
 
+  // Remove all active sessions for the user
+  await prisma.session.deleteMany({
+    where: { userId: updatedUser.id },
+  });
+
   await prisma.passwordReset.delete({
     where: { token },
   });
