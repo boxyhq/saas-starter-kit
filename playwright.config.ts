@@ -17,7 +17,7 @@ const config: PlaywrightTestConfig = {
     headless: true,
     ignoreHTTPSErrors: true,
     baseURL: 'http://localhost:4002',
-    video: "off"
+    video: 'off',
   },
   testDir: './tests',
 };
