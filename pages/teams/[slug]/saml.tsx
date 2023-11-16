@@ -23,7 +23,7 @@ const SSO_CSS = {
   section: 'mb-8',
 };
 
-const TeamSSO = ({ teamFeatures, baseURL }) => {
+const TeamSSO = ({ teamFeatures, SPConfigURL }) => {
   const { t } = useTranslation('common');
 
   const { isLoading, isError, team } = useTeam();
@@ -45,11 +45,11 @@ const TeamSSO = ({ teamFeatures, baseURL }) => {
       <TeamTab activeTab="saml" team={team} teamFeatures={teamFeatures} />
       <ConnectionsWrapper
         urls={{
-          spMetadata: `${baseURL}/well-known/saml-configuration`,
-          get: `${baseURL}/api/teams/${team.slug}/saml`,
-          post: `${baseURL}/api/teams/${team.slug}/saml`,
-          patch: `${baseURL}/api/teams/${team.slug}/saml`,
-          delete: `${baseURL}/api/teams/${team.slug}/saml`,
+          spMetadata: SPConfigURL,
+          get: `/api/teams/${team.slug}/saml`,
+          post: `/api/teams/${team.slug}/saml`,
+          patch: `/api/teams/${team.slug}/saml`,
+          delete: `/api/teams/${team.slug}/saml`,
         }}
         successCallback={({
           operation,
@@ -93,13 +93,15 @@ export async function getServerSideProps({
     };
   }
 
-  const baseURL = env.jackson.selfHosted ? env.jackson.url : '';
+  const SPConfigURL = env.jackson.selfHosted
+    ? `${env.jackson.url}/well-known/saml-configuration`
+    : '/well-known/saml-configuration';
 
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       teamFeatures: env.teamFeatures,
-      baseURL,
+      SPConfigURL,
     },
   };
 }
