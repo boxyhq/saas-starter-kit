@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from 'next/dist/server/api-utils';
 import { recordMetric } from '@/lib/metrics';
 import { unlockAccount } from '@/lib/accountLock';
+import env from '@/lib/env';
 
 export default async function handler(
   req: NextApiRequest,
@@ -73,9 +74,11 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   await unlockAccount(updatedUser);
 
   // Remove all active sessions for the user
-  await prisma.session.deleteMany({
-    where: { userId: updatedUser.id },
-  });
+  if (env.nextAuth.sessionStrategy === 'database') {
+    await prisma.session.deleteMany({
+      where: { userId: updatedUser.id },
+    });
+  }
 
   await prisma.passwordReset.delete({
     where: { token },
