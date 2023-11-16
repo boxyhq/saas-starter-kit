@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 
 const user = {
   name: 'Jackson',
-  email: 'jackson+4@boxyhq.com',
+  email: 'jackson@boxyhq.com',
   password: 'password',
 } as const;
 
