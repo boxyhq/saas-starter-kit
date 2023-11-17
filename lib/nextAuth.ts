@@ -13,7 +13,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import type { Provider } from 'next-auth/providers';
 import { setCookie, getCookie } from 'cookies-next';
 import { encode, decode } from 'next-auth/jwt';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
 import { Role } from '@prisma/client';
 import { getAccount } from 'models/account';
@@ -191,7 +191,7 @@ export const getAuthOptions = (
 
         // Handle credentials provider
         if (isCredentialsProviderCallback) {
-          const sessionToken = uuidv4();
+          const sessionToken = randomUUID();
           const expires = new Date(Date.now() + sessionMaxAge * 1000);
 
           if (adapter.createSession) {

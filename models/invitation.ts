@@ -1,7 +1,7 @@
 import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
 import { Invitation, Role } from '@prisma/client';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
 export const getInvitations = async (teamId: string) => {
   return await prisma.invitation.findMany({
@@ -50,7 +50,7 @@ export const createInvitation = async (param: {
 
   return await prisma.invitation.create({
     data: {
-      token: uuidv4(),
+      token: randomUUID(),
       expires,
       teamId,
       invitedBy,
