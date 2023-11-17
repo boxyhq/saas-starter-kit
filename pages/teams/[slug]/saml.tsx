@@ -69,7 +69,6 @@ const TeamSSO = ({ teamFeatures, SPConfigURL }) => {
             toast.success(`${ssoType} connection deleted successfully.`);
           } else if (operation === 'COPY') {
             toast.success(`Contents copied to clipboard`);
-            return;
           }
         }}
         errorCallback={(errMessage) => toast.error(errMessage)}
