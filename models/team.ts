@@ -122,7 +122,13 @@ export const getTeamMembers = async (slug: string) => {
       },
     },
     include: {
-      user: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
     },
   });
 };

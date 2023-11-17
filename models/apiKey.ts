@@ -37,6 +37,11 @@ export const fetchApiKeys = async (teamId: string) => {
     where: {
       teamId,
     },
+    select: {
+      id: true,
+      name: true,
+      createdAt: true,
+    },
   });
 };
 

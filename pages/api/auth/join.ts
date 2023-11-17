@@ -117,7 +117,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   res.status(201).json({
     data: {
-      user,
       confirmEmail: env.confirmEmail && !user.emailVerified,
     },
   });
