@@ -9,7 +9,7 @@ import { options } from './config';
 
 export const createDirectorySchema = z.object({
   name: z.string(),
-  provider: z.string(),
+  type: z.string(),
 });
 
 export const deleteDirectorySchema = z.object({
@@ -63,12 +63,12 @@ export const getDirectoryConnections = async ({
 export const createDirectoryConnection = async ({
   name,
   tenant,
-  provider,
+  type,
 }: z.infer<typeof createDirectorySchema> & { tenant: string }) => {
   const body = {
     name,
     tenant,
-    type: provider as DirectoryType,
+    type: type as DirectoryType,
     product: env.jackson.productId,
   };
 
