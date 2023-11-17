@@ -59,5 +59,5 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   recordMetric('user.password.updated');
 
-  res.status(200).json({ data: user });
+  res.status(200).json({ data: {} });
 };

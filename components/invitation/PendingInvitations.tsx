@@ -80,7 +80,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
         <tbody>
           {invitations.map((invitation) => {
             return (
-              <tr key={invitation.token}>
+              <tr key={invitation.id}>
                 <td>
                   <div className="flex items-center justify-start space-x-2">
                     <LetterAvatar name={invitation.email} />

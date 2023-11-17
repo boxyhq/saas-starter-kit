@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { InputWithLabel } from '@/components/shared';
 import { defaultHeaders, passwordPolicies } from '@/lib/common';
-import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -52,9 +51,9 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
         }),
       });
 
-      const json = (await response.json()) as ApiResponse<
-        User & { confirmEmail: boolean }
-      >;
+      const json = (await response.json()) as ApiResponse<{
+        confirmEmail: boolean;
+      }>;
 
       recaptchaRef.current?.reset();
 
