@@ -38,7 +38,7 @@
     "formik": "2.4.5",
     "i18next": "22.5.1",
     "mixpanel-browser": "2.48.1",
-    "next": "14.0.2",
+    "next": "14.0.3",
     "next-auth": "4.24.5",
     "next-i18next": "13.3.0",
     "nodemailer": "6.9.7",
