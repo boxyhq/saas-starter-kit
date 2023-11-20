@@ -65,7 +65,7 @@
     "@types/jest": "29.5.8",
     "@types/mixpanel-browser": "2.47.5",
     "@types/mocha": "10.0.4",
-    "@types/node": "20.9.1",
+    "@types/node": "20.9.2",
     "@types/nodemailer": "6.4.14",
     "@types/react": "18.2.37",
     "@typescript-eslint/eslint-plugin": "6.11.0",
