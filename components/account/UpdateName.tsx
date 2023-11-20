@@ -33,7 +33,7 @@ const UpdateName = ({ user }: { user: Partial<User> }) => {
         body: JSON.stringify(values),
       });
 
-      const json = (await response.json()) as ApiResponse<User>;
+      const json = (await response.json()) as ApiResponse;
 
       if (!response.ok) {
         toast.error(json.error.message);
@@ -41,7 +41,7 @@ const UpdateName = ({ user }: { user: Partial<User> }) => {
       }
 
       await update({
-        name: json.data.name,
+        name: values.name,
       });
 
       router.replace('/settings/account');

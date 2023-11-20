@@ -5,7 +5,6 @@ import {
   WithLoadingAndError,
 } from '@/components/shared';
 import { defaultHeaders, passwordPolicies } from '@/lib/common';
-import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
 import useInvitation from 'hooks/useInvitation';
 import { useTranslation } from 'next-i18next';
@@ -61,7 +60,7 @@ const JoinWithInvitation = ({
         }),
       });
 
-      const json = (await response.json()) as ApiResponse<User>;
+      const json = (await response.json()) as ApiResponse;
 
       recaptchaRef.current?.reset();
 

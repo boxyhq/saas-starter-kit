@@ -33,7 +33,7 @@ const UpdateEmail = ({ user, allowEmailChange }: UpdateEmailProps) => {
         body: JSON.stringify(values),
       });
 
-      const json = (await response.json()) as ApiResponse<User>;
+      const json = (await response.json()) as ApiResponse;
 
       if (!response.ok) {
         toast.error(json.error.message);
