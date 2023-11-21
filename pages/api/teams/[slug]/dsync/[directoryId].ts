@@ -7,6 +7,8 @@ import {
   deleteDirectoryConnection,
   deleteDirectorySchema,
   getDirectoryConnections,
+  patchDirectoryConnection,
+  patchDirectorySchema,
 } from '@/lib/jackson/dsync';
 import { sendAudit } from '@/lib/retraced';
 
@@ -26,7 +28,8 @@ export default async function handler(
         await handleGET(req, res);
         break;
       case 'PATCH':
-        return await handlePATCH(req, res);
+        await handlePATCH(req, res);
+        break;
       case 'DELETE':
         await handleDELETE(req, res);
         break;
@@ -63,12 +66,11 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_dsync', 'read');
 
-  const { directoryId } = req.query as { directoryId: string };
+  const body = patchDirectorySchema.parse({ ...req.query, ...req.body });
 
-  const { data, error } = await directorySyncController.directories.update(
-    directoryId,
-    req.body
-  );
+  const connection = await patchDirectoryConnection(body);
+
+  res.status(200).json({ data: connection });
 };
 
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
