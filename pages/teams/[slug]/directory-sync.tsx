@@ -63,7 +63,7 @@ const DirectorySync = ({ teamFeatures }) => {
           },
         }}
         urls={{
-          queryOpts: { type: 'slug', name: 'directoryId' },
+          parameters: { in: 'path', name: 'directoryId' },
           get: `/api/teams/${team.slug}/dsync`,
           post: `/api/teams/${team.slug}/dsync`,
           patch: `/api/teams/${team.slug}/dsync`,
