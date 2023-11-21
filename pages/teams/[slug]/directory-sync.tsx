@@ -49,10 +49,10 @@ const DirectorySync = ({ teamFeatures }) => {
       <DirectoriesWrapper
         classNames={DSYNC_CSS}
         urls={{
-          get: `/api/teams/${team.slug}/directory-sync`,
-          post: `/api/teams/${team.slug}/directory-sync`,
-          patch: `/api/teams/${team.slug}/directory-sync`,
-          delete: `/api/teams/${team.slug}/directory-sync`,
+          get: `/api/teams/${team.slug}/dsync`,
+          post: `/api/teams/${team.slug}/dsync`,
+          patch: `/api/teams/${team.slug}/dsync`,
+          delete: `/api/teams/${team.slug}/dsync`,
         }}
         successCallback={({ operation }) => {
           if (operation === 'CREATE') {
