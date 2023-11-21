@@ -48,7 +48,22 @@ const DirectorySync = ({ teamFeatures }) => {
       />
       <DirectoriesWrapper
         classNames={DSYNC_CSS}
+        componentProps={{
+          directoryList: { cols: ['name', 'type', 'status', 'actions'] },
+          createDirectory: {
+            excludeFields: [
+              'product',
+              'tenant',
+              'webhook_secret',
+              'webhook_url',
+            ],
+          },
+          editDirectory: {
+            excludeFields: ['webhook_url', 'webhook_secret'],
+          },
+        }}
         urls={{
+          queryOpts: { type: 'slug', name: 'directoryId' },
           get: `/api/teams/${team.slug}/dsync`,
           post: `/api/teams/${team.slug}/dsync`,
           patch: `/api/teams/${team.slug}/dsync`,
