@@ -19,22 +19,25 @@ export const deleteDirectorySchema = z.object({
 // Fetch DSync connections for a team
 export const getDirectoryConnections = async ({
   tenant,
+  dsyncId,
 }: {
-  tenant: string;
+  tenant?: string;
+  dsyncId?: string;
 }) => {
   if (env.jackson.selfHosted) {
-    const query = new URLSearchParams({
-      tenant,
-      product: env.jackson.productId,
+    let query;
+    if (tenant) {
+      query = `?${new URLSearchParams({
+        tenant,
+        product: env.jackson.productId,
+      }).toString()}`;
+    } else {
+      query = `/${dsyncId}`;
+    }
+    const response = await fetch(`${env.jackson.url}/api/v1/dsync${query}`, {
+      ...options,
+      method: 'GET',
     });
-
-    const response = await fetch(
-      `${env.jackson.url}/api/v1/dsync?${query.toString()}`,
-      {
-        ...options,
-        method: 'GET',
-      }
-    );
 
     const json = (await response.json()) as ApiResponse<Directory[]>;
 
@@ -47,10 +50,12 @@ export const getDirectoryConnections = async ({
 
   const { directorySync } = await jackson();
 
-  const { data, error } = await directorySync.directories.getByTenantAndProduct(
-    tenant,
-    env.jackson.productId
-  );
+  const { data, error } = tenant
+    ? await directorySync.directories.getByTenantAndProduct(
+        tenant,
+        env.jackson.productId
+      )
+    : await directorySync.directories.get(dsyncId!);
 
   if (error) {
     throw new ApiError(error.code, error.message);
