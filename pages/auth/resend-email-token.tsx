@@ -33,7 +33,7 @@ const VerifyAccount: NextPageWithLayout<
     if (error) {
       setMessage({ text: error, status: 'error' });
     }
-  }, [router, router.query]);
+  }, [router, router.query, error]);
 
   const formik = useFormik({
     initialValues: {
