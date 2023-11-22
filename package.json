@@ -64,7 +64,7 @@
     "@types/crypto-js": "4.2.1",
     "@types/jest": "29.5.10",
     "@types/mixpanel-browser": "2.47.5",
-    "@types/mocha": "10.0.4",
+    "@types/mocha": "10.0.6",
     "@types/node": "20.9.4",
     "@types/nodemailer": "6.4.14",
     "@types/react": "18.2.38",
