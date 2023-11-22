@@ -62,7 +62,7 @@
     "@trivago/prettier-plugin-sort-imports": "4.3.0",
     "@types/bcryptjs": "2.4.6",
     "@types/crypto-js": "4.2.1",
-    "@types/jest": "29.5.9",
+    "@types/jest": "29.5.10",
     "@types/mixpanel-browser": "2.47.5",
     "@types/mocha": "10.0.4",
     "@types/node": "20.9.3",
