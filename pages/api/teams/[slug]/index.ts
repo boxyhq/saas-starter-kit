@@ -10,6 +10,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { validateDomain } from '@/lib/common';
 import { ApiError } from '@/lib/errors';
+import env from '@/lib/env';
 
 export default async function handler(
   req: NextApiRequest,
@@ -85,7 +86,12 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Delete a team
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (!env.teamFeatures.deleteTeam) {
+    throw new ApiError(404, 'Not Found');
+  }
+
   const teamMember = await throwIfNoTeamAccess(req, res);
+
   throwIfNotAllowed(teamMember, 'team', 'delete');
 
   await deleteTeam({ id: teamMember.teamId });
