@@ -94,6 +94,7 @@ const env = {
     webhook: process.env.FEATURE_TEAM_WEBHOOK === 'false' ? false : true,
     apiKey: process.env.FEATURE_TEAM_API_KEY === 'false' ? false : true,
     auditLog: process.env.FEATURE_TEAM_AUDIT_LOG === 'false' ? false : true,
+    deleteTeam: process.env.FEATURE_TEAM_DELETION === 'false' ? false : true,
   },
 
   recaptcha: {
