@@ -206,6 +206,7 @@ export const getAuthOptions = (
             req,
             res,
             expires,
+            secure: true,
           });
         }
 
