@@ -78,6 +78,8 @@ const TeamSSO = ({ teamFeatures, SPConfigURL }) => {
           connectionList: {
             cols: ['provider', 'type', 'status', 'actions'],
           },
+          editOIDCConnection: { displayInfo: false },
+          editSAMLConnection: { displayInfo: false },
         }}
       />
     </>
