@@ -4,13 +4,17 @@ import jackson, {
   IOAuthController,
   JacksonOption,
   ISPSAMLConfig,
+  OIDCAuthzResponsePayload,
 } from '@boxyhq/saml-jackson';
+
+export type { OIDCAuthzResponsePayload };
 
 import env from './env';
 
 const opts = {
   externalUrl: env.appUrl,
   samlPath: env.jackson.sso.path,
+  oidcPath: env.jackson.sso.oidcPath,
   samlAudience: env.jackson.sso.issuer,
   db: {
     engine: 'sql',
