@@ -35,8 +35,10 @@ import {
 const adapter = PrismaAdapter(prisma);
 const providers: Provider[] = [];
 const sessionMaxAge = 30 * 24 * 60 * 60; // 30 days
+const useSecureCookie = env.appUrl.startsWith('https://');
 
-export const sessionTokenCookieName = 'next-auth.session-token';
+export const sessionTokenCookieName =
+  (useSecureCookie ? '__Secure-' : '') + 'next-auth.session-token';
 
 if (isAuthProviderEnabled('credentials')) {
   providers.push(
@@ -206,6 +208,7 @@ export const getAuthOptions = (
             req,
             res,
             expires,
+            secure: useSecureCookie,
           });
         }
 
