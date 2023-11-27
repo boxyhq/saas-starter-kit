@@ -46,8 +46,8 @@ const TeamTab = ({ activeTab, team, heading, teamFeatures }: TeamTabProps) => {
   ) {
     navigations.push({
       name: 'Single Sign-On',
-      href: `/teams/${team.slug}/saml`,
-      active: activeTab === 'saml',
+      href: `/teams/${team.slug}/sso`,
+      active: activeTab === 'sso',
       icon: ShieldExclamationIcon,
     });
   }

@@ -1,36 +1,9 @@
-import { z } from 'zod';
 import { SAMLSSORecord } from '@boxyhq/saml-jackson';
 
 import env from '@/lib/env';
 import jackson from '@/lib/jackson';
 import { ApiError } from '@/lib/errors';
 import { options } from './config';
-
-export const createSSOSchema = z.object({
-  metadataUrl: z.string(),
-  encodedRawMetadata: z.string(),
-});
-
-export const updateSSOSchema = z.union([
-  z.object({
-    metadataUrl: z.string(),
-    encodedRawMetadata: z.string(),
-    clientID: z.string(),
-    clientSecret: z.string(),
-  }),
-  z.object({
-    deactivated: z.boolean(),
-    isOIDC: z.boolean(),
-    isSAML: z.boolean(),
-    clientID: z.string(),
-    clientSecret: z.string(),
-  }),
-]);
-
-export const deleteSSOSchema = z.object({
-  clientID: z.string(),
-  clientSecret: z.string(),
-});
 
 // Fetch SSO connections for a team
 export const getSSOConnections = async ({
@@ -72,9 +45,7 @@ export const getSSOConnections = async ({
 };
 
 // Create SSO connection for a team
-export const createSSOConnection = async (
-  params: z.infer<typeof createSSOSchema> & { tenant: string }
-) => {
+export const createSSOConnection = async (params) => {
   const body = {
     ...params,
     defaultRedirectUrl: env.jackson.sso.callback,
@@ -104,9 +75,7 @@ export const createSSOConnection = async (
 };
 
 // Update SSO connection for a team
-export const updateSSOConnection = async (
-  params: z.infer<typeof updateSSOSchema> & { tenant: string }
-) => {
+export const updateSSOConnection = async (params) => {
   const body = {
     ...params,
     product: env.jackson.productId,
@@ -133,9 +102,7 @@ export const updateSSOConnection = async (
 };
 
 // Delete SSO connections for a team
-export const deleteSSOConnections = async (
-  params: z.infer<typeof deleteSSOSchema>
-) => {
+export const deleteSSOConnections = async (params) => {
   if (env.jackson.selfHosted) {
     const query = new URLSearchParams(params);
 
