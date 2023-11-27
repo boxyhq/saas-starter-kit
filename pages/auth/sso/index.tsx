@@ -2,7 +2,7 @@ import { AuthLayout } from '@/components/layouts';
 import { InputWithLabel, Loading } from '@/components/shared';
 import env from '@/lib/env';
 import { useFormik } from 'formik';
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -15,7 +15,9 @@ import type { NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
 import Head from 'next/head';
 
-const SSO: NextPageWithLayout = () => {
+const SSO: NextPageWithLayout<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ jacksonProductId }) => {
   const { t } = useTranslation('common');
   const { status } = useSession();
   const router = useRouter();
@@ -42,7 +44,7 @@ const SSO: NextPageWithLayout = () => {
 
       await signIn('boxyhq-saml', undefined, {
         tenant: data.teamId,
-        product: env.jackson.productId,
+        product: jacksonProductId,
       });
     },
   });
@@ -110,10 +112,13 @@ SSO.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export async function getStaticProps({ locale }: GetServerSidePropsContext) {
+export async function getServerSideProps({
+  locale,
+}: GetServerSidePropsContext) {
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+      jacksonProductId: env.jackson.productId,
     },
   };
 }

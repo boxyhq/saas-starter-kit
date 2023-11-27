@@ -60,6 +60,7 @@ const env = {
       callback: `${process.env.APP_URL}`,
       issuer: 'https://saml.boxyhq.com',
       path: '/api/oauth/saml',
+      oidcPath: '/api/oauth/oidc',
     },
     dsync: {
       webhook_url: `${process.env.APP_URL}/api/webhooks/dsync`,
