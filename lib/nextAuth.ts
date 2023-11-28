@@ -31,6 +31,7 @@ import {
   exceededLoginAttemptsThreshold,
   incrementLoginAttempts,
 } from '@/lib/accountLock';
+import { slackNotify } from './slack';
 
 const adapter = PrismaAdapter(prisma);
 const providers: Provider[] = [];
@@ -235,6 +236,14 @@ export const getAuthOptions = (
           if (account.provider === 'boxyhq-saml' && profile) {
             await linkToTeam(profile, newUser.id);
           }
+
+          slackNotify()?.alert({
+            text: 'New user signed up',
+            fields: {
+              Name: user.name || '',
+              Email: user.email,
+            },
+          });
 
           return true;
         }
