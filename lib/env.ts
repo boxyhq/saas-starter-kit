@@ -104,6 +104,8 @@ const env = {
   },
 
   maxLoginAttempts: Number(process.env.MAX_LOGIN_ATTEMPTS) || 5,
+
+  slackWebhookUrl: process.env.SLACK_WEBHOOK_URL,
 };
 
 export default env;
