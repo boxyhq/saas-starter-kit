@@ -60,6 +60,7 @@ const env = {
       callback: `${process.env.APP_URL}`,
       issuer: 'https://saml.boxyhq.com',
       path: '/api/oauth/saml',
+      oidcPath: '/api/oauth/oidc',
     },
     dsync: {
       webhook_url: `${process.env.APP_URL}/api/webhooks/dsync`,
@@ -94,6 +95,7 @@ const env = {
     webhook: process.env.FEATURE_TEAM_WEBHOOK === 'false' ? false : true,
     apiKey: process.env.FEATURE_TEAM_API_KEY === 'false' ? false : true,
     auditLog: process.env.FEATURE_TEAM_AUDIT_LOG === 'false' ? false : true,
+    deleteTeam: process.env.FEATURE_TEAM_DELETION === 'false' ? false : true,
   },
 
   recaptcha: {
@@ -102,6 +104,8 @@ const env = {
   },
 
   maxLoginAttempts: Number(process.env.MAX_LOGIN_ATTEMPTS) || 5,
+
+  slackWebhookUrl: process.env.SLACK_WEBHOOK_URL,
 };
 
 export default env;

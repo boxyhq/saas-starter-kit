@@ -25,7 +25,9 @@ export default async function handler(
         });
     }
   } catch (err: any) {
-    res.status(500).json({ error: { message: err.message } });
+    const message = err.message || 'Something went wrong';
+    const status = err.status || 500;
+    res.status(status).json({ error: { message } });
   }
 }
 

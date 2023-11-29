@@ -8,7 +8,12 @@ const nextConfig = {
   experimental: { esmExternals: false, webpackBuildWorker: true },
   reactStrictMode: true,
   images: {
-    domains: ['boxyhq.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'boxyhq.com',
+      },
+    ],
   },
   i18n,
   rewrites: async () => {
