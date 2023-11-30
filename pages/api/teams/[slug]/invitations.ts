@@ -11,10 +11,11 @@ import {
   getInvitations,
   isInvitationExpired,
 } from 'models/invitation';
-import { addTeamMember, throwIfNoTeamAccess } from 'models/team';
-import { throwIfNotAllowed } from 'models/user';
+import { addTeamMember, getTeam, throwIfNoTeamAccess } from 'models/team';
+import { getUser, throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import { slackNotify } from '@/lib/slack';
 
 export default async function handler(
   req: NextApiRequest,
@@ -175,6 +176,27 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     userId,
     invitation.role
   );
+
+  // Send a slack notification
+  const userPromise = getUser({ id: teamMember.userId });
+  const teamPromise = getTeam({ id: teamMember.teamId });
+
+  Promise.all([userPromise, teamPromise])
+    .then(([user, team]) => {
+      if (user && team) {
+        slackNotify()?.alert({
+          text: 'New user joined the team',
+          fields: {
+            Name: user.name,
+            Email: user.email,
+            Team: team.name,
+          },
+        });
+      }
+    })
+    .catch((error) => {
+      console.log('Error sending slack notification', error);
+    });
 
   await sendEvent(invitation.team.id, 'member.created', teamMember);
   await deleteInvitation({ token: inviteToken });

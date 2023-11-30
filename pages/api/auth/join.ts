@@ -92,12 +92,19 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   // Create team if user is not invited
   // So we can create the team with the user as the owner
   if (!invitation) {
-    const slug = slugify(team);
-
-    await createTeam({
+    const userTeam = await createTeam({
       userId: user.id,
       name: team,
-      slug,
+      slug: slugify(team),
+    });
+
+    slackNotify()?.alert({
+      text: 'New user signed up',
+      fields: {
+        Name: user.name,
+        Email: user.email,
+        Team: userTeam?.name,
+      },
     });
   }
 
@@ -115,14 +122,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   recordMetric('user.signup');
-
-  slackNotify()?.alert({
-    text: 'New user signed up',
-    fields: {
-      Name: user.name,
-      Email: user.email,
-    },
-  });
 
   res.status(201).json({
     data: {
