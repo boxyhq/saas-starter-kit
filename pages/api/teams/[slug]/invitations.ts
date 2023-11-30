@@ -170,7 +170,14 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  await addTeamMember(invitation.team.id, userId, invitation.role);
+  const teamMember = await addTeamMember(
+    invitation.team.id,
+    userId,
+    invitation.role
+  );
+
+  await sendEvent(invitation.team.id, 'member.created', teamMember);
+  await deleteInvitation({ token: inviteToken });
 
   recordMetric('member.created');
 
