@@ -120,7 +120,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   recordMetric('user.signup');
 
   slackNotify()?.alert({
-    text: 'New user signed up',
+    text: invitation
+      ? 'New user signed up via invitation'
+      : 'New user signed up',
     fields: {
       Name: user.name,
       Email: user.email,
