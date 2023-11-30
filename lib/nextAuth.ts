@@ -237,14 +237,6 @@ export const getAuthOptions = (
             await linkToTeam(profile, newUser.id);
           }
 
-          slackNotify()?.alert({
-            text: 'New user signed up',
-            fields: {
-              Name: user.name || '',
-              Email: user.email,
-            },
-          });
-
           return true;
         }
 
