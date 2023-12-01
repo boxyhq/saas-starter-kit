@@ -6,9 +6,6 @@ import {
   deleteSSOConnections,
   getSSOConnections,
   updateSSOConnection,
-  createSSOSchema,
-  updateSSOSchema,
-  deleteSSOSchema,
 } from '@/lib/jackson/sso';
 import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
@@ -60,7 +57,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_sso', 'read');
 
-  if (req.query.clientId) {
+  if (req.query.clientID) {
     const connections = await getSSOConnections({
       clientID: req.query.clientID as string,
     });
@@ -80,10 +77,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_sso', 'create');
 
-  const params = createSSOSchema.parse(req.body);
-
   const connection = await createSSOConnection({
-    ...params,
+    ...req.body,
     tenant: teamMember.teamId,
   });
 
@@ -102,10 +97,8 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_sso', 'create');
 
-  const params = updateSSOSchema.parse(req.body);
-
   const connection = await updateSSOConnection({
-    ...params,
+    ...req.body,
     tenant: teamMember.teamId,
   });
 
@@ -124,9 +117,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_sso', 'delete');
 
-  const params = deleteSSOSchema.parse(req.query);
-
-  await deleteSSOConnections(params);
+  await deleteSSOConnections(req.query);
 
   sendAudit({
     action: 'sso.connection.delete',

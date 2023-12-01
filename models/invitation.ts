@@ -8,6 +8,12 @@ export const getInvitations = async (teamId: string) => {
     where: {
       teamId,
     },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      expires: true,
+    },
   });
 };
 

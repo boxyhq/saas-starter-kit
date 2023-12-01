@@ -1,36 +1,52 @@
-import { z } from 'zod';
-import { SAMLSSORecord } from '@boxyhq/saml-jackson';
+import {
+  OIDCSSOConnectionWithDiscoveryUrl,
+  OIDCSSOConnectionWithMetadata,
+  SAMLSSORecord,
+} from '@boxyhq/saml-jackson';
 
 import env from '@/lib/env';
 import jackson from '@/lib/jackson';
 import { ApiError } from '@/lib/errors';
 import { options } from './config';
 
-export const createSSOSchema = z.object({
-  metadataUrl: z.string(),
-  encodedRawMetadata: z.string(),
-});
+const strategyChecker = (body): { isSAML: boolean; isOIDC: boolean } => {
+  const isSAML =
+    'rawMetadata' in body ||
+    'encodedRawMetadata' in body ||
+    'metadataUrl' in body ||
+    'isSAML' in body;
 
-export const updateSSOSchema = z.union([
-  z.object({
-    metadataUrl: z.string(),
-    encodedRawMetadata: z.string(),
-    clientID: z.string(),
-    clientSecret: z.string(),
-  }),
-  z.object({
-    deactivated: z.boolean(),
-    isOIDC: z.boolean(),
-    isSAML: z.boolean(),
-    clientID: z.string(),
-    clientSecret: z.string(),
-  }),
-]);
+  const isOIDC =
+    'oidcDiscoveryUrl' in body || 'oidcMetadata' in body || 'isOIDC' in body;
 
-export const deleteSSOSchema = z.object({
-  clientID: z.string(),
-  clientSecret: z.string(),
-});
+  return { isSAML, isOIDC };
+};
+
+// The oidcMetadata JSON will be parsed here
+const oidcMetadataParse = (
+  body: (
+    | OIDCSSOConnectionWithDiscoveryUrl
+    | (Omit<OIDCSSOConnectionWithMetadata, 'oidcMetadata'> & {
+        oidcMetadata: string;
+      })
+  ) & {
+    clientID: string;
+    clientSecret: string;
+  }
+) => {
+  if (!body.oidcDiscoveryUrl && typeof body.oidcMetadata === 'string') {
+    try {
+      const oidcMetadata = JSON.parse(body.oidcMetadata);
+      return { ...body, oidcMetadata };
+    } catch (err) {
+      throw new ApiError(
+        400,
+        'Could not parse OIDC Provider metadata, expected a valid JSON string'
+      );
+    }
+  }
+  return body;
+};
 
 // Fetch SSO connections for a team
 export const getSSOConnections = async ({
@@ -72,9 +88,7 @@ export const getSSOConnections = async ({
 };
 
 // Create SSO connection for a team
-export const createSSOConnection = async (
-  params: z.infer<typeof createSSOSchema> & { tenant: string }
-) => {
+export const createSSOConnection = async (params) => {
   const body = {
     ...params,
     defaultRedirectUrl: env.jackson.sso.callback,
@@ -100,13 +114,25 @@ export const createSSOConnection = async (
 
   const { apiController } = await jackson();
 
-  return await apiController.createSAMLConnection(body);
+  const { isSAML, isOIDC } = strategyChecker(body);
+
+  if (!isSAML && !isOIDC) {
+    throw { message: 'Missing SSO connection params', statusCode: 400 };
+  }
+
+  // Create SAML connection
+  if (isSAML) {
+    return await apiController.createSAMLConnection(body);
+  }
+
+  // Create OIDC connection
+  if (isOIDC) {
+    return await apiController.createOIDCConnection(oidcMetadataParse(body));
+  }
 };
 
 // Update SSO connection for a team
-export const updateSSOConnection = async (
-  params: z.infer<typeof updateSSOSchema> & { tenant: string }
-) => {
+export const updateSSOConnection = async (params) => {
   const body = {
     ...params,
     product: env.jackson.productId,
@@ -129,13 +155,25 @@ export const updateSSOConnection = async (
 
   const { apiController } = await jackson();
 
-  await apiController.updateSAMLConnection(body);
+  const { isSAML, isOIDC } = strategyChecker(body);
+
+  if (!isSAML && !isOIDC) {
+    throw { message: 'Missing SSO connection params', statusCode: 400 };
+  }
+
+  // Update SAML connection
+  if (isSAML) {
+    return await apiController.updateSAMLConnection(body);
+  }
+
+  // Update OIDC connection
+  if (isOIDC) {
+    return await apiController.updateOIDCConnection(oidcMetadataParse(body));
+  }
 };
 
 // Delete SSO connections for a team
-export const deleteSSOConnections = async (
-  params: z.infer<typeof deleteSSOSchema>
-) => {
+export const deleteSSOConnections = async (params) => {
   if (env.jackson.selfHosted) {
     const query = new URLSearchParams(params);
 

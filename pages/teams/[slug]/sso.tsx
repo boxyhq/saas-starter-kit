@@ -42,14 +42,14 @@ const TeamSSO = ({ teamFeatures, SPConfigURL }) => {
 
   return (
     <>
-      <TeamTab activeTab="saml" team={team} teamFeatures={teamFeatures} />
+      <TeamTab activeTab="sso" team={team} teamFeatures={teamFeatures} />
       <ConnectionsWrapper
         urls={{
           spMetadata: SPConfigURL,
-          get: `/api/teams/${team.slug}/saml`,
-          post: `/api/teams/${team.slug}/saml`,
-          patch: `/api/teams/${team.slug}/saml`,
-          delete: `/api/teams/${team.slug}/saml`,
+          get: `/api/teams/${team.slug}/sso`,
+          post: `/api/teams/${team.slug}/sso`,
+          patch: `/api/teams/${team.slug}/sso`,
+          delete: `/api/teams/${team.slug}/sso`,
         }}
         successCallback={({
           operation,
@@ -77,6 +77,8 @@ const TeamSSO = ({ teamFeatures, SPConfigURL }) => {
           connectionList: {
             cols: ['provider', 'type', 'status', 'actions'],
           },
+          editOIDCConnection: { displayInfo: false },
+          editSAMLConnection: { displayInfo: false },
         }}
       />
     </>

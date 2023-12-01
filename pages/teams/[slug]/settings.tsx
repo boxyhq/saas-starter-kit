@@ -6,8 +6,9 @@ import useTeam from 'hooks/useTeam';
 import type { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import type { TeamFeature } from 'types';
 
-const Settings = ({ teamFeatures }) => {
+const Settings = ({ teamFeatures }: { teamFeatures: TeamFeature }) => {
   const { t } = useTranslation('common');
   const { isLoading, isError, team } = useTeam();
 
@@ -29,7 +30,7 @@ const Settings = ({ teamFeatures }) => {
       <div className="space-y-6">
         <TeamSettings team={team} />
         <AccessControl resource="team" actions={['delete']}>
-          <RemoveTeam team={team} />
+          <RemoveTeam team={team} allowDelete={teamFeatures.deleteTeam} />
         </AccessControl>
       </div>
     </>

@@ -11,6 +11,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { getInvitation, isInvitationExpired } from 'models/invitation';
 import { validateRecaptcha } from '@/lib/recaptcha';
+import { slackNotify } from '@/lib/slack';
 
 export default async function handler(
   req: NextApiRequest,
@@ -115,9 +116,16 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   recordMetric('user.signup');
 
+  slackNotify()?.alert({
+    text: 'New user signed up',
+    fields: {
+      Name: user.name,
+      Email: user.email,
+    },
+  });
+
   res.status(201).json({
     data: {
-      user,
       confirmEmail: env.confirmEmail && !user.emailVerified,
     },
   });
