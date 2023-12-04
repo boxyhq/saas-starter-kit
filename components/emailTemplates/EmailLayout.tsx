@@ -41,7 +41,6 @@ const EmailLayout = ({ children }: EmailLayoutProps) => {
             <Hr className="border border-solid border-[#eaeaea] my-[20px] mx-0 w-full" />
             <Text className="my-0 text-center text-xs text-[#666666]">
               <span className="block">{app.name}</span>
-              <span className="block">{app.location}</span>
             </Text>
           </Section>
         </Container>
