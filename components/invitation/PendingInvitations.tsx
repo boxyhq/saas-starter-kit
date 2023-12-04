@@ -113,7 +113,9 @@ const PendingInvitations = ({ team }: { team: Team }) => {
         onConfirm={() => deleteInvitation(selectedInvitation)}
         title={t('confirm-delete-member-invitation')}
       >
-        {t('delete-member-invitation-warning')}
+        {t('delete-member-invitation-warning', {
+          email: selectedInvitation?.email,
+        })}
       </ConfirmationDialog>
     </div>
   );

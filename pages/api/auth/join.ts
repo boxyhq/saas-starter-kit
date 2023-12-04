@@ -5,13 +5,14 @@ import { prisma } from '@/lib/prisma';
 import { isBusinessEmail } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
-import { createTeam, isTeamExists } from 'models/team';
+import { createTeam, getTeam, isTeamExists } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { getInvitation, isInvitationExpired } from 'models/invitation';
 import { validateRecaptcha } from '@/lib/recaptcha';
 import { slackNotify } from '@/lib/slack';
+import { Team } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -89,16 +90,18 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     emailVerified: invitation ? new Date() : null,
   });
 
+  let userTeam: Team | null = null;
+
   // Create team if user is not invited
   // So we can create the team with the user as the owner
   if (!invitation) {
-    const slug = slugify(team);
-
-    await createTeam({
+    userTeam = await createTeam({
       userId: user.id,
       name: team,
-      slug,
+      slug: slugify(team),
     });
+  } else {
+    userTeam = await getTeam({ id: invitation.teamId });
   }
 
   // Send account verification email
@@ -117,10 +120,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   recordMetric('user.signup');
 
   slackNotify()?.alert({
-    text: 'New user signed up',
+    text: invitation
+      ? 'New user signed up via invitation'
+      : 'New user signed up',
     fields: {
       Name: user.name,
       Email: user.email,
+      Team: userTeam?.name,
     },
   });
 
