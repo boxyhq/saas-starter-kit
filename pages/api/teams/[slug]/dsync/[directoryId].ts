@@ -5,10 +5,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from '@/lib/errors';
 import {
   deleteDirectoryConnection,
-  deleteDirectorySchema,
   getDirectoryConnections,
   patchDirectoryConnection,
-  patchDirectorySchema,
 } from '@/lib/jackson/dsync';
 import { sendAudit } from '@/lib/retraced';
 
@@ -66,7 +64,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_dsync', 'read');
 
-  const body = patchDirectorySchema.parse({ ...req.query, ...req.body });
+  const body = { ...req.query, ...req.body };
 
   const connection = await patchDirectoryConnection(body);
 
@@ -78,7 +76,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_dsync', 'delete');
 
-  const params = deleteDirectorySchema.parse(req.query);
+  const params = req.query;
 
   await deleteDirectoryConnection(params);
 

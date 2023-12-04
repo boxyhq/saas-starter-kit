@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { Directory, DirectoryType } from '@boxyhq/saml-jackson';
 
 import env from '@/lib/env';
@@ -6,20 +5,6 @@ import jackson from '@/lib/jackson';
 import { ApiResponse } from 'types';
 import { ApiError } from '@/lib/errors';
 import { options } from './config';
-
-export const createDirectorySchema = z.object({
-  name: z.string(),
-  type: z.string(),
-});
-
-export const patchDirectorySchema = z.object({
-  name: z.string(),
-  directoryId: z.string(),
-});
-
-export const deleteDirectorySchema = z.object({
-  directoryId: z.string(),
-});
 
 // Fetch DSync connections for a team
 export const getDirectoryConnections = async ({
@@ -74,7 +59,11 @@ export const createDirectoryConnection = async ({
   name,
   tenant,
   type,
-}: z.infer<typeof createDirectorySchema> & { tenant: string }) => {
+}: {
+  name: string;
+  type: string;
+  tenant: string;
+}) => {
   const body = {
     name,
     tenant,
@@ -113,14 +102,11 @@ export const createDirectoryConnection = async ({
   return data;
 };
 
-export const patchDirectoryConnection = async ({
-  name,
-  directoryId,
-}: z.infer<typeof patchDirectorySchema>) => {
-  const body = { name };
+export const patchDirectoryConnection = async (params) => {
+  const body = { ...params };
   if (env.jackson.selfHosted) {
     const response = await fetch(
-      `${env.jackson.url}/api/v1/dsync/${directoryId}`,
+      `${env.jackson.url}/api/v1/dsync/${body.directoryId}`,
       {
         ...options,
         method: 'PATCH',
@@ -139,7 +125,7 @@ export const patchDirectoryConnection = async ({
   const { directorySync } = await jackson();
 
   const { data, error } = await directorySync.directories.update(
-    directoryId,
+    body.directoryId,
     body
   );
 
@@ -151,12 +137,11 @@ export const patchDirectoryConnection = async ({
 };
 
 // Delete DSync connection for a team
-export const deleteDirectoryConnection = async ({
-  directoryId,
-}: z.infer<typeof deleteDirectorySchema>) => {
+export const deleteDirectoryConnection = async (params) => {
+  const body = { ...params };
   if (env.jackson.selfHosted) {
     const response = await fetch(
-      `${env.jackson.url}/api/v1/dsync/${directoryId}`,
+      `${env.jackson.url}/api/v1/dsync/${body.directoryId}`,
       {
         ...options,
         method: 'DELETE',
@@ -174,7 +159,9 @@ export const deleteDirectoryConnection = async ({
 
   const { directorySync } = await jackson();
 
-  const { data, error } = await directorySync.directories.delete(directoryId);
+  const { data, error } = await directorySync.directories.delete(
+    body.directoryId
+  );
 
   if (error) {
     throw new ApiError(error.code, error.message);
