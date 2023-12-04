@@ -6,7 +6,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from '@/lib/errors';
 import {
   createDirectoryConnection,
-  createDirectorySchema,
   getDirectoryConnections,
 } from '@/lib/jackson/dsync';
 
@@ -62,7 +61,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_dsync', 'create');
 
-  const body = createDirectorySchema.parse(req.body);
+  const body = req.body;
 
   const connection = await createDirectoryConnection({
     ...body,
