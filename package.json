@@ -68,7 +68,7 @@
     "@types/mocha": "10.0.6",
     "@types/node": "20.10.1",
     "@types/nodemailer": "6.4.14",
-    "@types/react": "18.2.41",
+    "@types/react": "18.2.42",
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
     "autoprefixer": "10.4.16",
