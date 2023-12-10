@@ -152,7 +152,7 @@ if (isAuthProviderEnabled('saml')) {
           placeholder: 'Enter code',
         },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const { code } = credentials || {};
 
         if (!code) {
