@@ -307,6 +307,10 @@ export const getAuthOptions = (
 
           await linkAccount(newUser, account);
 
+          if (account.provider === 'boxyhq-idp' && user) {
+            await linkToTeam(user as unknown as Profile, newUser.id);
+          }
+
           if (account.provider === 'boxyhq-saml' && profile) {
             await linkToTeam(profile, newUser.id);
           }
