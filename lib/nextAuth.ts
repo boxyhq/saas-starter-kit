@@ -346,7 +346,14 @@ export const getAuthOptions = (
         return session;
       },
 
-      async jwt({ token, trigger, session }) {
+      async jwt({ token, trigger, session, account }) {
+        if (account?.provider === 'boxyhq-idp') {
+          const userByAccount = await adapter.getUserByAccount!({
+            providerAccountId: account.providerAccountId,
+            provider: account.provider,
+          });
+          return { ...token, sub: userByAccount?.id || token.sub };
+        }
         if (trigger === 'update' && 'name' in session && session.name) {
           return { ...token, name: session.name };
         }
