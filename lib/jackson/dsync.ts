@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { Directory, DirectoryType } from '@boxyhq/saml-jackson';
 
 import env from '@/lib/env';
@@ -7,34 +6,28 @@ import { ApiResponse } from 'types';
 import { ApiError } from '@/lib/errors';
 import { options } from './config';
 
-export const createDirectorySchema = z.object({
-  name: z.string(),
-  provider: z.string(),
-});
-
-export const deleteDirectorySchema = z.object({
-  dsyncId: z.string(),
-});
-
 // Fetch DSync connections for a team
 export const getDirectoryConnections = async ({
   tenant,
+  dsyncId,
 }: {
-  tenant: string;
+  tenant?: string;
+  dsyncId?: string;
 }) => {
   if (env.jackson.selfHosted) {
-    const query = new URLSearchParams({
-      tenant,
-      product: env.jackson.productId,
+    let query;
+    if (tenant) {
+      query = `?${new URLSearchParams({
+        tenant,
+        product: env.jackson.productId,
+      }).toString()}`;
+    } else {
+      query = `/${dsyncId}`;
+    }
+    const response = await fetch(`${env.jackson.url}/api/v1/dsync${query}`, {
+      ...options,
+      method: 'GET',
     });
-
-    const response = await fetch(
-      `${env.jackson.url}/api/v1/dsync?${query.toString()}`,
-      {
-        ...options,
-        method: 'GET',
-      }
-    );
 
     const json = (await response.json()) as ApiResponse<Directory[]>;
 
@@ -47,10 +40,12 @@ export const getDirectoryConnections = async ({
 
   const { directorySync } = await jackson();
 
-  const { data, error } = await directorySync.directories.getByTenantAndProduct(
-    tenant,
-    env.jackson.productId
-  );
+  const { data, error } = tenant
+    ? await directorySync.directories.getByTenantAndProduct(
+        tenant,
+        env.jackson.productId
+      )
+    : await directorySync.directories.get(dsyncId!);
 
   if (error) {
     throw new ApiError(error.code, error.message);
@@ -63,12 +58,16 @@ export const getDirectoryConnections = async ({
 export const createDirectoryConnection = async ({
   name,
   tenant,
-  provider,
-}: z.infer<typeof createDirectorySchema> & { tenant: string }) => {
+  type,
+}: {
+  name: string;
+  type: string;
+  tenant: string;
+}) => {
   const body = {
     name,
     tenant,
-    type: provider as DirectoryType,
+    type: type as DirectoryType,
     product: env.jackson.productId,
   };
 
@@ -103,17 +102,53 @@ export const createDirectoryConnection = async ({
   return data;
 };
 
-// Delete DSync connection for a team
-export const deleteDirectoryConnection = async ({
-  dsyncId,
-}: z.infer<typeof deleteDirectorySchema>) => {
+export const patchDirectoryConnection = async (params) => {
+  const body = { ...params };
   if (env.jackson.selfHosted) {
-    const response = await fetch(`${env.jackson.url}/api/v1/dsync/${dsyncId}`, {
-      ...options,
-      method: 'DELETE',
-    });
+    const response = await fetch(
+      `${env.jackson.url}/api/v1/dsync/${body.directoryId}`,
+      {
+        ...options,
+        method: 'PATCH',
+        body: JSON.stringify(body),
+      }
+    );
 
-    const json = (await response.json()) as ApiResponse<Directory[]>;
+    const json = (await response.json()) as ApiResponse<Directory>;
+
+    if (!response.ok) {
+      throw new ApiError(response.status, json.error.message);
+    }
+
+    return json.data;
+  }
+  const { directorySync } = await jackson();
+
+  const { data, error } = await directorySync.directories.update(
+    body.directoryId,
+    body
+  );
+
+  if (error) {
+    throw new ApiError(error.code, error.message);
+  }
+
+  return data;
+};
+
+// Delete DSync connection for a team
+export const deleteDirectoryConnection = async (params) => {
+  const body = { ...params };
+  if (env.jackson.selfHosted) {
+    const response = await fetch(
+      `${env.jackson.url}/api/v1/dsync/${body.directoryId}`,
+      {
+        ...options,
+        method: 'DELETE',
+      }
+    );
+
+    const json = (await response.json()) as ApiResponse<object>;
 
     if (!response.ok) {
       throw new ApiError(response.status, json.error.message);
@@ -124,7 +159,9 @@ export const deleteDirectoryConnection = async ({
 
   const { directorySync } = await jackson();
 
-  const { data, error } = await directorySync.directories.delete(dsyncId);
+  const { data, error } = await directorySync.directories.delete(
+    body.directoryId
+  );
 
   if (error) {
     throw new ApiError(error.code, error.message);

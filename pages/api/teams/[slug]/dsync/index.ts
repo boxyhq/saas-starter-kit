@@ -6,9 +6,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from '@/lib/errors';
 import {
   createDirectoryConnection,
-  createDirectorySchema,
-  deleteDirectoryConnection,
-  deleteDirectorySchema,
   getDirectoryConnections,
 } from '@/lib/jackson/dsync';
 
@@ -30,11 +27,9 @@ export default async function handler(
       case 'POST':
         await handlePOST(req, res);
         break;
-      case 'DELETE':
-        await handleDELETE(req, res);
-        break;
+
       default:
-        res.setHeader('Allow', 'GET, POST, DELETE');
+        res.setHeader('Allow', 'GET, POST');
         res.status(405).json({
           error: { message: `Method ${method} Not Allowed` },
         });
@@ -66,7 +61,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_dsync', 'create');
 
-  const body = createDirectorySchema.parse(req.body);
+  const body = req.body;
 
   const connection = await createDirectoryConnection({
     ...body,
@@ -81,23 +76,4 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   res.status(201).json({ data: connection });
-};
-
-const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const teamMember = await throwIfNoTeamAccess(req, res);
-
-  throwIfNotAllowed(teamMember, 'team_dsync', 'delete');
-
-  const params = deleteDirectorySchema.parse(req.query);
-
-  await deleteDirectoryConnection(params);
-
-  sendAudit({
-    action: 'dsync.connection.delete',
-    crud: 'd',
-    user: teamMember.user,
-    team: teamMember.team,
-  });
-
-  res.status(200).json({ data: {} });
 };
