@@ -199,12 +199,11 @@ if (isAuthProviderEnabled('saml')) {
 
         if (profile?.id && profile?.email) {
           return {
-            id: profile.id,
-            email: profile.email,
             name: [profile.firstName, profile.lastName]
               .filter(Boolean)
               .join(' '),
             image: null,
+            ...profile,
           };
         }
 
