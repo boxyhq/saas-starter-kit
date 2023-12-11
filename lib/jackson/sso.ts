@@ -91,7 +91,7 @@ export const getSSOConnections = async ({
 export const createSSOConnection = async (params) => {
   const body = {
     ...params,
-    defaultRedirectUrl: env.jackson.sso.callback,
+    defaultRedirectUrl: env.jackson.sso.callback + '/login/saml',
     redirectUrl: env.jackson.sso.callback,
     product: env.jackson.productId,
   };
