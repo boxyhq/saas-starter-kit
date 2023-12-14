@@ -291,32 +291,17 @@ export const getAuthOptions = (
           return '/auth/login?error=allow-only-work-email';
         }
 
+        const existingUser = await getUser({ email: user.email });
+        const isIdpLogin = account.provider === 'boxyhq-idp';
+
         // Handle credentials provider
-        if (isCredentialsProviderCallback) {
-          const sessionToken = randomUUID();
-          const expires = new Date(Date.now() + sessionMaxAge * 1000);
-
-          if (adapter.createSession) {
-            await adapter.createSession({
-              sessionToken,
-              userId: user.id,
-              expires,
-            });
-          }
-
-          setCookie(sessionTokenCookieName, sessionToken, {
-            req,
-            res,
-            expires,
-            secure: useSecureCookie,
-          });
+        if (isCredentialsProviderCallback && !isIdpLogin) {
+          await createDatabaseSession(user, req, res);
         }
 
         if (account?.provider === 'credentials') {
           return true;
         }
-
-        const existingUser = await getUser({ email: user.email });
 
         // Login via email (Magic Link)
         if (account?.provider === 'email') {
@@ -332,12 +317,16 @@ export const getAuthOptions = (
 
           await linkAccount(newUser, account);
 
-          if (account.provider === 'boxyhq-idp' && user) {
+          if (isIdpLogin && user) {
             await linkToTeam(user as unknown as Profile, newUser.id);
           }
 
           if (account.provider === 'boxyhq-saml' && profile) {
             await linkToTeam(profile, newUser.id);
+          }
+
+          if (isCredentialsProviderCallback) {
+            await createDatabaseSession(newUser, req, res);
           }
 
           slackNotify()?.alert({
@@ -352,6 +341,10 @@ export const getAuthOptions = (
         }
 
         // Existing users reach here
+        if (isCredentialsProviderCallback) {
+          await createDatabaseSession(existingUser, req, res);
+        }
+
         const linkedAccount = await getAccount({ userId: existingUser.id });
 
         if (!linkedAccount) {
