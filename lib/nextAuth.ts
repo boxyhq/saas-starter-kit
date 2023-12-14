@@ -233,6 +233,30 @@ if (isAuthProviderEnabled('email')) {
   );
 }
 
+async function createDatabaseSession(
+  user,
+  req: NextApiRequest | GetServerSidePropsContext['req'],
+  res: NextApiResponse | GetServerSidePropsContext['res']
+) {
+  const sessionToken = randomUUID();
+  const expires = new Date(Date.now() + sessionMaxAge * 1000);
+
+  if (adapter.createSession) {
+    await adapter.createSession({
+      sessionToken,
+      userId: user.id,
+      expires,
+    });
+  }
+
+  setCookie(sessionTokenCookieName, sessionToken, {
+    req,
+    res,
+    expires,
+    secure: useSecureCookie,
+  });
+}
+
 export const getAuthOptions = (
   req: NextApiRequest | GetServerSidePropsContext['req'],
   res: NextApiResponse | GetServerSidePropsContext['res']
