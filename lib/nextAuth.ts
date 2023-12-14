@@ -264,7 +264,8 @@ export const getAuthOptions = (
   const isCredentialsProviderCallback =
     (req as NextApiRequest).query &&
     (req as NextApiRequest).query.nextauth?.includes('callback') &&
-    (req as NextApiRequest).query.nextauth?.includes('credentials') &&
+    ((req as NextApiRequest).query.nextauth?.includes('credentials') ||
+      (req as NextApiRequest).query.nextauth?.includes('boxyhq-idp')) &&
     req.method === 'POST' &&
     env.nextAuth.sessionStrategy === 'database';
 
