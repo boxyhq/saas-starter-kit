@@ -1,15 +1,13 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
 import { sendAudit } from '@/lib/retraced';
-import {
-  createSSOConnection,
-  deleteSSOConnections,
-  getSSOConnections,
-  updateSSOConnection,
-} from '@/lib/jackson/sso';
 import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { ssoManager } from '@/lib/jackson/sso/index';
+
+const sso = ssoManager();
 
 export default async function handler(
   req: NextApiRequest,
@@ -57,16 +55,12 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_sso', 'read');
 
-  if (req.query.clientID) {
-    const connections = await getSSOConnections({
-      clientID: req.query.clientID as string,
-    });
-    return res.json(connections);
-  }
+  const params =
+    'clientID' in req.query
+      ? { clientID: req.query.clientID as string }
+      : { tenant: teamMember.teamId, product: env.jackson.productId };
 
-  const connections = await getSSOConnections({
-    tenant: teamMember.teamId,
-  });
+  const connections = await sso.getConnections(params);
 
   res.json(connections);
 };
@@ -77,7 +71,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_sso', 'create');
 
-  const connection = await createSSOConnection({
+  const connection = await sso.createConnection({
     ...req.body,
     tenant: teamMember.teamId,
   });
@@ -89,7 +83,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  res.status(201).json({ data: connection });
+  res.status(201).json(connection);
 };
 
 const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -97,7 +91,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_sso', 'create');
 
-  const connection = await updateSSOConnection({
+  await sso.updateConnection({
     ...req.body,
     tenant: teamMember.teamId,
   });
@@ -109,7 +103,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  res.status(200).json({ data: connection });
+  res.status(204).end();
 };
 
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -117,7 +111,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_sso', 'delete');
 
-  await deleteSSOConnections(req.query);
+  await sso.deleteConnection({ ...(req.query as any) });
 
   sendAudit({
     action: 'sso.connection.delete',
@@ -126,5 +120,5 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  res.json({ data: {} });
+  res.status(204).end();
 };
