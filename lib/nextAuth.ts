@@ -192,9 +192,10 @@ if (isAuthProviderEnabled('saml')) {
           },
         });
 
-        if (resUserInfo.status !== 200) {
+        if (!resUserInfo.ok) {
           return null;
         }
+
         const profile = await resUserInfo.json();
 
         if (profile?.id && profile?.email) {
