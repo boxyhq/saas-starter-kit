@@ -261,7 +261,7 @@ export const getAuthOptions = (
   req: NextApiRequest | GetServerSidePropsContext['req'],
   res: NextApiResponse | GetServerSidePropsContext['res']
 ) => {
-  const isCredentialsProviderCallback =
+  const isCredentialsProviderCallbackWithDbSession =
     (req as NextApiRequest).query &&
     (req as NextApiRequest).query.nextauth?.includes('callback') &&
     ((req as NextApiRequest).query.nextauth?.includes('credentials') ||
@@ -295,7 +295,7 @@ export const getAuthOptions = (
         const isIdpLogin = account.provider === 'boxyhq-idp';
 
         // Handle credentials provider
-        if (isCredentialsProviderCallback && !isIdpLogin) {
+        if (isCredentialsProviderCallbackWithDbSession && !isIdpLogin) {
           await createDatabaseSession(user, req, res);
         }
 
@@ -325,7 +325,7 @@ export const getAuthOptions = (
             await linkToTeam(profile, newUser.id);
           }
 
-          if (isCredentialsProviderCallback) {
+          if (isCredentialsProviderCallbackWithDbSession) {
             await createDatabaseSession(newUser, req, res);
           }
 
@@ -341,7 +341,7 @@ export const getAuthOptions = (
         }
 
         // Existing users reach here
-        if (isCredentialsProviderCallback) {
+        if (isCredentialsProviderCallbackWithDbSession) {
           await createDatabaseSession(existingUser, req, res);
         }
 
@@ -381,7 +381,7 @@ export const getAuthOptions = (
     },
     jwt: {
       encode: async (params) => {
-        if (isCredentialsProviderCallback) {
+        if (isCredentialsProviderCallbackWithDbSession) {
           return getCookie(sessionTokenCookieName, { req, res }) || '';
         }
 
@@ -389,7 +389,7 @@ export const getAuthOptions = (
       },
 
       decode: async (params) => {
-        if (isCredentialsProviderCallback) {
+        if (isCredentialsProviderCallbackWithDbSession) {
           return null;
         }
 
