@@ -1,11 +1,18 @@
+import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
-import { Role } from '@prisma/client';
-import { v4 as uuidv4 } from 'uuid';
+import { Invitation, Role } from '@prisma/client';
+import { randomUUID } from 'crypto';
 
 export const getInvitations = async (teamId: string) => {
   return await prisma.invitation.findMany({
     where: {
       teamId,
+    },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      expires: true,
     },
   });
 };
@@ -13,12 +20,23 @@ export const getInvitations = async (teamId: string) => {
 export const getInvitation = async (
   key: { token: string } | { id: string }
 ) => {
-  return await prisma.invitation.findUniqueOrThrow({
+  const invitation = await prisma.invitation.findUnique({
     where: key,
     include: {
-      team: true,
+      team: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
+
+  if (!invitation) {
+    throw new ApiError(404, 'Invitation not found.');
+  }
+
+  return invitation;
 };
 
 export const createInvitation = async (param: {
@@ -28,11 +46,12 @@ export const createInvitation = async (param: {
   role: Role;
 }) => {
   const { teamId, invitedBy, email, role } = param;
+  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
   return await prisma.invitation.create({
     data: {
-      token: uuidv4(),
-      expires: new Date(),
+      token: randomUUID(),
+      expires,
       teamId,
       invitedBy,
       email,
@@ -47,4 +66,8 @@ export const deleteInvitation = async (
   return await prisma.invitation.delete({
     where: key,
   });
+};
+
+export const isInvitationExpired = async (invitation: Invitation) => {
+  return invitation.expires.getTime() < Date.now();
 };

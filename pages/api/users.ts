@@ -3,6 +3,8 @@ import { getSession } from '@/lib/session';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { ApiError } from '@/lib/errors';
+import env from '@/lib/env';
+import { getUser } from 'models/user';
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,6 +32,7 @@ export default async function handler(
 }
 
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
+  const allowEmailChange = env.confirmEmail === false;
   const session = await getSession(req, res);
   const toUpdate = {};
 
@@ -37,7 +40,14 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     toUpdate['name'] = req.body.name;
   }
 
-  if ('email' in req.body && req.body.email) {
+  // Only allow email change if confirmEmail is false
+  if ('email' in req.body && req.body.email && allowEmailChange) {
+    const user = await getUser({ email: req.body.email });
+
+    if (user && user.id !== session?.user.id) {
+      throw new ApiError(400, 'Email already in use.');
+    }
+
     toUpdate['email'] = req.body.email;
   }
 
@@ -49,12 +59,12 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new ApiError(400, 'Invalid request');
   }
 
-  const user = await prisma.user.update({
+  await prisma.user.update({
     where: { id: session?.user.id },
     data: toUpdate,
   });
 
   recordMetric('user.updated');
 
-  res.status(200).json({ data: user });
+  res.status(200).json({ data: {} });
 };

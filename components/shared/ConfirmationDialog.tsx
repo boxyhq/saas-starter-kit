@@ -1,5 +1,6 @@
 import { useTranslation } from 'next-i18next';
-import { Button, Modal } from 'react-daisyui';
+import { Button } from 'react-daisyui';
+import Modal from './Modal';
 
 interface ConfirmationDialogProps {
   title: string;
@@ -28,21 +29,17 @@ const ConfirmationDialog = ({
   };
 
   return (
-    <Modal open={visible}>
-      <Modal.Header className="font-semibold">{title}</Modal.Header>
-      <Modal.Body>
-        <div className="mt-2 flex flex-col space-y-2 text-sm text-gray-600 leading-6">
-          {children}
-        </div>
-      </Modal.Body>
-      <Modal.Actions>
-        <Button type="button" color="error" onClick={handleConfirm} size="md">
-          {confirmText || t('delete')}
-        </Button>
+    <Modal open={visible} close={onCancel}>
+      <Modal.Header>{title}</Modal.Header>
+      <Modal.Body className="text-sm leading-6">{children}</Modal.Body>
+      <Modal.Footer>
         <Button type="button" variant="outline" onClick={onCancel} size="md">
           {cancelText || t('cancel')}
         </Button>
-      </Modal.Actions>
+        <Button type="button" color="error" onClick={handleConfirm} size="md">
+          {confirmText || t('delete')}
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 };

@@ -5,13 +5,13 @@ const AgreeMessage = ({ text }) => {
   const { t } = useTranslation('common');
 
   return (
-    <p className="text-sm">
+    <p className="text-sm text-center">
       {t('agree-message-part', { button: t(text) })}{' '}
       <Link
         rel="noopener noreferrer"
         target="_blank"
         href={process.env.NEXT_PUBLIC_TERMS_URL || '/terms'}
-        className="font-medium text-indigo-600 hover:text-indigo-500"
+        className="font-medium text-primary hover:text-primary-focus"
       >
         {t('terms')}
       </Link>{' '}
@@ -20,7 +20,7 @@ const AgreeMessage = ({ text }) => {
         rel="noopener noreferrer"
         target="_blank"
         href={process.env.NEXT_PUBLIC_PRIVACY_URL || '/privacy'}
-        className="font-medium text-indigo-600 hover:text-indigo-500"
+        className="font-medium text-primary hover:text-primary-focus"
       >
         {t('privacy')}
       </Link>

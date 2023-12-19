@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { InputWithLabel } from '@/components/shared';
 import { defaultHeaders, passwordPolicies } from '@/lib/common';
-import type { User } from '@prisma/client';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -11,11 +10,19 @@ import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
 import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
 import AgreeMessage from './AgreeMessage';
+import GoogleReCAPTCHA from '../shared/GoogleReCAPTCHA';
+import ReCAPTCHA from 'react-google-recaptcha';
 
-const Join = () => {
+interface JoinProps {
+  recaptchaSiteKey: string | null;
+}
+
+const Join = ({ recaptchaSiteKey }: JoinProps) => {
   const router = useRouter();
   const { t } = useTranslation('common');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+  const [recaptchaToken, setRecaptchaToken] = useState<string>('');
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const handlePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -38,12 +45,17 @@ const Join = () => {
       const response = await fetch('/api/auth/join', {
         method: 'POST',
         headers: defaultHeaders,
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          recaptchaToken,
+        }),
       });
 
-      const json = (await response.json()) as ApiResponse<
-        User & { confirmEmail: boolean }
-      >;
+      const json = (await response.json()) as ApiResponse<{
+        confirmEmail: boolean;
+      }>;
+
+      recaptchaRef.current?.reset();
 
       if (!response.ok) {
         toast.error(json.error.message);
@@ -106,6 +118,11 @@ const Join = () => {
             handlePasswordVisibility={handlePasswordVisibility}
           />
         </div>
+        <GoogleReCAPTCHA
+          recaptchaRef={recaptchaRef}
+          onChange={setRecaptchaToken}
+          siteKey={recaptchaSiteKey}
+        />
       </div>
       <div className="mt-3 space-y-3">
         <Button

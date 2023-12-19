@@ -9,6 +9,7 @@ import {
   deleteInvitation,
   getInvitation,
   getInvitations,
+  isInvitationExpired,
 } from 'models/invitation';
 import { addTeamMember, throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
@@ -56,7 +57,20 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { email, role } = req.body;
 
-  const invitationExists = await prisma.invitation.findFirst({
+  const memberExists = await prisma.teamMember.count({
+    where: {
+      teamId: teamMember.teamId,
+      user: {
+        email,
+      },
+    },
+  });
+
+  if (memberExists) {
+    throw new ApiError(400, 'This user is already a member of the team.');
+  }
+
+  const invitationExists = await prisma.invitation.count({
     where: {
       email,
       teamId: teamMember.teamId,
@@ -75,7 +89,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   await sendEvent(teamMember.teamId, 'invitation.created', invitation);
-
   await sendTeamInviteEmail(teamMember.team, invitation);
 
   sendAudit({
@@ -141,10 +154,21 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const { inviteToken } = req.body as { inviteToken: string };
 
+  const invitation = await getInvitation({ token: inviteToken });
+
+  if (await isInvitationExpired(invitation)) {
+    throw new ApiError(400, 'Invitation expired. Please request a new one.');
+  }
+
   const session = await getSession(req, res);
   const userId = session?.user?.id as string;
 
-  const invitation = await getInvitation({ token: inviteToken });
+  if (session?.user.email != invitation.email) {
+    throw new ApiError(
+      400,
+      'You must be logged in with the email address you were invited with.'
+    );
+  }
 
   const teamMember = await addTeamMember(
     invitation.team.id,
@@ -153,7 +177,6 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   );
 
   await sendEvent(invitation.team.id, 'member.created', teamMember);
-
   await deleteInvitation({ token: inviteToken });
 
   recordMetric('member.created');

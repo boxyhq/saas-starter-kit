@@ -2,7 +2,7 @@ import { AuthLayout } from '@/components/layouts';
 import { InputWithLabel, Loading } from '@/components/shared';
 import env from '@/lib/env';
 import { useFormik } from 'formik';
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -13,8 +13,11 @@ import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
+import Head from 'next/head';
 
-const SSO: NextPageWithLayout = () => {
+const SSO: NextPageWithLayout<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ jacksonProductId }) => {
   const { t } = useTranslation('common');
   const { status } = useSession();
   const router = useRouter();
@@ -41,7 +44,7 @@ const SSO: NextPageWithLayout = () => {
 
       await signIn('boxyhq-saml', undefined, {
         tenant: data.teamId,
-        product: env.product,
+        product: jacksonProductId,
       });
     },
   });
@@ -56,6 +59,9 @@ const SSO: NextPageWithLayout = () => {
 
   return (
     <>
+      <Head>
+        <title>Sign in with SAML SSO</title>
+      </Head>
       <div className="rounded p-6 border">
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">
@@ -106,10 +112,13 @@ SSO.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export async function getStaticProps({ locale }: GetServerSidePropsContext) {
+export async function getServerSideProps({
+  locale,
+}: GetServerSidePropsContext) {
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+      jacksonProductId: env.jackson.productId,
     },
   };
 }

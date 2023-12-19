@@ -1,30 +1,30 @@
-import { CreateDirectory, Directory } from '@/components/directorySync';
-import { Card } from '@/components/shared';
 import { Error, Loading } from '@/components/shared';
-import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
 import { TeamTab } from '@/components/team';
-import { defaultHeaders } from '@/lib/common';
-import useDirectory from 'hooks/useDirectory';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
-import type { ApiResponse } from 'types';
 import env from '@/lib/env';
+import { DirectoriesWrapper } from '@boxyhq/react-ui/dsync';
+import styles from 'styles/sdk-override.module.css';
+
+const DSYNC_CSS = {
+  button: { ctoa: 'btn-primary', destructive: 'btn-error' },
+  input: `${styles['sdk-input']} input input-bordered`,
+  textarea: styles['sdk-input'],
+  confirmationPrompt: {
+    button: {
+      ctoa: 'btn-md',
+      cancel: 'btn-md btn-outline',
+    },
+  },
+  secretInput: 'input input-bordered',
+  section: 'mb-8',
+};
 
 const DirectorySync = ({ teamFeatures }) => {
-  const router = useRouter();
-  const { slug } = router.query as { slug: string };
-
-  const [visible, setVisible] = useState(false);
-  const [confirmationDialogVisible, setConfirmationDialogVisible] =
-    useState(false);
   const { isLoading, isError, team } = useTeam();
-  const { directories, mutateDirectory } = useDirectory(slug);
   const { t } = useTranslation('common');
 
   if (isLoading) {
@@ -39,33 +39,6 @@ const DirectorySync = ({ teamFeatures }) => {
     return <Error message={t('team-not-found')} />;
   }
 
-  const directory =
-    directories && directories.length > 0 ? directories[0] : null;
-
-  const removeDirectory = async () => {
-    if (!directory) return;
-
-    const sp = new URLSearchParams({ dsyncId: directory.id });
-
-    const response = await fetch(
-      `/api/teams/${team.slug}/directory-sync?${sp.toString()}`,
-      {
-        method: 'DELETE',
-        headers: defaultHeaders,
-      }
-    );
-
-    const json = (await response.json()) as ApiResponse;
-
-    if (!response.ok) {
-      toast.error(json.error.message);
-      return;
-    }
-
-    mutateDirectory();
-    toast.success(t('directory-sync-deleted'));
-  };
-
   return (
     <>
       <TeamTab
@@ -73,42 +46,41 @@ const DirectorySync = ({ teamFeatures }) => {
         team={team}
         teamFeatures={teamFeatures}
       />
-      <Card>
-        <Card.Body>
-          <div className="mb-3 flex items-center justify-between">
-            <p className="text-sm">{t('provision')}</p>
-            {directory === null ? (
-              <Button
-                onClick={() => setVisible(!visible)}
-                variant="outline"
-                color="primary"
-                size="md"
-              >
-                {t('configure')}
-              </Button>
-            ) : (
-              <Button
-                onClick={() => setConfirmationDialogVisible(true)}
-                variant="outline"
-                color="error"
-                size="md"
-              >
-                {t('remove')}
-              </Button>
-            )}
-          </div>
-          <Directory team={team} />
-        </Card.Body>
-      </Card>
-      <CreateDirectory visible={visible} setVisible={setVisible} team={team} />
-      <ConfirmationDialog
-        visible={confirmationDialogVisible}
-        onCancel={() => setConfirmationDialogVisible(false)}
-        onConfirm={removeDirectory}
-        title={t('confirm-delete-directory-sync')}
-      >
-        {t('delete-directory-sync-warning')}
-      </ConfirmationDialog>
+      <DirectoriesWrapper
+        classNames={DSYNC_CSS}
+        componentProps={{
+          directoryList: { cols: ['name', 'type', 'status', 'actions'] },
+          createDirectory: {
+            excludeFields: [
+              'product',
+              'tenant',
+              'webhook_secret',
+              'webhook_url',
+            ],
+          },
+          editDirectory: {
+            excludeFields: ['webhook_url', 'webhook_secret'],
+          },
+        }}
+        urls={{
+          get: `/api/teams/${team.slug}/dsync`,
+          post: `/api/teams/${team.slug}/dsync`,
+          patch: `/api/teams/${team.slug}/dsync`,
+          delete: `/api/teams/${team.slug}/dsync`,
+        }}
+        successCallback={({ operation }) => {
+          if (operation === 'CREATE') {
+            toast.success(`Connection created successfully.`);
+          } else if (operation === 'UPDATE') {
+            toast.success(`Connection updated successfully.`);
+          } else if (operation === 'DELETE') {
+            toast.success(`Connection deleted successfully.`);
+          } else if (operation === 'COPY') {
+            toast.success(`Contents copied to clipboard`);
+          }
+        }}
+        errorCallback={(errMessage) => toast.error(errMessage)}
+      />
     </>
   );
 };

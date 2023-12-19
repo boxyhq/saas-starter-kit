@@ -19,8 +19,10 @@ export default async function handler(
         });
     }
   } catch (err: any) {
-    // TODO: Handle error
-    console.error('saml error:', err);
+    const message = err.message || 'Something went wrong';
+    const status = err.status || 500;
+
+    res.status(status).json({ error: { message } });
   }
 }
 

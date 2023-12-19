@@ -49,14 +49,16 @@ model VerificationToken {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  name          String
-  email         String    @unique
-  emailVerified DateTime?
-  password      String?
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now())
+  id                     String    @id @default(uuid())
+  name                   String
+  email                  String    @unique
+  emailVerified          DateTime?
+  password               String?
+  image                  String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @default(now())
+  invalid_login_attempts Int       @default(0)
+  lockedAt               DateTime?
 
   teamMembers TeamMember[]
   accounts    Account[]

@@ -1,6 +1,7 @@
-import { getInvitation } from 'models/invitation';
+import { getInvitation, isInvitationExpired } from 'models/invitation';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import { ApiError } from '@/lib/errors';
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,6 +32,10 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.query as { token: string };
 
   const invitation = await getInvitation({ token });
+
+  if (await isInvitationExpired(invitation)) {
+    throw new ApiError(400, 'Invitation expired. Please request a new one.');
+  }
 
   recordMetric('invitation.fetched');
 

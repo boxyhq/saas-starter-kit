@@ -5,18 +5,19 @@ import useTeams from 'hooks/useTeams';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { Button, Input, Modal } from 'react-daisyui';
+import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import * as Yup from 'yup';
+import Modal from '../shared/Modal';
+import { InputWithLabel } from '../shared';
 
-const CreateTeam = ({
-  visible,
-  setVisible,
-}: {
+interface CreateTeamProps {
   visible: boolean;
   setVisible: (visible: boolean) => void;
-}) => {
+}
+
+const CreateTeam = ({ visible, setVisible }: CreateTeamProps) => {
   const { t } = useTranslation('common');
   const { mutateTeams } = useTeams();
   const router = useRouter();
@@ -50,59 +51,40 @@ const CreateTeam = ({
     },
   });
 
+  const onClose = () => {
+    setVisible(false);
+    router.push(`/teams`);
+  };
+
   return (
-    <Modal open={visible}>
-      <Button
-        type="button"
-        size="sm"
-        shape="circle"
-        className="absolute right-2 top-2 rounded-full btn-outline"
-        onClick={() => {
-          setVisible(!visible);
-        }}
-        aria-label={t('close')}
-      >
-        ✕
-      </Button>
+    <Modal open={visible} close={onClose}>
       <form onSubmit={formik.handleSubmit} method="POST">
-        <Modal.Header className="font-bold">{t('create-team')}</Modal.Header>
+        <Modal.Header>{t('create-team')}</Modal.Header>
+        <Modal.Description>{t('members-of-a-team')}</Modal.Description>
         <Modal.Body>
-          <div className="mt-2 flex flex-col space-y-4">
-            <p>{t('members-of-a-team')}</p>
-            <div className="flex justify-between space-x-3">
-              <Input
-                name="name"
-                className="flex-grow"
-                onChange={formik.handleChange}
-                value={formik.values.name}
-                placeholder={t('team-name')}
-                color={formik.errors.name ? 'error' : 'primary'}
-              />
-            </div>
-          </div>
+          <InputWithLabel
+            label={t('name')}
+            name="name"
+            onChange={formik.handleChange}
+            value={formik.values.name}
+            placeholder={t('team-name')}
+            required
+          />
         </Modal.Body>
-        <Modal.Actions>
+        <Modal.Footer>
+          <Button type="button" variant="outline" onClick={onClose} size="md">
+            {t('close')}
+          </Button>
           <Button
             type="submit"
             color="primary"
             loading={formik.isSubmitting}
-            active={formik.dirty}
             size="md"
-            disabled={!formik.isValid}
+            disabled={!formik.dirty || !formik.isValid}
           >
             {t('create-team')}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setVisible(!visible);
-            }}
-            size="md"
-          >
-            {t('close')}
-          </Button>
-        </Modal.Actions>
+        </Modal.Footer>
       </form>
     </Modal>
   );

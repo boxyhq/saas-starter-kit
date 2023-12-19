@@ -4,18 +4,15 @@ import { ConnectionsWrapper } from '@boxyhq/react-ui/sso';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
+import toast from 'react-hot-toast';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from 'styles/sdk-override.module.css';
 import env from '@/lib/env';
 
-const CREATE_SSO_CSS = {
-  input: `${styles['sdk-input']} input input-bordered`,
-  button: { ctoa: 'btn-primary' },
-};
-
-const EDIT_SSO_CSS = {
+const SSO_CSS = {
   button: { ctoa: 'btn-primary', destructive: 'btn-error' },
   input: `${styles['sdk-input']} input input-bordered`,
+  textarea: styles['sdk-input'],
   confirmationPrompt: {
     button: {
       ctoa: 'btn-md',
@@ -26,7 +23,7 @@ const EDIT_SSO_CSS = {
   section: 'mb-8',
 };
 
-const TeamSSO = ({ teamFeatures }) => {
+const TeamSSO = ({ teamFeatures, SPConfigURL }) => {
   const { t } = useTranslation('common');
 
   const { isLoading, isError, team } = useTeam();
@@ -45,46 +42,43 @@ const TeamSSO = ({ teamFeatures }) => {
 
   return (
     <>
-      <TeamTab activeTab="saml" team={team} teamFeatures={teamFeatures} />
+      <TeamTab activeTab="sso" team={team} teamFeatures={teamFeatures} />
       <ConnectionsWrapper
-        urls={{ spMetadata: '/well-known/saml-configuration' }}
-        copyDoneCallback={() => {
-          /** show toast */
+        urls={{
+          spMetadata: SPConfigURL,
+          get: `/api/teams/${team.slug}/sso`,
+          post: `/api/teams/${team.slug}/sso`,
+          patch: `/api/teams/${team.slug}/sso`,
+          delete: `/api/teams/${team.slug}/sso`,
         }}
-        classNames={{ button: { ctoa: 'btn-primary' } }}
+        successCallback={({
+          operation,
+          connectionIsSAML,
+          connectionIsOIDC,
+        }) => {
+          const ssoType = connectionIsSAML
+            ? 'SAML'
+            : connectionIsOIDC
+              ? 'OIDC'
+              : '';
+          if (operation === 'CREATE') {
+            toast.success(`${ssoType} connection created successfully.`);
+          } else if (operation === 'UPDATE') {
+            toast.success(`${ssoType} connection updated successfully.`);
+          } else if (operation === 'DELETE') {
+            toast.success(`${ssoType} connection deleted successfully.`);
+          } else if (operation === 'COPY') {
+            toast.success(`Contents copied to clipboard`);
+          }
+        }}
+        errorCallback={(errMessage) => toast.error(errMessage)}
+        classNames={SSO_CSS}
         componentProps={{
-          editOIDCConnection: {
-            classNames: EDIT_SSO_CSS,
-          },
-          editSAMLConnection: {
-            urls: {
-              patch: `/api/teams/${team.slug}/saml`,
-              delete: `/api/teams/${team.slug}/saml`,
-            },
-            classNames: EDIT_SSO_CSS,
-          },
           connectionList: {
             cols: ['provider', 'type', 'status', 'actions'],
-            getConnectionsUrl: `/api/teams/${team.slug}/saml`,
           },
-          createSSOConnection: {
-            componentProps: {
-              saml: {
-                variant: 'basic',
-                urls: {
-                  save: `/api/teams/${team.slug}/saml`,
-                },
-                classNames: CREATE_SSO_CSS,
-              },
-              oidc: {
-                variant: 'basic',
-                urls: {
-                  save: '',
-                },
-                classNames: CREATE_SSO_CSS,
-              },
-            },
-          },
+          editOIDCConnection: { displayInfo: false },
+          editSAMLConnection: { displayInfo: false },
         }}
       />
     </>
@@ -100,10 +94,15 @@ export async function getServerSideProps({
     };
   }
 
+  const SPConfigURL = env.jackson.selfHosted
+    ? `${env.jackson.url}/well-known/saml-configuration`
+    : '/well-known/saml-configuration';
+
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
       teamFeatures: env.teamFeatures,
+      SPConfigURL,
     },
   };
 }
