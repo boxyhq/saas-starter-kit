@@ -61,7 +61,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     const connections = await getSSOConnections({
       clientID: req.query.clientID as string,
     });
-    return res.json({ data: connections });
+    return res.json(connections);
   }
 
   const connections = await getSSOConnections({
