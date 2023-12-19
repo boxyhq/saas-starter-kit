@@ -135,7 +135,7 @@ model ApiKey {
 }
 
 model jackson_store {
-  key        String    @id @db.VarChar(1500) // is this unique?
+  key        String    @id @db.VarChar(1500)
   value      String
   iv         String?   @db.VarChar(64)
   tag        String?   @db.VarChar(64)
@@ -145,7 +145,7 @@ model jackson_store {
 
   jackson_index jackson_index[]
 
-  @@index([namespace])
+  @@index([namespace], map: "_jackson_store_namespace")
 }
 
 model jackson_index {
@@ -155,13 +155,13 @@ model jackson_index {
 
   store jackson_store @relation(fields: [storeKey], references: [key], onDelete: Cascade, onUpdate: NoAction)
 
-  @@index([key])
-  @@index([key, storeKey])
+  @@index([key], map: "_jackson_index_key")
+  @@index([key, storeKey], map: "_jackson_index_key_store")
 }
 
 model jackson_ttl {
   key       String @id @db.VarChar(1500)
   expiresAt BigInt
 
-  @@index([expiresAt])
+  @@index([expiresAt], map: "_jackson_ttl_expires_at")
 }

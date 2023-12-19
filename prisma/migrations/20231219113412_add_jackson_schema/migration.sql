@@ -29,16 +29,16 @@ CREATE TABLE "jackson_ttl" (
 );
 
 -- CreateIndex
-CREATE INDEX "jackson_store_namespace_idx" ON "jackson_store"("namespace");
+CREATE INDEX "_jackson_store_namespace" ON "jackson_store"("namespace");
 
 -- CreateIndex
-CREATE INDEX "jackson_index_key_idx" ON "jackson_index"("key");
+CREATE INDEX "_jackson_index_key" ON "jackson_index"("key");
 
 -- CreateIndex
-CREATE INDEX "jackson_index_key_storeKey_idx" ON "jackson_index"("key", "storeKey");
+CREATE INDEX "_jackson_index_key_store" ON "jackson_index"("key", "storeKey");
 
 -- CreateIndex
-CREATE INDEX "jackson_ttl_expiresAt_idx" ON "jackson_ttl"("expiresAt");
+CREATE INDEX "_jackson_ttl_expires_at" ON "jackson_ttl"("expiresAt");
 
 -- AddForeignKey
 ALTER TABLE "jackson_index" ADD CONSTRAINT "jackson_index_storeKey_fkey" FOREIGN KEY ("storeKey") REFERENCES "jackson_store"("key") ON DELETE CASCADE ON UPDATE NO ACTION;
