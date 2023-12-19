@@ -3,7 +3,6 @@ import type {
   GetConnectionsQuery,
 } from '@boxyhq/saml-jackson';
 
-import env from '@/lib/env';
 import jackson from '@/lib/jackson';
 import { ApiError } from '@/lib/errors';
 import { type JacksonSSO, strategyChecker, oidcMetadataParse } from './utils';
