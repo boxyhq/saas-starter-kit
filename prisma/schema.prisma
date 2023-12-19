@@ -135,14 +135,17 @@ model ApiKey {
 }
 
 model jackson_store {
-  key       String    @id @db.VarChar(1500)
-  value     String
-  iv        String?   @db.VarChar(64)
-  tag       String?   @db.VarChar(64)
-  createdAt DateTime  @default(now()) @db.Timestamp(0)
-  updatedAt DateTime? @db.Timestamp(0)
+  key        String    @id @db.VarChar(1500) // is this unique?
+  value      String
+  iv         String?   @db.VarChar(64)
+  tag        String?   @db.VarChar(64)
+  createdAt  DateTime  @default(now()) @db.Timestamp(0)
+  modifiedAt DateTime? @db.Timestamp(0)
+  namespace  String?   @db.VarChar(64)
 
   jackson_index jackson_index[]
+
+  @@index([namespace])
 }
 
 model jackson_index {
@@ -150,7 +153,7 @@ model jackson_index {
   key      String @db.VarChar(1500)
   storeKey String @db.VarChar(1500)
 
-  store jackson_store @relation(fields: [storeKey], references: [key], onDelete: Cascade)
+  store jackson_store @relation(fields: [storeKey], references: [key], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([key])
   @@index([key, storeKey])

@@ -5,7 +5,8 @@ CREATE TABLE "jackson_store" (
     "iv" VARCHAR(64),
     "tag" VARCHAR(64),
     "createdAt" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(0),
+    "modifiedAt" TIMESTAMP(0),
+    "namespace" VARCHAR(64),
 
     CONSTRAINT "jackson_store_pkey" PRIMARY KEY ("key")
 );
@@ -28,6 +29,9 @@ CREATE TABLE "jackson_ttl" (
 );
 
 -- CreateIndex
+CREATE INDEX "jackson_store_namespace_idx" ON "jackson_store"("namespace");
+
+-- CreateIndex
 CREATE INDEX "jackson_index_key_idx" ON "jackson_index"("key");
 
 -- CreateIndex
@@ -37,4 +41,4 @@ CREATE INDEX "jackson_index_key_storeKey_idx" ON "jackson_index"("key", "storeKe
 CREATE INDEX "jackson_ttl_expiresAt_idx" ON "jackson_ttl"("expiresAt");
 
 -- AddForeignKey
-ALTER TABLE "jackson_index" ADD CONSTRAINT "jackson_index_storeKey_fkey" FOREIGN KEY ("storeKey") REFERENCES "jackson_store"("key") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "jackson_index" ADD CONSTRAINT "jackson_index_storeKey_fkey" FOREIGN KEY ("storeKey") REFERENCES "jackson_store"("key") ON DELETE CASCADE ON UPDATE NO ACTION;
