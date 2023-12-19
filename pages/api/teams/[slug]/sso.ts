@@ -68,7 +68,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     tenant: teamMember.teamId,
   });
 
-  res.json({ data: connections });
+  res.json(connections);
 };
 
 // Create a SSO connection for the team
