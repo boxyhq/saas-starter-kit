@@ -37,23 +37,18 @@ export class jacksonEmbedded implements JacksonSSO {
 
   // Update SSO connection
   async updateConnection(params: any) {
-    const body = {
-      ...params,
-      product: env.jackson.productId,
-    };
-
     const { apiController } = await jackson();
 
-    const { isSAML, isOIDC } = strategyChecker(body);
+    const { isSAML, isOIDC } = strategyChecker(params);
 
     if (!isSAML && !isOIDC) {
       throw new ApiError(400, 'Could not update SSO connection. Bad request.');
     }
 
     if (isSAML) {
-      await apiController.updateSAMLConnection(body);
+      await apiController.updateSAMLConnection(params);
     } else {
-      await apiController.updateOIDCConnection(oidcMetadataParse(body));
+      await apiController.updateOIDCConnection(oidcMetadataParse(params));
     }
   }
 

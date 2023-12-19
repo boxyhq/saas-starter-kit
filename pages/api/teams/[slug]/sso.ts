@@ -73,6 +73,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const connection = await sso.createConnection({
     ...req.body,
+    defaultRedirectUrl: env.jackson.sso.callback + env.jackson.sso.idpLoginPath,
+    redirectUrl: env.jackson.sso.callback,
+    product: env.jackson.productId,
     tenant: teamMember.teamId,
   });
 
@@ -94,6 +97,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
   await sso.updateConnection({
     ...req.body,
     tenant: teamMember.teamId,
+    product: env.jackson.productId,
   });
 
   sendAudit({
