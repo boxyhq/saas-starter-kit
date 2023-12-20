@@ -135,7 +135,11 @@ if (isAuthProviderEnabled('saml')) {
       httpOptions: {
         timeout: 30000,
       },
-    }),
+    })
+  );
+}
+if (isAuthProviderEnabled('idp-initiated')) {
+  providers.push(
     CredentialsProvider({
       id: 'boxyhq-idp',
       name: 'IdP Login',
