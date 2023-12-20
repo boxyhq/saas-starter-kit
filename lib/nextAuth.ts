@@ -138,18 +138,10 @@ if (isAuthProviderEnabled('saml')) {
     }),
     CredentialsProvider({
       id: 'boxyhq-idp',
-      // The name to display on the sign in form (e.g. 'Sign in with...')
       name: 'IdP Login',
-      // The credentials is used to generate a suitable form on the sign in page.
-      // You can specify whatever fields you are expecting to be submitted.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
         code: {
-          label:
-            'Code: Go to https://mocksaml.com/saml/login to initiate SAML IdP login',
           type: 'text',
-          placeholder: 'Enter code',
         },
       },
       async authorize(credentials) {
@@ -366,13 +358,15 @@ export const getAuthOptions = (
       },
 
       async jwt({ token, trigger, session, account }) {
-        if (account?.provider === 'boxyhq-idp') {
+        if (trigger === 'signIn' && account?.provider === 'boxyhq-idp') {
           const userByAccount = await adapter.getUserByAccount!({
             providerAccountId: account.providerAccountId,
             provider: account.provider,
           });
-          return { ...token, sub: userByAccount?.id || token.sub };
+
+          return { ...token, sub: userByAccount?.id };
         }
+
         if (trigger === 'update' && 'name' in session && session.name) {
           return { ...token, name: session.name };
         }
