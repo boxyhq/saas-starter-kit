@@ -2,18 +2,32 @@ import env from '@/lib/env';
 import { options } from '../config';
 import { ApiError } from '@/lib/errors';
 import type { JacksonDsync } from './utils';
+import type { Directory, DirectoryType } from '@boxyhq/saml-jackson';
 import type { ApiResponse } from 'types';
-import type { Directory } from '@boxyhq/saml-jackson';
 
 export class JacksonHosted implements JacksonDsync {
   private dsyncUrl = `${env.jackson.url}/api/v1/dsync`;
 
-  async createConnection(params: any) {
+  async createConnection({
+    name,
+    type,
+    tenant,
+  }: {
+    name: string;
+    type: string;
+    tenant: string;
+  }) {
+    const body = {
+      name,
+      tenant,
+      type: type as DirectoryType,
+      product: env.jackson.productId,
+    };
     const response = await fetch(this.dsyncUrl, {
       ...options,
       method: 'POST',
       body: JSON.stringify({
-        ...params,
+        ...body,
         webhook_url: env.jackson.dsync.webhook_url,
         webhook_secret: env.jackson.dsync.webhook_secret,
       }),
@@ -54,7 +68,40 @@ export class JacksonHosted implements JacksonDsync {
     return json;
   }
 
-  async updateConnection(params: any) {}
+  async updateConnection(params: any) {
+    const response = await fetch(
+      `${env.jackson.url}/api/v1/dsync/${params.directoryId}`,
+      {
+        ...options,
+        method: 'PATCH',
+        body: JSON.stringify(params),
+      }
+    );
 
-  async deleteConnection(params: any) {}
+    const json = (await response.json()) as ApiResponse<Directory>;
+
+    if (!response.ok) {
+      throw new ApiError(response.status, json.error.message);
+    }
+
+    return json;
+  }
+
+  async deleteConnection(params: any) {
+    const response = await fetch(
+      `${env.jackson.url}/api/v1/dsync/${params.directoryId}`,
+      {
+        ...options,
+        method: 'DELETE',
+      }
+    );
+
+    const json = (await response.json()) as ApiResponse<object>;
+
+    if (!response.ok) {
+      throw new ApiError(response.status, json.error.message);
+    }
+
+    return json;
+  }
 }
