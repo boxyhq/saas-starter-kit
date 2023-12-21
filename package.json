@@ -29,7 +29,7 @@
     "@react-email/components": "0.0.12",
     "@retracedhq/logs-viewer": "2.5.2",
     "@retracedhq/retraced": "0.7.2",
-    "@sentry/nextjs": "7.88.0",
+    "@sentry/nextjs": "7.90.0",
     "@tailwindcss/typography": "0.5.10",
     "bcryptjs": "2.4.3",
     "classnames": "2.3.2",
@@ -69,7 +69,7 @@
     "@types/node": "20.10.5",
     "@types/nodemailer": "6.4.14",
     "@types/react": "18.2.45",
-    "@typescript-eslint/eslint-plugin": "6.14.0",
+    "@typescript-eslint/eslint-plugin": "6.15.0",
     "@typescript-eslint/parser": "6.15.0",
     "autoprefixer": "10.4.16",
     "daisyui": "2.52.0",
@@ -83,7 +83,7 @@
     "prettier": "3.1.1",
     "prettier-plugin-tailwindcss": "0.5.9",
     "prisma": "5.7.1",
-    "tailwindcss": "3.3.6",
+    "tailwindcss": "3.4.0",
     "typescript": "5.3.3"
   }
 }
