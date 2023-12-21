@@ -7,7 +7,7 @@ import jackson from '@/lib/jackson';
 import { ApiError } from '@/lib/errors';
 import { type JacksonSSO, strategyChecker, oidcMetadataParse } from './utils';
 
-export class jacksonEmbedded implements JacksonSSO {
+export class JacksonEmbedded implements JacksonSSO {
   // Create SSO connection
   async createConnection(params: any) {
     const { apiController } = await jackson();

@@ -1,11 +1,11 @@
 import env from '@/lib/env';
-import { jacksonHosted } from './hosted';
-import { jacksonEmbedded } from './embed';
+import { JacksonHosted } from './hosted';
+import { JacksonEmbedded } from './embed';
 
 export const ssoManager = () => {
   if (env.jackson.selfHosted) {
-    return new jacksonHosted();
+    return new JacksonHosted();
   } else {
-    return new jacksonEmbedded();
+    return new JacksonEmbedded();
   }
 };

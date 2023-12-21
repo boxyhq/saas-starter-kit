@@ -8,7 +8,7 @@ import { options } from '../config';
 import { ApiError } from '@/lib/errors';
 import { type JacksonSSO } from './utils';
 
-export class jacksonHosted implements JacksonSSO {
+export class JacksonHosted implements JacksonSSO {
   private ssoUrl = `${env.jackson.url}/api/v1/sso`;
 
   // Create SSO connection
