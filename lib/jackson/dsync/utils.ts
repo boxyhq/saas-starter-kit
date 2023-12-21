@@ -8,10 +8,14 @@ type GetConnectionsResult<T> = T extends { tenant: string }
     : never;
 
 export interface JacksonDsync {
-  createConnection: (params: any) => Promise<ApiResponse<Directory>>;
+  createConnection: (params: {
+    name: string;
+    type: string;
+    tenant: string;
+  }) => Promise<ApiResponse<Directory>>;
   getConnections: (
     param: { tenant: string } | { dsyncId: string }
   ) => Promise<GetConnectionsResult<typeof param>>;
-  updateConnection: (params: any) => Promise<Directory>;
-  deleteConnection: (params: any) => Promise<void>;
+  updateConnection: (params: any) => Promise<ApiResponse<Directory>>;
+  deleteConnection: (params: any) => Promise<ApiResponse<object>>;
 }
