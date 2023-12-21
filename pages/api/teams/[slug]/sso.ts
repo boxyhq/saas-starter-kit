@@ -6,6 +6,10 @@ import { sendAudit } from '@/lib/retraced';
 import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import { ssoManager } from '@/lib/jackson/sso/index';
+import {
+  extractClientId,
+  throwIfNoAccessToConnection,
+} from '@/lib/guards/team-sso';
 
 const sso = ssoManager();
 
@@ -55,6 +59,13 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_sso', 'read');
 
+  if ('clientID' in req.query) {
+    await throwIfNoAccessToConnection({
+      teamId: teamMember.teamId,
+      clientId: extractClientId(req),
+    });
+  }
+
   const params =
     'clientID' in req.query
       ? { clientID: req.query.clientID as string }
@@ -94,6 +105,11 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_sso', 'create');
 
+  await throwIfNoAccessToConnection({
+    teamId: teamMember.teamId,
+    clientId: extractClientId(req),
+  });
+
   await sso.updateConnection({
     ...req.body,
     tenant: teamMember.teamId,
@@ -114,6 +130,11 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
 
   throwIfNotAllowed(teamMember, 'team_sso', 'delete');
+
+  await throwIfNoAccessToConnection({
+    teamId: teamMember.teamId,
+    clientId: extractClientId(req),
+  });
 
   await sso.deleteConnection({ ...(req.query as any) });
 
