@@ -77,6 +77,18 @@ const TeamTab = ({ activeTab, team, heading, teamFeatures }: TeamTabProps) => {
   }
 
   if (
+    teamFeatures.payments &&
+    canAccess('team_payments', ['create', 'update', 'read', 'delete'])
+  ) {
+    navigations.push({
+      name: 'Payments',
+      href: `/teams/${team.slug}/payments`,
+      active: activeTab === 'payments',
+      icon: DocumentMagnifyingGlassIcon,
+    });
+  }
+
+  if (
     teamFeatures.webhook &&
     canAccess('team_webhook', ['create', 'update', 'read', 'delete'])
   ) {
