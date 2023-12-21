@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client';
 
 export type ApiError = {
-  code?: string;
+  code: number;
   message: string;
   values: { [key: string]: string };
 };

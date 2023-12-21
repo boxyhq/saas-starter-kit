@@ -3,12 +3,10 @@ import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from '@/lib/errors';
-import {
-  deleteDirectoryConnection,
-  getDirectoryConnections,
-  patchDirectoryConnection,
-} from '@/lib/jackson/dsync';
+import { dsyncManager } from '@/lib/jackson/dsync';
 import { sendAudit } from '@/lib/retraced';
+
+const dsync = dsyncManager();
 
 export default async function handler(
   req: NextApiRequest,
@@ -52,11 +50,11 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_dsync', 'read');
 
-  const connection = await getDirectoryConnections({
+  const connection = await dsync.getConnections({
     dsyncId: req.query.directoryId as string,
   });
 
-  res.status(200).json({ data: connection });
+  res.status(200).json(connection);
 };
 
 const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -66,9 +64,9 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const body = { ...req.query, ...req.body };
 
-  const connection = await patchDirectoryConnection(body);
+  const connection = await dsync.updateConnection(body);
 
-  res.status(200).json({ data: connection });
+  res.status(200).json(connection);
 };
 
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -78,7 +76,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const params = req.query;
 
-  await deleteDirectoryConnection(params);
+  const data = await dsync.deleteConnection(params);
 
   sendAudit({
     action: 'dsync.connection.delete',
@@ -87,5 +85,5 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  res.status(200).json({ data: {} });
+  res.status(200).json(data);
 };

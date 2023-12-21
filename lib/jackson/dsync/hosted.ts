@@ -2,8 +2,7 @@ import env from '@/lib/env';
 import { options } from '../config';
 import { ApiError } from '@/lib/errors';
 import type { JacksonDsync } from './utils';
-import type { Directory, DirectoryType } from '@boxyhq/saml-jackson';
-import type { ApiResponse } from 'types';
+import type { DirectoryType } from '@boxyhq/saml-jackson';
 
 export class JacksonHosted implements JacksonDsync {
   private dsyncUrl = `${env.jackson.url}/api/v1/dsync`;
@@ -33,7 +32,7 @@ export class JacksonHosted implements JacksonDsync {
       }),
     });
 
-    const json = (await response.json()) as ApiResponse<Directory>;
+    const json = await response.json();
 
     if (!response.ok) {
       throw new ApiError(response.status, json.error.message);
@@ -57,9 +56,7 @@ export class JacksonHosted implements JacksonDsync {
       method: 'GET',
     });
 
-    const json = (await response.json()) as Awaited<
-      ReturnType<JacksonDsync['getConnections']>
-    >;
+    const json = await response.json();
 
     if (!response.ok) {
       throw new ApiError(response.status, json.error.message);
@@ -78,7 +75,7 @@ export class JacksonHosted implements JacksonDsync {
       }
     );
 
-    const json = (await response.json()) as ApiResponse<Directory>;
+    const json = await response.json();
 
     if (!response.ok) {
       throw new ApiError(response.status, json.error.message);
@@ -96,7 +93,7 @@ export class JacksonHosted implements JacksonDsync {
       }
     );
 
-    const json = (await response.json()) as ApiResponse<object>;
+    const json = await response.json();
 
     if (!response.ok) {
       throw new ApiError(response.status, json.error.message);
