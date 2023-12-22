@@ -61,7 +61,7 @@ const env = {
       issuer: 'https://saml.boxyhq.com',
       path: '/api/oauth/saml',
       oidcPath: '/api/oauth/oidc',
-      idpLoginPath: '/login/saml',
+      idpLoginPath: '/auth/idp-login',
     },
     dsync: {
       webhook_url: `${process.env.APP_URL}/api/webhooks/dsync`,
