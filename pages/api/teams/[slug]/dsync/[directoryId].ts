@@ -58,9 +58,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     directoryId,
   });
 
-  const connection = await dsync.getConnections({
-    dsyncId: directoryId,
-  });
+  const connection = await dsync.getConnectionById(directoryId);
 
   res.status(200).json(connection);
 };

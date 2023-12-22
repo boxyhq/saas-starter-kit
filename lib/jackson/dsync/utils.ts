@@ -1,28 +1,13 @@
-import type { Directory, Response } from '@boxyhq/saml-jackson';
-import type { ApiResponse } from 'types';
-
-type GetConnectionsResult<T> = T extends { tenant: string }
-  ? Directory[]
-  : T extends { dsyncId: string }
-    ? Directory
-    : never;
+import type { Directory } from '@boxyhq/saml-jackson';
 
 export interface JacksonDsync {
   createConnection: (params: {
     name: string;
     type: string;
     tenant: string;
-  }) => Promise<ApiResponse<Directory> | Response<Directory>>;
-  getConnections: (
-    param: { tenant: string } | { dsyncId: string }
-  ) => Promise<
-    | ApiResponse<GetConnectionsResult<typeof param>>
-    | Response<GetConnectionsResult<typeof param>>
-  >;
-  updateConnection: (
-    params: any
-  ) => Promise<ApiResponse<Directory> | Response<Directory>>;
-  deleteConnection: (
-    params: any
-  ) => Promise<ApiResponse<null> | Response<null>>;
+  }) => Promise<{ data: Directory }>;
+  getConnections: (param: { tenant: string }) => Promise<{ data: Directory[] }>;
+  updateConnection: (params: any) => Promise<{ data: Directory }>;
+  deleteConnection: (params: any) => Promise<{ data: null }>;
+  getConnectionById: (directoryId: string) => Promise<{ data: Directory }>;
 }

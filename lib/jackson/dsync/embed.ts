@@ -1,8 +1,9 @@
 import type { DirectoryType } from '@boxyhq/saml-jackson';
-import type { JacksonDsync } from './utils';
-import jackson from '@/lib/jackson';
+
 import env from '@/lib/env';
+import jackson from '@/lib/jackson';
 import { ApiError } from '@/lib/errors';
+import type { JacksonDsync } from './utils';
 
 export class JacksonEmbedded implements JacksonDsync {
   async createConnection({
@@ -14,66 +15,76 @@ export class JacksonEmbedded implements JacksonDsync {
     type: string;
     tenant: string;
   }) {
-    const body = {
+    const { directorySync } = await jackson();
+
+    const { data, error } = await directorySync.directories.create({
       name,
       tenant,
       type: type as DirectoryType,
       product: env.jackson.productId,
-    };
-    const { directorySync } = await jackson();
+    });
 
-    const data = await directorySync.directories.create(body);
-
-    if (data.error) {
-      throw new ApiError(data.error.code, data.error.message);
+    if (error) {
+      throw new ApiError(error.code, error.message);
     }
 
-    return data;
+    return { data };
   }
 
-  async getConnections(params: { tenant: string } | { dsyncId: string }) {
+  async getConnections({ tenant }: { tenant: string }) {
     const { directorySync } = await jackson();
-    let data;
-    if ('tenant' in params) {
-      data = await directorySync.directories.getByTenantAndProduct(
-        params.tenant,
+
+    const { data, error } =
+      await directorySync.directories.getByTenantAndProduct(
+        tenant,
         env.jackson.productId
       );
-    } else if ('dsyncId' in params) {
-      data = await directorySync.directories.get(params.dsyncId!);
+
+    if (error) {
+      throw new ApiError(error.code, error.message);
     }
 
-    if (data?.error) {
-      throw new ApiError(data.error.code, data.error.message);
-    }
-
-    return data;
+    return { data };
   }
 
   async updateConnection(params: any) {
     const { directorySync } = await jackson();
 
-    const data = await directorySync.directories.update(
+    const { data, error } = await directorySync.directories.update(
       params.directoryId,
       params
     );
 
-    if (data?.error) {
-      throw new ApiError(data.error.code, data.error.message);
+    if (error) {
+      throw new ApiError(error.code, error.message);
     }
 
-    return data;
+    return { data };
   }
 
   async deleteConnection(params: any) {
     const { directorySync } = await jackson();
 
-    const data = await directorySync.directories.delete(params.directoryId);
+    const { data, error } = await directorySync.directories.delete(
+      params.directoryId
+    );
 
-    if (data?.error) {
-      throw new ApiError(data.error.code, data.error.message);
+    if (error) {
+      throw new ApiError(error.code, error.message);
     }
 
-    return data;
+    return { data };
+  }
+
+  async getConnectionById(directoryId: string) {
+    const { directorySync } = await jackson();
+
+    const { data, error } = await directorySync.directories.get(directoryId);
+
+    if (error) {
+      throw new ApiError(error.code, error.message);
+    }
+
+    return { data };
   }
 }
