@@ -56,10 +56,15 @@ const DirectorySync = ({ teamFeatures }) => {
               'tenant',
               'webhook_secret',
               'webhook_url',
+              'log_webhook_events',
             ],
           },
           editDirectory: {
-            excludeFields: ['webhook_url', 'webhook_secret'],
+            excludeFields: [
+              'webhook_url',
+              'webhook_secret',
+              'log_webhook_events',
+            ],
           },
         }}
         urls={{
