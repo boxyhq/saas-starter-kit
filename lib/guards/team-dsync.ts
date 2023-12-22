@@ -17,9 +17,7 @@ export const throwIfNoAccessToDirectory = async ({
 
   const dsync = dsyncManager();
 
-  const { data: connection } = await dsync.getConnections({
-    dsyncId: directoryId,
-  });
+  const { data: connection } = await dsync.getConnectionById(directoryId);
 
   if (connection.tenant === teamId) {
     return;
