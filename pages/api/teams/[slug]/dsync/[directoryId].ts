@@ -3,12 +3,11 @@ import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from '@/lib/errors';
-import {
-  deleteDirectoryConnection,
-  getDirectoryConnections,
-  patchDirectoryConnection,
-} from '@/lib/jackson/dsync';
+import { dsyncManager } from '@/lib/jackson/dsync';
 import { sendAudit } from '@/lib/retraced';
+import { throwIfNoAccessToDirectory } from '@/lib/guards/team-dsync';
+
+const dsync = dsyncManager();
 
 export default async function handler(
   req: NextApiRequest,
@@ -52,11 +51,16 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_dsync', 'read');
 
-  const connection = await getDirectoryConnections({
-    dsyncId: req.query.directoryId as string,
+  const directoryId = req.query.directoryId as string;
+
+  await throwIfNoAccessToDirectory({
+    teamId: teamMember.team.id,
+    directoryId,
   });
 
-  res.status(200).json({ data: connection });
+  const connection = await dsync.getConnectionById(directoryId);
+
+  res.status(200).json(connection);
 };
 
 const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -64,11 +68,16 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_dsync', 'read');
 
+  await throwIfNoAccessToDirectory({
+    teamId: teamMember.team.id,
+    directoryId: req.query.directoryId as string,
+  });
+
   const body = { ...req.query, ...req.body };
 
-  const connection = await patchDirectoryConnection(body);
+  const connection = await dsync.updateConnection(body);
 
-  res.status(200).json({ data: connection });
+  res.status(200).json(connection);
 };
 
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -76,9 +85,12 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_dsync', 'delete');
 
-  const params = req.query;
+  await throwIfNoAccessToDirectory({
+    teamId: teamMember.team.id,
+    directoryId: req.query.directoryId as string,
+  });
 
-  await deleteDirectoryConnection(params);
+  const data = await dsync.deleteConnection(req.query);
 
   sendAudit({
     action: 'dsync.connection.delete',
@@ -87,5 +99,5 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  res.status(200).json({ data: {} });
+  res.status(200).json(data);
 };

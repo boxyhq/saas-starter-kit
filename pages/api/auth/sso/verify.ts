@@ -1,6 +1,9 @@
-import { getSSOConnections } from '@/lib/jackson/sso';
+import env from '@/lib/env';
+import { ssoManager } from '@/lib/jackson/sso';
 import { getTeam } from 'models/team';
 import { NextApiRequest, NextApiResponse } from 'next';
+
+const sso = ssoManager();
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,7 +42,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new Error('Team not found.');
   }
 
-  const connections = await getSSOConnections({ tenant: team.id });
+  const connections = await sso.getConnections({
+    tenant: team.id,
+    product: env.jackson.productId,
+  });
 
   if (!connections || connections.length === 0) {
     throw new Error('No SSO connections found for this team.');
