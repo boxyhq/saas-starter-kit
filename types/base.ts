@@ -64,7 +64,8 @@ export type AUTH_PROVIDER =
   | 'google'
   | 'saml'
   | 'email'
-  | 'credentials';
+  | 'credentials'
+  | 'idp-initiated';
 
 export interface TeamFeature {
   sso: boolean;

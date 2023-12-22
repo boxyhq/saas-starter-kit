@@ -138,6 +138,77 @@ if (isAuthProviderEnabled('saml')) {
     })
   );
 }
+if (isAuthProviderEnabled('idp-initiated')) {
+  providers.push(
+    CredentialsProvider({
+      id: 'boxyhq-idp',
+      name: 'IdP Login',
+      credentials: {
+        code: {
+          type: 'text',
+        },
+      },
+      async authorize(credentials) {
+        const { code } = credentials || {};
+
+        if (!code) {
+          return null;
+        }
+
+        const samlLoginUrl = env.jackson.selfHosted
+          ? env.jackson.url
+          : env.appUrl;
+
+        const res = await fetch(`${samlLoginUrl}/api/oauth/token`, {
+          method: 'POST',
+          body: JSON.stringify({
+            grant_type: 'authorization_code',
+            client_id: 'dummy',
+            client_secret: 'dummy',
+            redirect_url: process.env.NEXTAUTH_URL,
+            code,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (res.status !== 200) {
+          return null;
+        }
+
+        const json = await res.json();
+        if (!json?.access_token) {
+          return null;
+        }
+
+        const resUserInfo = await fetch(`${samlLoginUrl}/api/oauth/userinfo`, {
+          headers: {
+            Authorization: `Bearer ${json.access_token}`,
+          },
+        });
+
+        if (!resUserInfo.ok) {
+          return null;
+        }
+
+        const profile = await resUserInfo.json();
+
+        if (profile?.id && profile?.email) {
+          return {
+            name: [profile.firstName, profile.lastName]
+              .filter(Boolean)
+              .join(' '),
+            image: null,
+            ...profile,
+          };
+        }
+
+        return null;
+      },
+    })
+  );
+}
 
 if (isAuthProviderEnabled('email')) {
   providers.push(
@@ -159,14 +230,39 @@ if (isAuthProviderEnabled('email')) {
   );
 }
 
+async function createDatabaseSession(
+  user,
+  req: NextApiRequest | GetServerSidePropsContext['req'],
+  res: NextApiResponse | GetServerSidePropsContext['res']
+) {
+  const sessionToken = randomUUID();
+  const expires = new Date(Date.now() + sessionMaxAge * 1000);
+
+  if (adapter.createSession) {
+    await adapter.createSession({
+      sessionToken,
+      userId: user.id,
+      expires,
+    });
+  }
+
+  setCookie(sessionTokenCookieName, sessionToken, {
+    req,
+    res,
+    expires,
+    secure: useSecureCookie,
+  });
+}
+
 export const getAuthOptions = (
   req: NextApiRequest | GetServerSidePropsContext['req'],
   res: NextApiResponse | GetServerSidePropsContext['res']
 ) => {
-  const isCredentialsProviderCallback =
+  const isCredentialsProviderCallbackWithDbSession =
     (req as NextApiRequest).query &&
     (req as NextApiRequest).query.nextauth?.includes('callback') &&
-    (req as NextApiRequest).query.nextauth?.includes('credentials') &&
+    ((req as NextApiRequest).query.nextauth?.includes('credentials') ||
+      (req as NextApiRequest).query.nextauth?.includes('boxyhq-idp')) &&
     req.method === 'POST' &&
     env.nextAuth.sessionStrategy === 'database';
 
@@ -192,32 +288,17 @@ export const getAuthOptions = (
           return '/auth/login?error=allow-only-work-email';
         }
 
+        const existingUser = await getUser({ email: user.email });
+        const isIdpLogin = account.provider === 'boxyhq-idp';
+
         // Handle credentials provider
-        if (isCredentialsProviderCallback) {
-          const sessionToken = randomUUID();
-          const expires = new Date(Date.now() + sessionMaxAge * 1000);
-
-          if (adapter.createSession) {
-            await adapter.createSession({
-              sessionToken,
-              userId: user.id,
-              expires,
-            });
-          }
-
-          setCookie(sessionTokenCookieName, sessionToken, {
-            req,
-            res,
-            expires,
-            secure: useSecureCookie,
-          });
+        if (isCredentialsProviderCallbackWithDbSession && !isIdpLogin) {
+          await createDatabaseSession(user, req, res);
         }
 
         if (account?.provider === 'credentials') {
           return true;
         }
-
-        const existingUser = await getUser({ email: user.email });
 
         // Login via email (Magic Link)
         if (account?.provider === 'email') {
@@ -233,8 +314,16 @@ export const getAuthOptions = (
 
           await linkAccount(newUser, account);
 
+          if (isIdpLogin && user) {
+            await linkToTeam(user as unknown as Profile, newUser.id);
+          }
+
           if (account.provider === 'boxyhq-saml' && profile) {
             await linkToTeam(profile, newUser.id);
+          }
+
+          if (isCredentialsProviderCallbackWithDbSession) {
+            await createDatabaseSession(newUser, req, res);
           }
 
           slackNotify()?.alert({
@@ -249,6 +338,10 @@ export const getAuthOptions = (
         }
 
         // Existing users reach here
+        if (isCredentialsProviderCallbackWithDbSession) {
+          await createDatabaseSession(existingUser, req, res);
+        }
+
         const linkedAccount = await getAccount({ userId: existingUser.id });
 
         if (!linkedAccount) {
@@ -268,7 +361,16 @@ export const getAuthOptions = (
         return session;
       },
 
-      async jwt({ token, trigger, session }) {
+      async jwt({ token, trigger, session, account }) {
+        if (trigger === 'signIn' && account?.provider === 'boxyhq-idp') {
+          const userByAccount = await adapter.getUserByAccount!({
+            providerAccountId: account.providerAccountId,
+            provider: account.provider,
+          });
+
+          return { ...token, sub: userByAccount?.id };
+        }
+
         if (trigger === 'update' && 'name' in session && session.name) {
           return { ...token, name: session.name };
         }
@@ -278,7 +380,7 @@ export const getAuthOptions = (
     },
     jwt: {
       encode: async (params) => {
-        if (isCredentialsProviderCallback) {
+        if (isCredentialsProviderCallbackWithDbSession) {
           return getCookie(sessionTokenCookieName, { req, res }) || '';
         }
 
@@ -286,7 +388,7 @@ export const getAuthOptions = (
       },
 
       decode: async (params) => {
-        if (isCredentialsProviderCallback) {
+        if (isCredentialsProviderCallbackWithDbSession) {
           return null;
         }
 

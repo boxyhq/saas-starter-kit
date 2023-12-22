@@ -22,6 +22,7 @@ const opts = {
     url: env.databaseUrl,
   },
   idpDiscoveryPath: '/auth/sso/idp-select',
+  idpEnabled: true,
   openid: {},
 } as JacksonOption;
 
