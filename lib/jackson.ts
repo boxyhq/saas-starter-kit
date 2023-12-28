@@ -3,7 +3,7 @@ import jackson, {
   IDirectorySyncController,
   IOAuthController,
   JacksonOption,
-  ISPSAMLConfig,
+  ISPSSOConfig,
   OIDCAuthzResponsePayload,
 } from '@boxyhq/saml-jackson';
 
@@ -29,7 +29,7 @@ const opts = {
 let apiController: IConnectionAPIController;
 let oauthController: IOAuthController;
 let directorySync: IDirectorySyncController;
-let spConfig: ISPSAMLConfig;
+let spConfig: ISPSSOConfig;
 
 const g = global as any;
 
