@@ -48,7 +48,7 @@
     "react-google-recaptcha": "3.1.0",
     "react-hot-toast": "2.4.1",
     "react-i18next": "12.3.1",
-    "sharp": "0.32.6",
+    "sharp": "0.33.1",
     "slack-notify": "2.0.7",
     "svix": "1.15.0",
     "swr": "2.2.4",
