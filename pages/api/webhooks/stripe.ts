@@ -1,0 +1,100 @@
+import Stripe from 'stripe';
+import { stripe } from '@/lib/stripe';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Readable } from 'node:stream';
+import { getByCustomerId } from 'models/stripeTeam';
+import {
+  createStripeSubscription,
+  deleteStripeSubscription,
+  updateStripeSubscription,
+} from 'models/stripeSubscription';
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+// Get raw body as string
+async function getRawBody(readable: Readable): Promise<Buffer> {
+  const chunks: any[] = [];
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
+const relevantEvents = new Set([
+  'customer.subscription.created',
+  'customer.subscription.updated',
+  'customer.subscription.deleted',
+]);
+
+export default async function POST(req: NextApiRequest, res: NextApiResponse) {
+  const rawBody = await getRawBody(req);
+
+  const sig = req.headers['stripe-signature'] as string;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  let event: Stripe.Event;
+
+  try {
+    if (!sig || !webhookSecret) return;
+    event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+  } catch (err: any) {
+    console.log(`Error message: ${err.message}`);
+    return res.status(400).json({ error: { message: err.message } });
+  }
+
+  if (relevantEvents.has(event.type)) {
+    try {
+      switch (event.type) {
+        case 'customer.subscription.created':
+          await handleSubscriptionCreated(event);
+          break;
+        case 'customer.subscription.updated':
+          await handleSubscriptionUpdated(event);
+          break;
+        case 'customer.subscription.deleted':
+          await deleteStripeSubscription(
+            (event.data.object as Stripe.Subscription).id
+          );
+          break;
+        default:
+          throw new Error('Unhandled relevant event!');
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({
+        error: {
+          message: 'Webhook handler failed. View your nextjs function logs.',
+        },
+      });
+    }
+  }
+  return res.status(200).json({ received: true });
+}
+
+async function handleSubscriptionUpdated(event: Stripe.Event) {
+  const { cancel_at, cancel_at_period_end, id } = event.data
+    .object as Stripe.Subscription;
+  if (cancel_at && cancel_at_period_end) {
+    await updateStripeSubscription(id, {
+      cancelAt: new Date(cancel_at * 1000),
+    });
+  }
+}
+
+async function handleSubscriptionCreated(event: Stripe.Event) {
+  const { customer, id, current_period_start, current_period_end } = event.data
+    .object as Stripe.Subscription;
+  const stripeTeam = await getByCustomerId(customer as string);
+  if (stripeTeam) {
+    await createStripeSubscription(
+      stripeTeam.id,
+      id,
+      true,
+      new Date(current_period_start * 1000),
+      new Date(current_period_end * 1000)
+    );
+  }
+}

@@ -199,5 +199,8 @@
   "remove-current-browser-session-warning": "You are about to remove your current session. Once you do this, you will be logged out of the app.",
   "session-removed": "Browser session removed.",
   "remove-team-restricted": "Please contact our support if you want to remove this team. We will help you with that.",
-  "open-customer-portal": "Open Customer Portal"
+  "open-customer-portal": "Open Customer Portal",
+  "subscriptions": "Subscriptions",
+  "from": "From",
+  "to": "To"
 }

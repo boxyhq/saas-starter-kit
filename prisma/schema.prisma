@@ -78,6 +78,7 @@ model Team {
   members     TeamMember[]
   invitations Invitation[]
   apiKeys     ApiKey[]
+  StripeTeam  StripeTeam?
 }
 
 model TeamMember {
@@ -132,4 +133,29 @@ model ApiKey {
   lastUsedAt DateTime?
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+model StripeTeam {
+  id         String   @id @default(uuid())
+  teamId     String   @unique
+  customerId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  team               Team                 @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  StripeSubscription StripeSubscription[]
+}
+
+model StripeSubscription {
+  id             String   @id @default(uuid())
+  subscriptionId String   @unique
+  stripeTeamId   String
+  active         Boolean  @default(false)
+  startDate      DateTime
+  endDate        DateTime
+  cancelAt       DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+
+  stripeTeam StripeTeam @relation(fields: [stripeTeamId], references: [id], onDelete: Cascade)
 }
