@@ -31,7 +31,7 @@
     "@sentry/nextjs": "7.91.0",
     "@tailwindcss/typography": "0.5.10",
     "bcryptjs": "2.4.3",
-    "classnames": "2.5.0",
+    "classnames": "2.5.1",
     "cookies-next": "4.1.0",
     "crypto-js": "4.2.0",
     "formik": "2.4.5",
