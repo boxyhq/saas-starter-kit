@@ -5,6 +5,7 @@ import {
   PaperAirplaneIcon,
   ShieldExclamationIcon,
   UserPlusIcon,
+  BanknotesIcon,
 } from '@heroicons/react/24/outline';
 import type { Team } from '@prisma/client';
 import classNames from 'classnames';
@@ -84,7 +85,7 @@ const TeamTab = ({ activeTab, team, heading, teamFeatures }: TeamTabProps) => {
       name: 'Payments',
       href: `/teams/${team.slug}/payments`,
       active: activeTab === 'payments',
-      icon: DocumentMagnifyingGlassIcon,
+      icon: BanknotesIcon,
     });
   }
 
