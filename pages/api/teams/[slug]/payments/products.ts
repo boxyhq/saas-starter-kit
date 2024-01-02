@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getStripeCustomerId, getSubscriptionsWithItems } from '@/lib/stripe';
+import { getStripeCustomerId } from '@/lib/stripe';
 import { getSession } from '@/lib/session';
 import { throwIfNoTeamAccess } from 'models/team';
 import { getAllProducts } from 'models/stripeProduct';
