@@ -40,9 +40,7 @@ const Payments = ({ teamFeatures }) => {
     });
 
     if (!res.ok) {
-      toast.error(`${t('error-occurred')} ${url} ${data} ${res}`);
-
-      // throw Error(res?.statusText);
+      toast.error(`${t('error-occurred')}`);
     }
     return res.json();
   };
