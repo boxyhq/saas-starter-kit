@@ -1,6 +1,6 @@
-const Stripe = require('stripe');
-const dotenv = require('dotenv');
-const { PrismaClient } = require('@prisma/client');
+import Stripe from 'stripe';
+import dotenv from 'dotenv';
+import { PrismaClient } from '@prisma/client';
 
 /**
  * Synchronizes data between a database and the Stripe API.
@@ -77,7 +77,7 @@ function getStripeInstance() {
     throw result.error;
   }
   const parsed = result.parsed;
-  const stripe = new Stripe(parsed.STRIPE_SECRET_KEY, {
+  const stripe = new Stripe(parsed?.STRIPE_SECRET_KEY || '', {
     apiVersion: '2022-11-15',
     appInfo: {
       name: 'saas-starter-kit',
