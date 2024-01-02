@@ -54,7 +54,7 @@ const ProductPricing = ({
                     </Card.Title>
                     <Image
                       className="mx-auto"
-                      src={plan.images.length > 0 ? plan.images[0] : ''}
+                      src={plan.image || ''}
                       alt={plan.name}
                       width={100}
                       height={100}
@@ -70,7 +70,7 @@ const ProductPricing = ({
                                 className="flex items-center"
                               >
                                 <CheckIcon className="h-5 w-5" />
-                                <span className="ml-1">{feature.name}</span>
+                                <span className="ml-1">{feature}</span>
                               </li>
                             );
                           }

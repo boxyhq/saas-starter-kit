@@ -30,3 +30,8 @@ export const deleteAllPrices = async () => {
   const prices = await prisma.stripePrice.deleteMany({});
   return prices;
 };
+
+export const getAllPrices = async () => {
+  const prices = await prisma.stripePrice.findMany({});
+  return prices;
+};

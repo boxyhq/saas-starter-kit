@@ -24,13 +24,6 @@ export const getURL = () => {
   return url;
 };
 
-export const getProductByName = async (name: string) => {
-  const products = await stripe.products.search({
-    query: `name: '${name}' AND active: 'true'`,
-  });
-  return products.data.length > 0 ? products.data[0] : null;
-};
-
 export async function getStripeCustomerId(teamMember, session?: any) {
   let customerId = '';
   const stripeTeam = await getByTeamId(teamMember.teamId);
@@ -61,23 +54,4 @@ export async function getSubscriptionsWithItems(customerId) {
     customer: customerId,
   });
   return subscriptions;
-}
-
-export async function findSubscriptionItem(
-  customerId: string,
-  productName: string
-): Promise<Stripe.SubscriptionItem | null> {
-  try {
-    const product = await getProductByName(productName);
-    if (!product) return null;
-    const subscriptions = await getSubscriptionsWithItems(customerId);
-    const subscriptionItem = subscriptions.data.filter((subscription) => {
-      const [item] = subscription.items.data;
-      return item.plan.product === product.id;
-    })[0].items.data[0];
-    return subscriptionItem || null;
-  } catch (error) {
-    console.error('Error finding subscription item:', error);
-    return null;
-  }
 }

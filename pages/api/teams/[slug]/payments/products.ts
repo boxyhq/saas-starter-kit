@@ -1,11 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import {
-  getStripeCustomerId,
-  getSubscriptionsWithItems,
-  stripe,
-} from '@/lib/stripe';
+import { getStripeCustomerId, getSubscriptionsWithItems } from '@/lib/stripe';
 import { getSession } from '@/lib/session';
 import { throwIfNoTeamAccess } from 'models/team';
+import { getAllProducts } from 'models/stripeProduct';
+import { getAllPrices } from 'models/stripePrice';
 
 interface Product {
   id: string;
@@ -34,31 +32,24 @@ export default async function handler(
     const customerId = await getStripeCustomerId(teamMember, session);
     const [subscriptions, products, prices] = await Promise.all([
       getSubscriptionsWithItems(customerId),
-      stripe.products.list({
-        active: true,
-      }),
-      stripe.prices.list({
-        active: true,
-      }),
+      getAllProducts(),
+      getAllPrices(),
     ]);
 
     // create a unified object with prices associated with the product
-    const productsWithPrices = products.data.map((product: any) => {
-      product.prices = prices.data.filter(
-        (price) => price.product === product.id
-      );
+    const productsWithPrices = products.map((product: any) => {
+      product.prices = prices.filter((price) => price.productId === product.id);
       return product;
     });
 
     // Extract Products
-    const _products: Product[] = products?.data.map((product: any) => {
+    const _products: Product[] = products?.map((product: any) => {
       const { id, name, prices: productPrices } = product;
       return {
         id,
         name,
         prices: productPrices.map((price: any) => ({
           id: price.id,
-          unit_amount: price.unit_amount,
           currency: price.currency,
           interval: price.recurring.interval,
         })),
@@ -80,7 +71,7 @@ export default async function handler(
           product,
           startDate: subscription.current_period_start * 1000,
           endDate: subscription.current_period_end * 1000,
-          price: prices.data.find((d) => d.id === subscriptionItem.plan.id),
+          price: prices.find((d) => d.id === subscriptionItem.plan.id),
           status: subscription.status,
         };
       }
@@ -88,15 +79,7 @@ export default async function handler(
 
     res.status(200).json({
       data: {
-        products: productsWithPrices.map((a) => {
-          return {
-            name: a.name,
-            images: a.images,
-            description: a.description,
-            features: a?.features || [],
-            prices: a?.prices || [],
-          };
-        }),
+        products: productsWithPrices,
         subscriptions: _subscriptions || [],
       },
     });

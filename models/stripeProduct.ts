@@ -20,3 +20,8 @@ export const deleteAllProducts = async () => {
   const products = await prisma.stripeProduct.deleteMany({});
   return products;
 };
+
+export const getAllProducts = async () => {
+  const products = await prisma.stripeProduct.findMany({});
+  return products;
+};

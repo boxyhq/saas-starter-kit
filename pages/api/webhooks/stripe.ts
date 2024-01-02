@@ -2,7 +2,6 @@ import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Readable } from 'node:stream';
-import { getByCustomerId } from 'models/stripeTeam';
 import {
   createStripeSubscription,
   deleteStripeSubscription,
