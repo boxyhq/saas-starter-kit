@@ -46,10 +46,3 @@ export async function getStripeCustomerId(teamMember, session?: any) {
   }
   return customerId;
 }
-
-export async function getSubscriptionsWithItems(customerId) {
-  const subscriptions = await stripe.subscriptions.list({
-    customer: customerId,
-  });
-  return subscriptions;
-}
