@@ -72,8 +72,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handleSubscriptionUpdated(event: Stripe.Event) {
-  const { cancel_at, cancel_at_period_end, id, status, current_period_end } =
-    event.data.object as Stripe.Subscription;
+  const { cancel_at, id, status, current_period_end } = event.data
+    .object as Stripe.Subscription;
 
   await updateStripeSubscription(id, {
     active: status === 'active',

@@ -6,19 +6,6 @@ import { getAllProducts } from 'models/stripeProduct';
 import { getAllPrices } from 'models/stripePrice';
 import { getByCustomerId } from 'models/stripeSubscription';
 
-interface Product {
-  id: string;
-  name: string;
-  prices: Price[];
-}
-
-interface Price {
-  id: string;
-  unit_amount: number;
-  currency: string;
-  interval: string;
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
