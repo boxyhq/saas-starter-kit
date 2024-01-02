@@ -94,8 +94,8 @@ const ProductPricing = ({
                             onClick={() => {
                               initiateCheckout(
                                 price.id,
-                                (price.billing_scheme == 'per_unit' ||
-                                  price.billing_scheme == 'tiered') &&
+                                (price.billingScheme == 'per_unit' ||
+                                  price.billingScheme == 'tiered') &&
                                   price.recurring.usage_type !== 'metered'
                                   ? 1
                                   : undefined

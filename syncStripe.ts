@@ -103,7 +103,7 @@ async function seedPrices(prices: any[], prisma: any) {
         metadata: data.metadata,
         nickname: data.nickname,
         productId: data.product as string,
-        recurring: JSON.stringify(data.recurring || {}),
+        recurring: data.recurring as any,
         tiersMode: data.tiers_mode ? data.tiers_mode.toString() : '',
         type: data.type,
         unitAmount: data.unit_amount ? data.unit_amount.toString() : null,

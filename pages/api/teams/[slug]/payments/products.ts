@@ -4,6 +4,7 @@ import { getSession } from '@/lib/session';
 import { throwIfNoTeamAccess } from 'models/team';
 import { getAllProducts } from 'models/stripeProduct';
 import { getAllPrices } from 'models/stripePrice';
+import { getByCustomerId } from 'models/stripeSubscription';
 
 interface Product {
   id: string;
@@ -31,7 +32,7 @@ export default async function handler(
     if (!session?.user?.id) throw Error('Could not get user');
     const customerId = await getStripeCustomerId(teamMember, session);
     const [subscriptions, products, prices] = await Promise.all([
-      getSubscriptionsWithItems(customerId),
+      getByCustomerId(customerId),
       getAllProducts(),
       getAllPrices(),
     ]);
@@ -42,45 +43,25 @@ export default async function handler(
       return product;
     });
 
-    // Extract Products
-    const _products: Product[] = products?.map((product: any) => {
-      const { id, name, prices: productPrices } = product;
+    // Extract Subscriptions
+    const _subscriptions: any[] = subscriptions.map((subscription: any) => {
+      const _price = prices.find((p) => p.id === subscription.priceId);
+      if (!_price) return undefined;
+      const subscriptionProduct = products.find(
+        (p) => p.id === _price.productId
+      );
+
       return {
-        id,
-        name,
-        prices: productPrices.map((price: any) => ({
-          id: price.id,
-          currency: price.currency,
-          interval: price.recurring.interval,
-        })),
+        ...subscription,
+        product: subscriptionProduct,
+        price: _price,
       };
     });
-
-    // Extract Subscriptions
-    const _subscriptions: any[] = subscriptions.data.map(
-      (subscription: any) => {
-        const { id, items } = subscription;
-        const [subscriptionItem] = items.data;
-        const product = _products.find(
-          (p) => p.id === subscriptionItem.plan.product
-        );
-
-        return {
-          id,
-          subscriptionItemId: subscriptionItem.id,
-          product,
-          startDate: subscription.current_period_start * 1000,
-          endDate: subscription.current_period_end * 1000,
-          price: prices.find((d) => d.id === subscriptionItem.plan.id),
-          status: subscription.status,
-        };
-      }
-    );
 
     res.status(200).json({
       data: {
         products: productsWithPrices,
-        subscriptions: _subscriptions || [],
+        subscriptions: (_subscriptions || []).filter((s) => !!s),
       },
     });
   } catch (err: any) {
