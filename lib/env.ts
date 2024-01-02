@@ -110,7 +110,6 @@ const env = {
   slackWebhookUrl: process.env.SLACK_WEBHOOK_URL,
 
   stripe: {
-    stripePublishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     stripeSecretKey: process.env.STRIPE_SECRET_KEY,
     stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
   },
