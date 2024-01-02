@@ -43,7 +43,7 @@ export default async function handler(
       return product;
     });
 
-    // Extract Subscriptions
+    // Subscriptions with product and price
     const _subscriptions: any[] = subscriptions.map((subscription: any) => {
       const _price = prices.find((p) => p.id === subscription.priceId);
       if (!_price) return undefined;

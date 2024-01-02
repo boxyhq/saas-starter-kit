@@ -4,6 +4,7 @@ import { Button, Card } from 'react-daisyui';
 import Image from 'next/image';
 import useTeam from 'hooks/useTeam';
 import router from 'next/router';
+import toast from 'react-hot-toast';
 
 const ProductPricing = ({
   plans,
@@ -31,7 +32,11 @@ const ProductPricing = ({
     if (data?.data?.url) {
       router.push(data.data.url);
     } else {
-      console.log('Error in initiateCheckout', { data });
+      toast.error(
+        data?.error?.message ||
+          data?.error?.raw?.message ||
+          t('stripe-checkout-fallback-error')
+      );
     }
   };
   return (

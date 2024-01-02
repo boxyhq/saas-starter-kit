@@ -40,7 +40,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     if (!sig || !webhookSecret) return;
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
   } catch (err: any) {
-    console.log(`Error message: ${err.message}`);
     return res.status(400).json({ error: { message: err.message } });
   }
 
@@ -62,7 +61,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
           throw new Error('Unhandled relevant event!');
       }
     } catch (error) {
-      console.log(error);
       return res.status(400).json({
         error: {
           message: 'Webhook handler failed. View your nextjs function logs.',

@@ -12,6 +12,7 @@ import router from 'next/router';
 import fetcher from '@/lib/fetcher';
 import useSWR from 'swr';
 import ProductPricing from '@/components/payments/productPricing';
+import toast from 'react-hot-toast';
 
 const Payments = ({ teamFeatures }) => {
   const { t } = useTranslation('common');
@@ -39,7 +40,7 @@ const Payments = ({ teamFeatures }) => {
     });
 
     if (!res.ok) {
-      console.log('Error in postData', { url, data, res });
+      toast.error(`${t('error-occurred')} ${url} ${data} ${res}`);
 
       // throw Error(res?.statusText);
     }
@@ -51,7 +52,6 @@ const Payments = ({ teamFeatures }) => {
       const { url } = await postData({
         url: `/api/teams/${team?.slug}/payments/create-portal-link`,
       });
-      console.log(url);
       router.push(url);
     } catch (error) {
       if (error) return alert((error as Error).message);
