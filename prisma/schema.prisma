@@ -142,20 +142,52 @@ model StripeTeam {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now())
 
-  team               Team                 @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  StripeSubscription StripeSubscription[]
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }
 
 model StripeSubscription {
-  id             String   @id @default(uuid())
-  subscriptionId String   @unique
-  stripeTeamId   String
-  active         Boolean  @default(false)
+  id             String    @id @default(uuid())
+  subscriptionId String    @unique
+  customerId     String
+  priceId        String
+  active         Boolean   @default(false)
   startDate      DateTime
   endDate        DateTime
   cancelAt       DateTime?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now())
+}
 
-  stripeTeam StripeTeam @relation(fields: [stripeTeamId], references: [id], onDelete: Cascade)
+model StripeProduct {
+  id          String        @id @default(uuid())
+  description String
+  features    String[]
+  image       String
+  metadata    Json
+  name        String
+  unitLabel   String?
+  created     DateTime
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now())
+  StripePrice StripePrice[]
+}
+
+model StripePrice {
+  id                String   @id @default(uuid())
+  billingScheme     String
+  created           DateTime
+  currency          String
+  customUnitAmount  String?
+  livemode          Boolean
+  lookupKey         String?
+  metadata          Json
+  nickname          String?
+  productId         String
+  recurring         Json
+  tiersMode         String
+  type              String
+  unitAmount        String?
+  unitAmountDecimal String?
+
+  product StripeProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
 }

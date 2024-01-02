@@ -16,7 +16,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --env=jsdom",
-    "build-ci": "next build"
+    "build-ci": "next build",
+    "sync-stripe": "npx ts-node --skip-project syncStripe.ts"
   },
   "dependencies": {
     "@boxyhq/metrics": "0.2.6",
@@ -36,6 +37,7 @@
     "classnames": "2.3.2",
     "cookies-next": "4.1.0",
     "crypto-js": "4.2.0",
+    "dotenv": "16.3.1",
     "formik": "2.4.5",
     "i18next": "22.5.1",
     "mixpanel-browser": "2.48.1",
@@ -86,6 +88,7 @@
     "prettier-plugin-tailwindcss": "0.5.9",
     "prisma": "5.7.1",
     "tailwindcss": "3.4.0",
+    "ts-node": "10.9.2",
     "typescript": "5.3.3"
   }
 }
