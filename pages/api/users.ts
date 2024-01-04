@@ -5,6 +5,7 @@ import { recordMetric } from '@/lib/metrics';
 import { ApiError } from '@/lib/errors';
 import env from '@/lib/env';
 import { getUser } from 'models/user';
+import { isEmailAllowed } from '@/lib/email/utils';
 
 export default async function handler(
   req: NextApiRequest,
@@ -42,13 +43,19 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Only allow email change if confirmEmail is false
   if ('email' in req.body && req.body.email && allowEmailChange) {
-    const user = await getUser({ email: req.body.email });
+    const { email } = req.body;
+
+    if (!isEmailAllowed(email)) {
+      throw new ApiError(400, 'Please use your work email.');
+    }
+
+    const user = await getUser({ email });
 
     if (user && user.id !== session?.user.id) {
       throw new ApiError(400, 'Email already in use.');
     }
 
-    toUpdate['email'] = req.body.email;
+    toUpdate['email'] = email;
   }
 
   if ('image' in req.body) {
