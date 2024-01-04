@@ -15,7 +15,7 @@ const usePermissions = () => {
     if (slug) {
       setTeamSlug(slug);
     }
-  }, [router.query]);
+  }, [router.query, slug]);
 
   const { data, error, isLoading } = useSWR<ApiResponse<Permission[]>>(
     teamSlug ? `/api/teams/${teamSlug}/permissions` : null,
