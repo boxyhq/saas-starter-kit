@@ -42,11 +42,17 @@ const JoinWithInvitation = ({
   const formik = useFormik({
     initialValues: {
       name: '',
+      email: '',
       password: '',
+      isShared: invitation?.isShared || false,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       password: Yup.string().required().min(passwordPolicies.minLength),
+      email: Yup.string().when('isShared', {
+        is: true,
+        then: (schema) => schema.required().email(),
+      }),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -83,6 +89,9 @@ const JoinWithInvitation = ({
     return <Error message={error.message} />;
   }
 
+  console.log(invitation);
+  console.log(formik.errors);
+
   return (
     <WithLoadingAndError isLoading={isLoading} error={error}>
       <form className="space-y-3" onSubmit={formik.handleSubmit}>
@@ -92,15 +101,29 @@ const JoinWithInvitation = ({
           name="name"
           placeholder={t('your-name')}
           value={formik.values.name}
-          error={formik.touched.name ? formik.errors.name : undefined}
+          error={formik.errors.name}
           onChange={formik.handleChange}
         />
-        <InputWithLabel
-          type="email"
-          label={t('email')}
-          value={invitation.email}
-          disabled
-        />
+
+        {invitation.isShared ? (
+          <InputWithLabel
+            type="email"
+            label={t('email')}
+            name="email"
+            placeholder={t('email')}
+            value={formik.values.email}
+            error={formik.errors.email}
+            onChange={formik.handleChange}
+          />
+        ) : (
+          <InputWithLabel
+            type="email"
+            label={t('email')}
+            value={invitation.email!}
+            disabled
+          />
+        )}
+
         <div className="relative flex">
           <InputWithLabel
             type={isPasswordVisible ? 'text' : 'password'}
@@ -108,7 +131,7 @@ const JoinWithInvitation = ({
             name="password"
             placeholder={t('password')}
             value={formik.values.password}
-            error={formik.touched.password ? formik.errors.password : undefined}
+            error={formik.errors.password}
             onChange={formik.handleChange}
           />
           <TogglePasswordVisibility

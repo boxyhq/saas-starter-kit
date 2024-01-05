@@ -7,6 +7,9 @@ export const getInvitations = async (teamId: string) => {
   return await prisma.invitation.findMany({
     where: {
       teamId,
+      email: {
+        not: null,
+      },
     },
     select: {
       id: true,

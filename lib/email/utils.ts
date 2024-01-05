@@ -7,3 +7,7 @@ export const isBusinessEmail = (email: string) => {
     return !blockedDomains[emailDomain];
   }
 };
+
+export function extractEmailDomain(email: string) {
+  return email.split('@')[1];
+}
