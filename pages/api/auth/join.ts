@@ -2,7 +2,7 @@ import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
 import { generateToken, slugify } from '@/lib/common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { prisma } from '@/lib/prisma';
-import { isBusinessEmail } from '@/lib/email/utils';
+import { isEmailAllowed } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
 import { createTeam, getTeam, isTeamExists } from 'models/team';
@@ -62,7 +62,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  if (env.disableNonBusinessEmailSignup && !isBusinessEmail(emailToUse)) {
+  if (!isEmailAllowed(emailToUse)) {
     throw new ApiError(
       400,
       `We currently only accept work email addresses for sign-up. Please use your work email to create an account. If you don't have a work email, feel free to contact our support team for assistance.`

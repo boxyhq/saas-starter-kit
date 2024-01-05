@@ -15,6 +15,7 @@ import { addTeamMember, throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import { isEmailAllowed } from '@/lib/email/utils';
 
 export default async function handler(
   req: NextApiRequest,
@@ -56,6 +57,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   throwIfNotAllowed(teamMember, 'team_invitation', 'create');
 
   const { email, role } = req.body;
+
+  if (!isEmailAllowed(email)) {
+    throw new ApiError(
+      400,
+      'It seems you entered a non-business email. Invitations can only be sent to work emails.'
+    );
+  }
 
   const memberExists = await prisma.teamMember.count({
     where: {

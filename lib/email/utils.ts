@@ -1,3 +1,4 @@
+import env from '../env';
 import blockedDomains from './freeEmailService.json';
 
 export const isBusinessEmail = (email: string) => {
@@ -6,6 +7,14 @@ export const isBusinessEmail = (email: string) => {
 
     return !blockedDomains[emailDomain];
   }
+};
+
+export const isEmailAllowed = (email: string) => {
+  if (!env.disableNonBusinessEmailSignup) {
+    return true;
+  }
+
+  return isBusinessEmail(email);
 };
 
 export function extractEmailDomain(email: string) {
