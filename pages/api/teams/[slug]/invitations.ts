@@ -16,7 +16,7 @@ import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { extractEmailDomain, isEmailAllowed } from '@/lib/email/utils';
-import { Invitation, User } from '@prisma/client';
+import { Invitation } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
