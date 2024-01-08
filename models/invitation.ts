@@ -1,10 +1,13 @@
+import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
 import { Invitation } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
+type InvitationWithUrl = Invitation & { url: string };
+
 export const getInvitations = async (teamId: string, sentViaEmail: boolean) => {
-  return await prisma.invitation.findMany({
+  const invitations = await prisma.invitation.findMany({
     where: {
       teamId,
       sentViaEmail,
@@ -14,8 +17,15 @@ export const getInvitations = async (teamId: string, sentViaEmail: boolean) => {
       email: true,
       role: true,
       expires: true,
+      token: true,
+      allowedDomain: true,
     },
   });
+
+  return invitations.map((invitation) => ({
+    ...invitation,
+    url: `${env.appUrl}/invitations/${invitation.token}`,
+  })) as InvitationWithUrl[];
 };
 
 export const getInvitation = async (

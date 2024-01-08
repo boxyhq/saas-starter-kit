@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Yup from 'yup';
+import { mutate } from 'swr';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import { Button, Input } from 'react-daisyui';
@@ -8,35 +9,45 @@ import { useTranslation } from 'next-i18next';
 import type { ApiResponse } from 'types';
 import useInvitations from 'hooks/useInvitations';
 import { availableRoles } from '@/lib/permissions';
-import type { Invitation, Team } from '@prisma/client';
-import { defaultHeaders } from '@/lib/common';
+import type { Team } from '@prisma/client';
+import { defaultHeaders, isValidDomain } from '@/lib/common';
+import { InputWithCopyButton } from '../shared';
 
 interface InviteViaLinkProps {
   team: Team;
 }
 
+const FormValidationSchema = Yup.object().shape({
+  domains: Yup.string()
+    .nullable()
+    .test(
+      'domains',
+      'Enter one or more valid domains, separated by commas.',
+      (value) => {
+        if (!value) {
+          return true;
+        }
+
+        return value.split(',').every(isValidDomain);
+      }
+    ),
+  role: Yup.string()
+    .required('Please select a role.')
+    .oneOf(availableRoles.map((r) => r.id)),
+});
+
 const InviteViaLink = ({ team }: InviteViaLinkProps) => {
   const { t } = useTranslation('common');
   const { invitations } = useInvitations(team.slug, false);
 
-  console.log(invitations);
-
+  // Create a new invitation link
   const formik = useFormik({
     initialValues: {
       domains: '',
       role: availableRoles[0].id,
       sentViaEmail: false,
     },
-    validationSchema: Yup.object().shape({
-      domains: Yup.string()
-        .nullable()
-        .matches(/^([a-zA-Z0-9.-]+\s*,\s*)*[a-zA-Z0-9.-]+$/, {
-          message: 'Enter one or more valid domains, separated by commas.',
-        }),
-      role: Yup.string()
-        .required(t('required-role'))
-        .oneOf(availableRoles.map((r) => r.id)),
-    }),
+    validationSchema: FormValidationSchema,
     onSubmit: async (values) => {
       const response = await fetch(`/api/teams/${team.slug}/invitations`, {
         method: 'POST',
@@ -44,17 +55,62 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
         body: JSON.stringify(values),
       });
 
-      const result = (await response.json()) as ApiResponse<Invitation>;
-
       if (!response.ok) {
+        const result = (await response.json()) as ApiResponse;
         toast.error(result.error.message);
         return;
       }
 
+      mutate(`/api/teams/${team.slug}/invitations?sentViaEmail=false`);
       toast.success('Invitation link created. Share it with your team member.');
       formik.resetForm();
     },
   });
+
+  // Delete an existing invitation link
+  const deleteInvitationLink = async (id: string) => {
+    const response = await fetch(
+      `/api/teams/${team.slug}/invitations?id=${id}`,
+      {
+        method: 'DELETE',
+        headers: defaultHeaders,
+      }
+    );
+
+    if (!response.ok) {
+      const result = (await response.json()) as ApiResponse;
+      toast.error(result.error.message);
+      return;
+    }
+
+    mutate(`/api/teams/${team.slug}/invitations?sentViaEmail=false`);
+    toast.success('Invitation link deleted.');
+  };
+
+  const invitation = invitations ? invitations[0] : null;
+
+  if (invitation) {
+    return (
+      <div className="pt-4">
+        <InputWithCopyButton
+          label="Share your team invite link"
+          value={invitation.url}
+          className="text-sm w-full"
+        />
+        <p className="text-sm text-slate-500 my-2">
+          {invitation.allowedDomain.length > 0
+            ? `Anyone with an email address ending with ${invitation.allowedDomain} can use this link to join your team.`
+            : 'Anyone can use this link to join your team.'}
+          <Button
+            className="btn-xs btn-link link-error"
+            onClick={() => deleteInvitationLink(invitation.id)}
+          >
+            Delete link
+          </Button>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={formik.handleSubmit} method="POST" className="pt-4">
@@ -83,7 +139,7 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
           type="submit"
           color="primary"
           loading={formik.isSubmitting}
-          disabled={!formik.isValid || !formik.dirty}
+          disabled={!formik.isValid}
           className="flex-grow"
         >
           {t('create-link')}

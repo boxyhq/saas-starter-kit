@@ -89,9 +89,6 @@ const JoinWithInvitation = ({
     return <Error message={error.message} />;
   }
 
-  console.log(invitation);
-  console.log(formik.errors);
-
   return (
     <WithLoadingAndError isLoading={isLoading} error={error}>
       <form className="space-y-3" onSubmit={formik.handleSubmit}>

@@ -38,15 +38,14 @@ const InviteViaEmail = ({ setVisible, team }: InviteViaEmailProps) => {
         body: JSON.stringify(values),
       });
 
-      const result = (await response.json()) as ApiResponse<Invitation>;
-
       if (!response.ok) {
+        const result = (await response.json()) as ApiResponse;
         toast.error(result.error.message);
         return;
       }
 
       toast.success(t('invitation-sent'));
-      mutate(`/api/teams/${team.slug}/invitations`);
+      mutate(`/api/teams/${team.slug}/invitations?sentViaEmail=true`);
       setVisible(false);
       formik.resetForm();
     },

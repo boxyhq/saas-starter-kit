@@ -113,7 +113,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       invitedBy: teamMember.userId,
       role,
       email: null,
-      sentViaEmail: true,
+      sentViaEmail: false,
       allowedDomain: domains
         ? domains.split(',').map((d) => d.trim().toLowerCase())
         : [],
@@ -133,16 +133,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   recordMetric('invitation.created');
 
-  const data = {
-    id: invitation.id,
-    email: invitation.email,
-    role: invitation.role,
-    expires: invitation.expires,
-    sentViaEmail: invitation.sentViaEmail,
-    allowedDomain: invitation.allowedDomain,
-  };
-
-  res.status(200).json({ data });
+  res.status(204).end();
 };
 
 // Get all invitations for a team
@@ -152,7 +143,10 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { sentViaEmail } = req.query as { sentViaEmail: string };
 
-  const invitations = await getInvitations(teamMember.teamId, !!sentViaEmail);
+  const invitations = await getInvitations(
+    teamMember.teamId,
+    sentViaEmail === 'true'
+  );
 
   recordMetric('invitation.fetched');
 
