@@ -44,12 +44,12 @@ const JoinWithInvitation = ({
       name: '',
       email: '',
       password: '',
-      isShared: invitation?.isShared || false,
+      sentViaEmail: invitation?.sentViaEmail || true,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(),
       password: Yup.string().required().min(passwordPolicies.minLength),
-      email: Yup.string().when('isShared', {
+      email: Yup.string().when('sentViaEmail', {
         is: true,
         then: (schema) => schema.required().email(),
       }),
@@ -105,7 +105,14 @@ const JoinWithInvitation = ({
           onChange={formik.handleChange}
         />
 
-        {invitation.isShared ? (
+        {invitation.sentViaEmail ? (
+          <InputWithLabel
+            type="email"
+            label={t('email')}
+            value={invitation.email!}
+            disabled
+          />
+        ) : (
           <InputWithLabel
             type="email"
             label={t('email')}
@@ -114,13 +121,6 @@ const JoinWithInvitation = ({
             value={formik.values.email}
             error={formik.errors.email}
             onChange={formik.handleChange}
-          />
-        ) : (
-          <InputWithLabel
-            type="email"
-            label={t('email')}
-            value={invitation.email!}
-            disabled
           />
         )}
 

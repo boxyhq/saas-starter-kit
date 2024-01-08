@@ -3,8 +3,8 @@ import { Invitation } from '@prisma/client';
 import useSWR, { mutate } from 'swr';
 import type { ApiResponse } from 'types';
 
-const useInvitations = (slug: string) => {
-  const url = `/api/teams/${slug}/invitations`;
+const useInvitations = (slug: string, sentViaEmail: boolean) => {
+  const url = `/api/teams/${slug}/invitations?sentViaEmail=${sentViaEmail}`;
 
   const { data, error, isLoading } = useSWR<ApiResponse<Invitation[]>>(
     url,

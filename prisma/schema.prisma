@@ -105,7 +105,7 @@ model Invitation {
   invitedBy     String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
-  isShared      Boolean  @default(false)
+  sentViaEmail  Boolean  @default(true)
   allowedDomain String[] @default([])
 
   user User @relation(fields: [invitedBy], references: [id], onDelete: Cascade)

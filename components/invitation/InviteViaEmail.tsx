@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Yup from 'yup';
+import { mutate } from 'swr';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import { Button, Input } from 'react-daisyui';
@@ -7,24 +8,22 @@ import { useTranslation } from 'next-i18next';
 
 import type { ApiResponse } from 'types';
 import { defaultHeaders } from '@/lib/common';
-import useInvitations from 'hooks/useInvitations';
 import { availableRoles } from '@/lib/permissions';
 import type { Invitation, Team } from '@prisma/client';
 
 interface InviteViaEmailProps {
   team: Team;
-  visible: boolean;
   setVisible: (visible: boolean) => void;
 }
 
-const InviteViaEmail = ({ visible, setVisible, team }: InviteViaEmailProps) => {
+const InviteViaEmail = ({ setVisible, team }: InviteViaEmailProps) => {
   const { t } = useTranslation('common');
-  const { mutateInvitation } = useInvitations(team.slug);
 
   const formik = useFormik({
     initialValues: {
       email: '',
       role: availableRoles[0].id,
+      sentViaEmail: true,
     },
     validationSchema: Yup.object().shape({
       email: Yup.string().email().required(t('require-email')),
@@ -39,15 +38,15 @@ const InviteViaEmail = ({ visible, setVisible, team }: InviteViaEmailProps) => {
         body: JSON.stringify(values),
       });
 
-      const json = (await response.json()) as ApiResponse<Invitation>;
+      const result = (await response.json()) as ApiResponse<Invitation>;
 
       if (!response.ok) {
-        toast.error(json.error.message);
+        toast.error(result.error.message);
         return;
       }
 
       toast.success(t('invitation-sent'));
-      mutateInvitation();
+      mutate(`/api/teams/${team.slug}/invitations`);
       setVisible(false);
       formik.resetForm();
     },
@@ -64,6 +63,7 @@ const InviteViaEmail = ({ visible, setVisible, team }: InviteViaEmailProps) => {
           placeholder="jackson@boxyhq.com"
           required
           className="text-sm w-1/2"
+          type="email"
         />
         <select
           className="select-bordered select rounded"

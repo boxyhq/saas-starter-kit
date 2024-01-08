@@ -42,7 +42,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
     ? invitation.allowedDomain.includes(emailDomain!)
     : true;
 
-  const acceptInvite = invitation.isShared ? emailDomainMatch : emailMatch;
+  const acceptInvite = invitation.sentViaEmail ? emailMatch : emailDomainMatch;
 
   return (
     <>
@@ -66,12 +66,14 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
           )}
 
           {/* User authenticated and email does not match */}
-          {status === 'authenticated' && invitation.email && !emailMatch && (
-            <EmailMismatch email={authUser?.email!} />
-          )}
+          {status === 'authenticated' &&
+            invitation.sentViaEmail &&
+            authUser?.email &&
+            !emailMatch && <EmailMismatch email={authUser.email} />}
 
           {/* User authenticated and email domain doesn not match */}
           {status === 'authenticated' &&
+            !invitation.sentViaEmail &&
             invitation.allowedDomain.length > 0 &&
             !emailDomainMatch && (
               <EmailDomainMismatch

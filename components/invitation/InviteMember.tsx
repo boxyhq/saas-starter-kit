@@ -22,7 +22,6 @@ const InviteMember = ({ visible, setVisible, team }: InviteMemberProps) => {
   return (
     <Modal open={visible} close={closeModal}>
       <Modal.Header>{t('invite-new-member')}</Modal.Header>
-      <Modal.Description>{t('invite-member-message')}</Modal.Description>
       <Modal.Body>
         <div className="grid grid-cols-1 divide-y py-2">
           <InviteViaEmail
@@ -30,11 +29,7 @@ const InviteMember = ({ visible, setVisible, team }: InviteMemberProps) => {
             setVisible={setVisible}
             team={team}
           />
-          <InviteViaLink
-            visible={visible}
-            setVisible={setVisible}
-            team={team}
-          />
+          <InviteViaLink team={team} />
         </div>
       </Modal.Body>
     </Modal>

@@ -6,28 +6,33 @@ import { Button, Input } from 'react-daisyui';
 import { useTranslation } from 'next-i18next';
 
 import type { ApiResponse } from 'types';
-import { defaultHeaders } from '@/lib/common';
 import useInvitations from 'hooks/useInvitations';
 import { availableRoles } from '@/lib/permissions';
 import type { Invitation, Team } from '@prisma/client';
+import { defaultHeaders } from '@/lib/common';
 
 interface InviteViaLinkProps {
   team: Team;
-  visible: boolean;
-  setVisible: (visible: boolean) => void;
 }
 
-const InviteViaLink = ({ visible, setVisible, team }: InviteViaLinkProps) => {
+const InviteViaLink = ({ team }: InviteViaLinkProps) => {
   const { t } = useTranslation('common');
-  const { mutateInvitation } = useInvitations(team.slug);
+  const { invitations } = useInvitations(team.slug, false);
+
+  console.log(invitations);
 
   const formik = useFormik({
     initialValues: {
       domains: '',
       role: availableRoles[0].id,
+      sentViaEmail: false,
     },
     validationSchema: Yup.object().shape({
-      domains: Yup.string().email().required(t('require-email')),
+      domains: Yup.string()
+        .nullable()
+        .matches(/^([a-zA-Z0-9.-]+\s*,\s*)*[a-zA-Z0-9.-]+$/, {
+          message: 'Enter one or more valid domains, separated by commas.',
+        }),
       role: Yup.string()
         .required(t('required-role'))
         .oneOf(availableRoles.map((r) => r.id)),
@@ -39,16 +44,14 @@ const InviteViaLink = ({ visible, setVisible, team }: InviteViaLinkProps) => {
         body: JSON.stringify(values),
       });
 
-      const json = (await response.json()) as ApiResponse<Invitation>;
+      const result = (await response.json()) as ApiResponse<Invitation>;
 
       if (!response.ok) {
-        toast.error(json.error.message);
+        toast.error(result.error.message);
         return;
       }
 
-      toast.success(t('invitation-sent'));
-      mutateInvitation();
-      setVisible(false);
+      toast.success('Invitation link created. Share it with your team member.');
       formik.resetForm();
     },
   });
@@ -61,7 +64,7 @@ const InviteViaLink = ({ visible, setVisible, team }: InviteViaLinkProps) => {
           name="domains"
           onChange={formik.handleChange}
           value={formik.values.domains}
-          placeholder="boxyhq.com"
+          placeholder="Restrict domain: boxyhq.com"
           className="text-sm w-1/2"
         />
         <select
@@ -83,11 +86,13 @@ const InviteViaLink = ({ visible, setVisible, team }: InviteViaLinkProps) => {
           disabled={!formik.isValid || !formik.dirty}
           className="flex-grow"
         >
-          {t('send-invite')}
+          {t('create-link')}
         </Button>
       </div>
-      <p className="text-sm text-slate-500 my-4">
-        Anyone can use this link to join your team.
+      <p className="text-sm text-slate-500 my-2">
+        {formik.values.domains && !formik.errors.domains
+          ? `Anyone with an email address ending with ${formik.values.domains} can use this link to join your team.`
+          : 'Anyone can use this link to join your team.'}
       </p>
     </form>
   );

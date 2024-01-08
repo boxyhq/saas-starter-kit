@@ -17,7 +17,8 @@ const PendingInvitations = ({ team }: { team: Team }) => {
     useState(false);
 
   const { isLoading, isError, invitations, mutateInvitation } = useInvitations(
-    team.slug
+    team.slug,
+    true
   );
 
   const { t } = useTranslation('common');
@@ -83,7 +84,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
               <tr key={invitation.id}>
                 <td>
                   <div className="flex items-center justify-start space-x-2">
-                    <LetterAvatar name={invitation.email} />
+                    <LetterAvatar name={invitation.email || ''} />
                     <span>{invitation.email}</span>
                   </div>
                 </td>

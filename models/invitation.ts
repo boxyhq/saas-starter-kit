@@ -1,15 +1,13 @@
 import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
-import { Invitation, Role } from '@prisma/client';
+import { Invitation } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
-export const getInvitations = async (teamId: string) => {
+export const getInvitations = async (teamId: string, sentViaEmail: boolean) => {
   return await prisma.invitation.findMany({
     where: {
       teamId,
-      email: {
-        not: null,
-      },
+      sentViaEmail,
     },
     select: {
       id: true,
@@ -42,24 +40,20 @@ export const getInvitation = async (
   return invitation;
 };
 
-export const createInvitation = async (param: {
-  teamId: string;
-  invitedBy: string;
-  email: string;
-  role: Role;
-}) => {
-  const { teamId, invitedBy, email, role } = param;
-  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+export const createInvitation = async (
+  params: Omit<
+    Invitation,
+    'id' | 'token' | 'expires' | 'createdAt' | 'updatedAt'
+  >
+) => {
+  const data: Omit<Invitation, 'id' | 'createdAt' | 'updatedAt'> = {
+    ...params,
+    token: randomUUID(),
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  };
 
   return await prisma.invitation.create({
-    data: {
-      token: randomUUID(),
-      expires,
-      teamId,
-      invitedBy,
-      email,
-      role,
-    },
+    data,
   });
 };
 

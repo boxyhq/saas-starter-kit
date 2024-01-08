@@ -16,6 +16,7 @@ import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { isEmailAllowed } from '@/lib/email/utils';
+import { Invitation } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -56,48 +57,72 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_invitation', 'create');
 
-  const { email, role } = req.body;
+  const { email, role, sentViaEmail, domains } = req.body;
+  let invitation: null | Invitation = null;
 
-  if (!isEmailAllowed(email)) {
-    throw new ApiError(
-      400,
-      'It seems you entered a non-business email. Invitations can only be sent to work emails.'
-    );
-  }
+  // Invite via email
+  if (email && sentViaEmail) {
+    if (!isEmailAllowed(email)) {
+      throw new ApiError(
+        400,
+        'It seems you entered a non-business email. Invitations can only be sent to work emails.'
+      );
+    }
 
-  const memberExists = await prisma.teamMember.count({
-    where: {
-      teamId: teamMember.teamId,
-      user: {
-        email,
+    const memberExists = await prisma.teamMember.count({
+      where: {
+        teamId: teamMember.teamId,
+        user: {
+          email,
+        },
       },
-    },
-  });
+    });
 
-  if (memberExists) {
-    throw new ApiError(400, 'This user is already a member of the team.');
-  }
+    if (memberExists) {
+      throw new ApiError(400, 'This user is already a member of the team.');
+    }
 
-  const invitationExists = await prisma.invitation.count({
-    where: {
-      email,
+    const invitationExists = await prisma.invitation.count({
+      where: {
+        email,
+        teamId: teamMember.teamId,
+      },
+    });
+
+    if (invitationExists) {
+      throw new ApiError(400, 'An invitation already exists for this email.');
+    }
+
+    invitation = await createInvitation({
       teamId: teamMember.teamId,
-    },
-  });
+      invitedBy: teamMember.userId,
+      email,
+      role,
+      sentViaEmail: true,
+      allowedDomain: [],
+    });
 
-  if (invitationExists) {
-    throw new ApiError(400, 'An invitation already exists for this email.');
+    await sendEvent(teamMember.teamId, 'invitation.created', invitation);
+    await sendTeamInviteEmail(teamMember.team, invitation);
   }
 
-  const invitation = await createInvitation({
-    teamId: teamMember.teamId,
-    invitedBy: teamMember.userId,
-    email,
-    role,
-  });
+  // Invite via link
+  if (!sentViaEmail) {
+    invitation = await createInvitation({
+      teamId: teamMember.teamId,
+      invitedBy: teamMember.userId,
+      role,
+      email: null,
+      sentViaEmail: true,
+      allowedDomain: domains
+        ? domains.split(',').map((d) => d.trim().toLowerCase())
+        : [],
+    });
+  }
 
-  await sendEvent(teamMember.teamId, 'invitation.created', invitation);
-  await sendTeamInviteEmail(teamMember.team, invitation);
+  if (!invitation) {
+    throw new ApiError(400, `Couldn't create invitation. Please try again.`);
+  }
 
   sendAudit({
     action: 'member.invitation.create',
@@ -108,7 +133,16 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   recordMetric('invitation.created');
 
-  res.status(200).json({ data: invitation });
+  const data = {
+    id: invitation.id,
+    email: invitation.email,
+    role: invitation.role,
+    expires: invitation.expires,
+    sentViaEmail: invitation.sentViaEmail,
+    allowedDomain: invitation.allowedDomain,
+  };
+
+  res.status(200).json({ data });
 };
 
 // Get all invitations for a team
@@ -116,7 +150,9 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_invitation', 'read');
 
-  const invitations = await getInvitations(teamMember.teamId);
+  const { sentViaEmail } = req.query as { sentViaEmail: string };
+
+  const invitations = await getInvitations(teamMember.teamId, !!sentViaEmail);
 
   recordMetric('invitation.fetched');
 

@@ -57,7 +57,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       throw new ApiError(400, 'Invitation expired. Please request a new one.');
     }
 
-    if (!invitation.isShared) {
+    if (invitation.sentViaEmail) {
       emailToUse = invitation.email!;
     }
   }
