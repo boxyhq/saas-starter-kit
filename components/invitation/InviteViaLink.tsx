@@ -17,28 +17,31 @@ interface InviteViaLinkProps {
   team: Team;
 }
 
-const FormValidationSchema = Yup.object().shape({
-  domains: Yup.string()
-    .nullable()
-    .test(
-      'domains',
-      'Enter one or more valid domains, separated by commas.',
-      (value) => {
-        if (!value) {
-          return true;
-        }
-
-        return value.split(',').every(isValidDomain);
-      }
-    ),
-  role: Yup.string()
-    .required('Please select a role.')
-    .oneOf(availableRoles.map((r) => r.id)),
-});
-
 const InviteViaLink = ({ team }: InviteViaLinkProps) => {
   const { t } = useTranslation('common');
-  const { invitations } = useInvitations(team.slug, false);
+  const { invitations } = useInvitations({
+    slug: team.slug,
+    sentViaEmail: false,
+  });
+
+  const FormValidationSchema = Yup.object().shape({
+    domains: Yup.string()
+      .nullable()
+      .test(
+        'domains',
+        'Enter one or more valid domains, separated by commas.',
+        (value) => {
+          if (!value) {
+            return true;
+          }
+
+          return value.split(',').every(isValidDomain);
+        }
+      ),
+    role: Yup.string()
+      .required(t('required-role'))
+      .oneOf(availableRoles.map((r) => r.id)),
+  });
 
   // Create a new invitation link
   const formik = useFormik({

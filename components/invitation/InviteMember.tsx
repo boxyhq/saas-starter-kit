@@ -15,12 +15,8 @@ interface InviteMemberProps {
 const InviteMember = ({ visible, setVisible, team }: InviteMemberProps) => {
   const { t } = useTranslation('common');
 
-  const closeModal = () => {
-    setVisible(!visible);
-  };
-
   return (
-    <Modal open={visible} close={closeModal}>
+    <Modal open={visible} close={() => setVisible(!visible)}>
       <Modal.Header>{t('invite-new-member')}</Modal.Header>
       <Modal.Body>
         <div className="grid grid-cols-1 divide-y py-2">

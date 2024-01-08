@@ -19,18 +19,20 @@ interface InviteViaEmailProps {
 const InviteViaEmail = ({ setVisible, team }: InviteViaEmailProps) => {
   const { t } = useTranslation('common');
 
+  const FormValidationSchema = Yup.object().shape({
+    email: Yup.string().email().required(t('require-email')),
+    role: Yup.string()
+      .required(t('required-role'))
+      .oneOf(availableRoles.map((r) => r.id)),
+  });
+
   const formik = useFormik({
     initialValues: {
       email: '',
       role: availableRoles[0].id,
       sentViaEmail: true,
     },
-    validationSchema: Yup.object().shape({
-      email: Yup.string().email().required(t('require-email')),
-      role: Yup.string()
-        .required(t('required-role'))
-        .oneOf(availableRoles.map((r) => r.id)),
-    }),
+    validationSchema: FormValidationSchema,
     onSubmit: async (values) => {
       const response = await fetch(`/api/teams/${team.slug}/invitations`, {
         method: 'POST',

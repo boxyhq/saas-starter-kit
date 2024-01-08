@@ -17,10 +17,10 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   const [confirmationDialogVisible, setConfirmationDialogVisible] =
     useState(false);
 
-  const { isLoading, isError, invitations, mutateInvitation } = useInvitations(
-    team.slug,
-    true
-  );
+  const { isLoading, isError, invitations, mutateInvitation } = useInvitations({
+    slug: team.slug,
+    sentViaEmail: true,
+  });
 
   const { t } = useTranslation('common');
 
@@ -85,8 +85,12 @@ const PendingInvitations = ({ team }: { team: Team }) => {
               <tr key={invitation.id}>
                 <td>
                   <div className="flex items-center justify-start space-x-2">
-                    <LetterAvatar name={invitation.email || ''} />
-                    <span>{invitation.email}</span>
+                    {invitation.email && (
+                      <>
+                        <LetterAvatar name={invitation.email} />
+                        <span>{invitation.email}</span>
+                      </>
+                    )}
                   </div>
                 </td>
                 <td>{invitation.role}</td>

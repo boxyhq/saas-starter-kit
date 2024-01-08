@@ -15,8 +15,8 @@ import { addTeamMember, throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
-import { isEmailAllowed } from '@/lib/email/utils';
-import { Invitation } from '@prisma/client';
+import { extractEmailDomain, isEmailAllowed } from '@/lib/email/utils';
+import { Invitation, User } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -199,18 +199,21 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const session = await getSession(req, res);
+  const email = session?.user.email as string;
 
   // Make sure the user is logged in with the invited email address (Join via email)
-  if (invitation.sentViaEmail && session?.user.email != invitation.email) {
-    throw new ApiError(
-      400,
-      'You must be logged in with the email address you were invited with.'
-    );
+  if (invitation.sentViaEmail) {
+    if (invitation.email !== email) {
+      throw new ApiError(
+        400,
+        'You must be logged in with the email address you were invited with.'
+      );
+    }
   }
 
   // Make sure the user is logged in with an allowed domain (Join via link)
   if (!invitation.sentViaEmail && invitation.allowedDomain.length) {
-    const emailDomain = session?.user.email!.split('@')[1];
+    const emailDomain = extractEmailDomain(email);
     const allowJoin = invitation.allowedDomain.find(
       (domain) => domain === emailDomain
     );
