@@ -164,7 +164,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (
     invitation.invitedBy != teamMember.user.id ||
-    invitation.teamId != teamMember.teamId
+    invitation.team.id != teamMember.teamId
   ) {
     throw new ApiError(
       400,
@@ -194,30 +194,48 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const invitation = await getInvitation({ token: inviteToken });
 
-  if (await isInvitationExpired(invitation)) {
+  if (await isInvitationExpired(invitation.expires)) {
     throw new ApiError(400, 'Invitation expired. Please request a new one.');
   }
 
   const session = await getSession(req, res);
-  const userId = session?.user?.id as string;
 
-  if (session?.user.email != invitation.email) {
+  // Make sure the user is logged in with the invited email address (Join via email)
+  if (invitation.sentViaEmail && session?.user.email != invitation.email) {
     throw new ApiError(
       400,
       'You must be logged in with the email address you were invited with.'
     );
   }
 
+  // Make sure the user is logged in with an allowed domain (Join via link)
+  if (!invitation.sentViaEmail && invitation.allowedDomain.length) {
+    const emailDomain = session?.user.email!.split('@')[1];
+    const allowJoin = invitation.allowedDomain.find(
+      (domain) => domain === emailDomain
+    );
+
+    if (!allowJoin) {
+      throw new ApiError(
+        400,
+        'You must be logged in with an email address from an allowed domain.'
+      );
+    }
+  }
+
   const teamMember = await addTeamMember(
     invitation.team.id,
-    userId,
+    session?.user?.id as string,
     invitation.role
   );
 
   await sendEvent(invitation.team.id, 'member.created', teamMember);
-  await deleteInvitation({ token: inviteToken });
+
+  if (invitation.sentViaEmail) {
+    await deleteInvitation({ token: inviteToken });
+  }
 
   recordMetric('member.created');
 
-  res.status(200).json({ data: {} });
+  res.status(204).end();
 };

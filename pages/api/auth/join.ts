@@ -53,7 +53,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // When join via invitation
   if (invitation) {
-    if (await isInvitationExpired(invitation)) {
+    if (await isInvitationExpired(invitation.expires)) {
       throw new ApiError(400, 'Invitation expired. Please request a new one.');
     }
 
@@ -107,7 +107,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       slug: slugify(team),
     });
   } else {
-    userTeam = await getTeam({ id: invitation.teamId });
+    userTeam = await getTeam({ slug: invitation.team.slug });
   }
 
   // Send account verification email

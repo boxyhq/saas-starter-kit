@@ -1,13 +1,14 @@
 import { Error, LetterAvatar, Loading } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import { Team } from '@prisma/client';
-import useInvitations, { TeamInvitation } from 'hooks/useInvitations';
+import useInvitations from 'hooks/useInvitations';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
+import { TeamInvitation } from 'models/invitation';
 
 const PendingInvitations = ({ team }: { team: Team }) => {
   const [selectedInvitation, setSelectedInvitation] =

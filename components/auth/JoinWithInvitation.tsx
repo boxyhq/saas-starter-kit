@@ -24,6 +24,16 @@ interface JoinWithInvitationProps {
   recaptchaSiteKey: string | null;
 }
 
+const JoinUserSchema = Yup.object().shape({
+  name: Yup.string().required(),
+  password: Yup.string().required().min(passwordPolicies.minLength),
+  sentViaEmail: Yup.boolean().required(),
+  email: Yup.string().when('sentViaEmail', {
+    is: false,
+    then: (schema) => schema.required().email(),
+  }),
+});
+
 const JoinWithInvitation = ({
   inviteToken,
   recaptchaSiteKey,
@@ -46,14 +56,7 @@ const JoinWithInvitation = ({
       password: '',
       sentViaEmail: invitation?.sentViaEmail || true,
     },
-    validationSchema: Yup.object().shape({
-      name: Yup.string().required(),
-      password: Yup.string().required().min(passwordPolicies.minLength),
-      email: Yup.string().when('sentViaEmail', {
-        is: true,
-        then: (schema) => schema.required().email(),
-      }),
-    }),
+    validationSchema: JoinUserSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
       const response = await fetch('/api/auth/join', {
@@ -88,6 +91,9 @@ const JoinWithInvitation = ({
   if (error || !invitation) {
     return <Error message={error.message} />;
   }
+
+  console.log(formik.errors);
+  // console.log(formik.values);
 
   return (
     <WithLoadingAndError isLoading={isLoading} error={error}>

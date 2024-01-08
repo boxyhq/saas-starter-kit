@@ -4,7 +4,10 @@ import { prisma } from '@/lib/prisma';
 import { Invitation } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
-type InvitationWithUrl = Invitation & { url: string };
+export type TeamInvitation = Pick<
+  Invitation,
+  'id' | 'email' | 'role' | 'expires' | 'allowedDomain' | 'token'
+> & { url: string };
 
 export const getInvitations = async (teamId: string, sentViaEmail: boolean) => {
   const invitations = await prisma.invitation.findMany({
@@ -25,7 +28,7 @@ export const getInvitations = async (teamId: string, sentViaEmail: boolean) => {
   return invitations.map((invitation) => ({
     ...invitation,
     url: `${env.appUrl}/invitations/${invitation.token}`,
-  })) as InvitationWithUrl[];
+  })) as (Invitation & { url: string })[];
 };
 
 export const getInvitation = async (
@@ -38,6 +41,7 @@ export const getInvitation = async (
         select: {
           id: true,
           name: true,
+          slug: true,
         },
       },
     },
@@ -75,6 +79,6 @@ export const deleteInvitation = async (
   });
 };
 
-export const isInvitationExpired = async (invitation: Invitation) => {
-  return invitation.expires.getTime() < Date.now();
+export const isInvitationExpired = async (expires: Date) => {
+  return expires.getTime() < Date.now();
 };
