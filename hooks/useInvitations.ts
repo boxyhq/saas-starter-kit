@@ -4,7 +4,7 @@ import fetcher from '@/lib/fetcher';
 import type { ApiResponse } from 'types';
 import { Invitation } from '@prisma/client';
 
-type TeamInvitation = Pick<
+export type TeamInvitation = Pick<
   Invitation,
   'id' | 'email' | 'role' | 'expires' | 'allowedDomain' | 'token'
 > & { url: string };

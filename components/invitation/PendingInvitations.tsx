@@ -1,7 +1,7 @@
 import { Error, LetterAvatar, Loading } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
-import { Invitation, Team } from '@prisma/client';
-import useInvitations from 'hooks/useInvitations';
+import { Team } from '@prisma/client';
+import useInvitations, { TeamInvitation } from 'hooks/useInvitations';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import { Button } from 'react-daisyui';
@@ -11,7 +11,7 @@ import ConfirmationDialog from '../shared/ConfirmationDialog';
 
 const PendingInvitations = ({ team }: { team: Team }) => {
   const [selectedInvitation, setSelectedInvitation] =
-    useState<Invitation | null>(null);
+    useState<TeamInvitation | null>(null);
 
   const [confirmationDialogVisible, setConfirmationDialogVisible] =
     useState(false);
@@ -31,7 +31,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
     return <Error message={isError.message} />;
   }
 
-  const deleteInvitation = async (invitation: Invitation | null) => {
+  const deleteInvitation = async (invitation: TeamInvitation | null) => {
     if (!invitation) return;
 
     const sp = new URLSearchParams({ id: invitation.id });
