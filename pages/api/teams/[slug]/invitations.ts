@@ -58,10 +58,15 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   throwIfNotAllowed(teamMember, 'team_invitation', 'create');
 
   const { email, role, sentViaEmail, domains } = req.body;
-  let invitation: null | Invitation = null;
+
+  let invitation: undefined | Invitation = undefined;
 
   // Invite via email
-  if (email && sentViaEmail) {
+  if (sentViaEmail) {
+    if (!email) {
+      throw new ApiError(400, 'Email is required.');
+    }
+
     if (!isEmailAllowed(email)) {
       throw new ApiError(
         400,
@@ -101,9 +106,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       sentViaEmail: true,
       allowedDomains: [],
     });
-
-    await sendEvent(teamMember.teamId, 'invitation.created', invitation);
-    await sendTeamInviteEmail(teamMember.team, invitation);
   }
 
   // Invite via link
@@ -121,8 +123,14 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (!invitation) {
-    throw new ApiError(400, `Couldn't create invitation. Please try again.`);
+    throw new ApiError(400, 'Could not create invitation. Please try again.');
   }
+
+  if (invitation.sentViaEmail) {
+    await sendTeamInviteEmail(teamMember.team, invitation);
+  }
+
+  await sendEvent(teamMember.teamId, 'invitation.created', invitation);
 
   sendAudit({
     action: 'member.invitation.create',

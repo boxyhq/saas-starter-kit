@@ -17,6 +17,13 @@ interface JoinProps {
   recaptchaSiteKey: string | null;
 }
 
+const JoinUserSchema = Yup.object().shape({
+  name: Yup.string().required(),
+  email: Yup.string().required().email(),
+  password: Yup.string().required().min(passwordPolicies.minLength),
+  team: Yup.string().required().min(3),
+});
+
 const Join = ({ recaptchaSiteKey }: JoinProps) => {
   const router = useRouter();
   const { t } = useTranslation('common');
@@ -35,12 +42,9 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
       password: '',
       team: '',
     },
-    validationSchema: Yup.object().shape({
-      name: Yup.string().required(),
-      email: Yup.string().required().email(),
-      password: Yup.string().required().min(passwordPolicies.minLength),
-      team: Yup.string().required().min(3),
-    }),
+    validationSchema: JoinUserSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
     onSubmit: async (values) => {
       const response = await fetch('/api/auth/join', {
         method: 'POST',
@@ -91,7 +95,7 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
           name="team"
           placeholder={t('team-name')}
           value={formik.values.team}
-          error={formik.touched.team ? formik.errors.team : undefined}
+          error={formik.errors.team}
           onChange={formik.handleChange}
         />
         <InputWithLabel
@@ -100,7 +104,7 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
           name="email"
           placeholder={t('email-placeholder')}
           value={formik.values.email}
-          error={formik.touched.email ? formik.errors.email : undefined}
+          error={formik.errors.email}
           onChange={formik.handleChange}
         />
         <div className="relative flex">
@@ -110,7 +114,7 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
             name="password"
             placeholder={t('password')}
             value={formik.values.password}
-            error={formik.touched.password ? formik.errors.password : undefined}
+            error={formik.errors.password}
             onChange={formik.handleChange}
           />
           <TogglePasswordVisibility

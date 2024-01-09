@@ -58,6 +58,8 @@ const JoinWithInvitation = ({
     },
     validationSchema: JoinUserSchema,
     enableReinitialize: true,
+    validateOnChange: false,
+    validateOnBlur: false,
     onSubmit: async (values) => {
       const response = await fetch('/api/auth/join', {
         method: 'POST',
