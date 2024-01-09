@@ -12,8 +12,6 @@ import { useFormik } from 'formik';
 import { z } from 'zod';
 import { createApiKeySchema } from '@/lib/zod/schema';
 
-type CreateAPIKeyFormValues = z.infer<typeof createApiKeySchema>;
-
 const NewAPIKey = ({
   team,
   createModalVisible,
@@ -54,7 +52,7 @@ const CreateAPIKeyForm = ({
 }: CreateAPIKeyFormProps) => {
   const { t } = useTranslation('common');
 
-  const formik = useFormik<CreateAPIKeyFormValues>({
+  const formik = useFormik<z.infer<typeof createApiKeySchema>>({
     initialValues: {
       name: '',
     },
