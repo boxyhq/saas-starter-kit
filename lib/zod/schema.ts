@@ -5,9 +5,9 @@ export const createApiKeySchema = z.object({
 });
 
 export const deleteApiKeySchema = z.object({
-  apiKeyId: z.string(),
+  apiKeyId: z.string().min(1),
 });
 
 export const teamSlugSchema = z.object({
-  slug: z.string(),
+  slug: z.string().min(1),
 });

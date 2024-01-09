@@ -8,6 +8,11 @@ import { useSWRConfig } from 'swr';
 import type { ApiResponse } from 'types';
 import Modal from '../shared/Modal';
 import { defaultHeaders } from '@/lib/common';
+import { useFormik } from 'formik';
+import { z } from 'zod';
+import { createApiKeySchema } from '@/lib/zod/schema';
+
+type CreateAPIKeyFormValues = z.infer<typeof createApiKeySchema>;
 
 const NewAPIKey = ({
   team,
@@ -47,52 +52,57 @@ const CreateAPIKeyForm = ({
   onNewAPIKey,
   closeModal,
 }: CreateAPIKeyFormProps) => {
-  const [name, setName] = useState('');
   const { t } = useTranslation('common');
-  const [submitting, setSubmitting] = useState(false);
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const formik = useFormik<CreateAPIKeyFormValues>({
+    initialValues: {
+      name: '',
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validate: (values) => {
+      try {
+        createApiKeySchema.parse(values);
+      } catch (error: any) {
+        return error.formErrors.fieldErrors;
+      }
+    },
+    onSubmit: async (values) => {
+      const response = await fetch(`/api/teams/${team.slug}/api-keys`, {
+        method: 'POST',
+        body: JSON.stringify(values),
+        headers: defaultHeaders,
+      });
 
-    setSubmitting(true);
+      const { data, error } = (await response.json()) as ApiResponse<{
+        apiKey: string;
+      }>;
 
-    const res = await fetch(`/api/teams/${team.slug}/api-keys`, {
-      method: 'POST',
-      body: JSON.stringify({ name }),
-      headers: defaultHeaders,
-    });
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
 
-    const { data, error } = (await res.json()) as ApiResponse<{
-      apiKey: string;
-    }>;
-
-    setSubmitting(false);
-
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-
-    if (data.apiKey) {
-      onNewAPIKey(data.apiKey);
-      toast.success(t('api-key-created'));
-    }
-  };
+      if (data.apiKey) {
+        onNewAPIKey(data.apiKey);
+        toast.success(t('api-key-created'));
+      }
+    },
+  });
 
   return (
-    <form onSubmit={handleSubmit} method="POST">
+    <form onSubmit={formik.handleSubmit} method="POST">
       <Modal.Header>{t('new-api-key')}</Modal.Header>
       <Modal.Description>{t('new-api-key-description')}</Modal.Description>
       <Modal.Body>
         <InputWithLabel
           label={t('name')}
           name="name"
-          required
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={formik.values.name}
+          onChange={formik.handleChange}
           placeholder="My API Key"
           className="text-sm"
+          error={formik.errors.name}
         />
       </Modal.Body>
       <Modal.Footer>
@@ -102,8 +112,8 @@ const CreateAPIKeyForm = ({
         <Button
           color="primary"
           type="submit"
-          loading={submitting}
-          disabled={!name}
+          loading={formik.isSubmitting}
+          disabled={!formik.dirty || !formik.isValid}
           size="md"
         >
           {t('create-api-key')}
