@@ -2,7 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { getSession } from '@/lib/session';
 import { throwIfNoTeamAccess } from 'models/team';
-import { stripe, getURL, getStripeCustomerId } from '@/lib/stripe';
+import { stripe, getStripeCustomerId } from '@/lib/stripe';
+import env from '@/lib/env';
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,8 +35,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { url } = await stripe.billingPortal.sessions.create({
     customer: customerId,
-    return_url: `${getURL()}teams/${teamMember.team.slug}/payments`,
+    return_url: `${env.appUrl}/teams/${teamMember.team.slug}/billing`,
   });
 
-  res.json({ url });
+  res.json({ data: url });
 };

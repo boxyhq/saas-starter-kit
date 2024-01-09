@@ -67,18 +67,18 @@ model User {
 }
 
 model Team {
-  id          String   @id @default(uuid())
-  name        String
-  slug        String   @unique
-  domain      String?  @unique
-  defaultRole Role     @default(MEMBER)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  id               String   @id @default(uuid())
+  name             String
+  slug             String   @unique
+  domain           String?  @unique
+  defaultRole      Role     @default(MEMBER)
+  stripeCustomerId String?  @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now())
 
   members     TeamMember[]
   invitations Invitation[]
   apiKeys     ApiKey[]
-  StripeTeam  StripeTeam?
 }
 
 model TeamMember {
@@ -131,16 +131,6 @@ model ApiKey {
   updatedAt  DateTime  @default(now())
   expiresAt  DateTime?
   lastUsedAt DateTime?
-
-  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
-}
-
-model StripeTeam {
-  id         String   @id @default(uuid())
-  teamId     String   @unique
-  customerId String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }

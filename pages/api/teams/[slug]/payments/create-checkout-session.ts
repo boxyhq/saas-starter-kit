@@ -2,7 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { getSession } from '@/lib/session';
 import { throwIfNoTeamAccess } from 'models/team';
-import { stripe, getURL, getStripeCustomerId } from '@/lib/stripe';
+import { stripe, getStripeCustomerId } from '@/lib/stripe';
+import env from '@/lib/env';
 
 export default async function handler(
   req: NextApiRequest,
@@ -47,8 +48,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     // the actual Session ID is returned in the query parameter when your customer
     // is redirected to the success page.
 
-    success_url: `${getURL()}teams/${teamMember.team.slug}/payments`,
-    cancel_url: `${getURL()}teams/${teamMember.team.slug}/payments`,
+    success_url: `${env.appUrl}/teams/${teamMember.team.slug}/billing`,
+    cancel_url: `${env.appUrl}/teams/${teamMember.team.slug}/billing`,
   });
 
   res.json({ data: checkoutSession });

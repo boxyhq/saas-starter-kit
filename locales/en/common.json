@@ -203,6 +203,6 @@
   "subscriptions": "Subscriptions",
   "from": "From",
   "to": "To",
-  "stripe-checkout-fallback-error": "Somthing went wrong while initiating checkout, please try again later.",
+  "stripe-checkout-fallback-error": "Something went wrong while initiating checkout, please try again later.",
   "error-occurred": "An error occurred"
 }

@@ -47,11 +47,12 @@ const Payments = ({ teamFeatures }) => {
 
   const redirectToCustomerPortal = async () => {
     try {
-      const { url } = await postData({
+      const { data: url } = await postData({
         url: `/api/teams/${team?.slug}/payments/create-portal-link`,
       });
       router.push(url);
     } catch (error) {
+      setPortalLinkLoading(false);
       if (error) return alert((error as Error).message);
     }
   };
@@ -133,7 +134,7 @@ const Payments = ({ teamFeatures }) => {
 export async function getServerSideProps({
   locale,
 }: GetServerSidePropsContext) {
-  if (!env.teamFeatures.apiKey) {
+  if (!env.teamFeatures.payments) {
     return {
       notFound: true,
     };

@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import env from '@/lib/env';
 import type { Readable } from 'node:stream';
 import {
   createStripeSubscription,
@@ -33,7 +34,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   const rawBody = await getRawBody(req);
 
   const sig = req.headers['stripe-signature'] as string;
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const webhookSecret = env.stripe.webhookSecret;
   let event: Stripe.Event;
 
   try {

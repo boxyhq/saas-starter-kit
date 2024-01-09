@@ -82,8 +82,8 @@ const TeamTab = ({ activeTab, team, heading, teamFeatures }: TeamTabProps) => {
     canAccess('team_payments', ['create', 'update', 'read', 'delete'])
   ) {
     navigations.push({
-      name: 'Payments',
-      href: `/teams/${team.slug}/payments`,
+      name: 'Billing',
+      href: `/teams/${team.slug}/billing`,
       active: activeTab === 'payments',
       icon: BanknotesIcon,
     });

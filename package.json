@@ -17,7 +17,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --env=jsdom",
     "build-ci": "next build",
-    "sync-stripe": "npx ts-node --skip-project syncStripe.ts"
+    "sync-stripe": "node --env-file .env syncStripe.js"
   },
   "dependencies": {
     "@boxyhq/metrics": "0.2.6",
@@ -36,7 +36,6 @@
     "classnames": "2.5.1",
     "cookies-next": "4.1.0",
     "crypto-js": "4.2.0",
-    "dotenv": "16.3.1",
     "formik": "2.4.5",
     "i18next": "22.5.1",
     "micromatch": "4.0.5",
