@@ -41,11 +41,11 @@ export default async function handler(
 
 // Get API keys
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const teamMember = await getCurrentUser(req, res);
+  const user = await getCurrentUser(req, res);
 
-  throwIfNotAllowed(teamMember, 'team_api_key', 'read');
+  throwIfNotAllowed(user, 'team_api_key', 'read');
 
-  const apiKeys = await fetchApiKeys(teamMember.team.id);
+  const apiKeys = await fetchApiKeys(user.team.id);
 
   recordMetric('apikey.fetched');
 
@@ -54,15 +54,15 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Create an API key
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const teamMember = await getCurrentUser(req, res);
+  const user = await getCurrentUser(req, res);
 
-  throwIfNotAllowed(teamMember, 'team_api_key', 'create');
+  throwIfNotAllowed(user, 'team_api_key', 'create');
 
   const { name } = createApiKeySchema.parse(req.body);
 
   const apiKey = await createApiKey({
     name,
-    teamId: teamMember.team.id,
+    teamId: user.team.id,
   });
 
   recordMetric('apikey.created');

@@ -38,9 +38,9 @@ export default async function handler(
 
 // Delete an API key
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const teamMember = await getCurrentUser(req, res);
+  const user = await getCurrentUser(req, res);
 
-  throwIfNotAllowed(teamMember, 'team_api_key', 'delete');
+  throwIfNotAllowed(user, 'team_api_key', 'delete');
 
   const { apiKeyId } = deleteApiKeySchema.parse(req.query);
 

@@ -67,11 +67,11 @@ export const isAllowed = (role: Role, resource: Resource, action: Action) => {
 };
 
 export const throwIfNotAllowed = (
-  teamMember: Pick<TeamMember, 'role'>,
+  user: Pick<TeamMember, 'role'>,
   resource: Resource,
   action: Action
 ) => {
-  if (isAllowed(teamMember.role, resource, action)) {
+  if (isAllowed(user.role, resource, action)) {
     return true;
   }
 
