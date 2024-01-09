@@ -67,7 +67,7 @@ export const isAllowed = (role: Role, resource: Resource, action: Action) => {
 };
 
 export const throwIfNotAllowed = (
-  teamMember: TeamMember,
+  teamMember: Pick<TeamMember, 'role'>,
   resource: Resource,
   action: Action
 ) => {

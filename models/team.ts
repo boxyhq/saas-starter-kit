@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
+import { teamSlugSchema } from '@/lib/zod/schema';
 import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -197,4 +198,26 @@ export const getTeamMember = async (userId: string, slug: string) => {
   });
 
   return teamMember;
+};
+
+// Get current user's team member object
+export const getCurrentUser = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  const session = await getSession(req, res);
+
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
+
+  const { slug } = teamSlugSchema.parse(req.query);
+
+  const { role, team } = await getTeamMember(session.user.id, slug);
+
+  return {
+    ...session.user,
+    role,
+    team,
+  };
 };

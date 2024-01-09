@@ -1,30 +1,31 @@
 import { deleteApiKey } from 'models/apiKey';
-import { throwIfNoTeamAccess } from 'models/team';
+import { getCurrentUser, throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
+import { deleteApiKeySchema } from '@/lib/zod/schema';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method } = req;
-
   try {
     if (!env.teamFeatures.apiKey) {
       throw new ApiError(404, 'Not Found');
     }
 
-    switch (method) {
+    await throwIfNoTeamAccess(req, res);
+
+    switch (req.method) {
       case 'DELETE':
         await handleDELETE(req, res);
         break;
       default:
         res.setHeader('Allow', 'DELETE');
         res.status(405).json({
-          error: { message: `Method ${method} Not Allowed` },
+          error: { message: `Method ${req.method} Not Allowed` },
         });
     }
   } catch (error: any) {
@@ -37,14 +38,15 @@ export default async function handler(
 
 // Delete an API key
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const teamMember = await throwIfNoTeamAccess(req, res);
+  const teamMember = await getCurrentUser(req, res);
+
   throwIfNotAllowed(teamMember, 'team_api_key', 'delete');
 
-  const { apiKeyId } = req.query as { apiKeyId: string };
+  const { apiKeyId } = deleteApiKeySchema.parse(req.query);
 
   await deleteApiKey(apiKeyId);
 
   recordMetric('apikey.removed');
 
-  res.json({ data: {} });
+  res.status(204).end();
 };

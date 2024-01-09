@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast';
 import { useSWRConfig } from 'swr';
 import type { ApiResponse } from 'types';
 import Modal from '../shared/Modal';
+import { defaultHeaders } from '@/lib/common';
 
 const NewAPIKey = ({
   team,
@@ -59,6 +60,7 @@ const CreateAPIKeyForm = ({
     const res = await fetch(`/api/teams/${team.slug}/api-keys`, {
       method: 'POST',
       body: JSON.stringify({ name }),
+      headers: defaultHeaders,
     });
 
     const { data, error } = (await res.json()) as ApiResponse<{

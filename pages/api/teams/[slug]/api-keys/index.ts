@@ -1,23 +1,24 @@
 import { createApiKey, fetchApiKeys } from 'models/apiKey';
-import { throwIfNoTeamAccess } from 'models/team';
+import { getCurrentUser, throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
+import { createApiKeySchema } from '@/lib/zod/schema';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method } = req;
-
   try {
     if (!env.teamFeatures.apiKey) {
       throw new ApiError(404, 'Not Found');
     }
 
-    switch (method) {
+    await throwIfNoTeamAccess(req, res);
+
+    switch (req.method) {
       case 'GET':
         await handleGET(req, res);
         break;
@@ -27,7 +28,7 @@ export default async function handler(
       default:
         res.setHeader('Allow', 'GET, POST');
         res.status(405).json({
-          error: { message: `Method ${method} Not Allowed` },
+          error: { message: `Method ${req.method} Not Allowed` },
         });
     }
   } catch (error: any) {
@@ -40,10 +41,11 @@ export default async function handler(
 
 // Get API keys
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const teamMember = await throwIfNoTeamAccess(req, res);
+  const teamMember = await getCurrentUser(req, res);
+
   throwIfNotAllowed(teamMember, 'team_api_key', 'read');
 
-  const apiKeys = await fetchApiKeys(teamMember.teamId);
+  const apiKeys = await fetchApiKeys(teamMember.team.id);
 
   recordMetric('apikey.fetched');
 
@@ -52,14 +54,15 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Create an API key
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const teamMember = await throwIfNoTeamAccess(req, res);
+  const teamMember = await getCurrentUser(req, res);
+
   throwIfNotAllowed(teamMember, 'team_api_key', 'create');
 
-  const { name } = JSON.parse(req.body) as { name: string };
+  const { name } = createApiKeySchema.parse(req.body);
 
   const apiKey = await createApiKey({
     name,
-    teamId: teamMember.teamId,
+    teamId: teamMember.team.id,
   });
 
   recordMetric('apikey.created');
