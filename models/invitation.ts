@@ -6,7 +6,7 @@ import { randomUUID } from 'crypto';
 
 export type TeamInvitation = Pick<
   Invitation,
-  'id' | 'email' | 'role' | 'expires' | 'allowedDomain' | 'token'
+  'id' | 'email' | 'role' | 'expires' | 'allowedDomains' | 'token'
 > & { url: string };
 
 export const getInvitations = async (teamId: string, sentViaEmail: boolean) => {
@@ -21,7 +21,7 @@ export const getInvitations = async (teamId: string, sentViaEmail: boolean) => {
       role: true,
       expires: true,
       token: true,
-      allowedDomain: true,
+      allowedDomains: true,
     },
   });
 

@@ -99,7 +99,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       email,
       role,
       sentViaEmail: true,
-      allowedDomain: [],
+      allowedDomains: [],
     });
 
     await sendEvent(teamMember.teamId, 'invitation.created', invitation);
@@ -114,7 +114,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       role,
       email: null,
       sentViaEmail: false,
-      allowedDomain: domains
+      allowedDomains: domains
         ? domains.split(',').map((d) => d.trim().toLowerCase())
         : [],
     });
@@ -212,9 +212,9 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Make sure the user is logged in with an allowed domain (Join via link)
-  if (!invitation.sentViaEmail && invitation.allowedDomain.length) {
+  if (!invitation.sentViaEmail && invitation.allowedDomains.length) {
     const emailDomain = extractEmailDomain(email);
-    const allowJoin = invitation.allowedDomain.find(
+    const allowJoin = invitation.allowedDomains.find(
       (domain) => domain === emailDomain
     );
 

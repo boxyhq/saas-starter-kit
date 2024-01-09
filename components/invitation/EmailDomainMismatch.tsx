@@ -12,12 +12,12 @@ const EmailDomainMismatch = ({
   invitation,
   emailDomain,
 }: EmailDomainMismatchProps) => {
-  const { allowedDomain } = invitation;
+  const { allowedDomains } = invitation;
 
   const allowedDomainsString =
-    allowedDomain.length === 1
-      ? `the domain: ${allowedDomain[0]}`
-      : `one of the following domains: ${allowedDomain.join(', ')}`;
+    allowedDomains.length === 1
+      ? `the domain: ${allowedDomains[0]}`
+      : `one of the following domains: ${allowedDomains.join(', ')}`;
 
   return (
     <>
