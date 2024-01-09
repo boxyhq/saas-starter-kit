@@ -57,7 +57,6 @@ const CreateAPIKeyForm = ({
       name: '',
     },
     validateOnBlur: false,
-    validateOnChange: false,
     validate: (values) => {
       try {
         createApiKeySchema.parse(values);
