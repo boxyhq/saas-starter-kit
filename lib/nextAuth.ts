@@ -20,7 +20,7 @@ import { getAccount } from 'models/account';
 import { addTeamMember, getTeam } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import { verifyPassword } from '@/lib/auth';
-import { isBusinessEmail } from '@/lib/email/utils';
+import { isEmailAllowed } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { prisma } from '@/lib/prisma';
 import { isAuthProviderEnabled } from '@/lib/auth';
@@ -284,7 +284,7 @@ export const getAuthOptions = (
           return false;
         }
 
-        if (env.disableNonBusinessEmailSignup && !isBusinessEmail(user.email)) {
+        if (!isEmailAllowed(user.email)) {
           return '/auth/login?error=allow-only-work-email';
         }
 
