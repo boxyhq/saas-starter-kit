@@ -1,7 +1,7 @@
 import { sendAudit } from '@/lib/retraced';
 import {
   deleteTeam,
-  getCurrentUser,
+  getCurrentUserWithTeam,
   getTeam,
   throwIfNoTeamAccess,
   updateTeam,
@@ -46,7 +46,7 @@ export default async function handler(
 
 // Get a team by slug
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const user = await getCurrentUser(req, res);
+  const user = await getCurrentUserWithTeam(req, res);
 
   throwIfNotAllowed(user, 'team', 'read');
 
@@ -59,7 +59,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Update a team
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const user = await getCurrentUser(req, res);
+  const user = await getCurrentUserWithTeam(req, res);
 
   throwIfNotAllowed(user, 'team', 'update');
 
@@ -89,7 +89,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new ApiError(404, 'Not Found');
   }
 
-  const user = await getCurrentUser(req, res);
+  const user = await getCurrentUserWithTeam(req, res);
 
   throwIfNotAllowed(user, 'team', 'delete');
 

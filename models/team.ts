@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
 import { teamSlugSchema } from '@/lib/zod/schema';
-import { Role, Team } from '@prisma/client';
+import { Role, Team, TeamMember } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const createTeam = async (param: {
@@ -200,8 +200,8 @@ export const getTeamMember = async (userId: string, slug: string) => {
   return teamMember;
 };
 
-// Get current user's team member object
-export const getCurrentUser = async (
+// Get current user with team info
+export const getCurrentUserWithTeam = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -220,4 +220,18 @@ export const getCurrentUser = async (
     role,
     team,
   };
+};
+
+// Get current user
+export const getCurrentUser = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  const session = await getSession(req, res);
+
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
+
+  return session.user;
 };

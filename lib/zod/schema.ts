@@ -32,3 +32,7 @@ export const updateTeamSchema = z.object({
       }
     ),
 });
+
+export const createTeamSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+});

@@ -1,5 +1,5 @@
 import { deleteApiKey } from 'models/apiKey';
-import { getCurrentUser, throwIfNoTeamAccess } from 'models/team';
+import { getCurrentUserWithTeam, throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
@@ -38,7 +38,7 @@ export default async function handler(
 
 // Delete an API key
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const user = await getCurrentUser(req, res);
+  const user = await getCurrentUserWithTeam(req, res);
 
   throwIfNotAllowed(user, 'team_api_key', 'delete');
 

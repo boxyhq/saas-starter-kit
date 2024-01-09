@@ -1,5 +1,5 @@
 import { createApiKey, fetchApiKeys } from 'models/apiKey';
-import { getCurrentUser, throwIfNoTeamAccess } from 'models/team';
+import { getCurrentUserWithTeam, throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
@@ -41,7 +41,7 @@ export default async function handler(
 
 // Get API keys
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const user = await getCurrentUser(req, res);
+  const user = await getCurrentUserWithTeam(req, res);
 
   throwIfNotAllowed(user, 'team_api_key', 'read');
 
@@ -54,7 +54,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Create an API key
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const user = await getCurrentUser(req, res);
+  const user = await getCurrentUserWithTeam(req, res);
 
   throwIfNotAllowed(user, 'team_api_key', 'create');
 
