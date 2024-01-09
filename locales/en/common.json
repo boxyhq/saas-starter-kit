@@ -62,7 +62,7 @@
   "close": "Close",
   "unknown-error": "Unknown Error",
   "configure": "Configure",
-  "add-member": "Add Member",
+  "add-member": "Invite Member",
   "add-webhook": "Add Webhook",
   "webhook-created": "Webhook created successfully.",
   "webhook-deleted": "Webhook deleted successfully.",

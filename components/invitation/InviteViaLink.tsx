@@ -1,8 +1,8 @@
-import React from 'react';
 import * as Yup from 'yup';
 import { mutate } from 'swr';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
+import React, { useState } from 'react';
 import { Button, Input } from 'react-daisyui';
 import { useTranslation } from 'next-i18next';
 
@@ -12,12 +12,14 @@ import { availableRoles } from '@/lib/permissions';
 import type { Team } from '@prisma/client';
 import { defaultHeaders, isValidDomain } from '@/lib/common';
 import { InputWithCopyButton } from '../shared';
+import ConfirmationDialog from '../shared/ConfirmationDialog';
 
 interface InviteViaLinkProps {
   team: Team;
 }
 
 const InviteViaLink = ({ team }: InviteViaLinkProps) => {
+  const [showDelDialog, setShowDelDialog] = useState(false);
   const { t } = useTranslation('common');
   const { invitations } = useInvitations({
     slug: team.slug,
@@ -88,6 +90,7 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
 
     mutate(`/api/teams/${team.slug}/invitations?sentViaEmail=false`);
     toast.success('Invitation link deleted.');
+    setShowDelDialog(false);
   };
 
   const invitation = invitations ? invitations[0] : null;
@@ -106,11 +109,20 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
             : 'Anyone can use this link to join your team.'}
           <Button
             className="btn-xs btn-link link-error"
-            onClick={() => deleteInvitationLink(invitation.id)}
+            onClick={() => setShowDelDialog(true)}
           >
             Delete link
           </Button>
         </p>
+        <ConfirmationDialog
+          visible={showDelDialog}
+          onCancel={() => setShowDelDialog(false)}
+          onConfirm={() => deleteInvitationLink(invitation.id)}
+          title="Delete invitation link"
+        >
+          Are you sure you want to delete this invitation link? Any future
+          attempts to join your team using this link will fail.
+        </ConfirmationDialog>
       </div>
     );
   }
