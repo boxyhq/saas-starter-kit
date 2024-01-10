@@ -1,12 +1,18 @@
-import fetcher from '@/lib/fetcher';
-import { Invitation } from '@prisma/client';
 import useSWR, { mutate } from 'swr';
+
+import fetcher from '@/lib/fetcher';
 import type { ApiResponse } from 'types';
+import { TeamInvitation } from 'models/invitation';
 
-const useInvitations = (slug: string) => {
-  const url = `/api/teams/${slug}/invitations`;
+interface Props {
+  slug: string;
+  sentViaEmail: boolean;
+}
 
-  const { data, error, isLoading } = useSWR<ApiResponse<Invitation[]>>(
+const useInvitations = ({ slug, sentViaEmail }: Props) => {
+  const url = `/api/teams/${slug}/invitations?sentViaEmail=${sentViaEmail}`;
+
+  const { data, error, isLoading } = useSWR<ApiResponse<TeamInvitation[]>>(
     url,
     fetcher
   );

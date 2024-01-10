@@ -2,16 +2,17 @@ import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
 import { generateToken, slugify } from '@/lib/common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { prisma } from '@/lib/prisma';
-import { isBusinessEmail } from '@/lib/email/utils';
+import { isEmailAllowed } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
-import { createTeam, isTeamExists } from 'models/team';
+import { createTeam, getTeam, isTeamExists } from 'models/team';
 import { createUser, getUser } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { getInvitation, isInvitationExpired } from 'models/invitation';
 import { validateRecaptcha } from '@/lib/recaptcha';
 import { slackNotify } from '@/lib/slack';
+import { Team } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -40,7 +41,7 @@ export default async function handler(
 
 // Signup the user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, password, team, inviteToken, recaptchaToken } = req.body;
+  const { name, password, team, inviteToken, recaptchaToken } = req.body;
 
   await validateRecaptcha(recaptchaToken);
 
@@ -48,14 +49,20 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     ? await getInvitation({ token: inviteToken })
     : null;
 
-  if (invitation && (await isInvitationExpired(invitation))) {
-    throw new ApiError(400, 'Invitation expired. Please request a new one.');
+  let emailToUse: string = req.body.email;
+
+  // When join via invitation
+  if (invitation) {
+    if (await isInvitationExpired(invitation.expires)) {
+      throw new ApiError(400, 'Invitation expired. Please request a new one.');
+    }
+
+    if (invitation.sentViaEmail) {
+      emailToUse = invitation.email!;
+    }
   }
 
-  // If invitation is present, use the email from the invitation instead of the email in the request body
-  const emailToUse = invitation ? invitation.email : email;
-
-  if (env.disableNonBusinessEmailSignup && !isBusinessEmail(emailToUse)) {
+  if (!isEmailAllowed(emailToUse)) {
     throw new ApiError(
       400,
       `We currently only accept work email addresses for sign-up. Please use your work email to create an account. If you don't have a work email, feel free to contact our support team for assistance.`
@@ -89,16 +96,18 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     emailVerified: invitation ? new Date() : null,
   });
 
+  let userTeam: Team | null = null;
+
   // Create team if user is not invited
   // So we can create the team with the user as the owner
   if (!invitation) {
-    const slug = slugify(team);
-
-    await createTeam({
+    userTeam = await createTeam({
       userId: user.id,
       name: team,
-      slug,
+      slug: slugify(team),
     });
+  } else {
+    userTeam = await getTeam({ slug: invitation.team.slug });
   }
 
   // Send account verification email
@@ -117,10 +126,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   recordMetric('user.signup');
 
   slackNotify()?.alert({
-    text: 'New user signed up',
+    text: invitation
+      ? 'New user signed up via invitation'
+      : 'New user signed up',
     fields: {
       Name: user.name,
       Email: user.email,
+      Team: userTeam?.name,
     },
   });
 

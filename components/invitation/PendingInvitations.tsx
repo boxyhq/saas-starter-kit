@@ -1,6 +1,6 @@
 import { Error, LetterAvatar, Loading } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
-import { Invitation, Team } from '@prisma/client';
+import { Team } from '@prisma/client';
 import useInvitations from 'hooks/useInvitations';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
@@ -8,17 +8,19 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
+import { TeamInvitation } from 'models/invitation';
 
 const PendingInvitations = ({ team }: { team: Team }) => {
   const [selectedInvitation, setSelectedInvitation] =
-    useState<Invitation | null>(null);
+    useState<TeamInvitation | null>(null);
 
   const [confirmationDialogVisible, setConfirmationDialogVisible] =
     useState(false);
 
-  const { isLoading, isError, invitations, mutateInvitation } = useInvitations(
-    team.slug
-  );
+  const { isLoading, isError, invitations, mutateInvitation } = useInvitations({
+    slug: team.slug,
+    sentViaEmail: true,
+  });
 
   const { t } = useTranslation('common');
 
@@ -30,7 +32,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
     return <Error message={isError.message} />;
   }
 
-  const deleteInvitation = async (invitation: Invitation | null) => {
+  const deleteInvitation = async (invitation: TeamInvitation | null) => {
     if (!invitation) return;
 
     const sp = new URLSearchParams({ id: invitation.id });
@@ -83,8 +85,12 @@ const PendingInvitations = ({ team }: { team: Team }) => {
               <tr key={invitation.id}>
                 <td>
                   <div className="flex items-center justify-start space-x-2">
-                    <LetterAvatar name={invitation.email} />
-                    <span>{invitation.email}</span>
+                    {invitation.email && (
+                      <>
+                        <LetterAvatar name={invitation.email} />
+                        <span>{invitation.email}</span>
+                      </>
+                    )}
                   </div>
                 </td>
                 <td>{invitation.role}</td>
@@ -113,7 +119,9 @@ const PendingInvitations = ({ team }: { team: Team }) => {
         onConfirm={() => deleteInvitation(selectedInvitation)}
         title={t('confirm-delete-member-invitation')}
       >
-        {t('delete-member-invitation-warning')}
+        {t('delete-member-invitation-warning', {
+          email: selectedInvitation?.email,
+        })}
       </ConfirmationDialog>
     </div>
   );

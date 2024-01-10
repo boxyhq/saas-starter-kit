@@ -15,6 +15,8 @@ import { addTeamMember, throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import { extractEmailDomain, isEmailAllowed } from '@/lib/email/utils';
+import { Invitation } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
@@ -55,41 +57,80 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_invitation', 'create');
 
-  const { email, role } = req.body;
+  const { email, role, sentViaEmail, domains } = req.body;
 
-  const memberExists = await prisma.teamMember.count({
-    where: {
-      teamId: teamMember.teamId,
-      user: {
-        email,
+  let invitation: undefined | Invitation = undefined;
+
+  // Invite via email
+  if (sentViaEmail) {
+    if (!email) {
+      throw new ApiError(400, 'Email is required.');
+    }
+
+    if (!isEmailAllowed(email)) {
+      throw new ApiError(
+        400,
+        'It seems you entered a non-business email. Invitations can only be sent to work emails.'
+      );
+    }
+
+    const memberExists = await prisma.teamMember.count({
+      where: {
+        teamId: teamMember.teamId,
+        user: {
+          email,
+        },
       },
-    },
-  });
+    });
 
-  if (memberExists) {
-    throw new ApiError(400, 'This user is already a member of the team.');
-  }
+    if (memberExists) {
+      throw new ApiError(400, 'This user is already a member of the team.');
+    }
 
-  const invitationExists = await prisma.invitation.count({
-    where: {
-      email,
+    const invitationExists = await prisma.invitation.count({
+      where: {
+        email,
+        teamId: teamMember.teamId,
+      },
+    });
+
+    if (invitationExists) {
+      throw new ApiError(400, 'An invitation already exists for this email.');
+    }
+
+    invitation = await createInvitation({
       teamId: teamMember.teamId,
-    },
-  });
-
-  if (invitationExists) {
-    throw new ApiError(400, 'An invitation already exists for this email.');
+      invitedBy: teamMember.userId,
+      email,
+      role,
+      sentViaEmail: true,
+      allowedDomains: [],
+    });
   }
 
-  const invitation = await createInvitation({
-    teamId: teamMember.teamId,
-    invitedBy: teamMember.userId,
-    email,
-    role,
-  });
+  // Invite via link
+  if (!sentViaEmail) {
+    invitation = await createInvitation({
+      teamId: teamMember.teamId,
+      invitedBy: teamMember.userId,
+      role,
+      email: null,
+      sentViaEmail: false,
+      allowedDomains: domains
+        ? domains.split(',').map((d) => d.trim().toLowerCase())
+        : [],
+    });
+  }
+
+  if (!invitation) {
+    throw new ApiError(400, 'Could not create invitation. Please try again.');
+  }
+
+  if (invitation.sentViaEmail) {
+    await sendTeamInviteEmail(teamMember.team, invitation);
+  }
 
   await sendEvent(teamMember.teamId, 'invitation.created', invitation);
-  await sendTeamInviteEmail(teamMember.team, invitation);
 
   sendAudit({
     action: 'member.invitation.create',
@@ -100,7 +141,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   recordMetric('invitation.created');
 
-  res.status(200).json({ data: invitation });
+  res.status(204).end();
 };
 
 // Get all invitations for a team
@@ -108,7 +149,12 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_invitation', 'read');
 
-  const invitations = await getInvitations(teamMember.teamId);
+  const { sentViaEmail } = req.query as { sentViaEmail: string };
+
+  const invitations = await getInvitations(
+    teamMember.teamId,
+    sentViaEmail === 'true'
+  );
 
   recordMetric('invitation.fetched');
 
@@ -126,7 +172,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (
     invitation.invitedBy != teamMember.user.id ||
-    invitation.teamId != teamMember.teamId
+    invitation.team.id != teamMember.teamId
   ) {
     throw new ApiError(
       400,
@@ -156,30 +202,51 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const invitation = await getInvitation({ token: inviteToken });
 
-  if (await isInvitationExpired(invitation)) {
+  if (await isInvitationExpired(invitation.expires)) {
     throw new ApiError(400, 'Invitation expired. Please request a new one.');
   }
 
   const session = await getSession(req, res);
-  const userId = session?.user?.id as string;
+  const email = session?.user.email as string;
 
-  if (session?.user.email != invitation.email) {
-    throw new ApiError(
-      400,
-      'You must be logged in with the email address you were invited with.'
+  // Make sure the user is logged in with the invited email address (Join via email)
+  if (invitation.sentViaEmail) {
+    if (invitation.email !== email) {
+      throw new ApiError(
+        400,
+        'You must be logged in with the email address you were invited with.'
+      );
+    }
+  }
+
+  // Make sure the user is logged in with an allowed domain (Join via link)
+  if (!invitation.sentViaEmail && invitation.allowedDomains.length) {
+    const emailDomain = extractEmailDomain(email);
+    const allowJoin = invitation.allowedDomains.find(
+      (domain) => domain === emailDomain
     );
+
+    if (!allowJoin) {
+      throw new ApiError(
+        400,
+        'You must be logged in with an email address from an allowed domain.'
+      );
+    }
   }
 
   const teamMember = await addTeamMember(
     invitation.team.id,
-    userId,
+    session?.user?.id as string,
     invitation.role
   );
 
   await sendEvent(invitation.team.id, 'member.created', teamMember);
-  await deleteInvitation({ token: inviteToken });
+
+  if (invitation.sentViaEmail) {
+    await deleteInvitation({ token: inviteToken });
+  }
 
   recordMetric('member.created');
 
-  res.status(200).json({ data: {} });
+  res.status(204).end();
 };

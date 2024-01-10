@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client';
 
 export type ApiError = {
-  code?: string;
+  code: number;
   message: string;
   values: { [key: string]: string };
 };
@@ -64,7 +64,8 @@ export type AUTH_PROVIDER =
   | 'google'
   | 'saml'
   | 'email'
-  | 'credentials';
+  | 'credentials'
+  | 'idp-initiated';
 
 export interface TeamFeature {
   sso: boolean;

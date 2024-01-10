@@ -9,6 +9,10 @@ export const sendTeamInviteEmail = async (
   team: Team,
   invitation: Invitation
 ) => {
+  if (!invitation.email) {
+    return;
+  }
+
   const subject = `You've been invited to join ${team.name} on ${app.name}`;
   const invitationLink = `${env.appUrl}/invitations/${invitation.token}`;
 

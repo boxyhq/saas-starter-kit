@@ -8,7 +8,7 @@ import {
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
-import { validateDomain } from '@/lib/common';
+import { isValidDomain } from '@/lib/common';
 import { ApiError } from '@/lib/errors';
 import env from '@/lib/env';
 
@@ -62,7 +62,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { name, slug, domain } = req.body;
 
-  if (domain?.length > 0 && !validateDomain(domain)) {
+  if (domain?.length > 0 && !isValidDomain(domain)) {
     throw new ApiError(400, 'Invalid domain name');
   }
 
