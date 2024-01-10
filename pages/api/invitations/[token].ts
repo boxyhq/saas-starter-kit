@@ -33,7 +33,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const invitation = await getInvitation({ token });
 
-  if (await isInvitationExpired(invitation)) {
+  if (await isInvitationExpired(invitation.expires)) {
     throw new ApiError(400, 'Invitation expired. Please request a new one.');
   }
 

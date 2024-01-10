@@ -97,15 +97,17 @@ model TeamMember {
 }
 
 model Invitation {
-  id        String   @id @default(uuid())
-  teamId    String
-  email     String
-  role      Role     @default(MEMBER)
-  token     String   @unique
-  expires   DateTime
-  invitedBy String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id             String   @id @default(uuid())
+  teamId         String
+  email          String?
+  role           Role     @default(MEMBER)
+  token          String   @unique
+  expires        DateTime
+  invitedBy      String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+  sentViaEmail   Boolean  @default(true)
+  allowedDomains String[] @default([])
 
   user User @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
