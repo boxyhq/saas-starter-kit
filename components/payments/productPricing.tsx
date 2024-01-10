@@ -57,13 +57,20 @@ const ProductPricing = ({
                     <Card.Title tag="h2">
                       <h2 className="mx-auto">{plan.name}</h2>
                     </Card.Title>
-                    <Image
-                      className="mx-auto"
-                      src={plan.image || ''}
-                      alt={plan.name}
-                      width={100}
-                      height={100}
-                    />
+                    {plan.image ? (
+                      <Image
+                        className="mx-auto"
+                        src={plan.image}
+                        alt={plan.name}
+                        width={100}
+                        height={100}
+                      />
+                    ) : (
+                      <div
+                        style={{ width: 100, height: 100 }}
+                        className="mx-auto"
+                      />
+                    )}
                     <p>{plan.description}</p>
                     <div className="mt-5">
                       <ul className="flex flex-col space-y-2">
