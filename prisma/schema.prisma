@@ -72,7 +72,7 @@ model Team {
   slug             String   @unique
   domain           String?  @unique
   defaultRole      Role     @default(MEMBER)
-  stripeCustomerId String?  @unique
+  stripeCustomerId String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @default(now())
 
