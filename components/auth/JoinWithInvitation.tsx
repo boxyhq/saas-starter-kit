@@ -24,6 +24,16 @@ interface JoinWithInvitationProps {
   recaptchaSiteKey: string | null;
 }
 
+const JoinUserSchema = Yup.object().shape({
+  name: Yup.string().required(),
+  password: Yup.string().required().min(passwordPolicies.minLength),
+  sentViaEmail: Yup.boolean().required(),
+  email: Yup.string().when('sentViaEmail', {
+    is: false,
+    then: (schema) => schema.required().email(),
+  }),
+});
+
 const JoinWithInvitation = ({
   inviteToken,
   recaptchaSiteKey,
@@ -42,13 +52,14 @@ const JoinWithInvitation = ({
   const formik = useFormik({
     initialValues: {
       name: '',
+      email: '',
       password: '',
+      sentViaEmail: invitation?.sentViaEmail || true,
     },
-    validationSchema: Yup.object().shape({
-      name: Yup.string().required(),
-      password: Yup.string().required().min(passwordPolicies.minLength),
-    }),
+    validationSchema: JoinUserSchema,
     enableReinitialize: true,
+    validateOnChange: false,
+    validateOnBlur: false,
     onSubmit: async (values) => {
       const response = await fetch('/api/auth/join', {
         method: 'POST',
@@ -92,15 +103,29 @@ const JoinWithInvitation = ({
           name="name"
           placeholder={t('your-name')}
           value={formik.values.name}
-          error={formik.touched.name ? formik.errors.name : undefined}
+          error={formik.errors.name}
           onChange={formik.handleChange}
         />
-        <InputWithLabel
-          type="email"
-          label={t('email')}
-          value={invitation.email}
-          disabled
-        />
+
+        {invitation.sentViaEmail ? (
+          <InputWithLabel
+            type="email"
+            label={t('email')}
+            value={invitation.email!}
+            disabled
+          />
+        ) : (
+          <InputWithLabel
+            type="email"
+            label={t('email')}
+            name="email"
+            placeholder={t('email')}
+            value={formik.values.email}
+            error={formik.errors.email}
+            onChange={formik.handleChange}
+          />
+        )}
+
         <div className="relative flex">
           <InputWithLabel
             type={isPasswordVisible ? 'text' : 'password'}
@@ -108,7 +133,7 @@ const JoinWithInvitation = ({
             name="password"
             placeholder={t('password')}
             value={formik.values.password}
-            error={formik.touched.password ? formik.errors.password : undefined}
+            error={formik.errors.password}
             onChange={formik.handleChange}
           />
           <TogglePasswordVisibility

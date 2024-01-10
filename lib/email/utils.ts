@@ -16,3 +16,7 @@ export const isEmailAllowed = (email: string) => {
 
   return isBusinessEmail(email);
 };
+
+export function extractEmailDomain(email: string) {
+  return email.split('@')[1];
+}
