@@ -99,9 +99,7 @@ const env = {
     payments:
       process.env.FEATURE_TEAM_PAYMENTS === 'false'
         ? false
-        : process.env.STRIPE_SECRET_KEY &&
-            process.env.STRIPE_WEBHOOK_SECRET &&
-            process.env.CRON_API_KEY
+        : process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET
           ? true
           : false,
     deleteTeam: process.env.FEATURE_TEAM_DELETION === 'false' ? false : true,
