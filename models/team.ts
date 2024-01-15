@@ -4,6 +4,7 @@ import { findOrCreateApp } from '@/lib/svix';
 import { teamSlugSchema } from '@/lib/zod/schema';
 import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getCurrentUser } from './user';
 
 export const createTeam = async (param: {
   userId: string;
@@ -205,33 +206,15 @@ export const getCurrentUserWithTeam = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new Error('Unauthorized');
-  }
+  const user = await getCurrentUser(req, res);
 
   const { slug } = teamSlugSchema.parse(req.query);
 
-  const { role, team } = await getTeamMember(session.user.id, slug);
+  const { role, team } = await getTeamMember(user.id, slug);
 
   return {
-    ...session.user,
+    ...user,
     role,
     team,
   };
-};
-
-// Get current user
-export const getCurrentUser = async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => {
-  const session = await getSession(req, res);
-
-  if (!session) {
-    throw new Error('Unauthorized');
-  }
-
-  return session.user;
 };

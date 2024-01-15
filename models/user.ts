@@ -3,6 +3,8 @@ import { Action, Resource, permissions } from '@/lib/permissions';
 import { prisma } from '@/lib/prisma';
 import { Role, TeamMember } from '@prisma/client';
 import type { Session } from 'next-auth';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getSession } from '@/lib/session';
 
 export const createUser = async (param: {
   name: string;
@@ -79,4 +81,18 @@ export const throwIfNotAllowed = (
     403,
     `You are not allowed to perform ${action} on ${resource}`
   );
+};
+
+// Get current user from session
+export const getCurrentUser = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  const session = await getSession(req, res);
+
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
+
+  return session.user;
 };

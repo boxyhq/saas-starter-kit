@@ -1,14 +1,10 @@
 import { slugify } from '@/lib/common';
 import { ApiError } from '@/lib/errors';
-import {
-  createTeam,
-  getCurrentUser,
-  getTeams,
-  isTeamExists,
-} from 'models/team';
+import { createTeam, getTeams, isTeamExists } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { createTeamSchema } from '@/lib/zod/schema';
+import { getCurrentUser } from 'models/user';
 
 export default async function handler(
   req: NextApiRequest,
