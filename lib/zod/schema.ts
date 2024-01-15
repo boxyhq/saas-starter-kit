@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { validateDomain } from '../common';
+import { isValidDomain } from '../common';
 
 export const createApiKeySchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -25,7 +25,7 @@ export const updateTeamSchema = z.object({
           return true;
         }
 
-        return validateDomain(domain);
+        return isValidDomain(domain);
       },
       {
         message: 'Enter a domain name in the format example.com',
