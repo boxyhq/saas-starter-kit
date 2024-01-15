@@ -4,13 +4,7 @@ import { updateTeam } from 'models/team';
 
 export const stripe = new Stripe(env.stripe.secretKey ?? '', {
   // https://github.com/stripe/stripe-node#configuration
-  apiVersion: '2022-11-15',
-  // Register this as an official Stripe plugin.
-  // https://stripe.com/docs/building-plugins#setappinfo
-  appInfo: {
-    name: 'saas-starter-kit',
-    version: '0.1.0',
-  },
+  apiVersion: '2022-11-15'
 });
 
 export async function getStripeCustomerId(teamMember, session?: any) {
