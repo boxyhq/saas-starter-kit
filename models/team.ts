@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
 import { teamSlugSchema } from '@/lib/zod/schema';
-import { Role, Team, TeamMember } from '@prisma/client';
+import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const createTeam = async (param: {

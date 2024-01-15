@@ -5,5 +5,8 @@ type GetSSRResult<TProps> =
 
 type GetSSRFn<TProps> = (args: any) => Promise<GetSSRResult<TProps>>;
 
-export type inferSSRProps<TFn extends GetSSRFn<any>> =
-  TFn extends GetSSRFn<infer TProps> ? NonNullable<TProps> : never;
+export type inferSSRProps<TFn extends GetSSRFn<any>> = TFn extends GetSSRFn<
+  infer TProps
+>
+  ? NonNullable<TProps>
+  : never;
