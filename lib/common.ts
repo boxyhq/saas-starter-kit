@@ -42,7 +42,7 @@ export const extractAuthToken = (req: NextApiRequest): string | null => {
 export const domainRegex =
   /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/;
 
-export const validateDomain = (domain: string): boolean => {
+export const isValidDomain = (domain: string): boolean => {
   return domainRegex.test(domain);
 };
 
