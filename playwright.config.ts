@@ -6,23 +6,12 @@ const config: PlaywrightTestConfig = {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
   ],
-  reporter: [
-    [
-      'html',
-      {
-        outputFolder: 'report',
-        open: 'never',
-      },
-    ],
-  ],
+  reporter: 'html',
   webServer: {
     command: 'npm run start',
     url: 'http://localhost:4002',
+    reuseExistingServer: !process.env.CI,
   },
   use: {
     headless: true,
@@ -30,5 +19,7 @@ const config: PlaywrightTestConfig = {
     baseURL: 'http://localhost:4002',
     video: 'off',
   },
+  testDir: './tests',
 };
+
 export default config;

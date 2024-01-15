@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+yarn.lock
 
 # testing
 /coverage
@@ -44,6 +45,9 @@ yarn-error.log*
 
 # Tests
 /report
+/test-results/
+/playwright-report/
+/playwright/.cache/
 
 # eslint
 .eslintcache
