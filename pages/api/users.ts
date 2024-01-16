@@ -6,22 +6,21 @@ import { ApiError } from '@/lib/errors';
 import env from '@/lib/env';
 import { getUser } from 'models/user';
 import { isEmailAllowed } from '@/lib/email/utils';
+import { updateAccountSchema } from '@/lib/zod/schema';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method } = req;
-
   try {
-    switch (method) {
+    switch (req.method) {
       case 'PUT':
         await handlePUT(req, res);
         break;
       default:
         res.setHeader('Allow', 'PUT');
         res.status(405).json({
-          error: { message: `Method ${method} Not Allowed` },
+          error: { message: `Method ${req.method} Not Allowed` },
         });
     }
   } catch (error: any) {
@@ -33,33 +32,39 @@ export default async function handler(
 }
 
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const allowEmailChange = env.confirmEmail === false;
+  const body = updateAccountSchema.parse(req.body);
+
+  console.log(body);
+
   const session = await getSession(req, res);
   const toUpdate = {};
 
-  if ('name' in req.body && req.body.name) {
-    toUpdate['name'] = req.body.name;
+  if ('name' in body) {
+    toUpdate['name'] = body.name;
   }
 
-  // Only allow email change if confirmEmail is false
-  if ('email' in req.body && req.body.email && allowEmailChange) {
-    const { email } = req.body;
+  if ('email' in body) {
+    const allowEmailChange = env.confirmEmail === false;
 
-    if (!isEmailAllowed(email)) {
+    if (!allowEmailChange) {
+      throw new ApiError(400, 'Email change is not allowed.');
+    }
+
+    if (!isEmailAllowed(body.email)) {
       throw new ApiError(400, 'Please use your work email.');
     }
 
-    const user = await getUser({ email });
+    const user = await getUser({ email: body.email });
 
     if (user && user.id !== session?.user.id) {
       throw new ApiError(400, 'Email already in use.');
     }
 
-    toUpdate['email'] = email;
+    toUpdate['email'] = body.email;
   }
 
-  if ('image' in req.body) {
-    toUpdate['image'] = req.body.image;
+  if ('image' in body) {
+    toUpdate['image'] = body.image;
   }
 
   if (Object.keys(toUpdate).length === 0) {
@@ -73,5 +78,5 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   recordMetric('user.updated');
 
-  res.status(200).json({ data: {} });
+  res.status(204).end();
 };

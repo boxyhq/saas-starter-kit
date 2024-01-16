@@ -1,4 +1,3 @@
-import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'next-i18next';
@@ -10,10 +9,7 @@ import { defaultHeaders } from '@/lib/common';
 import { User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-
-const schema = Yup.object().shape({
-  name: Yup.string().required(),
-});
+import { updateAccountSchema } from '@/lib/zod/schema';
 
 const UpdateName = ({ user }: { user: Partial<User> }) => {
   const { t } = useTranslation('common');
@@ -24,8 +20,15 @@ const UpdateName = ({ user }: { user: Partial<User> }) => {
     initialValues: {
       name: user.name,
     },
+    validateOnBlur: false,
     enableReinitialize: true,
-    validationSchema: schema,
+    validate: (values) => {
+      try {
+        updateAccountSchema.parse(values);
+      } catch (error: any) {
+        return error.formErrors.fieldErrors;
+      }
+    },
     onSubmit: async (values) => {
       const response = await fetch('/api/users', {
         method: 'PUT',
@@ -33,9 +36,8 @@ const UpdateName = ({ user }: { user: Partial<User> }) => {
         body: JSON.stringify(values),
       });
 
-      const json = (await response.json()) as ApiResponse;
-
       if (!response.ok) {
+        const json = (await response.json()) as ApiResponse;
         toast.error(json.error.message);
         return;
       }
