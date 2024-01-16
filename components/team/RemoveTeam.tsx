@@ -29,11 +29,10 @@ const RemoveTeam = ({ team, allowDelete }: RemoveTeamProps) => {
       headers: defaultHeaders,
     });
 
-    const json = (await response.json()) as ApiResponse;
-
     setLoading(false);
 
     if (!response.ok) {
+      const json = (await response.json()) as ApiResponse;
       toast.error(json.error.message);
       return;
     }

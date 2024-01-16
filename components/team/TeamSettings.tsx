@@ -1,5 +1,5 @@
 import { Card, InputWithLabel } from '@/components/shared';
-import { defaultHeaders, domainRegex } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import { Team } from '@prisma/client';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
@@ -8,28 +8,30 @@ import React from 'react';
 import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
-import * as Yup from 'yup';
 
 import { AccessControl } from '../shared/AccessControl';
+import { z } from 'zod';
+import { updateTeamSchema } from '@/lib/zod/schema';
 
 const TeamSettings = ({ team }: { team: Team }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
 
-  const formik = useFormik({
+  const formik = useFormik<z.infer<typeof updateTeamSchema>>({
     initialValues: {
       name: team.name,
       slug: team.slug,
-      domain: team.domain,
+      domain: team.domain || '',
     },
-    validationSchema: Yup.object().shape({
-      name: Yup.string().required('Name is required'),
-      slug: Yup.string().required('Slug is required'),
-      domain: Yup.string().nullable().matches(domainRegex, {
-        message: 'Invalid domain: ${value}',
-      }),
-    }),
+    validateOnBlur: false,
     enableReinitialize: true,
+    validate: (values) => {
+      try {
+        updateTeamSchema.parse(values);
+      } catch (error: any) {
+        return error.formErrors.fieldErrors;
+      }
+    },
     onSubmit: async (values) => {
       const response = await fetch(`/api/teams/${team.slug}`, {
         method: 'PUT',
