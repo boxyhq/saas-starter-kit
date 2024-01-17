@@ -30,7 +30,14 @@ export const updateTeamSchema = z.object({
       {
         message: 'Enter a domain name in the format example.com',
       }
-    ),
+    )
+    .transform((domain) => {
+      if (!domain) {
+        return null;
+      }
+
+      return domain.trim().toLowerCase();
+    }),
 });
 
 export const createTeamSchema = z.object({
