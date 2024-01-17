@@ -137,49 +137,38 @@ model ApiKey {
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }
 
-model StripeSubscription {
-  id             String    @id @default(uuid())
-  subscriptionId String    @unique
-  customerId     String
-  priceId        String
-  active         Boolean   @default(false)
-  startDate      DateTime
-  endDate        DateTime
-  cancelAt       DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now())
+model Subscription {
+  id         String    @unique
+  customerId String
+  priceId    String
+  active     Boolean   @default(false)
+  startDate  DateTime
+  endDate    DateTime
+  cancelAt   DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now())
 }
 
-model StripeProduct {
-  id          String        @id @default(uuid())
+model Plan {
+  id          String   @id @default(uuid())
   description String
   features    String[]
   image       String
-  metadata    Json
   name        String
-  unitLabel   String?
   created     DateTime
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @default(now())
-  StripePrice StripePrice[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  Price       Price[]
 }
 
-model StripePrice {
-  id                String   @id @default(uuid())
-  billingScheme     String
-  created           DateTime
-  currency          String
-  customUnitAmount  String?
-  livemode          Boolean
-  lookupKey         String?
-  metadata          Json
-  nickname          String?
-  productId         String
-  recurring         Json
-  tiersMode         String
-  type              String
-  unitAmount        String?
-  unitAmountDecimal String?
+model Price {
+  id            String   @id @default(uuid())
+  billingScheme String
+  currency      String
+  planId        String
+  recurring     Json
+  type          String
+  created       DateTime
 
-  product StripeProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
 }

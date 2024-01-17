@@ -53,8 +53,8 @@ process.on('uncaughtException', (error) => {
 
 async function printStats(prisma) {
   const [productCount, priceCount] = await Promise.all([
-    prisma.stripeProduct.count(),
-    prisma.stripePrice.count(),
+    prisma.plan.count(),
+    prisma.price.count(),
   ]);
 
   console.log('Products synced:', productCount);
@@ -63,9 +63,9 @@ async function printStats(prisma) {
 
 async function cleanup(prisma) {
   // delete all prices from the database
-  await prisma.stripePrice.deleteMany({});
+  await prisma.price.deleteMany({});
   // Delete all products and prices from the database
-  await prisma.stripeProduct.deleteMany({});
+  await prisma.plan.deleteMany({});
 }
 
 function getStripeInstance() {
@@ -86,25 +86,15 @@ function getStripeInstance() {
 async function seedPrices(prices, prisma) {
   for (const data of prices) {
     try {
-      await prisma.stripePrice.create({
+      await prisma.price.create({
         data: {
           id: data.id,
           billingScheme: data.billing_scheme,
-          created: new Date(data.created * 1000),
           currency: data.currency,
-          customUnitAmount: data.custom_unit_amount
-            ? data.custom_unit_amount.toString()
-            : null,
-          livemode: data.livemode,
-          lookupKey: data.lookup_key,
-          metadata: data.metadata,
-          nickname: data.nickname,
-          productId: data.product,
+          planId: data.product,
           recurring: data.recurring,
-          tiersMode: data.tiers_mode ? data.tiers_mode.toString() : '',
           type: data.type,
-          unitAmount: data.unit_amount ? data.unit_amount.toString() : null,
-          unitAmountDecimal: data.unit_amount_decimal,
+          created: new Date(data.created * 1000),
         },
       });
     } catch (error) {
@@ -116,15 +106,13 @@ async function seedPrices(prices, prisma) {
 async function seedProducts(products, prisma) {
   for (const data of products) {
     try {
-      await prisma.stripeProduct.create({
+      await prisma.plan.create({
         data: {
           id: data.id,
           description: data.description || '',
           features: (data.features || []).map((a) => a.name),
           image: data.images.length > 0 ? data.images[0] : '',
-          metadata: data.metadata,
           name: data.name,
-          unitLabel: data.unit_label,
           created: new Date(data.created * 1000),
         },
       });

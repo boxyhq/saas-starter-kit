@@ -7,7 +7,7 @@ import {
   createStripeSubscription,
   deleteStripeSubscription,
   updateStripeSubscription,
-} from 'models/stripeSubscription';
+} from 'models/subscription';
 
 export const config = {
   api: {

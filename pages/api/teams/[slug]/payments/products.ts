@@ -3,9 +3,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getStripeCustomerId } from '@/lib/stripe';
 import { getSession } from '@/lib/session';
 import { throwIfNoTeamAccess } from 'models/team';
-import { getAllProducts } from 'models/stripeProduct';
-import { getAllPrices } from 'models/stripePrice';
-import { getByCustomerId } from 'models/stripeSubscription';
+import { getAllPlans } from 'models/plan';
+import { getAllPrices } from 'models/price';
+import { getByCustomerId } from 'models/subscription';
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,13 +37,13 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const [subscriptions, products, prices] = await Promise.all([
     getByCustomerId(customerId),
-    getAllProducts(),
+    getAllPlans(),
     getAllPrices(),
   ]);
 
   // create a unified object with prices associated with the product
   const productsWithPrices = products.map((product: any) => {
-    product.prices = prices.filter((price) => price.productId === product.id);
+    product.prices = prices.filter((price) => price.planId === product.id);
     return product;
   });
 
@@ -51,7 +51,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const _subscriptions: any[] = subscriptions.map((subscription: any) => {
     const _price = prices.find((p) => p.id === subscription.priceId);
     if (!_price) return undefined;
-    const subscriptionProduct = products.find((p) => p.id === _price.productId);
+    const subscriptionProduct = products.find((p) => p.id === _price.planId);
 
     return {
       ...subscription,
