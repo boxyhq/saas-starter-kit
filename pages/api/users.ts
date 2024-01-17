@@ -34,8 +34,6 @@ export default async function handler(
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = updateAccountSchema.parse(req.body);
 
-  console.log(body);
-
   const session = await getSession(req, res);
   const toUpdate = {};
 
