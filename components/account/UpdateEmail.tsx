@@ -1,4 +1,3 @@
-import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'next-i18next';
@@ -8,10 +7,7 @@ import type { ApiResponse } from 'types';
 import { Card } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import type { User } from '@prisma/client';
-
-const schema = Yup.object().shape({
-  email: Yup.string().required(),
-});
+import { updateAccountSchema } from '@/lib/zod/schema';
 
 interface UpdateEmailProps {
   user: Partial<User>;
@@ -25,7 +21,15 @@ const UpdateEmail = ({ user, allowEmailChange }: UpdateEmailProps) => {
     initialValues: {
       email: user.email,
     },
-    validationSchema: schema,
+    validateOnBlur: false,
+    enableReinitialize: true,
+    validate: (values) => {
+      try {
+        updateAccountSchema.parse(values);
+      } catch (error: any) {
+        return error.formErrors.fieldErrors;
+      }
+    },
     onSubmit: async (values) => {
       const response = await fetch('/api/users', {
         method: 'PUT',
@@ -33,9 +37,8 @@ const UpdateEmail = ({ user, allowEmailChange }: UpdateEmailProps) => {
         body: JSON.stringify(values),
       });
 
-      const json = (await response.json()) as ApiResponse;
-
       if (!response.ok) {
+        const json = (await response.json()) as ApiResponse;
         toast.error(json.error.message);
         return;
       }

@@ -43,3 +43,22 @@ export const updateTeamSchema = z.object({
 export const createTeamSchema = z.object({
   name: z.string().min(1, 'Name is required'),
 });
+
+export const updateAccountSchema = z.union([
+  z.object({ email: z.string().email('Enter a valid email address') }),
+  z.object({ name: z.string().min(1, 'Name is required') }),
+  z.object({
+    image: z
+      .string()
+      .url('Enter a valid URL')
+      .refine(
+        (imageUri) => imageUri.startsWith('data:image/'),
+        'Avatar must be an image'
+      )
+      .refine((imageUri) => {
+        const [, base64] = imageUri.split(',');
+        const size = base64.length * (3 / 4) - 2;
+        return size < 2000000;
+      }, 'Avatar must be less than 2MB'),
+  }),
+]);
