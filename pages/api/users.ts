@@ -32,46 +32,30 @@ export default async function handler(
 }
 
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const body = updateAccountSchema.parse(req.body);
-
+  const data = updateAccountSchema.parse(req.body);
   const session = await getSession(req, res);
-  const toUpdate = {};
 
-  if ('name' in body) {
-    toUpdate['name'] = body.name;
-  }
-
-  if ('email' in body) {
+  if ('email' in data) {
     const allowEmailChange = env.confirmEmail === false;
 
     if (!allowEmailChange) {
       throw new ApiError(400, 'Email change is not allowed.');
     }
 
-    if (!isEmailAllowed(body.email)) {
+    if (!isEmailAllowed(data.email)) {
       throw new ApiError(400, 'Please use your work email.');
     }
 
-    const user = await getUser({ email: body.email });
+    const user = await getUser({ email: data.email });
 
     if (user && user.id !== session?.user.id) {
       throw new ApiError(400, 'Email already in use.');
     }
-
-    toUpdate['email'] = body.email;
-  }
-
-  if ('image' in body) {
-    toUpdate['image'] = body.image;
-  }
-
-  if (Object.keys(toUpdate).length === 0) {
-    throw new ApiError(400, 'Invalid request');
   }
 
   await prisma.user.update({
     where: { id: session?.user.id },
-    data: toUpdate,
+    data,
   });
 
   recordMetric('user.updated');
