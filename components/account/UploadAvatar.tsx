@@ -8,7 +8,6 @@ import type { ApiResponse } from 'types';
 import type { User } from '@prisma/client';
 import { Card } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
-import { userAvatarSchema } from '@/lib/zod/schema';
 
 const UploadAvatar = ({ user }: { user: Partial<User> }) => {
   const { t } = useTranslation('common');
@@ -47,18 +46,23 @@ const UploadAvatar = ({ user }: { user: Partial<User> }) => {
   );
 
   const onAvatarUpload = (file: File) => {
-    try {
-      const image = userAvatarSchema.parse(file);
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        setImage(e.target?.result as string);
-      };
-
-      reader.readAsDataURL(image);
-    } catch (error: any) {
-      toast.error(error.flatten().formErrors[0]);
+    if (file.size / 1024 / 1024 > 2) {
+      toast.error('File size too big (max 2MB)');
+      return;
     }
+
+    if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+      toast.error('File type not supported (.png or .jpg only)');
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      setImage(e.target?.result as string);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

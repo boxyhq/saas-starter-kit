@@ -62,8 +62,3 @@ export const updateAccountSchema = z.union([
       }, 'Avatar must be less than 2MB'),
   }),
 ]);
-
-export const userAvatarSchema = z
-  .instanceof(File)
-  .refine((file) => file.size < 2000000, 'Avatar must be less than 2MB')
-  .refine((file) => file.type.startsWith('image/'), 'Avatar must be an image');
