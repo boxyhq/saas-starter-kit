@@ -38,7 +38,7 @@
     "i18next": "22.5.1",
     "micromatch": "4.0.5",
     "mixpanel-browser": "2.48.1",
-    "next": "14.0.4",
+    "next": "14.1.0",
     "next-auth": "4.24.5",
     "next-i18next": "13.3.0",
     "nodemailer": "6.9.8",
