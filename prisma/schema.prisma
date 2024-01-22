@@ -67,18 +67,18 @@ model User {
 }
 
 model Team {
-  id               String   @id @default(uuid())
-  name             String
-  slug             String   @unique
-  domain           String?  @unique
-  defaultRole      Role     @default(MEMBER)
-  stripeCustomerId String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @default(now())
-
-  members     TeamMember[]
-  invitations Invitation[]
-  apiKeys     ApiKey[]
+  id              String   @id @default(uuid())
+  name            String
+  slug            String   @unique
+  domain          String?  @unique
+  defaultRole     Role     @default(MEMBER)
+  billingId       String?
+  billingProvider String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now())
+  members         TeamMember[]
+  invitations     Invitation[]
+  apiKeys         ApiKey[]
 }
 
 model TeamMember {

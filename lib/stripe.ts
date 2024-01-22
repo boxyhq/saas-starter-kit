@@ -9,7 +9,7 @@ export const stripe = new Stripe(env.stripe.secretKey ?? '', {
 
 export async function getStripeCustomerId(teamMember, session?: any) {
   let customerId = '';
-  if (!teamMember.team.stripeCustomerId) {
+  if (!teamMember.team.billingId) {
     const customerData: {
       metadata: { teamId: string };
       email?: string;
@@ -24,11 +24,12 @@ export async function getStripeCustomerId(teamMember, session?: any) {
       name: session?.user?.name as string,
     });
     await updateTeam(teamMember.team.slug, {
-      stripeCustomerId: customer.id,
+      billingId: customer.id,
+      billingProvider: 'stripe',
     });
     customerId = customer.id;
   } else {
-    customerId = teamMember.team.stripeCustomerId;
+    customerId = teamMember.team.billingId;
   }
   return customerId;
 }
