@@ -38,5 +38,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     return_url: `${env.appUrl}/teams/${teamMember.team.slug}/billing`,
   });
 
-  res.json({ data: url });
+  res.json({ data: { url } });
 };

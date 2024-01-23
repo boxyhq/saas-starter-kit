@@ -4,59 +4,23 @@ import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import env from '@/lib/env';
-import { Button, Card } from 'react-daisyui';
+import { Card } from 'react-daisyui';
 import useCanAccess from 'hooks/useCanAccess';
 import { TeamTab } from '@/components/team';
-import { useState } from 'react';
-import router from 'next/router';
 import fetcher from '@/lib/fetcher';
 import useSWR from 'swr';
-import ProductPricing from '@/components/payments/productPricing';
-import toast from 'react-hot-toast';
+import ProductPricing from '@/components/billing/ProductPricing';
+import LinkToPortal from '@/components/billing/LinkToPortal';
+import Help from '@/components/billing/Help';
 
-const Billing = ({ teamFeatures }) => {
+const Payments = ({ teamFeatures }) => {
   const { t } = useTranslation('common');
   const { canAccess } = useCanAccess();
   const { isLoading, isError, team } = useTeam();
-  const [portalLinkLoading, setPortalLinkLoading] = useState(false);
-
   const { data } = useSWR(
     team?.slug ? `/api/teams/${team?.slug}/payments/products` : null,
     fetcher
   );
-
-  const postData = async ({
-    url,
-    data,
-  }: {
-    url: string;
-    data?: { price: any };
-  }) => {
-    setPortalLinkLoading(true);
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: new Headers({ 'Content-Type': 'application/json' }),
-      credentials: 'same-origin',
-      body: JSON.stringify(data),
-    });
-
-    if (!res.ok) {
-      toast.error(`${t('error-occurred')}`);
-    }
-    return res.json();
-  };
-
-  const redirectToCustomerPortal = async () => {
-    try {
-      const { data: url } = await postData({
-        url: `/api/teams/${team?.slug}/payments/create-portal-link`,
-      });
-      router.push(url);
-    } catch (error) {
-      setPortalLinkLoading(false);
-      if (error) return alert((error as Error).message);
-    }
-  };
 
   if (isLoading) {
     return <Loading />;
@@ -78,16 +42,9 @@ const Billing = ({ teamFeatures }) => {
             team={team}
             teamFeatures={teamFeatures}
           />
-          <div className="">
-            <Button
-              type="button"
-              color="primary"
-              size="md"
-              loading={portalLinkLoading}
-              onClick={redirectToCustomerPortal}
-            >
-              {t('open-customer-portal')}
-            </Button>
+          <div className="flex gap-4">
+            <LinkToPortal team={team} />
+            <Help />
           </div>
           <div>
             {(data?.data?.subscriptions || []).length > 0 && (
@@ -149,4 +106,4 @@ export async function getServerSideProps({
   };
 }
 
-export default Billing;
+export default Payments;
