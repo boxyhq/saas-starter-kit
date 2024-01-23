@@ -14,15 +14,16 @@ import useSWR from 'swr';
 import ProductPricing from '@/components/payments/productPricing';
 import toast from 'react-hot-toast';
 
-const Payments = ({ teamFeatures }) => {
+const Billing = ({ teamFeatures }) => {
   const { t } = useTranslation('common');
   const { canAccess } = useCanAccess();
   const { isLoading, isError, team } = useTeam();
+  const [portalLinkLoading, setPortalLinkLoading] = useState(false);
+
   const { data } = useSWR(
     team?.slug ? `/api/teams/${team?.slug}/payments/products` : null,
     fetcher
   );
-  const [portalLinkLoading, setPortalLinkLoading] = useState(false);
 
   const postData = async ({
     url,
@@ -148,4 +149,4 @@ export async function getServerSideProps({
   };
 }
 
-export default Payments;
+export default Billing;
