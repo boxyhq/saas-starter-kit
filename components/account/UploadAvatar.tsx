@@ -77,9 +77,8 @@ const UploadAvatar = ({ user }: { user: Partial<User> }) => {
 
     setLoading(false);
 
-    const json = (await response.json()) as ApiResponse;
-
     if (!response.ok) {
+      const json = (await response.json()) as ApiResponse;
       toast.error(json.error.message);
       return;
     }

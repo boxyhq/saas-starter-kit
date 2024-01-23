@@ -32,24 +32,24 @@ const APIKeys = ({ team }: APIKeysProps) => {
   const deleteApiKey = async (apiKey: ApiKey | null) => {
     if (!apiKey) return;
 
-    const res = await fetch(`/api/teams/${team.slug}/api-keys/${apiKey.id}`, {
-      method: 'DELETE',
-    });
-
-    const { data, error } = (await res.json()) as ApiResponse<null>;
+    const response = await fetch(
+      `/api/teams/${team.slug}/api-keys/${apiKey.id}`,
+      {
+        method: 'DELETE',
+      }
+    );
 
     setSelectedApiKey(null);
     setConfirmationDialogVisible(false);
 
-    if (error) {
+    if (!response.ok) {
+      const { error } = (await response.json()) as ApiResponse;
       toast.error(error.message);
       return;
     }
 
-    if (data) {
-      mutate();
-      toast.success(t('api-key-deleted'));
-    }
+    mutate();
+    toast.success(t('api-key-deleted'));
   };
 
   const apiKeys = data?.data ?? [];
