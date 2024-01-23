@@ -1,5 +1,6 @@
 -- AlterTable
-ALTER TABLE "Team" ADD COLUMN     "stripeCustomerId" TEXT;
+ALTER TABLE "Team" ADD COLUMN     "billingId" TEXT,
+ADD COLUMN     "billingProvider" TEXT;
 
 -- CreateTable
 CREATE TABLE "Subscription" (
