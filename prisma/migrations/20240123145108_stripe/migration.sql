@@ -35,7 +35,8 @@ CREATE TABLE "Price" (
     "billingScheme" TEXT NOT NULL,
     "currency" TEXT NOT NULL,
     "serviceId" TEXT NOT NULL,
-    "recurring" JSONB NOT NULL,
+    "amount" INTEGER,
+    "metadata" JSONB NOT NULL,
     "type" TEXT NOT NULL,
     "created" TIMESTAMP(3) NOT NULL,
 

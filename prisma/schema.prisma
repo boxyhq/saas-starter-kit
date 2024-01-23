@@ -166,7 +166,8 @@ model Price {
   billingScheme String
   currency      String
   serviceId     String
-  recurring     Json
+  amount        Int?
+  metadata      Json
   type          String
   created       DateTime
 

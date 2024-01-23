@@ -92,9 +92,7 @@ const ProductPricing = ({
                   </Card.Body>
                   <Card.Actions className="justify-center m-2">
                     {(plan?.prices || [])
-                      .sort(
-                        (a, b) => a.recurring.interval < b.recurring.interval
-                      )
+                      .sort((a, b) => a.metadata.interval < b.metadata.interval)
                       .map((price: any, priceIndex: number) => {
                         return (
                           <Button
@@ -108,15 +106,15 @@ const ProductPricing = ({
                                 price.id,
                                 (price.billingScheme == 'per_unit' ||
                                   price.billingScheme == 'tiered') &&
-                                  price.recurring.usage_type !== 'metered'
+                                  price.metadata.usage_type !== 'metered'
                                   ? 1
                                   : undefined
                               );
                             }}
                           >
-                            {price?.recurring?.interval
+                            {price?.metadata?.interval
                               ? `${
-                                  price?.recurring?.interval === 'month'
+                                  price?.metadata?.interval === 'month'
                                     ? 'Monthly Plan'
                                     : 'Yearly Plan'
                                 } `
