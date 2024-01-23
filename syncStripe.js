@@ -23,7 +23,7 @@ const sync = async () => {
     if (prices.data.length > 0 && products.data.length > 0) {
       await cleanup(prisma);
 
-      await seedProducts(products.data, prisma);
+      await seedServices(products.data, prisma);
       await seedPrices(prices.data, prisma);
 
       await printStats(prisma);
@@ -53,7 +53,7 @@ process.on('uncaughtException', (error) => {
 
 async function printStats(prisma) {
   const [productCount, priceCount] = await Promise.all([
-    prisma.plan.count(),
+    prisma.service.count(),
     prisma.price.count(),
   ]);
 
@@ -65,17 +65,13 @@ async function cleanup(prisma) {
   // delete all prices from the database
   await prisma.price.deleteMany({});
   // Delete all products and prices from the database
-  await prisma.plan.deleteMany({});
+  await prisma.service.deleteMany({});
 }
 
 function getStripeInstance() {
   if (process.env.STRIPE_SECRET_KEY) {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
       apiVersion: '2022-11-15',
-      appInfo: {
-        name: 'saas-starter-kit',
-        version: '0.1.0',
-      },
     });
     return stripe;
   } else {
@@ -91,7 +87,7 @@ async function seedPrices(prices, prisma) {
           id: data.id,
           billingScheme: data.billing_scheme,
           currency: data.currency,
-          planId: data.product,
+          serviceId: data.product,
           recurring: data.recurring,
           type: data.type,
           created: new Date(data.created * 1000),
@@ -103,10 +99,10 @@ async function seedPrices(prices, prisma) {
   }
 }
 
-async function seedProducts(products, prisma) {
+async function seedServices(products, prisma) {
   for (const data of products) {
     try {
-      await prisma.plan.create({
+      await prisma.service.create({
         data: {
           id: data.id,
           description: data.description || '',

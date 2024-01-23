@@ -67,15 +67,15 @@ model User {
 }
 
 model Team {
-  id              String   @id @default(uuid())
+  id              String       @id @default(uuid())
   name            String
-  slug            String   @unique
-  domain          String?  @unique
-  defaultRole     Role     @default(MEMBER)
+  slug            String       @unique
+  domain          String?      @unique
+  defaultRole     Role         @default(MEMBER)
   billingId       String?
   billingProvider String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @default(now())
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now())
   members         TeamMember[]
   invitations     Invitation[]
   apiKeys         ApiKey[]
@@ -149,7 +149,7 @@ model Subscription {
   updatedAt  DateTime  @default(now())
 }
 
-model Plan {
+model Service {
   id          String   @id @default(uuid())
   description String
   features    String[]
@@ -165,10 +165,10 @@ model Price {
   id            String   @id @default(uuid())
   billingScheme String
   currency      String
-  planId        String
+  serviceId     String
   recurring     Json
   type          String
   created       DateTime
 
-  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 }

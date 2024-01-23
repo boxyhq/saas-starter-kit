@@ -16,7 +16,7 @@ CREATE TABLE "Subscription" (
 );
 
 -- CreateTable
-CREATE TABLE "Plan" (
+CREATE TABLE "Service" (
     "id" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "features" TEXT[],
@@ -26,7 +26,7 @@ CREATE TABLE "Plan" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Plan_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Service_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -34,7 +34,7 @@ CREATE TABLE "Price" (
     "id" TEXT NOT NULL,
     "billingScheme" TEXT NOT NULL,
     "currency" TEXT NOT NULL,
-    "planId" TEXT NOT NULL,
+    "serviceId" TEXT NOT NULL,
     "recurring" JSONB NOT NULL,
     "type" TEXT NOT NULL,
     "created" TIMESTAMP(3) NOT NULL,
@@ -46,4 +46,4 @@ CREATE TABLE "Price" (
 CREATE UNIQUE INDEX "Subscription_id_key" ON "Subscription"("id");
 
 -- AddForeignKey
-ALTER TABLE "Price" ADD CONSTRAINT "Price_planId_fkey" FOREIGN KEY ("planId") REFERENCES "Plan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Price" ADD CONSTRAINT "Price_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE CASCADE ON UPDATE CASCADE;
