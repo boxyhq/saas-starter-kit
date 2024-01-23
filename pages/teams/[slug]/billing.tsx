@@ -42,7 +42,7 @@ const Payments = ({ teamFeatures }) => {
             team={team}
             teamFeatures={teamFeatures}
           />
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-col md:flex-row">
             <LinkToPortal team={team} />
             <Help />
           </div>
