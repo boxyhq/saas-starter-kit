@@ -1,17 +1,18 @@
-import { Error, Loading } from '@/components/shared';
+import useSWR from 'swr';
 import { useTranslation } from 'next-i18next';
-import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
 import env from '@/lib/env';
-import { Card } from 'react-daisyui';
+import useTeam from 'hooks/useTeam';
+import fetcher from '@/lib/fetcher';
 import useCanAccess from 'hooks/useCanAccess';
 import { TeamTab } from '@/components/team';
-import fetcher from '@/lib/fetcher';
-import useSWR from 'swr';
-import ProductPricing from '@/components/billing/ProductPricing';
-import LinkToPortal from '@/components/billing/LinkToPortal';
 import Help from '@/components/billing/Help';
+import { Error, Loading } from '@/components/shared';
+import LinkToPortal from '@/components/billing/LinkToPortal';
+import Subscriptions from '@/components/billing/Subscriptions';
+import ProductPricing from '@/components/billing/ProductPricing';
 
 const Payments = ({ teamFeatures }) => {
   const { t } = useTranslation('common');
@@ -33,6 +34,10 @@ const Payments = ({ teamFeatures }) => {
   if (!team) {
     return <Error message={t('team-not-found')} />;
   }
+
+  const plans = data?.data?.products || [];
+  const subscriptions = data?.data?.subscriptions || [];
+
   return (
     <>
       {canAccess('team_payments', ['read']) && (
@@ -42,47 +47,17 @@ const Payments = ({ teamFeatures }) => {
             team={team}
             teamFeatures={teamFeatures}
           />
-          <div className="flex gap-4 flex-col md:flex-row">
+
+          <div className="flex gap-6 flex-col md:flex-row">
             <LinkToPortal team={team} />
             <Help />
           </div>
-          <div>
-            {(data?.data?.subscriptions || []).length > 0 && (
-              <>
-                <div className="divider"></div>
-                <div className="m-1">
-                  <h2 className="text-2xl font-bold">{t('subscriptions')}</h2>
-                </div>
-              </>
-            )}
-            <div className="flex flex-col space-y-3">
-              <div className="flex items-center">
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-                  {data?.data?.subscriptions?.map((s, i) => (
-                    <Card key={`${i}`} className="p-1">
-                      <Card.Body>
-                        <Card.Title tag="h2">{s.product.name} </Card.Title>
-                        <div className="mt-1">
-                          {t('from')}{' '}
-                          {new Date(s.startDate).toLocaleDateString()}
-                        </div>
-                        <div className="mt-1">
-                          {t('to')} {new Date(s.endDate).toLocaleDateString()}
-                        </div>
-                      </Card.Body>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </div>
+
+          <div className="py-6">
+            <Subscriptions subscriptions={subscriptions} />
           </div>
-          <div className="divider"></div>
-          <ProductPricing
-            plans={data?.data?.products || []}
-            disabledPrices={(data?.data?.subscriptions || []).map(
-              (s) => s.price.id
-            )}
-          />
+
+          <ProductPricing plans={plans} subscriptions={subscriptions} />
         </>
       )}
     </>

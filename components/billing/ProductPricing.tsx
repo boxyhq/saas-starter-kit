@@ -1,20 +1,22 @@
-import { CheckIcon } from '@heroicons/react/20/solid';
-import { useTranslation } from 'next-i18next';
-import { Button, Card } from 'react-daisyui';
-import Image from 'next/image';
-import useTeam from 'hooks/useTeam';
 import router from 'next/router';
 import toast from 'react-hot-toast';
+import { Button } from 'react-daisyui';
+import { useTranslation } from 'next-i18next';
 
-const ProductPricing = ({
-  plans,
-  disabledPrices,
-}: {
+import useTeam from 'hooks/useTeam';
+import { Price } from '@prisma/client';
+import PaymentButton from './PaymentButton';
+import { Service, Subscription } from '@prisma/client';
+
+interface ProductPricingProps {
   plans: any[];
-  disabledPrices: string[];
-}) => {
+  subscriptions: (Subscription & { product: Service })[];
+}
+
+const ProductPricing = ({ plans, subscriptions }: ProductPricingProps) => {
   const { team } = useTeam();
   const { t } = useTranslation('common');
+
   const initiateCheckout = async (priceId: string, quantity?: number) => {
     const res = await fetch(
       `/api/teams/${team?.slug}/payments/create-checkout-session`,
@@ -39,95 +41,77 @@ const ProductPricing = ({
       );
     }
   };
+
+  const hasActiveSubscription = (price: Price) =>
+    subscriptions.some((s) => s.priceId === price.id);
+
   return (
-    <section className="py-6">
-      <div className="flex flex-col justify-center space-y-6">
-        <h2 className="text-center text-4xl font-bold normal-case">
-          {t('pricing')}
-        </h2>
-        <div className="flex items-center justify-center">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-            {plans.map((plan, index) => {
-              return (
-                <Card
-                  key={`plan-${index}`}
-                  className="rounded-md dark:border-gray-200 border border-gray-300"
-                >
-                  <Card.Body>
-                    <Card.Title tag="h2">
-                      <h2 className="mx-auto">{plan.name}</h2>
-                    </Card.Title>
-                    {plan.image ? (
-                      <Image
-                        className="mx-auto"
-                        src={plan.image}
-                        alt={plan.name}
-                        width={100}
-                        height={100}
+    <section className="py-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {plans.map((plan) => {
+          return (
+            <div
+              className="relative rounded-md bg-white border border-gray-200"
+              key={plan.id}
+            >
+              <div className="p-8">
+                <div className="flex items-center space-x-2">
+                  <h3 className="font-display text-2xl font-bold text-black">
+                    {plan.name}
+                  </h3>
+                </div>
+                <p className="mt-2 text-gray-500 h-10">{plan.description}</p>
+              </div>
+              <div className="flex justify-center flex-col gap-2 border-b border-t border-gray-200 bg-gray-50 px-8 py-5 h-32">
+                {plan.prices.map((price: Price) =>
+                  hasActiveSubscription(price) ? (
+                    <Button
+                      key={price.id}
+                      variant="outline"
+                      size="md"
+                      fullWidth
+                      disabled
+                      className="rounded-full"
+                    >
+                      Current
+                    </Button>
+                  ) : (
+                    <PaymentButton
+                      key={price.id}
+                      plan={plan}
+                      price={price}
+                      initiateCheckout={initiateCheckout}
+                    />
+                  )
+                )}
+              </div>
+              <ul className="mb-10 mt-5 space-y-4 px-8">
+                {plan.features.map((feature: string) => (
+                  <li className="flex space-x-4" key={`${plan.id}-${feature}`}>
+                    <svg
+                      className="h-6 w-6 flex-none text-black"
+                      viewBox="0 0 24 24"
+                      width={24}
+                      height={24}
+                      fill="none"
+                      shapeRendering="geometricPrecision"
+                    >
+                      <path
+                        d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z"
+                        fill="currentColor"
                       />
-                    ) : (
-                      <div
-                        style={{ width: 100, height: 100 }}
-                        className="mx-auto"
+                      <path
+                        d="M8 11.8571L10.5 14.3572L15.8572 9"
+                        stroke="white"
                       />
-                    )}
-                    <p>{plan.description}</p>
-                    <div className="mt-5">
-                      <ul className="flex flex-col space-y-2">
-                        {plan.features.map(
-                          (feature: any, itemIndex: number) => {
-                            return (
-                              <li
-                                key={`plan-${index}-benefit-${itemIndex}`}
-                                className="flex items-center"
-                              >
-                                <CheckIcon className="h-5 w-5" />
-                                <span className="ml-1">{feature}</span>
-                              </li>
-                            );
-                          }
-                        )}
-                      </ul>
-                    </div>
-                  </Card.Body>
-                  <Card.Actions className="justify-center m-2">
-                    {(plan?.prices || [])
-                      .sort((a, b) => a.metadata.interval < b.metadata.interval)
-                      .map((price: any, priceIndex: number) => {
-                        return (
-                          <Button
-                            key={`plan-${index}-price-${priceIndex}`}
-                            color="primary"
-                            className="md:w-full w-3/4 rounded-md"
-                            size="md"
-                            disabled={disabledPrices.includes(price.id)}
-                            onClick={() => {
-                              initiateCheckout(
-                                price.id,
-                                (price.billingScheme == 'per_unit' ||
-                                  price.billingScheme == 'tiered') &&
-                                  price.metadata.usage_type !== 'metered'
-                                  ? 1
-                                  : undefined
-                              );
-                            }}
-                          >
-                            {price?.metadata?.interval
-                              ? `${
-                                  price?.metadata?.interval === 'month'
-                                    ? 'Monthly Plan'
-                                    : 'Yearly Plan'
-                                } `
-                              : 'Buy Now'}
-                          </Button>
-                        );
-                      })}
-                  </Card.Actions>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
+                    </svg>
+                    <p className="text-gray-600">{feature}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
