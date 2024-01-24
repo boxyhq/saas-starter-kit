@@ -14,7 +14,6 @@ import Head from 'next/head';
 
 const Home: NextPageWithLayout = () => {
   const { toggleTheme, selectedTheme } = useTheme();
-
   const { t } = useTranslation('common');
 
   return (
@@ -27,7 +26,7 @@ const Home: NextPageWithLayout = () => {
         <div className="navbar bg-base-100 px-0 sm:px-1">
           <div className="flex-1">
             <Link href="/" className="btn-ghost btn text-xl normal-case">
-              BoxyHQ
+              {t('BoxyHQ')}
             </Link>
           </div>
           <div className="flex-none">

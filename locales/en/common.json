@@ -208,5 +208,19 @@
   "create-link": "Create Link",
   "select-a-session-to-delete": "Please select a session to delete",
   "api-keys": "API Keys",
-  "api-keys-description": "API keys allow you to authenticate with the API."
+  "api-keys-description": "API keys allow you to authenticate with the API.",
+  "product-placeholder": "This is just a placeholder for the products page.",
+  "request-new-link": "Request new link",
+  "unlock-account-link-sent": "A new link has been sent to your email address.",
+  "or": "or",
+  "webhooks-description": "Webhooks are used to send notifications to your external apps.",
+  "members-description": "Team members and their roles.",
+  "invitation-link-created": "Invitation link created. Share it with your team member.",
+  "invitation-link-deleted": "Invitation link deleted.",
+  "share-invitation-link": "Share your team invite link",
+  "delete-invitation-link": "Delete invitation link",
+  "delete-invitation-warning": "Are you sure you want to delete this invitation link? Any future attempts to join your team using this link will fail.",
+  "invite-via-link": "Invite via link",
+  "invite-via-email": "Invite via email",
+  "delete-link": "Delete link"
 }
