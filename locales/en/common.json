@@ -199,5 +199,14 @@
   "remove-current-browser-session-warning": "You are about to remove your current session. Once you do this, you will be logged out of the app.",
   "session-removed": "Browser session removed.",
   "remove-team-restricted": "Please contact our support if you want to remove this team. We will help you with that.",
-  "create-link": "Create Link"
+  "open-customer-portal": "Open Customer Portal",
+  "subscriptions": "Subscriptions",
+  "from": "From",
+  "to": "To",
+  "stripe-checkout-fallback-error": "Something went wrong while initiating checkout, please try again later.",
+  "error-occurred": "An error occurred",
+  "create-link": "Create Link",
+  "select-a-session-to-delete": "Please select a session to delete",
+  "api-keys": "API Keys",
+  "api-keys-description": "API keys allow you to authenticate with the API."
 }
