@@ -58,7 +58,7 @@ const Signup: NextPageWithLayout<
         </div>
 
         {(authProviders.github || authProviders.google) &&
-          authProviders.credentials && <div className="divider">or</div>}
+          authProviders.credentials && <div className="divider">{t('or')}</div>}
 
         {authProviders.credentials && (
           <>

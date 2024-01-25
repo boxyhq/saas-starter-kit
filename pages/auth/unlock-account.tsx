@@ -2,6 +2,7 @@ import { Button } from 'react-daisyui';
 import type { GetServerSidePropsContext } from 'next';
 import { useState, type ReactElement, useEffect } from 'react';
 import type { ComponentStatus } from 'react-daisyui/dist/types';
+import { useTranslation } from 'next-i18next';
 
 import {
   deleteVerificationToken,
@@ -35,6 +36,7 @@ const UnlockAccount = ({
   const [loading, setLoading] = useState(false);
   const [displayResendLink, setDisplayResendLink] = useState(false);
   const [message, setMessage] = useState<Message>({ text: null, status: null });
+  const { t } = useTranslation('common');
 
   useEffect(() => {
     if (error) {
@@ -64,7 +66,7 @@ const UnlockAccount = ({
       }
 
       setMessage({
-        text: 'A new link has been sent to your email address.',
+        text: t('unlock-account-link-sent'),
         status: 'success',
       });
     } catch (error: any) {
@@ -88,7 +90,7 @@ const UnlockAccount = ({
           onClick={requestNewLink}
           loading={loading}
         >
-          Request new link
+          {t('request-new-link')}
         </Button>
       )}
     </div>

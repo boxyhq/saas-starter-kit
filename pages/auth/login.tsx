@@ -127,7 +127,7 @@ const Login: NextPageWithLayout<
         </div>
 
         {(authProviders.github || authProviders.google) &&
-          authProviders.credentials && <div className="divider">or</div>}
+          authProviders.credentials && <div className="divider">{t('or')}</div>}
 
         {authProviders.credentials && (
           <form onSubmit={formik.handleSubmit}>
@@ -136,7 +136,7 @@ const Login: NextPageWithLayout<
                 type="email"
                 label="Email"
                 name="email"
-                placeholder="Email"
+                placeholder={t('email')}
                 value={formik.values.email}
                 error={formik.touched.email ? formik.errors.email : undefined}
                 onChange={formik.handleChange}
@@ -145,11 +145,11 @@ const Login: NextPageWithLayout<
                 <InputWithLabel
                   type={isPasswordVisible ? 'text' : 'password'}
                   name="password"
-                  placeholder="Password"
+                  placeholder={t('password')}
                   value={formik.values.password}
                   label={
                     <label className="label">
-                      <span className="label-text">Password</span>
+                      <span className="label-text">{t('password')}</span>
                       <span className="label-text-alt">
                         <Link
                           href="/auth/forgot-password"

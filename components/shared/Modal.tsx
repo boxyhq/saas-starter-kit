@@ -1,4 +1,5 @@
 import { Button, Modal as DModal } from 'react-daisyui';
+import { useTranslation } from 'next-i18next';
 
 interface ModalProps {
   open: boolean;
@@ -12,6 +13,8 @@ interface BodyProps {
 }
 
 const Modal = ({ open, close, children }: ModalProps) => {
+  const { t } = useTranslation('common');
+
   return (
     <DModal open={open}>
       <Button
@@ -22,7 +25,7 @@ const Modal = ({ open, close, children }: ModalProps) => {
         onClick={close}
         aria-label="close"
       >
-        x
+        {t('x')}
       </Button>
       <div>{children}</div>
     </DModal>

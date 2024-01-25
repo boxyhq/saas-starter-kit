@@ -81,10 +81,10 @@ const Members = ({ team }: { team: Team }) => {
       <div className="flex justify-between items-center">
         <div className="space-y-3">
           <h2 className="text-xl font-medium leading-none tracking-tight">
-            Members
+            {t('members')}
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Team members and their roles.
+            {t('members-description')}
           </p>
         </div>
         <Button
