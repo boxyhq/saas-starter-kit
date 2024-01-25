@@ -74,7 +74,7 @@ const CreateDirectory = ({
         onClick={toggleVisible}
         aria-label={t('close')}
       >
-        ✕
+        {t('x')}
       </Button>
       <form onSubmit={formik.handleSubmit} method="POST">
         <Modal.Header className="font-bold">

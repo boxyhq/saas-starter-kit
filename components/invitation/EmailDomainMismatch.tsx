@@ -1,5 +1,6 @@
 import { Button } from 'react-daisyui';
 import { signOut } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 
 import { Invitation } from '@prisma/client';
 
@@ -12,6 +13,7 @@ const EmailDomainMismatch = ({
   invitation,
   emailDomain,
 }: EmailDomainMismatchProps) => {
+  const { t } = useTranslation('common');
   const { allowedDomains } = invitation;
 
   const allowedDomainsString =
@@ -21,10 +23,11 @@ const EmailDomainMismatch = ({
 
   return (
     <>
-      <p className="text-sm text-center">{`Your email address domain ${emailDomain} is not allowed for this invitation. Please use an email with ${allowedDomainsString}.`}</p>
       <p className="text-sm text-center">
-        To accept this invitation, you will need to sign out and then sign in or
-        create a new account using the allowed email domains.
+        {t('email-domain-not-allowed', { emailDomain, allowedDomainsString })}
+      </p>
+      <p className="text-sm text-center">
+        {t('accept-invitation-email-domain-instruction')}
       </p>
       <Button
         fullWidth
@@ -35,7 +38,7 @@ const EmailDomainMismatch = ({
           signOut();
         }}
       >
-        Sign out
+        {t('logout')}
       </Button>
     </>
   );

@@ -32,5 +32,14 @@ module.exports = {
     {
       files: ['*.js'],
     },
+    {
+      files: [
+        'components/defaultLanding/**/*.tsx',
+        'components/emailTemplates/**/*.tsx',
+      ],
+      rules: {
+        'i18next/no-literal-string': 'off',
+      },
+    },
   ],
 };

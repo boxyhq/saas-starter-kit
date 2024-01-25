@@ -222,5 +222,18 @@
   "delete-invitation-warning": "Are you sure you want to delete this invitation link? Any future attempts to join your team using this link will fail.",
   "invite-via-link": "Invite via link",
   "invite-via-email": "Invite via email",
-  "delete-link": "Delete link"
+  "delete-link": "Delete link",
+  "accept-invitation-email-domain-instruction": "To accept this invitation, you will need to sign out and then sign in or create a new account using the allowed email domains.",
+  "email-domain-not-allowed": "Your email address domain {{emailDomain}} is not allowed for this invitation. Please use an email with {{allowedDomainsString}}.",
+  "accept-invitation-email-instruction": "To accept this invitation, you will need to sign out and then sign in or create a new account using the same email address used in the invitation.",
+  "email-mismatch-error": "Your email address {{email}} does not match the email address this invitation was sent to.",
+  "x": "x",
+  "close-sidebar": "Close sidebar",
+  "open-sidebar": "Open sidebar",
+  "switch-theme": "Change Theme",
+  "logout": "Sign out",
+  "guides": "guides",
+  "refer_to_provider_instructions": "Refer to our <guideLink>guides</guideLink> for provider specific instructions.",
+  "sp_download_our_public_cert": "If you want to encrypt the assertion, you can <downloadLink>download our public certificate.</downloadLink> Otherwise select the Unencrypted option.",
+  "download": "Download"
 }
