@@ -55,7 +55,7 @@ const InviteViaEmail = ({ setVisible, team }: InviteViaEmailProps) => {
 
   return (
     <form onSubmit={formik.handleSubmit} method="POST" className="pb-6">
-      <h3 className="font-medium text-[14px] pb-2">Invite via email</h3>
+      <h3 className="font-medium text-[14px] pb-2">{t('invite-via-email')}</h3>
       <div className="flex gap-1">
         <Input
           name="email"

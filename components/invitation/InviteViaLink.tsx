@@ -67,7 +67,7 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
       }
 
       mutate(`/api/teams/${team.slug}/invitations?sentViaEmail=false`);
-      toast.success('Invitation link created. Share it with your team member.');
+      toast.success(t('invitation-link-created'));
       formik.resetForm();
     },
   });
@@ -89,7 +89,7 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
     }
 
     mutate(`/api/teams/${team.slug}/invitations?sentViaEmail=false`);
-    toast.success('Invitation link deleted.');
+    toast.success(t('invitation-link-deleted'));
     setShowDelDialog(false);
   };
 
@@ -99,7 +99,7 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
     return (
       <div className="pt-4">
         <InputWithCopyButton
-          label="Share your team invite link"
+          label={t('share-invitation-link')}
           value={invitation.url}
           className="text-sm w-full"
         />
@@ -111,17 +111,16 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
             className="btn-xs btn-link link-error"
             onClick={() => setShowDelDialog(true)}
           >
-            Delete link
+            {t('delete-link')}
           </Button>
         </p>
         <ConfirmationDialog
           visible={showDelDialog}
           onCancel={() => setShowDelDialog(false)}
           onConfirm={() => deleteInvitationLink(invitation.id)}
-          title="Delete invitation link"
+          title={t('delete-invitation-link')}
         >
-          Are you sure you want to delete this invitation link? Any future
-          attempts to join your team using this link will fail.
+          {t('delete-invitation-warning')}
         </ConfirmationDialog>
       </div>
     );
@@ -129,7 +128,7 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
 
   return (
     <form onSubmit={formik.handleSubmit} method="POST" className="pt-4">
-      <h3 className="font-medium text-[14px] pb-2">Invite via link</h3>
+      <h3 className="font-medium text-[14px] pb-2">{t('invite-via-link')}</h3>
       <div className="flex gap-1">
         <Input
           name="domains"

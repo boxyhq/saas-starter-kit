@@ -14,7 +14,6 @@ import Head from 'next/head';
 
 const Home: NextPageWithLayout = () => {
   const { toggleTheme, selectedTheme } = useTheme();
-
   const { t } = useTranslation('common');
 
   return (
