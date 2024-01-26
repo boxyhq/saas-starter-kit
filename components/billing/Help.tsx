@@ -1,18 +1,18 @@
 import Link from 'next/link';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'next-i18next';
 
 import { Card } from '@/components/shared';
 
 const Help = () => {
+  const { t } = useTranslation('common');
+
   return (
     <Card>
       <Card.Body>
         <Card.Header>
-          <Card.Title>Need anything else?</Card.Title>
-          <Card.Description>
-            If you require additional assistance regarding billing, our team is
-            readily available to provide support.
-          </Card.Description>
+          <Card.Title>{t('need-anything-else')}</Card.Title>
+          <Card.Description>{t('billing-assistance-message')}</Card.Description>
         </Card.Header>
         <div>
           <Link
@@ -21,7 +21,7 @@ const Help = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Contact Support
+            {t('contact-support')}
             <ArrowTopRightOnSquareIcon className="w-5 h-5 ml-2" />
           </Link>
         </div>

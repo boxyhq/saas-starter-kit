@@ -73,7 +73,7 @@ const ProductPricing = ({ plans, subscriptions }: ProductPricingProps) => {
                       disabled
                       className="rounded-full"
                     >
-                      Current
+                      {t('current')}
                     </Button>
                   ) : (
                     <PaymentButton

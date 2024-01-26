@@ -1,3 +1,5 @@
+import { useTranslation } from 'next-i18next';
+
 import { Service, Subscription } from '@prisma/client';
 
 interface SubscriptionsProps {
@@ -5,6 +7,8 @@ interface SubscriptionsProps {
 }
 
 const Subscriptions = ({ subscriptions }: SubscriptionsProps) => {
+  const { t } = useTranslation('common');
+
   if (subscriptions.length === 0) {
     return null;
   }
@@ -12,15 +16,15 @@ const Subscriptions = ({ subscriptions }: SubscriptionsProps) => {
   return (
     <div className="space-y-3">
       <h2 className="card-title text-xl font-medium leading-none tracking-tight">
-        Subscriptions
+        {t('subscriptions')}
       </h2>
       <table className="table w-full text-sm border">
         <thead>
           <tr>
             <th>ID</th>
-            <th>Plan</th>
-            <th>Start date</th>
-            <th>End date</th>
+            <th>{t('plan')}</th>
+            <th>{t('start-date')}</th>
+            <th>{t('end-date')}</th>
           </tr>
         </thead>
         <tbody>

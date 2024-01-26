@@ -2,6 +2,7 @@ import toast from 'react-hot-toast';
 import { Button } from 'react-daisyui';
 import { useState } from 'react';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'next-i18next';
 
 import { Card } from '@/components/shared';
 import { Team } from '@prisma/client';
@@ -14,6 +15,7 @@ interface LinkToPortalProps {
 
 const LinkToPortal = ({ team }: LinkToPortalProps) => {
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation('common');
 
   const openStripePortal = async () => {
     setLoading(true);
@@ -42,11 +44,8 @@ const LinkToPortal = ({ team }: LinkToPortalProps) => {
     <Card>
       <Card.Body>
         <Card.Header>
-          <Card.Title>Manage your subscription</Card.Title>
-          <Card.Description>
-            Manage your billing information, make edits to your details, and
-            easily cancel your subscription.
-          </Card.Description>
+          <Card.Title>{t('manage-subscription')}</Card.Title>
+          <Card.Description>{t('manage-billing-information')}</Card.Description>
         </Card.Header>
         <div>
           <Button
@@ -57,7 +56,7 @@ const LinkToPortal = ({ team }: LinkToPortalProps) => {
             loading={loading}
             onClick={() => openStripePortal()}
           >
-            Billing Portal
+            {t('billing-portal')}
             <ArrowTopRightOnSquareIcon className="w-5 h-5 ml-2" />
           </Button>
         </div>
