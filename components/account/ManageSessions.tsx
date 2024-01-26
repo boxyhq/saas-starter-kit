@@ -29,7 +29,7 @@ const ManageSessions = () => {
   const deleteSession = async (id: string) => {
     try {
       if (!sessionToDelete) {
-        throw new Error('Please select a session to delete');
+        throw new Error(t('select-a-session-to-delete'));
       }
 
       const response = await fetch(`/api/sessions/${id}`, {
@@ -103,7 +103,7 @@ const ManageSessions = () => {
                               setAskConfirmation(true);
                             }}
                           >
-                            Delete
+                            {t('remove')}
                           </button>
                         </li>
                       </ul>

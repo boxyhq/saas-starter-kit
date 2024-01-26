@@ -11,6 +11,7 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import useTheme from 'hooks/useTheme';
 import env from '@/lib/env';
 import { signOut } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 
 interface HeaderProps {
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,6 +20,7 @@ interface HeaderProps {
 const Header = ({ setSidebarOpen }: HeaderProps) => {
   const { toggleTheme } = useTheme();
   const { status, data } = useSession();
+  const { t } = useTranslation('common');
 
   if (status === 'loading' || !data) {
     return null;
@@ -33,7 +35,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
         className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
         onClick={() => setSidebarOpen(true)}
       >
-        <span className="sr-only">Open sidebar</span>
+        <span className="sr-only">{t('open-sidebar')}</span>
         <Bars3Icon className="h-6 w-6" aria-hidden="true" />
       </button>
       <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
@@ -70,7 +72,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
                   className="block px-2 py-1 text-sm leading-6 text-gray-900 cursor-pointer"
                 >
                   <div className="flex items-center">
-                    <UserCircleIcon className="w-5 h-5 mr-1" /> Account
+                    <UserCircleIcon className="w-5 h-5 mr-1" /> {t('account')}
                   </div>
                 </Link>
               </li>
@@ -83,7 +85,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
                     onClick={toggleTheme}
                   >
                     <div className="flex items-center">
-                      <SunIcon className="w-5 h-5 mr-1" /> Change Theme
+                      <SunIcon className="w-5 h-5 mr-1" /> {t('switch-theme')}
                     </div>
                   </button>
                 </li>
@@ -97,7 +99,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
                 >
                   <div className="flex items-center">
                     <ArrowRightOnRectangleIcon className="w-5 h-5 mr-1" />{' '}
-                    Logout
+                    {t('logout')}
                   </div>
                 </button>
               </li>
