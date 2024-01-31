@@ -1,20 +1,34 @@
+import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';
-import { Invitation, Role } from '@prisma/client';
+import { Invitation } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
-export const getInvitations = async (teamId: string) => {
-  return await prisma.invitation.findMany({
+export type TeamInvitation = Pick<
+  Invitation,
+  'id' | 'email' | 'role' | 'expires' | 'allowedDomains' | 'token'
+> & { url: string };
+
+export const getInvitations = async (teamId: string, sentViaEmail: boolean) => {
+  const invitations = await prisma.invitation.findMany({
     where: {
       teamId,
+      sentViaEmail,
     },
     select: {
       id: true,
       email: true,
       role: true,
       expires: true,
+      token: true,
+      allowedDomains: true,
     },
   });
+
+  return invitations.map((invitation) => ({
+    ...invitation,
+    url: `${env.appUrl}/invitations/${invitation.token}`,
+  })) as (Invitation & { url: string })[];
 };
 
 export const getInvitation = async (
@@ -27,6 +41,7 @@ export const getInvitation = async (
         select: {
           id: true,
           name: true,
+          slug: true,
         },
       },
     },
@@ -39,24 +54,20 @@ export const getInvitation = async (
   return invitation;
 };
 
-export const createInvitation = async (param: {
-  teamId: string;
-  invitedBy: string;
-  email: string;
-  role: Role;
-}) => {
-  const { teamId, invitedBy, email, role } = param;
-  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+export const createInvitation = async (
+  params: Omit<
+    Invitation,
+    'id' | 'token' | 'expires' | 'createdAt' | 'updatedAt'
+  >
+) => {
+  const data: Omit<Invitation, 'id' | 'createdAt' | 'updatedAt'> = {
+    ...params,
+    token: randomUUID(),
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  };
 
   return await prisma.invitation.create({
-    data: {
-      token: randomUUID(),
-      expires,
-      teamId,
-      invitedBy,
-      email,
-      role,
-    },
+    data,
   });
 };
 
@@ -68,6 +79,6 @@ export const deleteInvitation = async (
   });
 };
 
-export const isInvitationExpired = async (invitation: Invitation) => {
-  return invitation.expires.getTime() < Date.now();
+export const isInvitationExpired = async (expires: Date) => {
+  return expires.getTime() < Date.now();
 };

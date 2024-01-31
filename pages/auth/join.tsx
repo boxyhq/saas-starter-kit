@@ -34,7 +34,7 @@ const Signup: NextPageWithLayout<
     if (error) {
       toast.error(t(error));
     }
-  }, [error]);
+  }, [error, t]);
 
   if (status === 'loading') {
     return <Loading />;
@@ -58,7 +58,7 @@ const Signup: NextPageWithLayout<
         </div>
 
         {(authProviders.github || authProviders.google) &&
-          authProviders.credentials && <div className="divider">or</div>}
+          authProviders.credentials && <div className="divider">{t('or')}</div>}
 
         {authProviders.credentials && (
           <>

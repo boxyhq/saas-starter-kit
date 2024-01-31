@@ -34,16 +34,13 @@ const UploadAvatar = ({ user }: { user: Partial<User> }) => {
     }
   };
 
-  const onChangePicture = useCallback(
-    (e) => {
-      const file = e.target.files[0];
+  const onChangePicture = useCallback((e) => {
+    const file = e.target.files[0];
 
-      if (file) {
-        onAvatarUpload(file);
-      }
-    },
-    [setImage]
-  );
+    if (file) {
+      onAvatarUpload(file);
+    }
+  }, []);
 
   const onAvatarUpload = (file: File) => {
     if (file.size / 1024 / 1024 > 2) {
@@ -77,9 +74,8 @@ const UploadAvatar = ({ user }: { user: Partial<User> }) => {
 
     setLoading(false);
 
-    const json = (await response.json()) as ApiResponse;
-
     if (!response.ok) {
+      const json = (await response.json()) as ApiResponse;
       toast.error(json.error.message);
       return;
     }

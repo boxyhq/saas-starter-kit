@@ -1,8 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
+import { teamSlugSchema } from '@/lib/zod/schema';
 import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getCurrentUser } from './user';
 
 export const createTeam = async (param: {
   userId: string;
@@ -197,4 +199,22 @@ export const getTeamMember = async (userId: string, slug: string) => {
   });
 
   return teamMember;
+};
+
+// Get current user with team info
+export const getCurrentUserWithTeam = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  const user = await getCurrentUser(req, res);
+
+  const { slug } = teamSlugSchema.parse(req.query);
+
+  const { role, team } = await getTeamMember(user.id, slug);
+
+  return {
+    ...user,
+    role,
+    team,
+  };
 };

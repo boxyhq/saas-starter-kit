@@ -3,7 +3,7 @@ import jackson, {
   IDirectorySyncController,
   IOAuthController,
   JacksonOption,
-  ISPSAMLConfig,
+  ISPSSOConfig,
   OIDCAuthzResponsePayload,
 } from '@boxyhq/saml-jackson';
 
@@ -22,13 +22,14 @@ const opts = {
     url: env.databaseUrl,
   },
   idpDiscoveryPath: '/auth/sso/idp-select',
+  idpEnabled: true,
   openid: {},
 } as JacksonOption;
 
 let apiController: IConnectionAPIController;
 let oauthController: IOAuthController;
 let directorySync: IDirectorySyncController;
-let spConfig: ISPSAMLConfig;
+let spConfig: ISPSSOConfig;
 
 const g = global as any;
 

@@ -1,22 +1,22 @@
-import { AuthLayout } from '@/components/layouts';
-import { Error, Loading } from '@/components/shared';
-import { defaultHeaders } from '@/lib/common';
-import useInvitation from 'hooks/useInvitation';
-import type { GetServerSidePropsContext } from 'next';
+import Head from 'next/head';
+import { ReactElement } from 'react';
+import { NextPageWithLayout } from 'types';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
+import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import type { ReactElement } from 'react';
-import { Button } from 'react-daisyui';
-import toast from 'react-hot-toast';
-import type { ApiResponse, NextPageWithLayout } from 'types';
-import { signOut } from 'next-auth/react';
+
+import useInvitation from 'hooks/useInvitation';
+import { AuthLayout } from '@/components/layouts';
+import { Error, Loading } from '@/components/shared';
+import { extractEmailDomain } from '@/lib/email/utils';
+import EmailMismatch from '@/components/invitation/EmailMismatch';
+import AcceptInvitation from '@/components/invitation/AcceptInvitation';
+import NotAuthenticated from '@/components/invitation/NotAuthenticated';
+import EmailDomainMismatch from '@/components/invitation/EmailDomainMismatch';
 
 const AcceptTeamInvitation: NextPageWithLayout = () => {
   const { status, data } = useSession();
-  const router = useRouter();
   const { t } = useTranslation('common');
   const { isLoading, error, invitation } = useInvitation();
 
@@ -28,27 +28,21 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
     return <Error message={error.message} />;
   }
 
-  const acceptInvitation = async () => {
-    const response = await fetch(
-      `/api/teams/${invitation.team.slug}/invitations`,
-      {
-        method: 'PUT',
-        headers: defaultHeaders,
-        body: JSON.stringify({ inviteToken: invitation.token }),
-      }
-    );
+  const authUser = data?.user;
 
-    const json = (await response.json()) as ApiResponse;
+  const emailDomain = authUser?.email
+    ? extractEmailDomain(authUser.email)
+    : null;
 
-    if (!response.ok) {
-      toast.error(json.error.message);
-      return;
-    }
+  const emailMatch = invitation.email
+    ? authUser?.email === invitation.email
+    : false;
 
-    router.push('/dashboard');
-  };
+  const emailDomainMatch = invitation.allowedDomains.length
+    ? invitation.allowedDomains.includes(emailDomain!)
+    : true;
 
-  const emailMatch = data?.user?.email === invitation.email;
+  const acceptInvite = invitation.sentViaEmail ? emailMatch : emailDomainMatch;
 
   return (
     <>
@@ -63,68 +57,30 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
 
           {/* User not authenticated */}
           {status === 'unauthenticated' && (
-            <>
-              <h3 className="text-center">{t('invite-create-account')}</h3>
-              <Button
-                variant="outline"
-                fullWidth
-                onClick={() => {
-                  router.push(`/auth/join?token=${invitation.token}`);
-                }}
-                size="md"
-              >
-                {t('create-a-new-account')}
-              </Button>
-              <Button
-                variant="outline"
-                fullWidth
-                onClick={() => {
-                  router.push(`/auth/login?token=${invitation.token}`);
-                }}
-                size="md"
-              >
-                {t('login')}
-              </Button>
-            </>
+            <NotAuthenticated invitation={invitation} />
           )}
 
           {/* User authenticated and email matches */}
-          {status === 'authenticated' && emailMatch && (
-            <>
-              <h3 className="text-center">{t('accept-invite')}</h3>
-              <Button
-                onClick={acceptInvitation}
-                fullWidth
-                color="primary"
-                size="md"
-              >
-                {t('accept-invitation')}
-              </Button>
-            </>
+          {status === 'authenticated' && acceptInvite && (
+            <AcceptInvitation invitation={invitation} />
           )}
 
           {/* User authenticated and email does not match */}
-          {status === 'authenticated' && !emailMatch && (
-            <>
-              <p className="text-sm text-center">{`Your email address ${data?.user?.email} does not match the email address this invitation was sent to.`}</p>
-              <p className="text-sm text-center">
-                To accept this invitation, you will need to sign out and then
-                sign in or create a new account using the same email address
-                used in the invitation.
-              </p>
-              <Button
-                fullWidth
-                color="error"
-                size="md"
-                variant="outline"
-                onClick={() => {
-                  signOut();
-                }}
-              >
-                Sign out
-              </Button>
-            </>
-          )}
+          {status === 'authenticated' &&
+            invitation.sentViaEmail &&
+            authUser?.email &&
+            !emailMatch && <EmailMismatch email={authUser.email} />}
+
+          {/* User authenticated and email domain doesn not match */}
+          {status === 'authenticated' &&
+            !invitation.sentViaEmail &&
+            invitation.allowedDomains.length > 0 &&
+            !emailDomainMatch && (
+              <EmailDomainMismatch
+                invitation={invitation}
+                emailDomain={emailDomain!}
+              />
+            )}
         </div>
       </div>
     </>

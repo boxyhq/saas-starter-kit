@@ -2,7 +2,7 @@ import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
 import { generateToken, slugify } from '@/lib/common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { prisma } from '@/lib/prisma';
-import { isBusinessEmail } from '@/lib/email/utils';
+import { isEmailAllowed } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
 import { createTeam, getTeam, isTeamExists } from 'models/team';
@@ -41,7 +41,7 @@ export default async function handler(
 
 // Signup the user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, password, team, inviteToken, recaptchaToken } = req.body;
+  const { name, password, team, inviteToken, recaptchaToken } = req.body;
 
   await validateRecaptcha(recaptchaToken);
 
@@ -49,14 +49,20 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     ? await getInvitation({ token: inviteToken })
     : null;
 
-  if (invitation && (await isInvitationExpired(invitation))) {
-    throw new ApiError(400, 'Invitation expired. Please request a new one.');
+  let emailToUse: string = req.body.email;
+
+  // When join via invitation
+  if (invitation) {
+    if (await isInvitationExpired(invitation.expires)) {
+      throw new ApiError(400, 'Invitation expired. Please request a new one.');
+    }
+
+    if (invitation.sentViaEmail) {
+      emailToUse = invitation.email!;
+    }
   }
 
-  // If invitation is present, use the email from the invitation instead of the email in the request body
-  const emailToUse = invitation ? invitation.email : email;
-
-  if (env.disableNonBusinessEmailSignup && !isBusinessEmail(emailToUse)) {
+  if (!isEmailAllowed(emailToUse)) {
     throw new ApiError(
       400,
       `We currently only accept work email addresses for sign-up. Please use your work email to create an account. If you don't have a work email, feel free to contact our support team for assistance.`
@@ -101,7 +107,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       slug: slugify(team),
     });
   } else {
-    userTeam = await getTeam({ id: invitation.teamId });
+    userTeam = await getTeam({ slug: invitation.team.slug });
   }
 
   // Send account verification email

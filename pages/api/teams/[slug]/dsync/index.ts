@@ -4,10 +4,9 @@ import { throwIfNoTeamAccess } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from '@/lib/errors';
-import {
-  createDirectoryConnection,
-  getDirectoryConnections,
-} from '@/lib/jackson/dsync';
+import { dsyncManager } from '@/lib/jackson/dsync';
+
+const dsync = dsyncManager();
 
 export default async function handler(
   req: NextApiRequest,
@@ -49,11 +48,11 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_dsync', 'read');
 
-  const connections = await getDirectoryConnections({
+  const connections = await dsync.getConnections({
     tenant: teamMember.teamId,
   });
 
-  res.status(200).json({ data: connections });
+  res.status(200).json(connections);
 };
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -63,7 +62,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const body = req.body;
 
-  const connection = await createDirectoryConnection({
+  const connection = await dsync.createConnection({
     ...body,
     tenant: teamMember.teamId,
   });
@@ -75,5 +74,5 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     team: teamMember.team,
   });
 
-  res.status(201).json({ data: connection });
+  res.status(201).json(connection);
 };
