@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.41.1",
-    "@testing-library/jest-dom": "6.4.0",
+    "@testing-library/jest-dom": "6.4.1",
     "@trivago/prettier-plugin-sort-imports": "4.3.0",
     "@types/bcryptjs": "2.4.6",
     "@types/crypto-js": "4.2.2",
