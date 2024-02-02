@@ -162,7 +162,7 @@ model jackson_index {
 }
 
 model jackson_ttl {
-  key       String @id(map: "_jackson_ttl_key") @db.VarChar(1500)
+  key       String @id(map: "jackson_ttl_key") @db.VarChar(1500)
   expiresAt BigInt
 
   @@index([expiresAt], map: "_jackson_ttl_expires_at")
