@@ -148,6 +148,7 @@ model jackson_store {
   jackson_index jackson_index[]
 
   @@index([namespace], map: "_jackson_store_namespace")
+  @@ignore
 }
 
 model jackson_index {
@@ -159,6 +160,7 @@ model jackson_index {
 
   @@index([key], map: "_jackson_index_key")
   @@index([key, storeKey], map: "_jackson_index_key_store")
+  @@ignore
 }
 
 model jackson_ttl {
@@ -166,4 +168,5 @@ model jackson_ttl {
   expiresAt BigInt
 
   @@index([expiresAt], map: "_jackson_ttl_expires_at")
+  @@ignore
 }
