@@ -137,7 +137,7 @@ model ApiKey {
 }
 
 model jackson_store {
-  key        String    @id @db.VarChar(1500)
+  key        String    @id(map: "_jackson_store_key") @db.VarChar(1500)
   value      String
   iv         String?   @db.VarChar(64)
   tag        String?   @db.VarChar(64)
@@ -151,7 +151,7 @@ model jackson_store {
 }
 
 model jackson_index {
-  id       Int    @id @default(autoincrement())
+  id       Int    @id(map: "_jackson_index_id") @default(autoincrement())
   key      String @db.VarChar(1500)
   storeKey String @db.VarChar(1500)
 
@@ -162,7 +162,7 @@ model jackson_index {
 }
 
 model jackson_ttl {
-  key       String @id @db.VarChar(1500)
+  key       String @id(map: "_jackson_ttl_key") @db.VarChar(1500)
   expiresAt BigInt
 
   @@index([expiresAt], map: "_jackson_ttl_expires_at")
