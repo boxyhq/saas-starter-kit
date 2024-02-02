@@ -141,8 +141,8 @@ model jackson_store {
   value      String
   iv         String?   @db.VarChar(64)
   tag        String?   @db.VarChar(64)
-  createdAt  DateTime  @default(now()) @db.Timestamp(0)
-  modifiedAt DateTime? @db.Timestamp(0)
+  createdAt  DateTime  @default(now()) @db.Timestamp(6)
+  modifiedAt DateTime? @db.Timestamp(6)
   namespace  String?   @db.VarChar(64)
 
   jackson_index jackson_index[]
