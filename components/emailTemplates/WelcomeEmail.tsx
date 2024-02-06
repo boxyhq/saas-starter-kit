@@ -27,7 +27,7 @@ const WelcomeEmail = ({ name, subject, team }: WelcomeEmailProps) => {
           You have been successfully signed up to {app.name} on team{' '}
           <b>{team}</b>.
         </Text>
-        <Text>Click the below link to login now:</Text>
+        <Text>Click the link below to login now:</Text>
         <Container className="text-center">
           <Button
             href={`${env.appUrl}/auth/login`}
