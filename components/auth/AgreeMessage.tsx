@@ -11,7 +11,7 @@ const AgreeMessage = ({ text }) => {
         rel="noopener noreferrer"
         target="_blank"
         href={process.env.NEXT_PUBLIC_TERMS_URL || '/terms'}
-        className="font-medium text-primary hover:text-primary-focus"
+        className="font-medium text-primary hover:text-[color-mix(in_oklab,oklch(var(--p)),black_7%)]"
       >
         {t('terms')}
       </Link>{' '}
@@ -20,7 +20,7 @@ const AgreeMessage = ({ text }) => {
         rel="noopener noreferrer"
         target="_blank"
         href={process.env.NEXT_PUBLIC_PRIVACY_URL || '/privacy'}
-        className="font-medium text-primary hover:text-primary-focus"
+        className="font-medium text-primary hover:text-[color-mix(in_oklab,oklch(var(--p)),black_7%)]"
       >
         {t('privacy')}
       </Link>
