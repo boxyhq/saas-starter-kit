@@ -89,10 +89,10 @@ const SSO: NextPageWithLayout<
         </form>
         <div className="divider"></div>
         <div className="space-y-3">
-          <Link href="/auth/login" className="btn-outline btn w-full">
+          <Link href="/auth/login" className="btn btn-outline w-full">
             {t('sign-in-with-password')}
           </Link>
-          <Link href="/auth/magic-link" className="btn-outline btn w-full">
+          <Link href="/auth/magic-link" className="btn btn-outline w-full">
             {t('sign-in-with-email')}
           </Link>
         </div>

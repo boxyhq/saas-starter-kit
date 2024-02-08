@@ -200,14 +200,14 @@ const Login: NextPageWithLayout<
           {authProviders.email && (
             <Link
               href={`/auth/magic-link${params}`}
-              className="btn-outline btn w-full"
+              className="btn btn-outline w-full"
             >
               &nbsp;{t('sign-in-with-email')}
             </Link>
           )}
 
           {authProviders.saml && (
-            <Link href="/auth/sso" className="btn-outline btn w-full">
+            <Link href="/auth/sso" className="btn btn-outline w-full">
               &nbsp;{t('continue-with-saml-sso')}
             </Link>
           )}
