@@ -10,7 +10,7 @@ import styles from 'styles/sdk-override.module.css';
 import env from '@/lib/env';
 
 const SSO_CSS = {
-  button: { ctoa: 'btn-primary', destructive: 'btn-error' },
+  button: { ctoa: 'btn btn-primary', destructive: 'btn-error' },
   input: `${styles['sdk-input']} input input-bordered`,
   textarea: styles['sdk-input'],
   confirmationPrompt: {
