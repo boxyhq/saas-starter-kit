@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "release": "git checkout release && git merge origin/main && release-it && git checkout main && git merge origin/release && git push origin main",
     "dev": "next dev --port 4002",
     "build": "prisma generate && prisma db push && next build",
     "start": "next start --port 4002",
@@ -43,7 +44,7 @@
     "next-i18next": "13.3.0",
     "nodemailer": "6.9.9",
     "react": "18.2.0",
-    "react-daisyui": "3.1.2",
+    "react-daisyui": "5.0.0",
     "react-dom": "18.2.0",
     "react-email": "2.0.0",
     "react-google-recaptcha": "3.1.0",
@@ -71,7 +72,7 @@
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
     "autoprefixer": "10.4.17",
-    "daisyui": "2.52.0",
+    "daisyui": "4.6.1",
     "eslint": "8.56.0",
     "eslint-config-next": "14.1.0",
     "eslint-config-prettier": "9.1.0",
@@ -83,6 +84,7 @@
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "0.5.11",
     "prisma": "5.9.1",
+    "release-it": "17.0.3",
     "tailwindcss": "3.4.1",
     "typescript": "5.3.3"
   }

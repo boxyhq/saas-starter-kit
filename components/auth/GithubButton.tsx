@@ -14,7 +14,7 @@ const GithubButton = () => {
 
   return (
     <Button
-      className="btn-outline w-full"
+      className="btn btn-outline w-full"
       onClick={() => {
         signIn('github', {
           callbackUrl,

@@ -25,7 +25,7 @@ const Home: NextPageWithLayout = () => {
       <div className="container mx-auto">
         <div className="navbar bg-base-100 px-0 sm:px-1">
           <div className="flex-1">
-            <Link href="/" className="btn-ghost btn text-xl normal-case">
+            <Link href="/" className="btn btn-ghost text-xl normal-case">
               BoxyHQ
             </Link>
           </div>
@@ -44,7 +44,7 @@ const Home: NextPageWithLayout = () => {
               <li>
                 <Link
                   href="/auth/join"
-                  className="btn btn-primary btn-md px-2 sm:px-4 text-white"
+                  className="btn btn-primary btn-md py-3 px-2 sm:px-4 text-white"
                 >
                   {t('sign-up')}
                 </Link>
@@ -52,7 +52,7 @@ const Home: NextPageWithLayout = () => {
               <li>
                 <Link
                   href="/auth/login"
-                  className="btn btn-primary dark:border-zinc-600 dark:border-2 dark:text-zinc-200 btn-outline px-2 sm:px-4 btn-md"
+                  className="btn btn-primary dark:border-zinc-600 dark:border-2 dark:text-zinc-200 btn-outline py-3 px-2 sm:px-4 btn-md"
                 >
                   {t('sign-in')}
                 </Link>

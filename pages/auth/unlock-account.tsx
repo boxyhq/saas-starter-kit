@@ -86,7 +86,7 @@ const UnlockAccount = ({
       {displayResendLink && (
         <Button
           wide
-          className="mt-4 btn-outline w-full"
+          className="mt-4 btn btn-outline w-full"
           onClick={requestNewLink}
           loading={loading}
         >

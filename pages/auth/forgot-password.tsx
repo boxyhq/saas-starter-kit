@@ -98,7 +98,7 @@ const ForgotPassword: NextPageWithLayout<
         {t('already-have-an-account')}
         <Link
           href="/auth/login"
-          className="font-medium text-primary hover:text-primary-focus"
+          className="font-medium text-primary hover:text-[color-mix(in_oklab,oklch(var(--p)),black_7%)]"
         >
           &nbsp;{t('sign-in')}
         </Link>

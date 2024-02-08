@@ -25,7 +25,7 @@ export default function IdPSelection({ connections }: IdPSelectionProps) {
             return (
               <button
                 type="button"
-                className="w-full btn-outline btn justify-start"
+                className="w-full btn btn-outline justify-start"
                 onClick={() => {
                   connectionSelected(connection.clientID);
                 }}

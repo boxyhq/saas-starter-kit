@@ -21,7 +21,7 @@ const Modal = ({ open, close, children }: ModalProps) => {
         type="button"
         size="sm"
         shape="circle"
-        className="absolute right-2 top-2 btn-ghost rounded-full"
+        className="btn absolute right-2 top-2 btn-ghost rounded-full"
         onClick={close}
         aria-label="close"
       >
