@@ -16,7 +16,7 @@ const Help = () => {
         </Card.Header>
         <div>
           <Link
-            href="https://boxyhq.com/"
+            href={process.env.NEXT_PUBLIC_SUPPORT_URL || ''}
             className="btn btn-primary btn-outline btn-sm"
             target="_blank"
             rel="noopener noreferrer"
