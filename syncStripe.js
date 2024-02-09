@@ -21,11 +21,12 @@ const sync = async () => {
     ]);
 
     if (prices.data.length > 0 && products.data.length > 0) {
-      await cleanup(prisma);
-
-      await seedServices(products.data, prisma);
-      await seedPrices(prices.data, prisma);
-
+      const operations = [
+        ...cleanup(prisma),
+        ...seedServices(products.data, prisma),
+        ...seedPrices(prices.data, prisma),
+      ];
+      await prisma.$transaction(operations);
       await printStats(prisma);
 
       console.log('Sync completed successfully');
@@ -61,11 +62,13 @@ async function printStats(prisma) {
   console.log('Prices synced:', priceCount);
 }
 
-async function cleanup(prisma) {
-  // delete all prices from the database
-  await prisma.price.deleteMany({});
-  // Delete all products and prices from the database
-  await prisma.service.deleteMany({});
+function cleanup(prisma) {
+  return [
+    // delete all prices from the database
+    prisma.price.deleteMany({}),
+    // Delete all products and prices from the database
+    prisma.service.deleteMany({}),
+  ];
 }
 
 function getStripeInstance() {
@@ -79,42 +82,34 @@ function getStripeInstance() {
   }
 }
 
-async function seedPrices(prices, prisma) {
-  for (const data of prices) {
-    try {
-      await prisma.price.create({
-        data: {
-          id: data.id,
-          billingScheme: data.billing_scheme,
-          currency: data.currency,
-          serviceId: data.product,
-          amount: data.unit_amount ? data.unit_amount / 100 : undefined,
-          metadata: data.recurring,
-          type: data.type,
-          created: new Date(data.created * 1000),
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
+function seedPrices(prices, prisma) {
+  return prices.map((data) =>
+    prisma.price.create({
+      data: {
+        id: data.id,
+        billingScheme: data.billing_scheme,
+        currency: data.currency,
+        serviceId: data.product,
+        amount: data.unit_amount ? data.unit_amount / 100 : undefined,
+        metadata: data.recurring,
+        type: data.type,
+        created: new Date(data.created * 1000),
+      },
+    })
+  );
 }
 
-async function seedServices(products, prisma) {
-  for (const data of products) {
-    try {
-      await prisma.service.create({
-        data: {
-          id: data.id,
-          description: data.description || '',
-          features: (data.features || []).map((a) => a.name),
-          image: data.images.length > 0 ? data.images[0] : '',
-          name: data.name,
-          created: new Date(data.created * 1000),
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
+function seedServices(products, prisma) {
+  return products.map((data) =>
+    prisma.service.create({
+      data: {
+        id: data.id,
+        description: data.description || '',
+        features: (data.features || []).map((a) => a.name),
+        image: data.images.length > 0 ? data.images[0] : '',
+        name: data.name,
+        created: new Date(data.created * 1000),
+      },
+    })
+  );
 }
