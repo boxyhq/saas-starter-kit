@@ -17,7 +17,9 @@ const Title = ({ children }: { children: React.ReactNode }) => {
 };
 
 const Description = ({ children }: { children: React.ReactNode }) => {
-  return <p className="text-gray-600 dark:text-gray-400 text-sm">{children}</p>;
+  return (
+    <div className="text-gray-600 dark:text-gray-400 text-sm">{children}</div>
+  );
 };
 
 const Header = ({ children }: { children: React.ReactNode }) => {
