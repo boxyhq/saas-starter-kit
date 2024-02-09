@@ -66,54 +66,63 @@ const ManageSessions = () => {
             {t('manage-sessions')}
           </p>
         </div>
-        <table className="text-sm table min-w-full border-b dark:border-base-200">
-          <thead className="bg-base-200">
-            <tr>
-              <th className="w-10/12">{t('device')}</th>
-              <th className="w-2/12">{t('actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sessions.map((session) => {
-              return (
-                <tr key={session.id}>
-                  <td>
-                    <span className="items-center flex">
-                      <ComputerDesktopIcon className="w-6 h-6 inline-block mr-1 text-primary" />
-                      {session.isCurrent ? t('this-browser') : t('other')}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="dropdown dropdown-left">
-                      <label
-                        tabIndex={0}
-                        className="flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
-                      >
-                        <EllipsisHorizontalIcon className="w-6" />
-                      </label>
-                      <ul
-                        tabIndex={0}
-                        className="dropdown-content z-[1] menu shadow bg-base-100 rounded w-30 border"
-                      >
-                        <li onClick={() => {}}>
-                          <button
-                            className="text-red-500 py-2"
-                            onClick={() => {
-                              setSessionToDelete(session);
-                              setAskConfirmation(true);
-                            }}
-                          >
-                            {t('remove')}
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div className="rounder border">
+          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+              <tr className="hover:bg-gray-50">
+                <th scope="col" className="px-6 py-3">
+                  {t('device')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('actions')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {sessions.map((session) => {
+                return (
+                  <tr
+                    key={session.id}
+                    className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+                  >
+                    <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                      <span className="items-center flex">
+                        <ComputerDesktopIcon className="w-6 h-6 inline-block mr-1 text-primary" />
+                        {session.isCurrent ? t('this-browser') : t('other')}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                      <div className="dropdown dropdown-left">
+                        <label
+                          tabIndex={0}
+                          className="flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
+                        >
+                          <EllipsisHorizontalIcon className="w-6" />
+                        </label>
+                        <ul
+                          tabIndex={0}
+                          className="dropdown-content z-[1] menu shadow bg-base-100 rounded w-30 border"
+                        >
+                          <li onClick={() => {}}>
+                            <button
+                              className="text-red-500 py-2"
+                              onClick={() => {
+                                setSessionToDelete(session);
+                                setAskConfirmation(true);
+                              }}
+                            >
+                              {t('remove')}
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
         {sessionToDelete && (
           <ConfirmationDialog
             visible={askConfirmation}
