@@ -1,10 +1,7 @@
 import useSWR from 'swr';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import {
-  ComputerDesktopIcon,
-  EllipsisHorizontalIcon,
-} from '@heroicons/react/24/outline';
+import { ComputerDesktopIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
 import fetcher from '@/lib/fetcher';
@@ -92,30 +89,17 @@ const ManageSessions = () => {
                       </span>
                     </td>
                     <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                      <div className="dropdown dropdown-left">
-                        <label
-                          tabIndex={0}
-                          className="flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
+                      <span className="flex gap-3">
+                        <button
+                          className="text-red-500 py-2"
+                          onClick={() => {
+                            setSessionToDelete(session);
+                            setAskConfirmation(true);
+                          }}
                         >
-                          <EllipsisHorizontalIcon className="w-6" />
-                        </label>
-                        <ul
-                          tabIndex={0}
-                          className="dropdown-content z-[1] menu shadow bg-base-100 rounded w-30 border"
-                        >
-                          <li onClick={() => {}}>
-                            <button
-                              className="text-red-500 py-2"
-                              onClick={() => {
-                                setSessionToDelete(session);
-                                setAskConfirmation(true);
-                              }}
-                            >
-                              {t('remove')}
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
+                          {t('remove')}
+                        </button>
+                      </span>
                     </td>
                   </tr>
                 );
