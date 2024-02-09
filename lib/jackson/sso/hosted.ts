@@ -30,7 +30,7 @@ export class JacksonHosted implements JacksonSSO {
 
   // Get SSO connections
   async getConnections(params: GetConnectionsQuery) {
-    const query = new URLSearchParams(params);
+    const query = new URLSearchParams(params as any);
 
     const response = await fetch(`${this.ssoUrl}?${query}`, {
       ...options,
