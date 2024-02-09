@@ -12,7 +12,9 @@ CREATE TABLE "Subscription" (
     "endDate" TIMESTAMP(3) NOT NULL,
     "cancelAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Subscription_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -45,6 +47,9 @@ CREATE TABLE "Price" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Subscription_id_key" ON "Subscription"("id");
+
+-- CreateIndex
+CREATE INDEX "Subscription_customerId_idx" ON "Subscription" USING HASH ("customerId");
 
 -- AddForeignKey
 ALTER TABLE "Price" ADD CONSTRAINT "Price_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE CASCADE ON UPDATE CASCADE;

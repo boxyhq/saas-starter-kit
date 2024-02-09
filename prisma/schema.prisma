@@ -138,8 +138,8 @@ model ApiKey {
 }
 
 model Subscription {
-  id         String    @unique
-  customerId String
+  id         String    @id @unique
+  customerId String    
   priceId    String
   active     Boolean   @default(false)
   startDate  DateTime
@@ -147,6 +147,8 @@ model Subscription {
   cancelAt   DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
+
+  @@index([customerId], type: Hash)
 }
 
 model Service {
