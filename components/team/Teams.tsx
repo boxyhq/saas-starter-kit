@@ -66,48 +66,65 @@ const Teams = () => {
             {t('create-team')}
           </Button>
         </div>
-        <table className="text-sm table w-full border-b dark:border-base-200">
-          <thead className="bg-base-200">
-            <tr>
-              <th>{t('name')}</th>
-              <th>{t('members')}</th>
-              <th>{t('created-at')}</th>
-              <th>{t('actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {teams &&
-              teams.map((team) => {
-                return (
-                  <tr key={team.id}>
-                    <td>
-                      <Link href={`/teams/${team.slug}/members`}>
-                        <div className="flex items-center justify-start space-x-2">
-                          <LetterAvatar name={team.name} />
-                          <span className="underline">{team.name}</span>
-                        </div>
-                      </Link>
-                    </td>
-                    <td>{team._count.members}</td>
-                    <td>{new Date(team.createdAt).toDateString()}</td>
-                    <td>
-                      <Button
-                        variant="outline"
-                        size="xs"
-                        color="error"
-                        onClick={() => {
-                          setTeam(team);
-                          setAskConfirmation(true);
-                        }}
-                      >
-                        {t('leave-team')}
-                      </Button>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
+        <div className="rounder border">
+          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+              <tr className="hover:bg-gray-50">
+                <th scope="col" className="px-6 py-3">
+                  {t('name')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('members')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('created-at')}
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  {t('actions')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {teams &&
+                teams.map((team) => {
+                  return (
+                    <tr
+                      key={team.id}
+                      className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+                    >
+                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                        <Link href={`/teams/${team.slug}/members`}>
+                          <div className="flex items-center justify-start space-x-2">
+                            <LetterAvatar name={team.name} />
+                            <span className="underline">{team.name}</span>
+                          </div>
+                        </Link>
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                        {team._count.members}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                        {new Date(team.createdAt).toDateString()}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                        <Button
+                          variant="outline"
+                          size="xs"
+                          color="error"
+                          onClick={() => {
+                            setTeam(team);
+                            setAskConfirmation(true);
+                          }}
+                        >
+                          {t('leave-team')}
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
         <ConfirmationDialog
           visible={askConfirmation}
           title={`${t('leave-team')} ${team?.name}`}

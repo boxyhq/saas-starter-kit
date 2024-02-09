@@ -80,26 +80,41 @@ const APIKeys = ({ team }: APIKeysProps) => {
             description={t('no-api-key-description')}
           />
         ) : (
-          <>
-            <table className="text-sm table w-full border-b dark:border-base-200">
-              <thead className="bg-base-200">
-                <tr>
-                  <th>{t('name')}</th>
-                  <th>{t('status')}</th>
-                  <th>{t('created')}</th>
-                  <th>{t('actions')}</th>
+          <div className="rounder border">
+            <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+              <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                <tr className="hover:bg-gray-50">
+                  <th scope="col" className="px-6 py-3">
+                    {t('name')}
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    {t('status')}
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    {t('created')}
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    {t('actions')}
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {apiKeys.map((apiKey) => {
                   return (
-                    <tr key={apiKey.id}>
-                      <td>{apiKey.name}</td>
-                      <td>
+                    <tr
+                      key={apiKey.id}
+                      className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+                    >
+                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                        {apiKey.name}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
                         <Badge color="success">{t('active')}</Badge>
                       </td>
-                      <td>{new Date(apiKey.createdAt).toLocaleDateString()}</td>
-                      <td>
+                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                        {new Date(apiKey.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
                         <Button
                           size="xs"
                           color="error"
@@ -127,7 +142,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
             >
               {t('revoke-api-key-confirm')}
             </ConfirmationDialog>
-          </>
+          </div>
         )}
         <NewAPIKey
           team={team}

@@ -70,49 +70,66 @@ const PendingInvitations = ({ team }: { team: Team }) => {
           {t('description-invitations')}
         </p>
       </div>
-      <table className="text-sm table w-full border-b dark:border-base-200">
-        <thead className="bg-base-200">
-          <tr>
-            <th>{t('email')}</th>
-            <th>{t('role')}</th>
-            <th>{t('expires-at')}</th>
-            <th>{t('action')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {invitations.map((invitation) => {
-            return (
-              <tr key={invitation.id}>
-                <td>
-                  <div className="flex items-center justify-start space-x-2">
-                    {invitation.email && (
-                      <>
-                        <LetterAvatar name={invitation.email} />
-                        <span>{invitation.email}</span>
-                      </>
-                    )}
-                  </div>
-                </td>
-                <td>{invitation.role}</td>
-                <td>{new Date(invitation.expires).toDateString()}</td>
-                <td>
-                  <Button
-                    size="sm"
-                    color="error"
-                    variant="outline"
-                    onClick={() => {
-                      setSelectedInvitation(invitation);
-                      setConfirmationDialogVisible(true);
-                    }}
-                  >
-                    {t('remove')}
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="rounder border">
+        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+          <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+            <tr className="hover:bg-gray-50">
+              <th scope="col" className="px-6 py-3">
+                {t('email')}
+              </th>
+              <th scope="col" className="px-6 py-3">
+                {t('role')}
+              </th>
+              <th scope="col" className="px-6 py-3">
+                {t('expires-at')}
+              </th>
+              <th scope="col" className="px-6 py-3">
+                {t('action')}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {invitations.map((invitation) => {
+              return (
+                <tr
+                  key={invitation.id}
+                  className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+                >
+                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                    <div className="flex items-center justify-start space-x-2">
+                      {invitation.email && (
+                        <>
+                          <LetterAvatar name={invitation.email} />
+                          <span>{invitation.email}</span>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                    {invitation.role}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                    {new Date(invitation.expires).toDateString()}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                    <Button
+                      size="sm"
+                      color="error"
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedInvitation(invitation);
+                        setConfirmationDialogVisible(true);
+                      }}
+                    >
+                      {t('remove')}
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
       <ConfirmationDialog
         visible={confirmationDialogVisible}
         onCancel={() => setConfirmationDialogVisible(false)}
