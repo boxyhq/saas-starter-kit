@@ -101,17 +101,19 @@ const PendingInvitations = ({ team }: { team: Team }) => {
                     {new Date(invitation.expires).toDateString()}
                   </td>
                   <td className={tdClass}>
-                    <Button
-                      size="sm"
-                      color="error"
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedInvitation(invitation);
-                        setConfirmationDialogVisible(true);
-                      }}
-                    >
-                      {t('remove')}
-                    </Button>
+                    <div className="flex space-x-2">
+                      <Button
+                        size="xs"
+                        color="error"
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedInvitation(invitation);
+                          setConfirmationDialogVisible(true);
+                        }}
+                      >
+                        {t('remove')}
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               );

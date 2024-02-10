@@ -105,17 +105,19 @@ const APIKeys = ({ team }: APIKeysProps) => {
                           {new Date(apiKey.createdAt).toLocaleDateString()}
                         </td>
                         <td className={tdClass}>
-                          <Button
-                            size="xs"
-                            color="error"
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedApiKey(apiKey);
-                              setConfirmationDialogVisible(true);
-                            }}
-                          >
-                            {t('revoke')}
-                          </Button>
+                          <div className="flex space-x-2">
+                            <Button
+                              size="xs"
+                              color="error"
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedApiKey(apiKey);
+                                setConfirmationDialogVisible(true);
+                              }}
+                            >
+                              {t('revoke')}
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     );

@@ -96,17 +96,19 @@ const Teams = () => {
                         {new Date(team.createdAt).toDateString()}
                       </td>
                       <td className={tdClass}>
-                        <Button
-                          variant="outline"
-                          size="xs"
-                          color="error"
-                          onClick={() => {
-                            setTeam(team);
-                            setAskConfirmation(true);
-                          }}
-                        >
-                          {t('leave-team')}
-                        </Button>
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="outline"
+                            size="xs"
+                            color="error"
+                            onClick={() => {
+                              setTeam(team);
+                              setAskConfirmation(true);
+                            }}
+                          >
+                            {t('leave-team')}
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   );

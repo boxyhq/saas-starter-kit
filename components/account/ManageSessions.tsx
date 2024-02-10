@@ -85,17 +85,19 @@ const ManageSessions = () => {
                       </span>
                     </td>
                     <td className={tdClass}>
-                      <Button
-                        size="xs"
-                        color="error"
-                        variant="outline"
-                        onClick={() => {
-                          setSessionToDelete(session);
-                          setAskConfirmation(true);
-                        }}
-                      >
-                        {t('remove')}
-                      </Button>
+                      <div className="flex space-x-2">
+                        <Button
+                          size="xs"
+                          color="error"
+                          variant="outline"
+                          onClick={() => {
+                            setSessionToDelete(session);
+                            setAskConfirmation(true);
+                          }}
+                        >
+                          {t('remove')}
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 );

@@ -126,17 +126,19 @@ const Members = ({ team }: { team: Team }) => {
                   </td>
                   <td className={tdClass}>
                     {canRemoveMember(member) ? (
-                      <Button
-                        size="sm"
-                        color="error"
-                        variant="outline"
-                        onClick={() => {
-                          setSelectedMember(member);
-                          setConfirmationDialogVisible(true);
-                        }}
-                      >
-                        {t('remove')}
-                      </Button>
+                      <div className="flex space-x-2">
+                        <Button
+                          size="xs"
+                          color="error"
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedMember(member);
+                            setConfirmationDialogVisible(true);
+                          }}
+                        >
+                          {t('remove')}
+                        </Button>
+                      </div>
                     ) : (
                       <span>-</span>
                     )}
