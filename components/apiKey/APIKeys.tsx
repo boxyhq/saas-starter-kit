@@ -14,11 +14,9 @@ import {
   tableClass,
   tableWrapperClass,
   tdClass,
-  thClass,
-  theadClass,
   trClass,
-  trHeadClass,
-} from '../styles';
+} from '@/components/styles';
+import { TableHeader } from '@/components/shared/table/TableHeader';
 
 interface APIKeysProps {
   team: Team;
@@ -91,22 +89,9 @@ const APIKeys = ({ team }: APIKeysProps) => {
         ) : (
           <div className={tableWrapperClass}>
             <table className={tableClass}>
-              <thead className={theadClass}>
-                <tr className={trHeadClass}>
-                  <th scope="col" className={thClass}>
-                    {t('name')}
-                  </th>
-                  <th scope="col" className={thClass}>
-                    {t('status')}
-                  </th>
-                  <th scope="col" className={thClass}>
-                    {t('created')}
-                  </th>
-                  <th scope="col" className={thClass}>
-                    {t('actions')}
-                  </th>
-                </tr>
-              </thead>
+              <TableHeader
+                cols={[t('name'), t('status'), t('created'), t('actions')]}
+              />
               <tbody>
                 {apiKeys.map((apiKey) => {
                   return (

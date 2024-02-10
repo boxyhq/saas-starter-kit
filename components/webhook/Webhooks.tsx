@@ -17,11 +17,9 @@ import {
   tableClass,
   tableWrapperClass,
   tdClass,
-  thClass,
-  theadClass,
   trClass,
-  trHeadClass,
-} from '../styles';
+} from '@/components/styles';
+import { TableHeader } from '@/components/shared/table/TableHeader';
 
 const Webhooks = ({ team }: { team: Team }) => {
   const { t } = useTranslation('common');
@@ -90,22 +88,9 @@ const Webhooks = ({ team }: { team: Team }) => {
           <div className="overflow-x-auto">
             <div className={tableWrapperClass}>
               <table className={tableClass}>
-                <thead className={theadClass}>
-                  <tr className={trHeadClass}>
-                    <th scope="col" className={thClass}>
-                      {t('name')}
-                    </th>
-                    <th scope="col" className={thClass}>
-                      {t('url')}
-                    </th>
-                    <th scope="col" className={thClass}>
-                      {t('created-at')}
-                    </th>
-                    <th scope="col" className={thClass}>
-                      {t('action')}
-                    </th>
-                  </tr>
-                </thead>
+                <TableHeader
+                  cols={[t('name'), t('url'), t('created-at'), t('actions')]}
+                />
                 <tbody>
                   {webhooks?.map((webhook) => {
                     return (

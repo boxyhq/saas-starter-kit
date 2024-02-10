@@ -55,7 +55,7 @@
   "confirm-delete-webhook": "Confirm delete webhook",
   "role": "Role",
   "url": "URL",
-  "action": "Action",
+  "actions": "Actions",
   "created-at": "Created At",
   "remove": "Remove",
   "edit": "Edit",

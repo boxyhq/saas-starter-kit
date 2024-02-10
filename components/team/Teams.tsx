@@ -16,11 +16,9 @@ import {
   tableClass,
   tableWrapperClass,
   tdClass,
-  thClass,
-  theadClass,
   trClass,
-  trHeadClass,
-} from '../styles';
+} from '@/components/styles';
+import { TableHeader } from '@/components/shared/table/TableHeader';
 
 const Teams = () => {
   const router = useRouter();
@@ -77,22 +75,9 @@ const Teams = () => {
         </div>
         <div className={tableWrapperClass}>
           <table className={tableClass}>
-            <thead className={theadClass}>
-              <tr className={trHeadClass}>
-                <th scope="col" className={thClass}>
-                  {t('name')}
-                </th>
-                <th scope="col" className={thClass}>
-                  {t('members')}
-                </th>
-                <th scope="col" className={thClass}>
-                  {t('created-at')}
-                </th>
-                <th scope="col" className={thClass}>
-                  {t('actions')}
-                </th>
-              </tr>
-            </thead>
+            <TableHeader
+              cols={[t('name'), t('members'), t('created-at'), t('actions')]}
+            />
             <tbody>
               {teams &&
                 teams.map((team) => {

@@ -13,11 +13,9 @@ import {
   tableClass,
   tableWrapperClass,
   tdClass,
-  thClass,
-  theadClass,
   trClass,
-  trHeadClass,
-} from '../styles';
+} from '@/components/styles';
+import { TableHeader } from '@/components/shared/table/TableHeader';
 
 const PendingInvitations = ({ team }: { team: Team }) => {
   const [selectedInvitation, setSelectedInvitation] =
@@ -81,22 +79,9 @@ const PendingInvitations = ({ team }: { team: Team }) => {
       </div>
       <div className={tableWrapperClass}>
         <table className={tableClass}>
-          <thead className={theadClass}>
-            <tr className={trHeadClass}>
-              <th scope="col" className={thClass}>
-                {t('email')}
-              </th>
-              <th scope="col" className={thClass}>
-                {t('role')}
-              </th>
-              <th scope="col" className={thClass}>
-                {t('expires-at')}
-              </th>
-              <th scope="col" className={thClass}>
-                {t('action')}
-              </th>
-            </tr>
-          </thead>
+          <TableHeader
+            cols={[t('email'), t('role'), t('expires-at'), t('actions')]}
+          />
           <tbody>
             {invitations.map((invitation) => {
               return (

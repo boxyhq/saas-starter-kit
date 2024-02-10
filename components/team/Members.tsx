@@ -17,11 +17,9 @@ import {
   tableClass,
   tableWrapperClass,
   tdClass,
-  thClass,
-  theadClass,
   trClass,
-  trHeadClass,
-} from '../styles';
+} from '@/components/styles';
+import { TableHeader } from '@/components/shared/table/TableHeader';
 
 const Members = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
@@ -85,6 +83,11 @@ const Members = ({ team }: { team: Team }) => {
     );
   };
 
+  const cols = [t('name'), t('email'), t('role')];
+  if (canAccess('team_member', ['delete'])) {
+    cols.push(t('actions'));
+  }
+
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-center">
@@ -102,20 +105,7 @@ const Members = ({ team }: { team: Team }) => {
       </div>
       <div className={tableWrapperClass}>
         <table className={tableClass}>
-          <thead className={theadClass}>
-            <tr className={trHeadClass}>
-              <th scope="col" className={thClass}>
-                {t('name')}
-              </th>
-              <th scope="col" className={thClass}>
-                {t('email')}
-              </th>
-              <th scope="col" className={thClass}>
-                {t('role')}
-              </th>
-              {canAccess('team_member', ['delete']) && <th>{t('action')}</th>}
-            </tr>
-          </thead>
+          <TableHeader cols={cols} />
           <tbody>
             {members.map((member) => {
               return (

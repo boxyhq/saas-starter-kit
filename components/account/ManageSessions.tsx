@@ -7,16 +7,14 @@ import toast from 'react-hot-toast';
 import fetcher from '@/lib/fetcher';
 import { Session } from '@prisma/client';
 import { WithLoadingAndError } from '@/components/shared';
-import ConfirmationDialog from '../shared/ConfirmationDialog';
+import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
 import {
   tableClass,
   tableWrapperClass,
   tdClass,
-  thClass,
-  theadClass,
   trClass,
-  trHeadClass,
-} from '../styles';
+} from '@/components/styles';
+import { TableHeader } from '@/components/shared/table/TableHeader';
 
 type NextAuthSession = Session & { isCurrent: boolean };
 
@@ -74,16 +72,7 @@ const ManageSessions = () => {
         </div>
         <div className={tableWrapperClass}>
           <table className={tableClass}>
-            <thead className={theadClass}>
-              <tr className={trHeadClass}>
-                <th scope="col" className={thClass}>
-                  {t('device')}
-                </th>
-                <th scope="col" className={thClass}>
-                  {t('actions')}
-                </th>
-              </tr>
-            </thead>
+            <TableHeader cols={[t('device'), t('actions')]} />
             <tbody>
               {sessions.map((session) => {
                 return (
