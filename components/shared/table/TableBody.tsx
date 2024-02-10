@@ -1,6 +1,11 @@
-import { trClass, tdClass } from '@/components/styles';
 import { Button } from 'react-daisyui';
 import Badge from '@/components/shared/Badge';
+
+const trClass =
+  'border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800';
+const tdClassBase = 'px-6 py-3 text-sm text-gray-500 dark:text-gray-400';
+const tdClass = `whitespace-nowrap ${tdClassBase}`;
+//const tdClassWrap = `break-all ${tdClassBase}`;
 
 interface TableBodyCell {
   text?: string;

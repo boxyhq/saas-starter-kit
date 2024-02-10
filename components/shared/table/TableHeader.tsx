@@ -1,4 +1,7 @@
-import { theadClass, trHeadClass, thClass } from '@/components/styles';
+const theadClass =
+  'bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400';
+const trHeadClass = 'hover:bg-gray-50';
+const thClass = 'px-6 py-3';
 
 export const TableHeader = ({ cols }: { cols: string[] }) => {
   return (

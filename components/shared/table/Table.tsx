@@ -1,6 +1,8 @@
-import { tableWrapperClass, tableClass } from '@/components/styles';
 import { TableHeader } from './TableHeader';
 import { TableBody, TableBodyType } from './TableBody';
+
+const tableWrapperClass = 'rounder border';
+const tableClass = 'w-full text-left text-sm text-gray-500 dark:text-gray-400';
 
 export const Table = ({
   cols,
