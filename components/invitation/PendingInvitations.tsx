@@ -4,18 +4,11 @@ import { Team } from '@prisma/client';
 import useInvitations from 'hooks/useInvitations';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
-import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
 import { TeamInvitation } from 'models/invitation';
-import {
-  tableClass,
-  tableWrapperClass,
-  tdClass,
-  trClass,
-} from '@/components/styles';
-import { TableHeader } from '@/components/shared/table/TableHeader';
+import { Table } from '@/components/shared/table/Table';
 
 const PendingInvitations = ({ team }: { team: Team }) => {
   const [selectedInvitation, setSelectedInvitation] =
@@ -77,50 +70,40 @@ const PendingInvitations = ({ team }: { team: Team }) => {
           {t('description-invitations')}
         </p>
       </div>
-      <div className={tableWrapperClass}>
-        <table className={tableClass}>
-          <TableHeader
-            cols={[t('email'), t('role'), t('expires-at'), t('actions')]}
-          />
-          <tbody>
-            {invitations.map((invitation) => {
-              return (
-                <tr key={invitation.id} className={trClass}>
-                  <td className={tdClass}>
-                    <div className="flex items-center justify-start space-x-2">
-                      {invitation.email && (
-                        <>
-                          <LetterAvatar name={invitation.email} />
-                          <span>{invitation.email}</span>
-                        </>
-                      )}
-                    </div>
-                  </td>
-                  <td className={tdClass}>{invitation.role}</td>
-                  <td className={tdClass}>
-                    {new Date(invitation.expires).toDateString()}
-                  </td>
-                  <td className={tdClass}>
-                    <div className="flex space-x-2">
-                      <Button
-                        size="xs"
-                        color="error"
-                        variant="outline"
-                        onClick={() => {
-                          setSelectedInvitation(invitation);
-                          setConfirmationDialogVisible(true);
-                        }}
-                      >
-                        {t('remove')}
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+
+      <Table
+        cols={[t('email'), t('role'), t('expires-at'), t('actions')]}
+        body={invitations.map((invitation) => {
+          return {
+            id: invitation.id,
+            cells: [
+              {
+                element: invitation.email ? (
+                  <div className="flex items-center justify-start space-x-2">
+                    <LetterAvatar name={invitation.email} />
+                    <span>{invitation.email}</span>
+                  </div>
+                ) : undefined,
+              },
+              { text: invitation.role },
+              { text: new Date(invitation.expires).toDateString() },
+              {
+                buttons: [
+                  {
+                    color: 'error',
+                    text: t('remove'),
+                    onClick: () => {
+                      setSelectedInvitation(invitation);
+                      setConfirmationDialogVisible(true);
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+        })}
+      ></Table>
+
       <ConfirmationDialog
         visible={confirmationDialogVisible}
         onCancel={() => setConfirmationDialogVisible(false)}

@@ -13,13 +13,7 @@ import { defaultHeaders } from '@/lib/common';
 import type { ApiResponse } from 'types';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
 import { useState } from 'react';
-import {
-  tableClass,
-  tableWrapperClass,
-  tdClass,
-  trClass,
-} from '@/components/styles';
-import { TableHeader } from '@/components/shared/table/TableHeader';
+import { Table } from '@/components/shared/table/Table';
 
 const Members = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
@@ -103,52 +97,48 @@ const Members = ({ team }: { team: Team }) => {
           {t('add-member')}
         </Button>
       </div>
-      <div className={tableWrapperClass}>
-        <table className={tableClass}>
-          <TableHeader cols={cols} />
-          <tbody>
-            {members.map((member) => {
-              return (
-                <tr key={member.id} className={trClass}>
-                  <td className={tdClass}>
-                    <div className="flex items-center justify-start space-x-2">
-                      <LetterAvatar name={member.user.name} />
-                      <span>{member.user.name}</span>
-                    </div>
-                  </td>
-                  <td className={tdClass}>{member.user.email}</td>
-                  <td className={tdClass}>
-                    {canUpdateRole(member) ? (
-                      <UpdateMemberRole team={team} member={member} />
-                    ) : (
-                      <span>{member.role}</span>
-                    )}
-                  </td>
-                  <td className={tdClass}>
-                    {canRemoveMember(member) ? (
-                      <div className="flex space-x-2">
-                        <Button
-                          size="xs"
-                          color="error"
-                          variant="outline"
-                          onClick={() => {
-                            setSelectedMember(member);
-                            setConfirmationDialogVisible(true);
-                          }}
-                        >
-                          {t('remove')}
-                        </Button>
-                      </div>
-                    ) : (
-                      <span>-</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+
+      <Table
+        cols={cols}
+        body={members.map((member) => {
+          return {
+            id: member.id,
+            cells: [
+              {
+                element: (
+                  <div className="flex items-center justify-start space-x-2">
+                    <LetterAvatar name={member.user.name} />
+                    <span>{member.user.name}</span>
+                  </div>
+                ),
+              },
+              { text: member.user.email },
+              {
+                element: canUpdateRole(member) ? (
+                  <UpdateMemberRole team={team} member={member} />
+                ) : (
+                  <span>{member.role}</span>
+                ),
+              },
+              {
+                buttons: canRemoveMember(member)
+                  ? [
+                      {
+                        color: 'error',
+                        text: t('remove'),
+                        onClick: () => {
+                          setSelectedMember(member);
+                          setConfirmationDialogVisible(true);
+                        },
+                      },
+                    ]
+                  : [],
+              },
+            ],
+          };
+        })}
+      ></Table>
+
       <ConfirmationDialog
         visible={confirmationDialogVisible}
         onCancel={() => setConfirmationDialogVisible(false)}

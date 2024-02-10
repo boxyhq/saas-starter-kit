@@ -1,5 +1,4 @@
 import { EmptyState, WithLoadingAndError } from '@/components/shared';
-import Badge from '@/components/shared/Badge';
 import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
 import fetcher from '@/lib/fetcher';
 import type { ApiKey, Team } from '@prisma/client';
@@ -10,13 +9,7 @@ import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
 import type { ApiResponse } from 'types';
 import NewAPIKey from './NewAPIKey';
-import {
-  tableClass,
-  tableWrapperClass,
-  tdClass,
-  trClass,
-} from '@/components/styles';
-import { TableHeader } from '@/components/shared/table/TableHeader';
+import { Table } from '@/components/shared/table/Table';
 
 interface APIKeysProps {
   team: Team;
@@ -88,43 +81,38 @@ const APIKeys = ({ team }: APIKeysProps) => {
           />
         ) : (
           <>
-            <div className={tableWrapperClass}>
-              <table className={tableClass}>
-                <TableHeader
-                  cols={[t('name'), t('status'), t('created'), t('actions')]}
-                />
-                <tbody>
-                  {apiKeys.map((apiKey) => {
-                    return (
-                      <tr key={apiKey.id} className={trClass}>
-                        <td className={tdClass}>{apiKey.name}</td>
-                        <td className={tdClass}>
-                          <Badge color="success">{t('active')}</Badge>
-                        </td>
-                        <td className={tdClass}>
-                          {new Date(apiKey.createdAt).toLocaleDateString()}
-                        </td>
-                        <td className={tdClass}>
-                          <div className="flex space-x-2">
-                            <Button
-                              size="xs"
-                              color="error"
-                              variant="outline"
-                              onClick={() => {
-                                setSelectedApiKey(apiKey);
-                                setConfirmationDialogVisible(true);
-                              }}
-                            >
-                              {t('revoke')}
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <Table
+              cols={[t('name'), t('status'), t('created'), t('actions')]}
+              body={apiKeys.map((apiKey) => {
+                return {
+                  id: apiKey.id,
+                  cells: [
+                    { text: apiKey.name },
+                    {
+                      badge: {
+                        color: 'success',
+                        text: t('active'),
+                      },
+                    },
+                    {
+                      text: new Date(apiKey.createdAt).toLocaleDateString(),
+                    },
+                    {
+                      buttons: [
+                        {
+                          color: 'error',
+                          text: t('revoke'),
+                          onClick: () => {
+                            setSelectedApiKey(apiKey);
+                            setConfirmationDialogVisible(true);
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                };
+              })}
+            ></Table>
             <ConfirmationDialog
               title={t('revoke-api-key')}
               visible={confirmationDialogVisible}

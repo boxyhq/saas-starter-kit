@@ -3,19 +3,12 @@ import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { ComputerDesktopIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
-import { Button } from 'react-daisyui';
 
 import fetcher from '@/lib/fetcher';
 import { Session } from '@prisma/client';
 import { WithLoadingAndError } from '@/components/shared';
 import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
-import {
-  tableClass,
-  tableWrapperClass,
-  tdClass,
-  trClass,
-} from '@/components/styles';
-import { TableHeader } from '@/components/shared/table/TableHeader';
+import { Table } from '@/components/shared/table/Table';
 
 type NextAuthSession = Session & { isCurrent: boolean };
 
@@ -71,40 +64,38 @@ const ManageSessions = () => {
             {t('manage-sessions')}
           </p>
         </div>
-        <div className={tableWrapperClass}>
-          <table className={tableClass}>
-            <TableHeader cols={[t('device'), t('actions')]} />
-            <tbody>
-              {sessions.map((session) => {
-                return (
-                  <tr key={session.id} className={trClass}>
-                    <td className={tdClass}>
-                      <span className="items-center flex">
-                        <ComputerDesktopIcon className="w-6 h-6 inline-block mr-1 text-primary" />
-                        {session.isCurrent ? t('this-browser') : t('other')}
-                      </span>
-                    </td>
-                    <td className={tdClass}>
-                      <div className="flex space-x-2">
-                        <Button
-                          size="xs"
-                          color="error"
-                          variant="outline"
-                          onClick={() => {
-                            setSessionToDelete(session);
-                            setAskConfirmation(true);
-                          }}
-                        >
-                          {t('remove')}
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+
+        <Table
+          cols={[t('device'), t('actions')]}
+          body={sessions.map((session) => {
+            return {
+              id: session.id,
+              cells: [
+                {
+                  element: (
+                    <span className="items-center flex">
+                      <ComputerDesktopIcon className="w-6 h-6 inline-block mr-1 text-primary" />
+                      {session.isCurrent ? t('this-browser') : t('other')}
+                    </span>
+                  ),
+                },
+                {
+                  buttons: [
+                    {
+                      color: 'error',
+                      text: t('remove'),
+                      onClick: () => {
+                        setSessionToDelete(session);
+                        setAskConfirmation(true);
+                      },
+                    },
+                  ],
+                },
+              ],
+            };
+          })}
+        ></Table>
+
         {sessionToDelete && (
           <ConfirmationDialog
             visible={askConfirmation}
