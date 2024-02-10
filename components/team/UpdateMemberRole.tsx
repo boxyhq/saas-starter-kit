@@ -36,10 +36,11 @@ const UpdateMemberRole = ({ team, member }: UpdateMemberRoleProps) => {
   return (
     <select
       className="select select-bordered select-sm rounded"
+      defaultValue={member.role}
       onChange={(e) => updateRole(member, e.target.value)}
     >
       {availableRoles.map((role) => (
-        <option value={role.id} key={role.id} selected={role.id == member.role}>
+        <option value={role.id} key={role.id}>
           {role.id}
         </option>
       ))}
