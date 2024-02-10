@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { ComputerDesktopIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+import { Button } from 'react-daisyui';
 
 import fetcher from '@/lib/fetcher';
 import { Session } from '@prisma/client';
@@ -84,17 +85,17 @@ const ManageSessions = () => {
                       </span>
                     </td>
                     <td className={tdClass}>
-                      <span className="flex gap-3">
-                        <button
-                          className="text-red-500 py-2"
-                          onClick={() => {
-                            setSessionToDelete(session);
-                            setAskConfirmation(true);
-                          }}
-                        >
-                          {t('remove')}
-                        </button>
-                      </span>
+                      <Button
+                        size="xs"
+                        color="error"
+                        variant="outline"
+                        onClick={() => {
+                          setSessionToDelete(session);
+                          setAskConfirmation(true);
+                        }}
+                      >
+                        {t('remove')}
+                      </Button>
                     </td>
                   </tr>
                 );

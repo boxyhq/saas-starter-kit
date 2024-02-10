@@ -87,40 +87,42 @@ const APIKeys = ({ team }: APIKeysProps) => {
             description={t('no-api-key-description')}
           />
         ) : (
-          <div className={tableWrapperClass}>
-            <table className={tableClass}>
-              <TableHeader
-                cols={[t('name'), t('status'), t('created'), t('actions')]}
-              />
-              <tbody>
-                {apiKeys.map((apiKey) => {
-                  return (
-                    <tr key={apiKey.id} className={trClass}>
-                      <td className={tdClass}>{apiKey.name}</td>
-                      <td className={tdClass}>
-                        <Badge color="success">{t('active')}</Badge>
-                      </td>
-                      <td className={tdClass}>
-                        {new Date(apiKey.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className={tdClass}>
-                        <Button
-                          size="xs"
-                          color="error"
-                          variant="outline"
-                          onClick={() => {
-                            setSelectedApiKey(apiKey);
-                            setConfirmationDialogVisible(true);
-                          }}
-                        >
-                          {t('revoke')}
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <>
+            <div className={tableWrapperClass}>
+              <table className={tableClass}>
+                <TableHeader
+                  cols={[t('name'), t('status'), t('created'), t('actions')]}
+                />
+                <tbody>
+                  {apiKeys.map((apiKey) => {
+                    return (
+                      <tr key={apiKey.id} className={trClass}>
+                        <td className={tdClass}>{apiKey.name}</td>
+                        <td className={tdClass}>
+                          <Badge color="success">{t('active')}</Badge>
+                        </td>
+                        <td className={tdClass}>
+                          {new Date(apiKey.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className={tdClass}>
+                          <Button
+                            size="xs"
+                            color="error"
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedApiKey(apiKey);
+                              setConfirmationDialogVisible(true);
+                            }}
+                          >
+                            {t('revoke')}
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
             <ConfirmationDialog
               title={t('revoke-api-key')}
               visible={confirmationDialogVisible}
@@ -131,7 +133,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
             >
               {t('revoke-api-key-confirm')}
             </ConfirmationDialog>
-          </div>
+          </>
         )}
         <NewAPIKey
           team={team}
