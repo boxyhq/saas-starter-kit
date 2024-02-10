@@ -87,7 +87,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
                 return {
                   id: apiKey.id,
                   cells: [
-                    { text: apiKey.name },
+                    { wrap: true, text: apiKey.name },
                     {
                       badge: {
                         color: 'success',
@@ -95,6 +95,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
                       },
                     },
                     {
+                      wrap: true,
                       text: new Date(apiKey.createdAt).toLocaleDateString(),
                     },
                     {

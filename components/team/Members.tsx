@@ -105,6 +105,7 @@ const Members = ({ team }: { team: Team }) => {
             id: member.id,
             cells: [
               {
+                wrap: true,
                 element: (
                   <div className="flex items-center justify-start space-x-2">
                     <LetterAvatar name={member.user.name} />
@@ -112,7 +113,7 @@ const Members = ({ team }: { team: Team }) => {
                   </div>
                 ),
               },
-              { text: member.user.email },
+              { wrap: true, text: member.user.email },
               {
                 element: canUpdateRole(member) ? (
                   <UpdateMemberRole team={team} member={member} />

@@ -89,12 +89,15 @@ const Webhooks = ({ team }: { team: Team }) => {
                         id: webhook.id,
                         cells: [
                           {
+                            wrap: true,
                             text: webhook.description,
                           },
                           {
+                            wrap: true,
                             text: webhook.url,
                           },
                           {
+                            wrap: true,
                             text: webhook.createdAt.toLocaleString(),
                           },
                           {

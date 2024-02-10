@@ -77,6 +77,7 @@ const Teams = () => {
                     id: team.id,
                     cells: [
                       {
+                        wrap: true,
                         element: (
                           <Link href={`/teams/${team.slug}/members`}>
                             <div className="flex items-center justify-start space-x-2">
@@ -86,8 +87,11 @@ const Teams = () => {
                           </Link>
                         ),
                       },
-                      { text: '' + team._count.members },
-                      { text: new Date(team.createdAt).toDateString() },
+                      { wrap: true, text: '' + team._count.members },
+                      {
+                        wrap: true,
+                        text: new Date(team.createdAt).toDateString(),
+                      },
                       {
                         buttons: [
                           {

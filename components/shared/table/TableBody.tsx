@@ -5,9 +5,10 @@ const trClass =
   'border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800';
 const tdClassBase = 'px-6 py-3 text-sm text-gray-500 dark:text-gray-400';
 const tdClass = `whitespace-nowrap ${tdClassBase}`;
-//const tdClassWrap = `break-all ${tdClassBase}`;
+const tdClassWrap = `break-all ${tdClassBase}`;
 
 interface TableBodyCell {
+  wrap?: boolean;
   text?: string;
   buttons?: {
     text: string;
@@ -34,7 +35,10 @@ export const TableBody = ({ body }: { body: TableBodyType[] }) => {
           <tr key={row.id} className={trClass}>
             {row.cells?.map((cell: any, index: number) => {
               return (
-                <td key={row.id + '-td-' + index} className={tdClass}>
+                <td
+                  key={row.id + '-td-' + index}
+                  className={cell.wrap ? tdClassWrap : tdClass}
+                >
                   {cell.buttons?.length === 0 ? null : (
                     <div className="flex space-x-2">
                       {cell.buttons?.map((button: any, index: number) => {

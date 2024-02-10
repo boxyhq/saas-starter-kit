@@ -78,6 +78,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
             id: invitation.id,
             cells: [
               {
+                wrap: true,
                 element: invitation.email ? (
                   <div className="flex items-center justify-start space-x-2">
                     <LetterAvatar name={invitation.email} />
@@ -86,7 +87,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
                 ) : undefined,
               },
               { text: invitation.role },
-              { text: new Date(invitation.expires).toDateString() },
+              { wrap: true, text: new Date(invitation.expires).toDateString() },
               {
                 buttons: [
                   {

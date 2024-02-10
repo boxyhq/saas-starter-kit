@@ -72,6 +72,7 @@ const ManageSessions = () => {
               id: session.id,
               cells: [
                 {
+                  wrap: true,
                   element: (
                     <span className="items-center flex">
                       <ComputerDesktopIcon className="w-6 h-6 inline-block mr-1 text-primary" />
