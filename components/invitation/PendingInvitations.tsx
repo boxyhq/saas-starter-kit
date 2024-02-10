@@ -9,6 +9,15 @@ import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
 import { TeamInvitation } from 'models/invitation';
+import {
+  tableClass,
+  tableWrapperClass,
+  tdClass,
+  thClass,
+  theadClass,
+  trClass,
+  trHeadClass,
+} from '../styles';
 
 const PendingInvitations = ({ team }: { team: Team }) => {
   const [selectedInvitation, setSelectedInvitation] =
@@ -70,20 +79,20 @@ const PendingInvitations = ({ team }: { team: Team }) => {
           {t('description-invitations')}
         </p>
       </div>
-      <div className="rounder border">
-        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-          <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-            <tr className="hover:bg-gray-50">
-              <th scope="col" className="px-6 py-3">
+      <div className={tableWrapperClass}>
+        <table className={tableClass}>
+          <thead className={theadClass}>
+            <tr className={trHeadClass}>
+              <th scope="col" className={thClass}>
                 {t('email')}
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className={thClass}>
                 {t('role')}
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className={thClass}>
                 {t('expires-at')}
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className={thClass}>
                 {t('action')}
               </th>
             </tr>
@@ -91,11 +100,8 @@ const PendingInvitations = ({ team }: { team: Team }) => {
           <tbody>
             {invitations.map((invitation) => {
               return (
-                <tr
-                  key={invitation.id}
-                  className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                >
-                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                <tr key={invitation.id} className={trClass}>
+                  <td className={tdClass}>
                     <div className="flex items-center justify-start space-x-2">
                       {invitation.email && (
                         <>
@@ -105,13 +111,11 @@ const PendingInvitations = ({ team }: { team: Team }) => {
                       )}
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                    {invitation.role}
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                  <td className={tdClass}>{invitation.role}</td>
+                  <td className={tdClass}>
                     {new Date(invitation.expires).toDateString()}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                  <td className={tdClass}>
                     <Button
                       size="sm"
                       color="error"

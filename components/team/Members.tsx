@@ -13,6 +13,15 @@ import { defaultHeaders } from '@/lib/common';
 import type { ApiResponse } from 'types';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
 import { useState } from 'react';
+import {
+  tableClass,
+  tableWrapperClass,
+  tdClass,
+  thClass,
+  theadClass,
+  trClass,
+  trHeadClass,
+} from '../styles';
 
 const Members = ({ team }: { team: Team }) => {
   const { data: session } = useSession();
@@ -91,17 +100,17 @@ const Members = ({ team }: { team: Team }) => {
           {t('add-member')}
         </Button>
       </div>
-      <div className="rounder border">
-        <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-          <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-            <tr className="hover:bg-gray-50">
-              <th scope="col" className="px-6 py-3">
+      <div className={tableWrapperClass}>
+        <table className={tableClass}>
+          <thead className={theadClass}>
+            <tr className={trHeadClass}>
+              <th scope="col" className={thClass}>
                 {t('name')}
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className={thClass}>
                 {t('email')}
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className={thClass}>
                 {t('role')}
               </th>
               {canAccess('team_member', ['delete']) && <th>{t('action')}</th>}
@@ -110,27 +119,22 @@ const Members = ({ team }: { team: Team }) => {
           <tbody>
             {members.map((member) => {
               return (
-                <tr
-                  key={member.id}
-                  className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                >
-                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                <tr key={member.id} className={trClass}>
+                  <td className={tdClass}>
                     <div className="flex items-center justify-start space-x-2">
                       <LetterAvatar name={member.user.name} />
                       <span>{member.user.name}</span>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                    {member.user.email}
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                  <td className={tdClass}>{member.user.email}</td>
+                  <td className={tdClass}>
                     {canUpdateRole(member) ? (
                       <UpdateMemberRole team={team} member={member} />
                     ) : (
                       <span>{member.role}</span>
                     )}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                  <td className={tdClass}>
                     {canRemoveMember(member) ? (
                       <Button
                         size="sm"

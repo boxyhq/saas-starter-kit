@@ -8,6 +8,15 @@ import fetcher from '@/lib/fetcher';
 import { Session } from '@prisma/client';
 import { WithLoadingAndError } from '@/components/shared';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
+import {
+  tableClass,
+  tableWrapperClass,
+  tdClass,
+  thClass,
+  theadClass,
+  trClass,
+  trHeadClass,
+} from '../styles';
 
 type NextAuthSession = Session & { isCurrent: boolean };
 
@@ -63,14 +72,14 @@ const ManageSessions = () => {
             {t('manage-sessions')}
           </p>
         </div>
-        <div className="rounder border">
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-              <tr className="hover:bg-gray-50">
-                <th scope="col" className="px-6 py-3">
+        <div className={tableWrapperClass}>
+          <table className={tableClass}>
+            <thead className={theadClass}>
+              <tr className={trHeadClass}>
+                <th scope="col" className={thClass}>
                   {t('device')}
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className={thClass}>
                   {t('actions')}
                 </th>
               </tr>
@@ -78,17 +87,14 @@ const ManageSessions = () => {
             <tbody>
               {sessions.map((session) => {
                 return (
-                  <tr
-                    key={session.id}
-                    className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                  >
-                    <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                  <tr key={session.id} className={trClass}>
+                    <td className={tdClass}>
                       <span className="items-center flex">
                         <ComputerDesktopIcon className="w-6 h-6 inline-block mr-1 text-primary" />
                         {session.isCurrent ? t('this-browser') : t('other')}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                    <td className={tdClass}>
                       <span className="flex gap-3">
                         <button
                           className="text-red-500 py-2"

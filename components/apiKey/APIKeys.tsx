@@ -10,6 +10,15 @@ import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
 import type { ApiResponse } from 'types';
 import NewAPIKey from './NewAPIKey';
+import {
+  tableClass,
+  tableWrapperClass,
+  tdClass,
+  thClass,
+  theadClass,
+  trClass,
+  trHeadClass,
+} from '../styles';
 
 interface APIKeysProps {
   team: Team;
@@ -80,20 +89,20 @@ const APIKeys = ({ team }: APIKeysProps) => {
             description={t('no-api-key-description')}
           />
         ) : (
-          <div className="rounder border">
-            <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-              <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                <tr className="hover:bg-gray-50">
-                  <th scope="col" className="px-6 py-3">
+          <div className={tableWrapperClass}>
+            <table className={tableClass}>
+              <thead className={theadClass}>
+                <tr className={trHeadClass}>
+                  <th scope="col" className={thClass}>
                     {t('name')}
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className={thClass}>
                     {t('status')}
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className={thClass}>
                     {t('created')}
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className={thClass}>
                     {t('actions')}
                   </th>
                 </tr>
@@ -101,20 +110,15 @@ const APIKeys = ({ team }: APIKeysProps) => {
               <tbody>
                 {apiKeys.map((apiKey) => {
                   return (
-                    <tr
-                      key={apiKey.id}
-                      className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                    >
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        {apiKey.name}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                    <tr key={apiKey.id} className={trClass}>
+                      <td className={tdClass}>{apiKey.name}</td>
+                      <td className={tdClass}>
                         <Badge color="success">{t('active')}</Badge>
                       </td>
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                      <td className={tdClass}>
                         {new Date(apiKey.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                      <td className={tdClass}>
                         <Button
                           size="xs"
                           color="error"

@@ -13,6 +13,15 @@ import EditWebhook from './EditWebhook';
 import { defaultHeaders } from '@/lib/common';
 import type { ApiResponse } from 'types';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
+import {
+  tableClass,
+  tableWrapperClass,
+  tdClass,
+  thClass,
+  theadClass,
+  trClass,
+  trHeadClass,
+} from '../styles';
 
 const Webhooks = ({ team }: { team: Team }) => {
   const { t } = useTranslation('common');
@@ -79,20 +88,20 @@ const Webhooks = ({ team }: { team: Team }) => {
           <EmptyState title={t('no-webhook-title')} />
         ) : (
           <div className="overflow-x-auto">
-            <div className="rounder border">
-              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-                <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                  <tr className="hover:bg-gray-50">
-                    <th scope="col" className="px-6 py-3">
+            <div className={tableWrapperClass}>
+              <table className={tableClass}>
+                <thead className={theadClass}>
+                  <tr className={trHeadClass}>
+                    <th scope="col" className={thClass}>
                       {t('name')}
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className={thClass}>
                       {t('url')}
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className={thClass}>
                       {t('created-at')}
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className={thClass}>
                       {t('action')}
                     </th>
                   </tr>
@@ -100,20 +109,13 @@ const Webhooks = ({ team }: { team: Team }) => {
                 <tbody>
                   {webhooks?.map((webhook) => {
                     return (
-                      <tr
-                        key={webhook.id}
-                        className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                      >
-                        <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                          {webhook.description}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                          {webhook.url}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                      <tr key={webhook.id} className={trClass}>
+                        <td className={tdClass}>{webhook.description}</td>
+                        <td className={tdClass}>{webhook.url}</td>
+                        <td className={tdClass}>
                           {webhook.createdAt.toLocaleString()}
                         </td>
-                        <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
+                        <td className={tdClass}>
                           <div className="flex space-x-2">
                             <Button
                               size="xs"
