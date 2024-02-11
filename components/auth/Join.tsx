@@ -139,7 +139,7 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
         >
           {t('create-account')}
         </Button>
-        <AgreeMessage text="create-account" />
+        <AgreeMessage text={t('create-account')} />
       </div>
     </form>
   );

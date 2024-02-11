@@ -235,5 +235,12 @@
   "guides": "guides",
   "refer-to-provider-instructions": "Refer to our <guideLink>guides</guideLink> for provider specific instructions.",
   "sp-download-our-public-cert": "If you want to encrypt the assertion, you can <downloadLink>download our public certificate.</downloadLink> Otherwise select the Unencrypted option.",
-  "download": "Download"
+  "download": "Download",
+  "welcome-back": "Welcome back",
+  "unlock-account": "Unlock your account",
+  "sso-login": "SSO Login",
+  "signin-with-saml-sso": "Sign in with SAML SSO",
+  "log-in-to-account": "Log in to your account",
+  "desc-sso-login": "Select an Identity Provider to continue with SSO",
+  "desc-signin-with-saml-sso": "Your ID is the slug after the hostname."
 }

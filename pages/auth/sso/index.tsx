@@ -60,7 +60,7 @@ const SSO: NextPageWithLayout<
   return (
     <>
       <Head>
-        <title>Sign in with SAML SSO</title>
+        <title>{t('signin-with-saml-sso')}</title>
       </Head>
       <div className="rounded p-6 border">
         <form onSubmit={formik.handleSubmit}>
@@ -104,8 +104,8 @@ const SSO: NextPageWithLayout<
 SSO.getLayout = function getLayout(page: ReactElement) {
   return (
     <AuthLayout
-      heading="Sign in with SAML SSO"
-      description="Your ID is the slug after the hostname."
+      heading="signin-with-saml-sso"
+      description="desc-signin-with-saml-sso"
     >
       {page}
     </AuthLayout>

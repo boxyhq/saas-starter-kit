@@ -187,7 +187,7 @@ const Login: NextPageWithLayout<
               >
                 {t('sign-in')}
               </Button>
-              <AgreeMessage text="sign-in" />
+              <AgreeMessage text={t('sign-in')} />
             </div>
           </form>
         )}
@@ -228,7 +228,7 @@ const Login: NextPageWithLayout<
 
 Login.getLayout = function getLayout(page: ReactElement) {
   return (
-    <AuthLayout heading="Welcome back" description="Log in to your account">
+    <AuthLayout heading="welcome-back" description="log-in-to-account">
       {page}
     </AuthLayout>
   );

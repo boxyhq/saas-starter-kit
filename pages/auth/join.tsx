@@ -88,7 +88,7 @@ const Signup: NextPageWithLayout<
 
 Signup.getLayout = function getLayout(page: ReactElement) {
   return (
-    <AuthLayout heading="Get started" description="Create a new account">
+    <AuthLayout heading="get-started" description="create-a-new-account">
       {page}
     </AuthLayout>
   );
