@@ -233,7 +233,7 @@
   "switch-theme": "Change Theme",
   "logout": "Sign out",
   "guides": "guides",
-  "refer_to_provider_instructions": "Refer to our <guideLink>guides</guideLink> for provider specific instructions.",
-  "sp_download_our_public_cert": "If you want to encrypt the assertion, you can <downloadLink>download our public certificate.</downloadLink> Otherwise select the Unencrypted option.",
+  "refer-to-provider-instructions": "Refer to our <guideLink>guides</guideLink> for provider specific instructions.",
+  "sp-download-our-public-cert": "If you want to encrypt the assertion, you can <downloadLink>download our public certificate.</downloadLink> Otherwise select the Unencrypted option.",
   "download": "Download"
 }

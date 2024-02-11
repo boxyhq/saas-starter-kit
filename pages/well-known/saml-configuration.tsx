@@ -25,7 +25,7 @@ const SPConfig: NextPageWithLayout<
             </p>
             <p className="text-sm leading-6 text-gray-600">
               <Trans
-                i18nKey="refer_to_provider_instructions"
+                i18nKey="refer-to-provider-instructions"
                 t={t}
                 components={{
                   guideLink: (
@@ -86,7 +86,7 @@ const SPConfig: NextPageWithLayout<
                 </label>
                 <p className="text-sm">
                   <Trans
-                    i18nKey="sp_download_our_public_cert"
+                    i18nKey="sp-download-our-public-cert"
                     t={t}
                     components={{
                       downloadLink: (
