@@ -1,5 +1,6 @@
 import { Button } from 'react-daisyui';
 import Badge from '@/components/shared/Badge';
+import { useTranslation } from 'next-i18next';
 
 const trClass =
   'border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800';
@@ -33,7 +34,32 @@ export interface TableBodyType {
   cells: TableBodyCell[];
 }
 
-export const TableBody = ({ body }: { body: TableBodyType[] }) => {
+export const TableBody = ({
+  cols,
+  body,
+  noMoreResults,
+}: {
+  cols: string[];
+  body: TableBodyType[];
+  noMoreResults?: boolean;
+}) => {
+  const { t } = useTranslation('common');
+
+  if (noMoreResults) {
+    return (
+      <tbody>
+        <tr>
+          <td
+            colSpan={cols.length}
+            className="px-6 py-3 text-center text-sm text-gray-500"
+          >
+            {t('no-more-results')}
+          </td>
+        </tr>
+      </tbody>
+    );
+  }
+
   return (
     <tbody>
       {body.map((row) => {
