@@ -20,6 +20,12 @@ interface TableBodyCell {
     color: string;
   };
   element?: React.JSX.Element;
+  actions?: {
+    text: string;
+    icon: React.JSX.Element;
+    className: string;
+    onClick: () => void;
+  }[];
 }
 
 export interface TableBodyType {
@@ -55,6 +61,22 @@ export const TableBody = ({ body }: { body: TableBodyType[] }) => {
                         );
                       })}
                     </div>
+                  )}
+                  {cell.actions?.length === 0 ? null : (
+                    <span className="flex gap-3">
+                      {cell.actions?.map((action: any, index: number) => {
+                        return (
+                          <button
+                            key={row.id + '-action-' + index}
+                            className={action.className}
+                            onClick={action.onClick}
+                            title={action.text}
+                          >
+                            {action.icon}
+                          </button>
+                        );
+                      })}
+                    </span>
                   )}
                   {cell.badge ? (
                     <Badge color={cell.badge.color}>{cell.badge.text}</Badge>
