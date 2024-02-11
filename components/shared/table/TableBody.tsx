@@ -23,8 +23,8 @@ interface TableBodyCell {
   actions?: {
     text: string;
     icon: React.JSX.Element;
-    className: string;
     onClick: () => void;
+    destructive?: boolean;
   }[];
 }
 
@@ -66,14 +66,19 @@ export const TableBody = ({ body }: { body: TableBodyType[] }) => {
                     <span className="flex gap-3">
                       {cell.actions?.map((action: any, index: number) => {
                         return (
-                          <button
-                            key={row.id + '-action-' + index}
-                            className={action.className}
-                            onClick={action.onClick}
-                            title={action.text}
+                          <div
+                            key={row.id + '-diva-' + index}
+                            className="tooltip"
+                            data-tip={action.text}
                           >
-                            {action.icon}
-                          </button>
+                            <button
+                              key={row.id + '-action-' + index}
+                              className={`py-2 ${action.destructive ? 'text-red-500 hover:text-red-900' : 'hover:text-green-400'}`}
+                              onClick={action.onClick}
+                            >
+                              {action.icon}
+                            </button>
+                          </div>
                         );
                       })}
                     </span>
