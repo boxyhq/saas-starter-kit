@@ -98,7 +98,7 @@ const UnlockAccount = ({
 };
 
 UnlockAccount.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout heading="Unlock your account">{page}</AuthLayout>;
+  return <AuthLayout heading="unlock-account">{page}</AuthLayout>;
 };
 
 export const getServerSideProps = async ({

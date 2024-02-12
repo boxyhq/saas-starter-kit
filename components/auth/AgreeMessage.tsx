@@ -6,7 +6,7 @@ const AgreeMessage = ({ text }) => {
 
   return (
     <p className="text-sm text-center">
-      {t('agree-message-part', { button: t(text) })}{' '}
+      {t('agree-message-part', { button: text })}{' '}
       <Link
         rel="noopener noreferrer"
         target="_blank"

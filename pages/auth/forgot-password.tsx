@@ -108,7 +108,7 @@ const ForgotPassword: NextPageWithLayout<
 };
 
 ForgotPassword.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout heading="Reset Password">{page}</AuthLayout>;
+  return <AuthLayout heading="reset-password">{page}</AuthLayout>;
 };
 
 export const getServerSideProps = async (

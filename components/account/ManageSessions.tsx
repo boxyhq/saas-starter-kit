@@ -7,7 +7,8 @@ import toast from 'react-hot-toast';
 import fetcher from '@/lib/fetcher';
 import { Session } from '@prisma/client';
 import { WithLoadingAndError } from '@/components/shared';
-import ConfirmationDialog from '../shared/ConfirmationDialog';
+import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
+import { Table } from '@/components/shared/table/Table';
 
 type NextAuthSession = Session & { isCurrent: boolean };
 
@@ -63,50 +64,39 @@ const ManageSessions = () => {
             {t('manage-sessions')}
           </p>
         </div>
-        <div className="rounder border">
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-              <tr className="hover:bg-gray-50">
-                <th scope="col" className="px-6 py-3">
-                  {t('device')}
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  {t('actions')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sessions.map((session) => {
-                return (
-                  <tr
-                    key={session.id}
-                    className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                  >
-                    <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                      <span className="items-center flex">
-                        <ComputerDesktopIcon className="w-6 h-6 inline-block mr-1 text-primary" />
-                        {session.isCurrent ? t('this-browser') : t('other')}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                      <span className="flex gap-3">
-                        <button
-                          className="text-red-500 py-2"
-                          onClick={() => {
-                            setSessionToDelete(session);
-                            setAskConfirmation(true);
-                          }}
-                        >
-                          {t('remove')}
-                        </button>
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+
+        <Table
+          cols={[t('device'), t('actions')]}
+          body={sessions.map((session) => {
+            return {
+              id: session.id,
+              cells: [
+                {
+                  wrap: true,
+                  element: (
+                    <span className="items-center flex">
+                      <ComputerDesktopIcon className="w-6 h-6 inline-block mr-1 text-primary" />
+                      {session.isCurrent ? t('this-browser') : t('other')}
+                    </span>
+                  ),
+                },
+                {
+                  buttons: [
+                    {
+                      color: 'error',
+                      text: t('remove'),
+                      onClick: () => {
+                        setSessionToDelete(session);
+                        setAskConfirmation(true);
+                      },
+                    },
+                  ],
+                },
+              ],
+            };
+          })}
+        ></Table>
+
         {sessionToDelete && (
           <ConfirmationDialog
             visible={askConfirmation}
