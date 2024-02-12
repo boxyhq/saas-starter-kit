@@ -65,7 +65,7 @@
     "@types/crypto-js": "4.2.2",
     "@types/jest": "29.5.12",
     "@types/micromatch": "4.0.6",
-    "@types/mixpanel-browser": "2.48.1",
+    "@types/mixpanel-browser": "2.49.0",
     "@types/node": "20.11.17",
     "@types/nodemailer": "6.4.14",
     "@types/react": "18.2.55",
