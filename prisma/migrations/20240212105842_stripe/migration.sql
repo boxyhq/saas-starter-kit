@@ -49,7 +49,7 @@ CREATE TABLE "Price" (
 CREATE UNIQUE INDEX "Subscription_id_key" ON "Subscription"("id");
 
 -- CreateIndex
-CREATE INDEX "Subscription_customerId_idx" ON "Subscription" USING HASH ("customerId");
+CREATE INDEX "Subscription_customerId_idx" ON "Subscription"("customerId");
 
 -- AddForeignKey
 ALTER TABLE "Price" ADD CONSTRAINT "Price_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE CASCADE ON UPDATE CASCADE;

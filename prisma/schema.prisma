@@ -148,7 +148,7 @@ model Subscription {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
 
-  @@index([customerId], type: Hash)
+  @@index([customerId])
 }
 
 model Service {
