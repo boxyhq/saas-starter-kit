@@ -78,6 +78,8 @@ model Team {
   members     TeamMember[]
   invitations Invitation[]
   apiKeys     ApiKey[]
+
+  @@index([slug])
 }
 
 model TeamMember {
@@ -112,6 +114,7 @@ model Invitation {
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   @@unique([teamId, email])
+  @@index([email])
 }
 
 model PasswordReset {
