@@ -46,9 +46,6 @@ CREATE TABLE "Price" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Subscription_id_key" ON "Subscription"("id");
-
--- CreateIndex
 CREATE INDEX "Subscription_customerId_idx" ON "Subscription"("customerId");
 
 -- AddForeignKey

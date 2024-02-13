@@ -138,7 +138,7 @@ model ApiKey {
 }
 
 model Subscription {
-  id         String    @id @unique
+  id         String    @id
   customerId String    
   priceId    String
   active     Boolean   @default(false)
