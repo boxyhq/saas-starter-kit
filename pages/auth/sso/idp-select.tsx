@@ -46,10 +46,7 @@ export default function IdPSelection({ connections }: IdPSelectionProps) {
 
 IdPSelection.getLayout = function getLayout(page: ReactElement) {
   return (
-    <AuthLayout
-      heading="SSO Login"
-      description="Select an Identity Provider to continue with SSO"
-    >
+    <AuthLayout heading="sso-login" description="desc-sso-login">
       {page}
     </AuthLayout>
   );

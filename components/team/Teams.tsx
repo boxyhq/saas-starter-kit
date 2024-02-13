@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
 import { WithLoadingAndError } from '@/components/shared';
 import CreateTeam from './CreateTeam';
+import { Table } from '@/components/shared/table/Table';
 
 const Teams = () => {
   const router = useRouter();
@@ -66,65 +67,50 @@ const Teams = () => {
             {t('create-team')}
           </Button>
         </div>
-        <div className="rounder border">
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-              <tr className="hover:bg-gray-50">
-                <th scope="col" className="px-6 py-3">
-                  {t('name')}
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  {t('members')}
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  {t('created-at')}
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  {t('actions')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {teams &&
-                teams.map((team) => {
-                  return (
-                    <tr
-                      key={team.id}
-                      className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                    >
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        <Link href={`/teams/${team.slug}/members`}>
-                          <div className="flex items-center justify-start space-x-2">
-                            <LetterAvatar name={team.name} />
-                            <span className="underline">{team.name}</span>
-                          </div>
-                        </Link>
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        {team._count.members}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(team.createdAt).toDateString()}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        <Button
-                          variant="outline"
-                          size="xs"
-                          color="error"
-                          onClick={() => {
-                            setTeam(team);
-                            setAskConfirmation(true);
-                          }}
-                        >
-                          {t('leave-team')}
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
+
+        <Table
+          cols={[t('name'), t('members'), t('created-at'), t('actions')]}
+          body={
+            teams
+              ? teams.map((team) => {
+                  return {
+                    id: team.id,
+                    cells: [
+                      {
+                        wrap: true,
+                        element: (
+                          <Link href={`/teams/${team.slug}/members`}>
+                            <div className="flex items-center justify-start space-x-2">
+                              <LetterAvatar name={team.name} />
+                              <span className="underline">{team.name}</span>
+                            </div>
+                          </Link>
+                        ),
+                      },
+                      { wrap: true, text: '' + team._count.members },
+                      {
+                        wrap: true,
+                        text: new Date(team.createdAt).toDateString(),
+                      },
+                      {
+                        buttons: [
+                          {
+                            color: 'error',
+                            text: t('leave-team'),
+                            onClick: () => {
+                              setTeam(team);
+                              setAskConfirmation(true);
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  };
+                })
+              : []
+          }
+        ></Table>
+
         <ConfirmationDialog
           visible={askConfirmation}
           title={`${t('leave-team')} ${team?.name}`}

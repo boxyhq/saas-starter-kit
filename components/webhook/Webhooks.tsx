@@ -13,6 +13,7 @@ import EditWebhook from './EditWebhook';
 import { defaultHeaders } from '@/lib/common';
 import type { ApiResponse } from 'types';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
+import { Table } from '@/components/shared/table/Table';
 
 const Webhooks = ({ team }: { team: Team }) => {
   const { t } = useTranslation('common');
@@ -79,71 +80,53 @@ const Webhooks = ({ team }: { team: Team }) => {
           <EmptyState title={t('no-webhook-title')} />
         ) : (
           <div className="overflow-x-auto">
-            <div className="rounder border">
-              <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-                <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                  <tr className="hover:bg-gray-50">
-                    <th scope="col" className="px-6 py-3">
-                      {t('name')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      {t('url')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      {t('created-at')}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      {t('action')}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {webhooks?.map((webhook) => {
-                    return (
-                      <tr
-                        key={webhook.id}
-                        className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                      >
-                        <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                          {webhook.description}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                          {webhook.url}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                          {webhook.createdAt.toLocaleString()}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                          <div className="flex space-x-2">
-                            <Button
-                              size="xs"
-                              variant="outline"
-                              onClick={() => {
-                                setEndpoint(webhook);
-                                setUpdateWebhookVisible(!updateWebhookVisible);
-                              }}
-                            >
-                              {t('edit')}
-                            </Button>
-                            <Button
-                              size="xs"
-                              color="error"
-                              variant="outline"
-                              onClick={() => {
-                                setSelectedWebhook(webhook);
-                                setConfirmationDialogVisible(true);
-                              }}
-                            >
-                              {t('remove')}
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <Table
+              cols={[t('name'), t('url'), t('created-at'), t('actions')]}
+              body={
+                webhooks
+                  ? webhooks.map((webhook) => {
+                      return {
+                        id: webhook.id,
+                        cells: [
+                          {
+                            wrap: true,
+                            text: webhook.description,
+                          },
+                          {
+                            wrap: true,
+                            text: webhook.url,
+                          },
+                          {
+                            wrap: true,
+                            text: webhook.createdAt.toLocaleString(),
+                          },
+                          {
+                            buttons: [
+                              {
+                                text: t('edit'),
+                                onClick: () => {
+                                  setEndpoint(webhook);
+                                  setUpdateWebhookVisible(
+                                    !updateWebhookVisible
+                                  );
+                                },
+                              },
+                              {
+                                color: 'error',
+                                text: t('remove'),
+                                onClick: () => {
+                                  setSelectedWebhook(webhook);
+                                  setConfirmationDialogVisible(true);
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      };
+                    })
+                  : []
+              }
+            ></Table>
           </div>
         )}
         {endpoint && (

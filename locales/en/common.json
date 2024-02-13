@@ -55,7 +55,7 @@
   "confirm-delete-webhook": "Confirm delete webhook",
   "role": "Role",
   "url": "URL",
-  "action": "Action",
+  "actions": "Actions",
   "created-at": "Created At",
   "remove": "Remove",
   "edit": "Edit",
@@ -245,5 +245,14 @@
   "billing-portal": "Billing Portal",
   "need-anything-else": "Need anything else?",
   "billing-assistance-message": "If you require additional assistance regarding billing, our team is readily available to provide support.",
-  "contact-support": "Contact Support"
+  "contact-support": "Contact Support",
+  "refer-to-provider-instructions": "Refer to our <guideLink>guides</guideLink> for provider specific instructions.",
+  "sp-download-our-public-cert": "If you want to encrypt the assertion, you can <downloadLink>download our public certificate.</downloadLink> Otherwise select the Unencrypted option.",
+  "welcome-back": "Welcome back",
+  "unlock-account": "Unlock your account",
+  "sso-login": "SSO Login",
+  "signin-with-saml-sso": "Sign in with SAML SSO",
+  "log-in-to-account": "Log in to your account",
+  "desc-sso-login": "Select an Identity Provider to continue with SSO",
+  "desc-signin-with-saml-sso": "Your ID is the slug after the hostname."
 }

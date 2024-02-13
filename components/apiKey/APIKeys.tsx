@@ -1,5 +1,4 @@
 import { EmptyState, WithLoadingAndError } from '@/components/shared';
-import Badge from '@/components/shared/Badge';
 import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
 import fetcher from '@/lib/fetcher';
 import type { ApiKey, Team } from '@prisma/client';
@@ -10,6 +9,7 @@ import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
 import type { ApiResponse } from 'types';
 import NewAPIKey from './NewAPIKey';
+import { Table } from '@/components/shared/table/Table';
 
 interface APIKeysProps {
   team: Team;
@@ -80,58 +80,40 @@ const APIKeys = ({ team }: APIKeysProps) => {
             description={t('no-api-key-description')}
           />
         ) : (
-          <div className="rounder border">
-            <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-              <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                <tr className="hover:bg-gray-50">
-                  <th scope="col" className="px-6 py-3">
-                    {t('name')}
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    {t('status')}
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    {t('created')}
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    {t('actions')}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {apiKeys.map((apiKey) => {
-                  return (
-                    <tr
-                      key={apiKey.id}
-                      className="border-b bg-white last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                    >
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        {apiKey.name}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        <Badge color="success">{t('active')}</Badge>
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(apiKey.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-3 text-sm text-gray-500 dark:text-gray-400">
-                        <Button
-                          size="xs"
-                          color="error"
-                          variant="outline"
-                          onClick={() => {
+          <>
+            <Table
+              cols={[t('name'), t('status'), t('created'), t('actions')]}
+              body={apiKeys.map((apiKey) => {
+                return {
+                  id: apiKey.id,
+                  cells: [
+                    { wrap: true, text: apiKey.name },
+                    {
+                      badge: {
+                        color: 'success',
+                        text: t('active'),
+                      },
+                    },
+                    {
+                      wrap: true,
+                      text: new Date(apiKey.createdAt).toLocaleDateString(),
+                    },
+                    {
+                      buttons: [
+                        {
+                          color: 'error',
+                          text: t('revoke'),
+                          onClick: () => {
                             setSelectedApiKey(apiKey);
                             setConfirmationDialogVisible(true);
-                          }}
-                        >
-                          {t('revoke')}
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                };
+              })}
+            ></Table>
             <ConfirmationDialog
               title={t('revoke-api-key')}
               visible={confirmationDialogVisible}
@@ -142,7 +124,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
             >
               {t('revoke-api-key-confirm')}
             </ConfirmationDialog>
-          </div>
+          </>
         )}
         <NewAPIKey
           team={team}

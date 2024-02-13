@@ -11,7 +11,7 @@ const ResetPasswordPage: NextPageWithLayout = () => {
 
 ResetPasswordPage.getLayout = function getLayout(page: ReactElement) {
   return (
-    <AuthLayout heading="Reset Password" description="Enter new password">
+    <AuthLayout heading="reset-password" description="enter-new-password">
       {page}
     </AuthLayout>
   );
