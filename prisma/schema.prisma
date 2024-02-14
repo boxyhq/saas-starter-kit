@@ -78,8 +78,6 @@ model Team {
   members     TeamMember[]
   invitations Invitation[]
   apiKeys     ApiKey[]
-
-  @@index([slug])
 }
 
 model TeamMember {
