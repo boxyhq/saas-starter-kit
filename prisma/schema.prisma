@@ -38,6 +38,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -113,6 +115,7 @@ model Invitation {
 
   @@unique([teamId, email])
   @@index([email])
+  @@index([teamId])
 }
 
 model PasswordReset {
@@ -135,4 +138,6 @@ model ApiKey {
   lastUsedAt DateTime?
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
 }
