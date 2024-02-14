@@ -86,6 +86,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team', 'leave');
 
+  // TODO: EXPLAIN QUERY
+  // TODO: Can we optimise this?
   const totalTeamOwners = await prisma.teamMember.count({
     where: {
       role: Role.OWNER,

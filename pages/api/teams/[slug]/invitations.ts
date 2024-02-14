@@ -74,6 +74,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
+    // TODO: EXPLAIN QUERY
     const memberExists = await prisma.teamMember.count({
       where: {
         teamId: teamMember.teamId,

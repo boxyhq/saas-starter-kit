@@ -73,6 +73,7 @@ export const removeTeamMember = async (teamId: string, userId: string) => {
   });
 };
 
+// TODO: EXPLAIN QUERY
 export const getTeams = async (userId: string) => {
   return await prisma.team.findMany({
     where: {
@@ -116,6 +117,7 @@ export async function isTeamAdmin(userId: string, teamId: string) {
   return teamMember.role === Role.ADMIN || teamMember.role === Role.OWNER;
 }
 
+// TODO: Can be optimized to not use a join
 export const getTeamMembers = async (slug: string) => {
   return await prisma.teamMember.findMany({
     where: {
@@ -144,6 +146,8 @@ export const updateTeam = async (slug: string, data: Partial<Team>) => {
   });
 };
 
+// TODO: EXPLAIN QUERY
+// name and slug is used in the condition as of now
 export const isTeamExists = async (condition: any) => {
   return await prisma.team.count({
     where: {
@@ -181,6 +185,7 @@ export const throwIfNoTeamAccess = async (
   };
 };
 
+// TODO: EXPLAIN QUERY
 // Get the current user's team member object
 export const getTeamMember = async (userId: string, slug: string) => {
   const teamMember = await prisma.teamMember.findFirstOrThrow({

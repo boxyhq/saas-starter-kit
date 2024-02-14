@@ -1,4 +1,7 @@
 -- CreateIndex
+CREATE INDEX "Account_userId_idx" ON "Account"("userId");
+
+-- CreateIndex
 CREATE INDEX "ApiKey_teamId_idx" ON "ApiKey"("teamId");
 
 -- CreateIndex

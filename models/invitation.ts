@@ -9,6 +9,7 @@ export type TeamInvitation = Pick<
   'id' | 'email' | 'role' | 'expires' | 'allowedDomains' | 'token'
 > & { url: string };
 
+// TODO: EXPLAIN QUERY
 export const getInvitations = async (teamId: string, sentViaEmail: boolean) => {
   const invitations = await prisma.invitation.findMany({
     where: {
