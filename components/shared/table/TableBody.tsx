@@ -71,7 +71,7 @@ export const TableBody = ({
                   key={row.id + '-td-' + index}
                   className={cell.wrap ? tdClassWrap : tdClass}
                 >
-                  {cell.buttons?.length === 0 ? null : (
+                  {!cell.buttons || cell.buttons?.length === 0 ? null : (
                     <div className="flex space-x-2">
                       {cell.buttons?.map((button: any, index: number) => {
                         return (
@@ -88,7 +88,7 @@ export const TableBody = ({
                       })}
                     </div>
                   )}
-                  {cell.actions?.length === 0 ? null : (
+                  {!cell.actions || cell.actions?.length === 0 ? null : (
                     <span className="flex gap-3">
                       {cell.actions?.map((action: any, index: number) => {
                         return (
