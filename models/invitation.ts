@@ -13,7 +13,13 @@ export type TeamInvitation = Pick<
 // DOUBLE CHECK WITH DATA
 
 /*
-SELECT "public"."Invitation"."id", "public"."Invitation"."email", "public"."Invitation"."role"::text, "public"."Invitation"."expires", "public"."Invitation"."token", "public"."Invitation"."allowedDomains" 
+SELECT 
+  "public"."Invitation"."id", 
+  "public"."Invitation"."email", 
+  "public"."Invitation"."role"::text, 
+  "public"."Invitation"."expires", 
+  "public"."Invitation"."token", 
+  "public"."Invitation"."allowedDomains" 
 FROM "public"."Invitation" 
 WHERE ("public"."Invitation"."teamId" = '7974330a-c8ca-4043-9e3c-3f326d1b6973' AND "public"."Invitation"."sentViaEmail" = true) OFFSET 0
 */
