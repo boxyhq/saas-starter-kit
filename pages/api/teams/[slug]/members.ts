@@ -88,6 +88,25 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // TODO: EXPLAIN QUERY
   // TODO: Can we optimise this?
+
+  /*
+  SELECT COUNT(*) FROM 
+    (
+        SELECT "public"."TeamMember"."id" FROM "public"."TeamMember" WHERE (
+            "public"."TeamMember"."role" = CAST('OWNER'::text AS "public"."Role") AND "public"."TeamMember"."teamId" = '7974330a-c8ca-4043-9e3c-3f326d1b6973'
+        ) OFFSET 0
+    ) AS "sub"
+  */
+
+  /*
+Aggregate  (cost=1.03..1.04 rows=1 width=8) (actual time=0.028..0.028 rows=1 loops=1)
+  ->  Seq Scan on "TeamMember"  (cost=0.00..1.02 rows=1 width=32) (actual time=0.025..0.026 rows=1 loops=1)
+        Filter: (("teamId" = '7974330a-c8ca-4043-9e3c-3f326d1b6973'::text) AND (role = ('OWNER'::cstring)::"Role"))
+        Rows Removed by Filter: 4
+Planning Time: 0.625 ms
+Execution Time: 0.057 ms
+*/
+
   const totalTeamOwners = await prisma.teamMember.count({
     where: {
       role: Role.OWNER,
