@@ -88,6 +88,20 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // TODO: EXPLAIN QUERY
   // TODO: Can we optimise this?
+  // On Scale of 100 user and 50 teams => Performing well
+
+  /*
+  Aggregate  (cost=64.62..64.63 rows=1 width=8) (actual time=0.222..0.223 rows=1 loops=1)
+  ->  Bitmap Heap Scan on "TeamMember"  (cost=4.72..64.24 rows=30 width=32) (actual time=0.054..0.218 rows=32 loops=1)
+        Recheck Cond: ("teamId" = '386a5102-0427-403a-b6c1-877de86d1ce0'::text)
+        Filter: (role = ('OWNER'::cstring)::"Role")
+        Rows Removed by Filter: 26
+        Heap Blocks: exact=47
+        ->  Bitmap Index Scan on "TeamMember_teamId_userId_key"  (cost=0.00..4.71 rows=58 width=0) (actual time=0.039..0.039 rows=58 loops=1)
+              Index Cond: ("teamId" = '386a5102-0427-403a-b6c1-877de86d1ce0'::text)
+Planning Time: 0.554 ms
+Execution Time: 0.252 ms
+  */
 
   /*
   SELECT COUNT(*) FROM 

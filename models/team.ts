@@ -74,6 +74,33 @@ export const removeTeamMember = async (teamId: string, userId: string) => {
 };
 
 // TODO: EXPLAIN QUERY
+// On Scale of 100 user and 50 teams => Performing well
+/*
+Hash Left Join  (cost=103.06..271.50 rows=48 width=184) (actual time=1.498..1.813 rows=48 loops=1)
+  Hash Cond: ("Team".id = "aggr_selection_0_TeamMember"."teamId")
+  ->  Nested Loop  (cost=4.82..172.89 rows=48 width=148) (actual time=0.080..0.364 rows=48 loops=1)
+        ->  Bitmap Heap Scan on "TeamMember" t1  (cost=4.65..61.77 rows=48 width=37) (actual time=0.038..0.048 rows=48 loops=1)
+              Recheck Cond: ("userId" = '5de1dfe6-edc0-4ef8-9858-0f7250b1022e'::text)
+              Filter: ("teamId" IS NOT NULL)
+              Heap Blocks: exact=1
+              ->  Bitmap Index Scan on "TeamMember_userId_idx"  (cost=0.00..4.64 rows=48 width=0) (actual time=0.026..0.027 rows=48 loops=1)
+                    Index Cond: ("userId" = '5de1dfe6-edc0-4ef8-9858-0f7250b1022e'::text)
+        ->  Memoize  (cost=0.17..3.52 rows=1 width=148) (actual time=0.006..0.006 rows=1 loops=48)
+              Cache Key: t1."teamId"
+              Cache Mode: logical
+              Hits: 0  Misses: 48  Evictions: 0  Overflows: 0  Memory Usage: 12kB
+              ->  Index Scan using "Team_pkey" on "Team"  (cost=0.15..3.51 rows=1 width=148) (actual time=0.003..0.003 rows=1 loops=48)
+                    Index Cond: (id = t1."teamId")
+  ->  Hash  (cost=97.62..97.62 rows=50 width=45) (actual time=1.328..1.329 rows=50 loops=1)
+        Buckets: 1024  Batches: 1  Memory Usage: 12kB
+        ->  Subquery Scan on "aggr_selection_0_TeamMember"  (cost=96.62..97.62 rows=50 width=45) (actual time=1.274..1.292 rows=50 loops=1)
+              ->  HashAggregate  (cost=96.62..97.12 rows=50 width=45) (actual time=1.274..1.284 rows=50 loops=1)
+                    Group Key: "TeamMember"."teamId"
+                    Batches: 1  Memory Usage: 24kB
+                    ->  Seq Scan on "TeamMember"  (cost=0.00..83.08 rows=2708 width=37) (actual time=0.004..0.402 rows=2708 loops=1)
+Planning Time: 1.276 ms
+Execution Time: 2.036 ms
+*/
 
 /*
 SELECT 
@@ -217,6 +244,22 @@ export const updateTeam = async (slug: string, data: Partial<Team>) => {
 };
 
 // TODO: EXPLAIN QUERY
+// On Scale of 100 user and 50 teams => Performing well
+/*
+Aggregate  (cost=124.01..124.02 rows=1 width=8) (actual time=0.216..0.216 rows=1 loops=1)
+  ->  Seq Scan on "Team"  (cost=0.00..123.82 rows=15 width=32) (actual time=0.083..0.213 rows=1 loops=1)
+        Filter: ((name = 'Stracke, Satterfield and Runolfsdottir'::text) OR (slug = 'stracke,-satterfield-and-runolfsdottir'::text))
+        Rows Removed by Filter: 49
+Planning Time: 0.288 ms
+Execution Time: 0.233 ms
+
+Aggregate  (cost=8.18..8.19 rows=1 width=8) (actual time=0.132..0.132 rows=1 loops=1)
+  ->  Index Only Scan using "Team_slug_key" on "Team"  (cost=0.15..8.17 rows=1 width=32) (actual time=0.128..0.128 rows=1 loops=1)
+        Index Cond: (slug = 'stracke,-satterfield-and-runolfsdottir'::text)
+        Heap Fetches: 1
+Planning Time: 0.548 ms
+Execution Time: 0.182 ms
+*/
 
 /*
 SELECT COUNT(*) FROM 
@@ -285,6 +328,25 @@ export const throwIfNoTeamAccess = async (
 };
 
 // TODO: EXPLAIN QUERY
+// On Scale of 100 user and 50 teams => Performing well
+
+/*
+Limit  (cost=0.44..16.82 rows=1 width=159) (actual time=0.009..0.010 rows=0 loops=1)
+  ->  Nested Loop  (cost=0.44..16.82 rows=1 width=159) (actual time=0.009..0.009 rows=0 loops=1)
+        ->  Index Scan using "Team_slug_key" on "Team" j1  (cost=0.15..8.17 rows=1 width=32) (actual time=0.008..0.009 rows=0 loops=1)
+              Index Cond: (slug = 'boxyhq'::text)
+              Filter: (id IS NOT NULL)
+        ->  Index Scan using "TeamMember_teamId_userId_key" on "TeamMember"  (cost=0.28..8.32 rows=1 width=131) (never executed)
+              Index Cond: (("teamId" = j1.id) AND ("userId" = '5de1dfe6-edc0-4ef8-9858-0f7250b1022e'::text))
+              Filter: (role = ANY (ARRAY[('ADMIN'::cstring)::"Role", ('MEMBER'::cstring)::"Role", ('OWNER'::cstring)::"Role"]))
+Planning Time: 1.073 ms
+Execution Time: 0.047 ms
+
+Index Scan using "Team_pkey" on "Team"  (cost=0.15..8.18 rows=1 width=176) (actual time=0.092..0.094 rows=1 loops=1)
+  Index Cond: (id = '386a5102-0427-403a-b6c1-877de86d1ce0'::text)
+Planning Time: 0.487 ms
+Execution Time: 0.133 ms
+*/
 
 /*
 SELECT 
@@ -314,7 +376,7 @@ SELECT
     "public"."Team"."createdAt", 
     "public"."Team"."updatedAt" 
 FROM "public"."Team" 
-WHERE "public"."Team"."id" IN ('7974330a-c8ca-4043-9e3c-3f326d1b6973') 
+WHERE "public"."Team"."id" IN ('386a5102-0427-403a-b6c1-877de86d1ce0') 
 OFFSET 0;
 */
 
