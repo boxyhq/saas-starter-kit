@@ -90,7 +90,7 @@ async function seedTeamMembers(users: any[], teams: any[]) {
           teamUsed.push(teamId);
         }
         teamUsed.push(teamId);
-        let allocation = +(await client.teamMember.create({
+        const allocation = +(await client.teamMember.create({
           data: {
             role: user.email.includes('admin')
               ? 'OWNER'
@@ -149,8 +149,8 @@ async function seedInvitations(teams: any[], users: any[]) {
 async function init() {
   const users = await seedUsers();
   const teams = await seedTeams();
-  const teamMembers = await seedTeamMembers(users, teams);
-  const invitations = await seedInvitations(teams, users);
+  await seedTeamMembers(users, teams);
+  await seedInvitations(teams, users);
 }
 
 init();
