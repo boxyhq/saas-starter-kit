@@ -4,7 +4,7 @@ import { updateTeam } from 'models/team';
 
 export const stripe = new Stripe(env.stripe.secretKey ?? '', {
   // https://github.com/stripe/stripe-node#configuration
-  apiVersion: '2022-11-15',
+  apiVersion: '2023-10-16',
 });
 
 export async function getStripeCustomerId(teamMember, session?: any) {
