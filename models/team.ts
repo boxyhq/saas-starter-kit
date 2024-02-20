@@ -114,7 +114,9 @@ SELECT
     "aggr_selection_0_TeamMember"."_aggr_count_members" 
 FROM "public"."Team" 
 LEFT JOIN (
-    SELECT "public"."TeamMember"."teamId", COUNT(*) AS "_aggr_count_members" FROM "public"."TeamMember" WHERE 1=1 GROUP BY "public"."TeamMember"."teamId") AS "aggr_selection_0_TeamMember" ON ("public"."Team"."id" = "aggr_selection_0_TeamMember"."teamId"
+    SELECT "public"."TeamMember"."teamId", COUNT(*) AS "_aggr_count_members" FROM 
+    "public"."TeamMember" WHERE 1=1 GROUP BY "public"."TeamMember"."teamId") AS "aggr_selection_0_TeamMember" 
+    ON ("public"."Team"."id" = "aggr_selection_0_TeamMember"."teamId"
     ) WHERE 
     ("public"."Team"."id") IN (SELECT "t1"."teamId" FROM "public"."TeamMember" AS "t1" 
 WHERE ("t1"."userId" = '34f3bc0e-e955-400b-892e-395edc6fa727' AND "t1"."teamId" IS NOT NULL)) 
@@ -283,24 +285,13 @@ Execution Time: 0.182 ms
 
 /*
 SELECT COUNT(*) FROM 
-    (
-        SELECT "public"."Team"."id" FROM "public"."Team" WHERE 
-        (
-            "public"."Team"."name" = 'BoxyHQ' OR "public"."Team"."slug" = 'boxyhq'
-        ) OFFSET 0
-    ) AS "sub"
-
-SELECT COUNT(*) FROM (SELECT "public"."Team"."id" FROM "public"."Team" WHERE "public"."Team"."slug" = $1 OFFSET $2) AS "sub"
+  (
+    SELECT "public"."Team"."id" FROM "public"."Team" 
+    WHERE "public"."Team"."slug" = $1 OFFSET $2
+  ) AS "sub"
 */
 
 /*
-Aggregate  (cost=1.03..1.04 rows=1 width=8) (actual time=0.018..0.019 rows=1 loops=1)
-  ->  Seq Scan on "Team"  (cost=0.00..1.01 rows=1 width=32) (actual time=0.012..0.013 rows=1 loops=1)
-        Filter: ((name = 'BoxyHQ'::text) OR (slug = 'boxyhq'::text))
-        Rows Removed by Filter: 1
-Planning Time: 0.279 ms
-Execution Time: 0.043 ms
-
 Aggregate  (cost=1.02..1.03 rows=1 width=8) (actual time=0.019..0.020 rows=1 loops=1)
   ->  Seq Scan on "Team"  (cost=0.00..1.01 rows=1 width=32) (actual time=0.013..0.014 rows=1 loops=1)
         Filter: (slug = 'boxyhq'::text)
@@ -310,10 +301,10 @@ Execution Time: 0.055 ms
 */
 
 // name and slug is used in the condition as of now
-export const isTeamExists = async (condition: any) => {
+export const isTeamExists = async (slug: string) => {
   return await prisma.team.count({
     where: {
-      OR: condition,
+      slug,
     },
   });
 };
