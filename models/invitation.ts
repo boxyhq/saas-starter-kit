@@ -12,14 +12,14 @@ export type TeamInvitation = Pick<
 // TODO: EXPLAIN QUERY
 // On Scale of 100 user and 50 teams => Performing well
 /*
-Bitmap Heap Scan on "Invitation"  (cost=4.34..29.33 rows=8 width=151) (actual time=0.038..0.040 rows=8 loops=1)
-  Recheck Cond: ("teamId" = '019f77e3-3101-43a3-a9e1-a1f443fafb4f'::text)
+Bitmap Heap Scan on "Invitation"  (cost=4.16..9.51 rows=1 width=168) (actual time=0.133..0.138 rows=4 loops=1)
+  Recheck Cond: ("teamId" = '12b885f6-dcd9-4b26-b27c-b3c8cf968786'::text)
   Filter: "sentViaEmail"
   Heap Blocks: exact=1
-  ->  Bitmap Index Scan on "Invitation_teamId_idx"  (cost=0.00..4.34 rows=8 width=0) (actual time=0.019..0.019 rows=8 loops=1)
-        Index Cond: ("teamId" = '019f77e3-3101-43a3-a9e1-a1f443fafb4f'::text)
-Planning Time: 10.371 ms
-Execution Time: 0.073 ms
+  ->  Bitmap Index Scan on "Invitation_teamId_email_key"  (cost=0.00..4.16 rows=2 width=0) (actual time=0.096..0.096 rows=4 loops=1)
+        Index Cond: ("teamId" = '12b885f6-dcd9-4b26-b27c-b3c8cf968786'::text)
+Planning Time: 0.984 ms
+Execution Time: 0.219 ms
 */
 
 /*

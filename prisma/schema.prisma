@@ -118,7 +118,6 @@ model Invitation {
 
   @@unique([teamId, email])
   @@index([email])
-  @@index([teamId])
 }
 
 model PasswordReset {
