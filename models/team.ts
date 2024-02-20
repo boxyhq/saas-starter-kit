@@ -179,7 +179,27 @@ export async function isTeamAdmin(userId: string, teamId: string) {
   return teamMember.role === Role.ADMIN || teamMember.role === Role.OWNER;
 }
 
-// TODO: Can be optimized to not use a join
+// TODO: EXPLAIN QUERY
+// On Scale of 100 user and 50 teams => Performing well
+
+/*
+Nested Loop  (cost=4.85..71.87 rows=1 width=159) (actual time=0.127..0.397 rows=58 loops=1)
+  ->  Index Scan using "Team_slug_key" on "Team" j1  (cost=0.15..8.17 rows=1 width=32) (actual time=0.027..0.028 rows=1 loops=1)
+        Index Cond: (slug = 'beahan,-gusikowski-and-satterfield'::text)
+        Filter: (id IS NOT NULL)
+  ->  Bitmap Heap Scan on "TeamMember"  (cost=4.70..63.15 rows=54 width=131) (actual time=0.067..0.316 rows=58 loops=1)
+        Recheck Cond: ("teamId" = j1.id)
+        Heap Blocks: exact=47
+        ->  Bitmap Index Scan on "TeamMember_teamId_userId_key"  (cost=0.00..4.69 rows=54 width=0) (actual time=0.061..0.061 rows=58 loops=1)
+              Index Cond: ("teamId" = j1.id)
+Planning Time: 1.273 ms
+Execution Time: 0.440 ms
+
+Index Scan using "User_pkey" on "User"  (cost=0.14..8.16 rows=1 width=98) (actual time=0.048..0.048 rows=1 loops=1)
+  Index Cond: (id = '5de1dfe6-edc0-4ef8-9858-0f7250b1022e'::text)
+Planning Time: 0.682 ms
+Execution Time: 0.057 ms
+*/
 
 /*
 SELECT 
