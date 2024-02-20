@@ -4,7 +4,7 @@ const client = new PrismaClient();
 const { hash } = require('bcryptjs');
 const { randomUUID } = require('crypto');
 
-const USER_COUNT = 100;
+const USER_COUNT = 10;
 const TEAM_COUNT = 5;
 
 async function seedUsers() {
@@ -12,7 +12,7 @@ async function seedUsers() {
   await createRandomUser('admin@example.com', 'admin@123');
   await createRandomUser('user@example.com', 'user@123');
   await Promise.all(
-    Array(USER_COUNT)
+    Array(USER_COUNT - 2)
       .fill(0)
       .map(async () => {
         await createRandomUser();
