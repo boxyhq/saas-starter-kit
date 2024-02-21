@@ -1,4 +1,9 @@
 {
+  "device": "Device",
+  "status": "Status",
+  "created": "Created",
+  "response": "Response",
+  "no-more-results": "No more results",
   "get-started": "Get Started",
   "login": "Log in using an existing account",
   "email-login-error": "Something went wrong while sending the email. Please try again later.",
