@@ -18,7 +18,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --env=jsdom",
     "build-ci": "next build",
-    "sync-stripe": "node --env-file .env syncStripe.js"
+    "sync-stripe": "node --env-file .env syncStripe.js",
+    "locale-check": "node locale-check.js"
   },
   "dependencies": {
     "@boxyhq/metrics": "0.2.6",
