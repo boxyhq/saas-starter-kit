@@ -6,6 +6,14 @@ const altRegExp = /\bi18nKey="(.*?)"/gm;
 //   /\bAuthLayout.*\bheading="(.*?)".*\bdescription="(.*?)"/gm;
 const authHeadingRegExp = /\bheading="(.*?)"/gm;
 const authDescriptionRegExp = /\bdescription="(.*?)"/gm;
+const exceptionList = [
+  'email-verified',
+  'allow-only-work-email',
+  'verify-account-expired',
+  'confirm-your-email',
+  'exceeded-login-attempts',
+  'account-unlocked',
+]
 
 const allStrings = {};
 
@@ -74,7 +82,7 @@ files.forEach((file) => {
 });
 
 Object.keys(localeFile).forEach((key) => {
-  if (!allStrings[key]) {
+  if (!allStrings[key] && !exceptionList.includes(key)) {
     console.error(`Unused key: ${key}`);
   }
 });
