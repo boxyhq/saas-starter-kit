@@ -86,10 +86,10 @@ async function seedTeams() {
 }
 
 async function seedTeamMembers(users: any[], teams: any[]) {
-  let newTeamMembers: any[] = [];
+  const newTeamMembers: any[] = [];
   const roles = ['OWNER', 'MEMBER'];
   for (const user of users) {
-    let count = Math.floor(Math.random() * (TEAM_COUNT - 1)) + 2;
+    const count = Math.floor(Math.random() * (TEAM_COUNT - 1)) + 2;
     const teamUsed = new Set();
     for (let j = 0; j < count; j++) {
       try {
