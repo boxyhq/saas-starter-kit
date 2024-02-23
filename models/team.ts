@@ -73,7 +73,6 @@ export const removeTeamMember = async (teamId: string, userId: string) => {
   });
 };
 
-// TODO: EXPLAIN QUERY
 // On Scale of 100 user and 50 teams => Performing well
 /*
 Hash Left Join  (cost=103.06..271.50 rows=48 width=184) (actual time=1.498..1.813 rows=48 loops=1)
@@ -181,7 +180,6 @@ export async function isTeamAdmin(userId: string, teamId: string) {
   return teamMember.role === Role.ADMIN || teamMember.role === Role.OWNER;
 }
 
-// TODO: EXPLAIN QUERY
 // On Scale of 100 user and 50 teams => Performing well
 
 /*
@@ -265,7 +263,6 @@ export const updateTeam = async (slug: string, data: Partial<Team>) => {
   });
 };
 
-// TODO: EXPLAIN QUERY
 // On Scale of 100 user and 50 teams => Performing well
 /*
 Aggregate  (cost=124.01..124.02 rows=1 width=8) (actual time=0.216..0.216 rows=1 loops=1)
@@ -338,7 +335,6 @@ export const throwIfNoTeamAccess = async (
   };
 };
 
-// TODO: EXPLAIN QUERY
 // On Scale of 100 user and 50 teams => Performing well
 
 /*

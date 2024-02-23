@@ -74,7 +74,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    // TODO: EXPLAIN QUERY
     // On Scale of 100 user and 50 teams => Performing well
 
     /*

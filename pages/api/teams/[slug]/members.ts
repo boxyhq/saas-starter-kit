@@ -86,8 +86,6 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team', 'leave');
 
-  // TODO: EXPLAIN QUERY
-  // TODO: Can we optimise this?
   // On Scale of 100 user and 50 teams => Performing well
 
   /*

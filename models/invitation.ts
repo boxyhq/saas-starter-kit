@@ -9,7 +9,6 @@ export type TeamInvitation = Pick<
   'id' | 'email' | 'role' | 'expires' | 'allowedDomains' | 'token'
 > & { url: string };
 
-// TODO: EXPLAIN QUERY
 // On Scale of 100 user and 50 teams => Performing well
 /*
 Bitmap Heap Scan on "Invitation"  (cost=4.16..9.51 rows=1 width=168) (actual time=0.133..0.138 rows=4 loops=1)
