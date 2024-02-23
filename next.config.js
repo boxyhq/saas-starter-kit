@@ -13,6 +13,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'boxyhq.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'files.stripe.com',
+      },
     ],
   },
   i18n,

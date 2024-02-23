@@ -157,7 +157,7 @@ const JoinWithInvitation = ({
           >
             {t('create-account')}
           </Button>
-          <AgreeMessage text="create-account" />
+          <AgreeMessage text={t('create-account')} />
         </div>
       </form>
     </WithLoadingAndError>

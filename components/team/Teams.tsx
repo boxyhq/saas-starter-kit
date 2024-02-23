@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
 import { WithLoadingAndError } from '@/components/shared';
 import CreateTeam from './CreateTeam';
+import { Table } from '@/components/shared/table/Table';
 
 const Teams = () => {
   const router = useRouter();
@@ -60,55 +61,56 @@ const Teams = () => {
           </div>
           <Button
             color="primary"
-            variant="outline"
             size="md"
             onClick={() => setCreateTeamVisible(!createTeamVisible)}
           >
             {t('create-team')}
           </Button>
         </div>
-        <table className="text-sm table w-full border-b dark:border-base-200">
-          <thead className="bg-base-200">
-            <tr>
-              <th>{t('name')}</th>
-              <th>{t('members')}</th>
-              <th>{t('created-at')}</th>
-              <th>{t('actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {teams &&
-              teams.map((team) => {
-                return (
-                  <tr key={team.id}>
-                    <td>
-                      <Link href={`/teams/${team.slug}/members`}>
-                        <div className="flex items-center justify-start space-x-2">
-                          <LetterAvatar name={team.name} />
-                          <span className="underline">{team.name}</span>
-                        </div>
-                      </Link>
-                    </td>
-                    <td>{team._count.members}</td>
-                    <td>{new Date(team.createdAt).toDateString()}</td>
-                    <td>
-                      <Button
-                        variant="outline"
-                        size="xs"
-                        color="error"
-                        onClick={() => {
-                          setTeam(team);
-                          setAskConfirmation(true);
-                        }}
-                      >
-                        {t('leave-team')}
-                      </Button>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
+
+        <Table
+          cols={[t('name'), t('members'), t('created-at'), t('actions')]}
+          body={
+            teams
+              ? teams.map((team) => {
+                  return {
+                    id: team.id,
+                    cells: [
+                      {
+                        wrap: true,
+                        element: (
+                          <Link href={`/teams/${team.slug}/members`}>
+                            <div className="flex items-center justify-start space-x-2">
+                              <LetterAvatar name={team.name} />
+                              <span className="underline">{team.name}</span>
+                            </div>
+                          </Link>
+                        ),
+                      },
+                      { wrap: true, text: '' + team._count.members },
+                      {
+                        wrap: true,
+                        text: new Date(team.createdAt).toDateString(),
+                      },
+                      {
+                        buttons: [
+                          {
+                            color: 'error',
+                            text: t('leave-team'),
+                            onClick: () => {
+                              setTeam(team);
+                              setAskConfirmation(true);
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  };
+                })
+              : []
+          }
+        ></Table>
+
         <ConfirmationDialog
           visible={askConfirmation}
           title={`${t('leave-team')} ${team?.name}`}

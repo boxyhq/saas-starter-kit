@@ -13,6 +13,7 @@ import EditWebhook from './EditWebhook';
 import { defaultHeaders } from '@/lib/common';
 import type { ApiResponse } from 'types';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
+import { Table } from '@/components/shared/table/Table';
 
 const Webhooks = ({ team }: { team: Team }) => {
   const { t } = useTranslation('common');
@@ -69,7 +70,6 @@ const Webhooks = ({ team }: { team: Team }) => {
           </div>
           <Button
             color="primary"
-            variant="outline"
             size="md"
             onClick={() => setCreateWebhookVisible(!createWebhookVisible)}
           >
@@ -80,52 +80,53 @@ const Webhooks = ({ team }: { team: Team }) => {
           <EmptyState title={t('no-webhook-title')} />
         ) : (
           <div className="overflow-x-auto">
-            <table className="text-sm table w-full border-b dark:border-base-200">
-              <thead className="bg-base-200">
-                <tr>
-                  <th>{t('name')}</th>
-                  <th>{t('url')}</th>
-                  <th>{t('created-at')}</th>
-                  <th>{t('action')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {webhooks?.map((webhook) => {
-                  return (
-                    <tr key={webhook.id}>
-                      <td>{webhook.description}</td>
-                      <td>{webhook.url}</td>
-                      <td>{webhook.createdAt.toLocaleString()}</td>
-                      <td>
-                        <div className="flex space-x-2">
-                          <Button
-                            size="xs"
-                            variant="outline"
-                            onClick={() => {
-                              setEndpoint(webhook);
-                              setUpdateWebhookVisible(!updateWebhookVisible);
-                            }}
-                          >
-                            {t('edit')}
-                          </Button>
-                          <Button
-                            size="xs"
-                            color="error"
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedWebhook(webhook);
-                              setConfirmationDialogVisible(true);
-                            }}
-                          >
-                            {t('remove')}
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <Table
+              cols={[t('name'), t('url'), t('created-at'), t('actions')]}
+              body={
+                webhooks
+                  ? webhooks.map((webhook) => {
+                      return {
+                        id: webhook.id,
+                        cells: [
+                          {
+                            wrap: true,
+                            text: webhook.description,
+                          },
+                          {
+                            wrap: true,
+                            text: webhook.url,
+                          },
+                          {
+                            wrap: true,
+                            text: webhook.createdAt.toLocaleString(),
+                          },
+                          {
+                            buttons: [
+                              {
+                                text: t('edit'),
+                                onClick: () => {
+                                  setEndpoint(webhook);
+                                  setUpdateWebhookVisible(
+                                    !updateWebhookVisible
+                                  );
+                                },
+                              },
+                              {
+                                color: 'error',
+                                text: t('remove'),
+                                onClick: () => {
+                                  setSelectedWebhook(webhook);
+                                  setConfirmationDialogVisible(true);
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      };
+                    })
+                  : []
+              }
+            ></Table>
           </div>
         )}
         {endpoint && (

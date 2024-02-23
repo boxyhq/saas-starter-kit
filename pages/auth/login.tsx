@@ -153,7 +153,7 @@ const Login: NextPageWithLayout<
                       <span className="label-text-alt">
                         <Link
                           href="/auth/forgot-password"
-                          className="text-sm text-primary hover:text-primary-focus"
+                          className="text-sm text-primary hover:text-[color-mix(in_oklab,oklch(var(--p)),black_7%)]"
                         >
                           {t('forgot-password')}
                         </Link>
@@ -187,7 +187,7 @@ const Login: NextPageWithLayout<
               >
                 {t('sign-in')}
               </Button>
-              <AgreeMessage text="sign-in" />
+              <AgreeMessage text={t('sign-in')} />
             </div>
           </form>
         )}
@@ -200,14 +200,14 @@ const Login: NextPageWithLayout<
           {authProviders.email && (
             <Link
               href={`/auth/magic-link${params}`}
-              className="btn-outline btn w-full"
+              className="btn btn-outline w-full"
             >
               &nbsp;{t('sign-in-with-email')}
             </Link>
           )}
 
           {authProviders.saml && (
-            <Link href="/auth/sso" className="btn-outline btn w-full">
+            <Link href="/auth/sso" className="btn btn-outline w-full">
               &nbsp;{t('continue-with-saml-sso')}
             </Link>
           )}
@@ -217,7 +217,7 @@ const Login: NextPageWithLayout<
         {t('dont-have-an-account')}
         <Link
           href={`/auth/join${params}`}
-          className="font-medium text-primary hover:text-primary-focus"
+          className="font-medium text-primary hover:text-[color-mix(in_oklab,oklch(var(--p)),black_7%)]"
         >
           &nbsp;{t('create-a-free-account')}
         </Link>
@@ -228,7 +228,7 @@ const Login: NextPageWithLayout<
 
 Login.getLayout = function getLayout(page: ReactElement) {
   return (
-    <AuthLayout heading="Welcome back" description="Log in to your account">
+    <AuthLayout heading="welcome-back" description="log-in-to-account">
       {page}
     </AuthLayout>
   );

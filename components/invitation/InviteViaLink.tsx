@@ -108,7 +108,7 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
             ? `Anyone with an email address ending with ${invitation.allowedDomains} can use this link to join your team.`
             : 'Anyone can use this link to join your team.'}
           <Button
-            className="btn-xs btn-link link-error"
+            className="btn btn-xs btn-link link-error"
             onClick={() => setShowDelDialog(true)}
           >
             {t('delete-link')}

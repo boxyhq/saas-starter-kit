@@ -98,11 +98,11 @@ const MagicLink = ({ csrfToken }: MagicLinkProps) => {
         <div className="space-y-3">
           <Link
             href={`/auth/login/${params}`}
-            className="btn-outline btn w-full"
+            className="btn btn-outline w-full"
           >
             &nbsp;{t('sign-in-with-password')}
           </Link>
-          <Link href="/auth/sso" className="btn-outline btn w-full">
+          <Link href="/auth/sso" className="btn btn-outline w-full">
             &nbsp;{t('continue-with-saml-sso')}
           </Link>
         </div>

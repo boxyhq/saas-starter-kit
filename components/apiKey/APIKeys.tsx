@@ -1,5 +1,4 @@
 import { EmptyState, WithLoadingAndError } from '@/components/shared';
-import Badge from '@/components/shared/Badge';
 import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
 import fetcher from '@/lib/fetcher';
 import type { ApiKey, Team } from '@prisma/client';
@@ -10,6 +9,7 @@ import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
 import type { ApiResponse } from 'types';
 import NewAPIKey from './NewAPIKey';
+import { Table } from '@/components/shared/table/Table';
 
 interface APIKeysProps {
   team: Team;
@@ -68,7 +68,6 @@ const APIKeys = ({ team }: APIKeysProps) => {
           </div>
           <Button
             color="primary"
-            variant="outline"
             size="md"
             onClick={() => setCreateModalVisible(true)}
           >
@@ -82,42 +81,39 @@ const APIKeys = ({ team }: APIKeysProps) => {
           />
         ) : (
           <>
-            <table className="text-sm table w-full border-b dark:border-base-200">
-              <thead className="bg-base-200">
-                <tr>
-                  <th>{t('name')}</th>
-                  <th>{t('status')}</th>
-                  <th>{t('created')}</th>
-                  <th>{t('actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {apiKeys.map((apiKey) => {
-                  return (
-                    <tr key={apiKey.id}>
-                      <td>{apiKey.name}</td>
-                      <td>
-                        <Badge color="success">{t('active')}</Badge>
-                      </td>
-                      <td>{new Date(apiKey.createdAt).toLocaleDateString()}</td>
-                      <td>
-                        <Button
-                          size="xs"
-                          color="error"
-                          variant="outline"
-                          onClick={() => {
+            <Table
+              cols={[t('name'), t('status'), t('created'), t('actions')]}
+              body={apiKeys.map((apiKey) => {
+                return {
+                  id: apiKey.id,
+                  cells: [
+                    { wrap: true, text: apiKey.name },
+                    {
+                      badge: {
+                        color: 'success',
+                        text: t('active'),
+                      },
+                    },
+                    {
+                      wrap: true,
+                      text: new Date(apiKey.createdAt).toLocaleDateString(),
+                    },
+                    {
+                      buttons: [
+                        {
+                          color: 'error',
+                          text: t('revoke'),
+                          onClick: () => {
                             setSelectedApiKey(apiKey);
                             setConfirmationDialogVisible(true);
-                          }}
-                        >
-                          {t('revoke')}
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                };
+              })}
+            ></Table>
             <ConfirmationDialog
               title={t('revoke-api-key')}
               visible={confirmationDialogVisible}
