@@ -1,4 +1,4 @@
-import { enc, lib } from 'crypto-js';
+import { randomBytes } from 'crypto';
 import type { NextApiRequest } from 'next';
 
 export const createRandomString = (length = 6) => {
@@ -16,9 +16,9 @@ export const createRandomString = (length = 6) => {
 
 // Create token
 export function generateToken(length = 64) {
-  const tokenBytes = lib.WordArray.random(length);
+  const tokenBytes = randomBytes(Math.ceil(length / 2)); // Convert length from bytes to hex
 
-  return enc.Base64.stringify(tokenBytes);
+  return tokenBytes.toString('hex').slice(0, length);
 }
 
 export const slugify = (text: string) => {
