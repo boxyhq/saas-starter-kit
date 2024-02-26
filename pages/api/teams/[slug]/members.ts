@@ -86,8 +86,6 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team', 'leave');
 
-  // On Scale of 100 user and 50 teams => Performing well
-
   /*
   Aggregate  (cost=64.62..64.63 rows=1 width=8) (actual time=0.222..0.223 rows=1 loops=1)
   ->  Bitmap Heap Scan on "TeamMember"  (cost=4.72..64.24 rows=30 width=32) (actual time=0.054..0.218 rows=32 loops=1)

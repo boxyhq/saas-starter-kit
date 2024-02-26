@@ -73,7 +73,6 @@ export const removeTeamMember = async (teamId: string, userId: string) => {
   });
 };
 
-// On Scale of 100 user and 50 teams => Performing well
 /*
 Hash Left Join  (cost=103.06..271.50 rows=48 width=184) (actual time=1.498..1.813 rows=48 loops=1)
   Hash Cond: ("Team".id = "aggr_selection_0_TeamMember"."teamId")
@@ -180,8 +179,6 @@ export async function isTeamAdmin(userId: string, teamId: string) {
   return teamMember.role === Role.ADMIN || teamMember.role === Role.OWNER;
 }
 
-// On Scale of 100 user and 50 teams => Performing well
-
 /*
 Nested Loop  (cost=4.85..71.87 rows=1 width=159) (actual time=0.127..0.397 rows=58 loops=1)
   ->  Index Scan using "Team_slug_key" on "Team" j1  (cost=0.15..8.17 rows=1 width=32) (actual time=0.027..0.028 rows=1 loops=1)
@@ -263,7 +260,6 @@ export const updateTeam = async (slug: string, data: Partial<Team>) => {
   });
 };
 
-// On Scale of 100 user and 50 teams => Performing well
 /*
 Aggregate  (cost=124.01..124.02 rows=1 width=8) (actual time=0.216..0.216 rows=1 loops=1)
   ->  Seq Scan on "Team"  (cost=0.00..123.82 rows=15 width=32) (actual time=0.083..0.213 rows=1 loops=1)
@@ -334,8 +330,6 @@ export const throwIfNoTeamAccess = async (
     },
   };
 };
-
-// On Scale of 100 user and 50 teams => Performing well
 
 /*
 Limit  (cost=0.44..16.82 rows=1 width=159) (actual time=0.009..0.010 rows=0 loops=1)

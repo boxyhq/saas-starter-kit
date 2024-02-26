@@ -74,8 +74,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    // On Scale of 100 user and 50 teams => Performing well
-
     /*
     Aggregate  (cost=12.61..12.62 rows=1 width=8) (actual time=0.040..0.040 rows=1 loops=1)
   ->  Nested Loop  (cost=0.42..12.60 rows=1 width=32) (actual time=0.037..0.038 rows=1 loops=1)
