@@ -292,8 +292,6 @@ Aggregate  (cost=1.02..1.03 rows=1 width=8) (actual time=0.019..0.020 rows=1 loo
 Planning Time: 0.352 ms
 Execution Time: 0.055 ms
 */
-
-// name and slug is used in the condition as of now
 export const isTeamExists = async (slug: string) => {
   return await prisma.team.count({
     where: {
