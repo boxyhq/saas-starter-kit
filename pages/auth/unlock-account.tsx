@@ -86,7 +86,7 @@ const UnlockAccount = ({
       {displayResendLink && (
         <Button
           wide
-          className="mt-4 btn-outline w-full"
+          className="mt-4 btn btn-outline w-full"
           onClick={requestNewLink}
           loading={loading}
         >
@@ -98,7 +98,7 @@ const UnlockAccount = ({
 };
 
 UnlockAccount.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout heading="Unlock your account">{page}</AuthLayout>;
+  return <AuthLayout heading="unlock-account">{page}</AuthLayout>;
 };
 
 export const getServerSideProps = async ({

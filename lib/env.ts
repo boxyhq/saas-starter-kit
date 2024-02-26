@@ -96,6 +96,12 @@ const env = {
     webhook: process.env.FEATURE_TEAM_WEBHOOK === 'false' ? false : true,
     apiKey: process.env.FEATURE_TEAM_API_KEY === 'false' ? false : true,
     auditLog: process.env.FEATURE_TEAM_AUDIT_LOG === 'false' ? false : true,
+    payments:
+      process.env.FEATURE_TEAM_PAYMENTS === 'false'
+        ? false
+        : process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET
+          ? true
+          : false,
     deleteTeam: process.env.FEATURE_TEAM_DELETION === 'false' ? false : true,
   },
 
@@ -107,6 +113,11 @@ const env = {
   maxLoginAttempts: Number(process.env.MAX_LOGIN_ATTEMPTS) || 5,
 
   slackWebhookUrl: process.env.SLACK_WEBHOOK_URL,
+
+  stripe: {
+    secretKey: process.env.STRIPE_SECRET_KEY,
+    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+  },
 };
 
 export default env;

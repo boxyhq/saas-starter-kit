@@ -6,22 +6,8 @@ import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import toast from 'react-hot-toast';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import styles from 'styles/sdk-override.module.css';
 import env from '@/lib/env';
-
-const SSO_CSS = {
-  button: { ctoa: 'btn-primary', destructive: 'btn-error' },
-  input: `${styles['sdk-input']} input input-bordered`,
-  textarea: styles['sdk-input'],
-  confirmationPrompt: {
-    button: {
-      ctoa: 'btn-md',
-      cancel: 'btn-md btn-outline',
-    },
-  },
-  secretInput: 'input input-bordered',
-  section: 'mb-8',
-};
+import { BOXYHQ_UI_CSS } from '@/components/styles';
 
 const TeamSSO = ({ teamFeatures, SPConfigURL }) => {
   const { t } = useTranslation('common');
@@ -72,7 +58,7 @@ const TeamSSO = ({ teamFeatures, SPConfigURL }) => {
           }
         }}
         errorCallback={(errMessage) => toast.error(errMessage)}
-        classNames={SSO_CSS}
+        classNames={BOXYHQ_UI_CSS}
         componentProps={{
           connectionList: {
             cols: ['provider', 'type', 'status', 'actions'],

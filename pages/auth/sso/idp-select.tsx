@@ -25,7 +25,7 @@ export default function IdPSelection({ connections }: IdPSelectionProps) {
             return (
               <button
                 type="button"
-                className="w-full btn-outline btn justify-start"
+                className="w-full btn btn-outline justify-start"
                 onClick={() => {
                   connectionSelected(connection.clientID);
                 }}
@@ -46,10 +46,7 @@ export default function IdPSelection({ connections }: IdPSelectionProps) {
 
 IdPSelection.getLayout = function getLayout(page: ReactElement) {
   return (
-    <AuthLayout
-      heading="SSO Login"
-      description="Select an Identity Provider to continue with SSO"
-    >
+    <AuthLayout heading="sso-login" description="desc-sso-login">
       {page}
     </AuthLayout>
   );
