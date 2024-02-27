@@ -76,6 +76,7 @@ async function handleSubscriptionUpdated(event: Stripe.Event) {
   const { cancel_at, id, status, current_period_end } = event.data
     .object as Stripe.Subscription;
 
+  //type Stripe.Subscription.Status = "active" | "canceled" | "incomplete" | "incomplete_expired" | "past_due" | "paused" | "trialing" | "unpaid"
   await updateStripeSubscription(id, {
     active: status === 'active',
     endDate: current_period_end
@@ -92,6 +93,7 @@ async function handleSubscriptionCreated(event: Stripe.Event) {
   await createStripeSubscription({
     customerId: customer as string,
     id,
+
     active: true,
     startDate: new Date(current_period_start * 1000),
     endDate: new Date(current_period_end * 1000),

@@ -36,6 +36,12 @@ module.exports = {
       },
     },
     {
+      files: ['seed.ts'],
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+      },
+    },
+    {
       files: [
         'components/defaultLanding/**/*.tsx',
         'components/emailTemplates/**/*.tsx',

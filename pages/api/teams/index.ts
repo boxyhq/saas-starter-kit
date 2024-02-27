@@ -51,8 +51,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await getCurrentUser(req, res);
   const slug = slugify(name);
 
-  if (await isTeamExists([{ slug }])) {
-    throw new ApiError(400, 'A team with the name already exists.');
+  if (await isTeamExists(slug)) {
+    throw new ApiError(400, 'A team with the slug already exists.');
   }
 
   const team = await createTeam({
