@@ -92,7 +92,7 @@ SELECT COUNT(*) FROM (
     SELECT 
         "public"."TeamMember"."id" 
     FROM "public"."TeamMember" LEFT JOIN "public"."User" AS "j1" ON ("j1"."id") = ("public"."TeamMember"."userId") 
-    WHERE ("public"."TeamMember"."teamId" = '7974330a-c8ca-4043-9e3c-3f326d1b6973' AND ("j1"."email" = 'utkarsh@boxyhq.com' AND ("j1"."id" IS NOT NULL))) 
+    WHERE ("public"."TeamMember"."teamId" = '7974330a-c8ca-4043-9e3c-3f326d1b6973' AND ("j1"."email" = 'admin@example.com' AND ("j1"."id" IS NOT NULL))) 
     OFFSET 0
 ) AS "sub"
 */
@@ -106,7 +106,7 @@ Aggregate  (cost=2.05..2.06 rows=1 width=8) (actual time=0.046..0.047 rows=1 loo
               Filter: ("teamId" = '7974330a-c8ca-4043-9e3c-3f326d1b6973'::text)
               Rows Removed by Filter: 4
         ->  Seq Scan on "User" j1  (cost=0.00..1.01 rows=1 width=37) (actual time=0.011..0.011 rows=1 loops=1)
-              Filter: ((id IS NOT NULL) AND (email = 'utkarsh@boxyhq.com'::text))
+              Filter: ((id IS NOT NULL) AND (email = 'admin@example.com'::text))
               Rows Removed by Filter: 2
 Planning Time: 1.285 ms
 Execution Time: 0.152 ms
