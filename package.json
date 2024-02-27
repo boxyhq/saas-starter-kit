@@ -2,6 +2,9 @@
   "name": "saas-starter-kit",
   "version": "1.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node ./prisma/seed.ts"
+  },
   "scripts": {
     "release": "git checkout release && git merge origin/main && release-it && git checkout main && git merge origin/release && git push origin main",
     "dev": "next dev --port 4002",
@@ -61,6 +64,7 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
+    "@faker-js/faker": "8.4.1",
     "@playwright/test": "1.41.2",
     "@testing-library/jest-dom": "6.4.2",
     "@trivago/prettier-plugin-sort-imports": "4.3.0",
