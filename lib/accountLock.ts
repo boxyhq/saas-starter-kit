@@ -3,7 +3,6 @@ import { render } from '@react-email/components';
 import app from './app';
 import env from './env';
 import { User } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
 import { sendEmail } from './email/sendEmail';
 import { createVerificationToken } from 'models/verificationToken';
 import AccountLocked from '@/components/emailTemplates/AccountLocked';

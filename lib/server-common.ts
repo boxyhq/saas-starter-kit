@@ -1,6 +1,15 @@
 import { randomBytes } from 'crypto';
 import type { NextApiRequest } from 'next';
 
+// Function to force consume the response body to avoid memory leaks
+export const forceConsume = async (response) => {
+  try {
+    await response.text();
+  } catch (error) {
+    // Do nothing
+  }
+};
+
 // Create token
 export function generateToken(length = 64) {
   const tokenBytes = randomBytes(Math.ceil(length / 2)); // Convert length from bytes to hex

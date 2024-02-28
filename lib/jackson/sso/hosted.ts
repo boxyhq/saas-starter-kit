@@ -7,6 +7,7 @@ import env from '@/lib/env';
 import { options } from '../config';
 import { ApiError } from '@/lib/errors';
 import { type JacksonSSO } from './utils';
+import { forceConsume } from '@/lib/server-common';
 
 export class JacksonHosted implements JacksonSSO {
   private ssoUrl = `${env.jackson.url}/api/v1/sso`;
@@ -52,10 +53,11 @@ export class JacksonHosted implements JacksonSSO {
       method: 'PATCH',
       body: JSON.stringify(params),
     });
-
     if (!response.ok) {
       const result = await response.json();
       throw new ApiError(response.status, result.error.message);
+    } else {
+      forceConsume(response);
     }
   }
 
@@ -67,10 +69,11 @@ export class JacksonHosted implements JacksonSSO {
       ...options,
       method: 'DELETE',
     });
-
     if (!response.ok) {
       const result = await response.json();
       throw new ApiError(response.status, result.error.message);
+    } else {
+      forceConsume(response);
     }
   }
 }
