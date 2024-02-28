@@ -8,6 +8,7 @@ import { Card } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import type { User } from '@prisma/client';
 import { updateAccountSchema } from '@/lib/zod/schema';
+import { maxLengthPolicies } from '@/lib/common';
 
 interface UpdateEmailProps {
   user: Partial<User>;
@@ -66,6 +67,7 @@ const UpdateEmail = ({ user, allowEmailChange }: UpdateEmailProps) => {
             className="w-full max-w-md"
             required
             disabled={!allowEmailChange}
+            maxLength={maxLengthPolicies.email}
           />
         </Card.Body>
         <Card.Footer>

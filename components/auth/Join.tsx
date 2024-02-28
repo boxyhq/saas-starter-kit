@@ -12,16 +12,20 @@ import TogglePasswordVisibility from '../shared/TogglePasswordVisibility';
 import AgreeMessage from './AgreeMessage';
 import GoogleReCAPTCHA from '../shared/GoogleReCAPTCHA';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { maxLengthPolicies } from '@/lib/common';
 
 interface JoinProps {
   recaptchaSiteKey: string | null;
 }
 
 const JoinUserSchema = Yup.object().shape({
-  name: Yup.string().required(),
-  email: Yup.string().required().email(),
-  password: Yup.string().required().min(passwordPolicies.minLength),
-  team: Yup.string().required().min(3),
+  name: Yup.string().required().max(maxLengthPolicies.name),
+  email: Yup.string().required().email().max(maxLengthPolicies.email),
+  password: Yup.string()
+    .required()
+    .min(passwordPolicies.minLength)
+    .max(maxLengthPolicies.password),
+  team: Yup.string().required().min(3).max(maxLengthPolicies.team),
 });
 
 const Join = ({ recaptchaSiteKey }: JoinProps) => {
@@ -88,6 +92,7 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
           value={formik.values.name}
           error={formik.touched.name ? formik.errors.name : undefined}
           onChange={formik.handleChange}
+          maxLength={maxLengthPolicies.name}
         />
         <InputWithLabel
           type="text"
@@ -97,6 +102,7 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
           value={formik.values.team}
           error={formik.errors.team}
           onChange={formik.handleChange}
+          maxLength={maxLengthPolicies.team}
         />
         <InputWithLabel
           type="email"
@@ -106,6 +112,7 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
           value={formik.values.email}
           error={formik.errors.email}
           onChange={formik.handleChange}
+          maxLength={maxLengthPolicies.email}
         />
         <div className="relative flex">
           <InputWithLabel
@@ -116,6 +123,7 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
             value={formik.values.password}
             error={formik.errors.password}
             onChange={formik.handleChange}
+            maxLength={maxLengthPolicies.password}
           />
           <TogglePasswordVisibility
             isPasswordVisible={isPasswordVisible}

@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import { useSWRConfig } from 'swr';
 import type { ApiResponse } from 'types';
 import Modal from '../shared/Modal';
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, maxLengthPolicies } from '@/lib/common';
 import { useFormik } from 'formik';
 import { z } from 'zod';
 import { createApiKeySchema } from '@/lib/zod/schema';
@@ -100,6 +100,7 @@ const CreateAPIKeyForm = ({
           placeholder="My API Key"
           className="text-sm"
           error={formik.errors.name}
+          maxLength={maxLengthPolicies.apiKeyName}
         />
       </Modal.Body>
       <Modal.Footer>
@@ -132,6 +133,7 @@ const DisplayAPIKey = ({ apiKey, closeModal }: DisplayAPIKeyProps) => {
           label={t('api-key')}
           value={apiKey}
           className="text-sm"
+          readOnly
         />
       </Modal.Body>
       <Modal.Footer>

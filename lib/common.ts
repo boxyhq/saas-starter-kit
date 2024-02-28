@@ -91,3 +91,13 @@ export const defaultHeaders = {
 export const passwordPolicies = {
   minLength: 8,
 };
+
+export const maxLengthPolicies = {
+  name: 104,
+  email: 254,
+  password: 128,
+  team: 50,
+  slug: 50,
+  domain: 253,
+  apiKeyName: 64,
+};

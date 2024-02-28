@@ -13,6 +13,7 @@ import { getInvitation, isInvitationExpired } from 'models/invitation';
 import { validateRecaptcha } from '@/lib/recaptcha';
 import { slackNotify } from '@/lib/slack';
 import { Team } from '@prisma/client';
+import { maxLengthPolicies } from '@/lib/common';
 
 export default async function handler(
   req: NextApiRequest,
@@ -62,6 +63,20 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
+  // maxLength check
+  if (name.length > maxLengthPolicies.name) {
+    throw new ApiError(400, 'Name is too long');
+  }
+  if (emailToUse.length > maxLengthPolicies.email) {
+    throw new ApiError(400, 'Email is too long');
+  }
+  if (team.length > maxLengthPolicies.team) {
+    throw new ApiError(400, 'Team name is too long');
+  }
+  if (password.length > maxLengthPolicies.password) {
+    throw new ApiError(400, 'Password is too long');
+  }
+
   if (!isEmailAllowed(emailToUse)) {
     throw new ApiError(
       400,
@@ -82,6 +97,14 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const slug = slugify(team);
+
+    if (team.length > maxLengthPolicies.team) {
+      throw new ApiError(400, 'Team name is too long');
+    }
+    if (slug.length > maxLengthPolicies.slug) {
+      throw new ApiError(400, 'Team slug is too long');
+    }
+
     const slugCollisions = await isTeamExists(slug);
 
     if (slugCollisions > 0) {
