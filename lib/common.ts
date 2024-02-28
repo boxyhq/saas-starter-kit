@@ -1,6 +1,15 @@
 import { randomBytes } from 'crypto';
 import type { NextApiRequest } from 'next';
 
+// Function to force consume the response body to avoid memory leaks
+export const forceConsume = async (response) => {
+  try {
+    await response.text();
+  } catch (error) {
+    // Do nothing
+  }
+};
+
 export const createRandomString = (length = 6) => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   const charactersLength = characters.length;
