@@ -6,7 +6,7 @@ export const forceConsume = async (response) => {
   try {
     await response.text();
   } catch (error) {
-    console.log('Error consuming response body:', error);
+    // Do nothing
   }
 };
 
