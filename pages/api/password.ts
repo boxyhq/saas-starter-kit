@@ -3,7 +3,6 @@ import {
   validatePasswordPolicy,
   verifyPassword,
 } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from 'next/dist/server/api-utils';
@@ -12,7 +11,8 @@ import { getCookie } from 'cookies-next';
 import { sessionTokenCookieName } from '@/lib/nextAuth';
 import env from '@/lib/env';
 import { maxLengthPolicies } from '@/lib/common';
-import { updateUser } from 'models/user';
+import { findFirstUserOrThrow, updateUser } from 'models/user';
+import { deleteManySessions } from 'models/session';
 
 export default async function handler(
   req: NextApiRequest,
@@ -54,7 +54,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new ApiError(400, 'New password is too long');
   }
 
-  const user = await prisma.user.findFirstOrThrow({
+  const user = await findFirstUserOrThrow({
     where: { id: session?.user.id },
   });
 
@@ -73,7 +73,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   if (env.nextAuth.sessionStrategy === 'database') {
     const sessionToken = getCookie(sessionTokenCookieName, { req, res });
 
-    await prisma.session.deleteMany({
+    await deleteManySessions({
       where: {
         userId: session?.user.id,
         NOT: {

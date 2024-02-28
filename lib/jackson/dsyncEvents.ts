@@ -1,9 +1,8 @@
 import { DirectorySyncEvent } from '@boxyhq/saml-jackson';
-
-import { prisma } from '@/lib/prisma';
 import { Role } from '@prisma/client';
 import { addTeamMember, removeTeamMember } from 'models/team';
 import { deleteUser, getUser, updateUser, upsertUser } from 'models/user';
+import { countTeamMembers } from 'models/teamMember';
 
 // Handle SCIM events
 export const handleEvents = async (event: DirectorySyncEvent) => {
@@ -48,7 +47,7 @@ export const handleEvents = async (event: DirectorySyncEvent) => {
     if (active === false) {
       await removeTeamMember(teamId, user.id);
 
-      const otherTeamsCount = await prisma.teamMember.count({
+      const otherTeamsCount = await countTeamMembers({
         where: {
           userId: user.id,
         },
@@ -84,7 +83,7 @@ export const handleEvents = async (event: DirectorySyncEvent) => {
 
     await removeTeamMember(teamId, user.id);
 
-    const otherTeamsCount = await prisma.teamMember.count({
+    const otherTeamsCount = await countTeamMembers({
       where: {
         userId: user.id,
       },

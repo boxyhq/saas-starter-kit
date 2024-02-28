@@ -1,7 +1,6 @@
 import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
-import { generateToken, slugify } from '@/lib/server-common';
+import { slugify } from '@/lib/server-common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
-import { prisma } from '@/lib/prisma';
 import { isEmailAllowed } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
@@ -14,6 +13,7 @@ import { validateRecaptcha } from '@/lib/recaptcha';
 import { slackNotify } from '@/lib/slack';
 import { Team } from '@prisma/client';
 import { maxLengthPolicies } from '@/lib/common';
+import { createVerificationToken } from 'models/verificationToken';
 
 export default async function handler(
   req: NextApiRequest,
@@ -135,12 +135,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Send account verification email
   if (env.confirmEmail && !user.emailVerified) {
-    const verificationToken = await prisma.verificationToken.create({
-      data: {
-        identifier: user.email,
-        token: generateToken(),
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      },
+    const verificationToken = await createVerificationToken({
+      identifier: user.email,
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
     await sendVerificationEmail({ user, verificationToken });

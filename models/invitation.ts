@@ -115,3 +115,9 @@ export const deleteInvitation = async (
 export const isInvitationExpired = async (expires: Date) => {
   return expires.getTime() < Date.now();
 };
+
+export const getInvitationCount = async ({ where }) => {
+  return await prisma.invitation.count({
+    where,
+  });
+};

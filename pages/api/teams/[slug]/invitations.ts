@@ -1,6 +1,5 @@
 import { sendTeamInviteEmail } from '@/lib/email/sendTeamInviteEmail';
 import { ApiError } from '@/lib/errors';
-import { prisma } from '@/lib/prisma';
 import { sendAudit } from '@/lib/retraced';
 import { getSession } from '@/lib/session';
 import { sendEvent } from '@/lib/svix';
@@ -8,6 +7,7 @@ import {
   createInvitation,
   deleteInvitation,
   getInvitation,
+  getInvitationCount,
   getInvitations,
   isInvitationExpired,
 } from 'models/invitation';
@@ -17,6 +17,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { extractEmailDomain, isEmailAllowed } from '@/lib/email/utils';
 import { Invitation } from '@prisma/client';
+import { countTeamMembers } from 'models/teamMember';
 
 export default async function handler(
   req: NextApiRequest,
@@ -111,7 +112,7 @@ Aggregate  (cost=2.05..2.06 rows=1 width=8) (actual time=0.046..0.047 rows=1 loo
 Planning Time: 1.285 ms
 Execution Time: 0.152 ms
 */
-    const memberExists = await prisma.teamMember.count({
+    const memberExists = await countTeamMembers({
       where: {
         teamId: teamMember.teamId,
         user: {
@@ -124,7 +125,7 @@ Execution Time: 0.152 ms
       throw new ApiError(400, 'This user is already a member of the team.');
     }
 
-    const invitationExists = await prisma.invitation.count({
+    const invitationExists = await getInvitationCount({
       where: {
         email,
         teamId: teamMember.teamId,
