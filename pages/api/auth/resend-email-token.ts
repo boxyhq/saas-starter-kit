@@ -1,4 +1,4 @@
-import { generateToken, validateEmail } from '@/lib/common';
+import { generateToken, validateEmail } from '@/lib/server-common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { ApiError } from '@/lib/errors';
 import { prisma } from '@/lib/prisma';

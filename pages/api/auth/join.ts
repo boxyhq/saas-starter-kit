@@ -1,5 +1,5 @@
 import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
-import { generateToken, slugify } from '@/lib/common';
+import { generateToken, slugify } from '@/lib/server-common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { prisma } from '@/lib/prisma';
 import { isEmailAllowed } from '@/lib/email/utils';
