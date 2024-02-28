@@ -3,7 +3,7 @@ import { DirectorySyncEvent } from '@boxyhq/saml-jackson';
 import { prisma } from '@/lib/prisma';
 import { Role } from '@prisma/client';
 import { addTeamMember, removeTeamMember } from 'models/team';
-import { deleteUser, getUser } from 'models/user';
+import { deleteUser, getUser, updateUser, upsertUser } from 'models/user';
 
 // Handle SCIM events
 export const handleEvents = async (event: DirectorySyncEvent) => {
@@ -20,7 +20,7 @@ export const handleEvents = async (event: DirectorySyncEvent) => {
 
   // User has been added
   if (action === 'user.created') {
-    const user = await prisma.user.upsert({
+    const user = await upsertUser({
       where: {
         email,
       },
@@ -61,7 +61,7 @@ export const handleEvents = async (event: DirectorySyncEvent) => {
       return;
     }
 
-    await prisma.user.update({
+    await updateUser({
       where: {
         email,
       },

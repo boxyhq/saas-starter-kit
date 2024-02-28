@@ -12,6 +12,7 @@ import { getCookie } from 'cookies-next';
 import { sessionTokenCookieName } from '@/lib/nextAuth';
 import env from '@/lib/env';
 import { maxLengthPolicies } from '@/lib/common';
+import { updateUser } from 'models/user';
 
 export default async function handler(
   req: NextApiRequest,
@@ -63,7 +64,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   validatePasswordPolicy(newPassword);
 
-  await prisma.user.update({
+  await await updateUser({
     where: { id: session?.user.id },
     data: { password: await hashPassword(newPassword) },
   });

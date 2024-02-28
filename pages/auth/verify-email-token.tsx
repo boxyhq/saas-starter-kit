@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { updateUser } from 'models/user';
 import type { GetServerSidePropsContext } from 'next';
 import type { ReactElement } from 'react';
 
@@ -46,7 +47,7 @@ export const getServerSideProps = async ({
   }
 
   await Promise.allSettled([
-    prisma.user.update({
+    updateUser({
       where: {
         email: verificationToken?.identifier,
       },

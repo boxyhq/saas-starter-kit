@@ -5,6 +5,7 @@ import { ApiError } from 'next/dist/server/api-utils';
 import { recordMetric } from '@/lib/metrics';
 import { unlockAccount } from '@/lib/accountLock';
 import env from '@/lib/env';
+import { updateUser } from 'models/user';
 
 export default async function handler(
   req: NextApiRequest,
@@ -60,7 +61,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const hashedPassword = await hashPassword(password);
 
-  const updatedUser = await prisma.user.update({
+  const updatedUser = await await updateUser({
     where: { email: passwordReset.email },
     data: {
       password: hashedPassword,
