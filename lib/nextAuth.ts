@@ -32,6 +32,7 @@ import {
   incrementLoginAttempts,
 } from '@/lib/accountLock';
 import { slackNotify } from './slack';
+import { forceConsume } from './common';
 
 const adapter = PrismaAdapter(prisma);
 const providers: Provider[] = [];
@@ -174,6 +175,7 @@ if (isAuthProviderEnabled('idp-initiated')) {
         });
 
         if (res.status !== 200) {
+          forceConsume(res);
           return null;
         }
 
@@ -189,6 +191,7 @@ if (isAuthProviderEnabled('idp-initiated')) {
         });
 
         if (!resUserInfo.ok) {
+          forceConsume(resUserInfo);
           return null;
         }
 
