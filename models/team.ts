@@ -5,7 +5,6 @@ import { teamSlugSchema } from '@/lib/zod/schema';
 import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCurrentUser } from './user';
-import { maxLengthPolicies } from '@/lib/common';
 import { normalizeUser } from './user';
 
 export const createTeam = async (param: {

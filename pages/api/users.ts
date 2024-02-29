@@ -53,7 +53,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   await updateUser({
-    where: { id: session!.user.id },
+    where: { id: session?.user.id },
     data,
   });
 
