@@ -60,7 +60,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const hashedPassword = await hashPassword(password);
 
-  const updatedUser = await await updateUser({
+  const updatedUser = await updateUser({
     where: { email: passwordReset.email },
     data: {
       password: hashedPassword,

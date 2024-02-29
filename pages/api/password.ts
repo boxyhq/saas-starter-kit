@@ -64,7 +64,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   validatePasswordPolicy(newPassword);
 
-  await await updateUser({
+  await updateUser({
     where: { id: session?.user.id },
     data: { password: await hashPassword(newPassword) },
   });

@@ -84,9 +84,15 @@ export const deleteUser = async (key: { id: string } | { email: string }) => {
 };
 
 export const findFirstUserOrThrow = async ({ where }) => {
-  return await prisma.user.findFirstOrThrow({
+  const user = await prisma.user.findFirstOrThrow({
     where,
   });
+
+  if (user?.name) {
+    user.name = user?.name.substring(0, maxLengthPolicies.name);
+  }
+
+  return user;
 };
 
 export const isAllowed = (role: Role, resource: Resource, action: Action) => {
