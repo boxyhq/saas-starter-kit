@@ -6,6 +6,7 @@ import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCurrentUser } from './user';
 import { maxLengthPolicies } from '@/lib/common';
+import { normalizeUser } from './user';
 
 export const createTeam = async (param: {
   userId: string;
@@ -253,12 +254,10 @@ export const getTeamMembers = async (slug: string) => {
     },
   });
 
-  members?.map((member) => {
-    if (member.user?.name) {
-      member.user.name = member.user?.name.substring(0, maxLengthPolicies.name);
-    }
+  return members?.map((member) => {
+    member.user = normalizeUser(member.user);
+    return member;
   });
-  return members;
 };
 
 export const updateTeam = async (slug: string, data: Partial<Team>) => {

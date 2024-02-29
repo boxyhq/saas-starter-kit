@@ -7,28 +7,27 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from '@/lib/session';
 import { maxLengthPolicies } from '@/lib/common';
 
-export const createUser = async (param: {
+export const normalizeUser = (user) => {
+  if (user.name) {
+    user.name = user.name.substring(0, maxLengthPolicies.name);
+  }
+
+  return user;
+};
+
+export const createUser = async (data: {
   name: string;
   email: string;
   password?: string;
   emailVerified?: Date | null;
 }) => {
-  const { name, email, password, emailVerified } = param;
-
   return await prisma.user.create({
-    data: {
-      name: name.substring(0, maxLengthPolicies.name),
-      email,
-      password: password ? password : '',
-      emailVerified: emailVerified ? emailVerified : null,
-    },
+    data: normalizeUser(data),
   });
 };
 
 export const updateUser = async ({ where, data }) => {
-  if (data.name) {
-    data.name = data.name.substring(0, maxLengthPolicies.name);
-  }
+  data = normalizeUser(data);
 
   return await prisma.user.update({
     where,
@@ -37,12 +36,8 @@ export const updateUser = async ({ where, data }) => {
 };
 
 export const upsertUser = async ({ where, update, create }) => {
-  if (update?.name) {
-    update.name = update.name.substring(0, maxLengthPolicies.name);
-  }
-  if (create?.name) {
-    create.name = create.name.substring(0, maxLengthPolicies.name);
-  }
+  update = normalizeUser(update);
+  create = normalizeUser(create);
 
   return await prisma.user.upsert({
     where,
@@ -56,11 +51,7 @@ export const getUser = async (key: { id: string } | { email: string }) => {
     where: key,
   });
 
-  if (user?.name) {
-    user.name = user?.name.substring(0, maxLengthPolicies.name);
-  }
-
-  return user;
+  return normalizeUser(user);
 };
 
 export const getUserBySession = async (session: Session | null) => {
@@ -88,11 +79,7 @@ export const findFirstUserOrThrow = async ({ where }) => {
     where,
   });
 
-  if (user?.name) {
-    user.name = user?.name.substring(0, maxLengthPolicies.name);
-  }
-
-  return user;
+  return normalizeUser(user);
 };
 
 export const isAllowed = (role: Role, resource: Resource, action: Action) => {
