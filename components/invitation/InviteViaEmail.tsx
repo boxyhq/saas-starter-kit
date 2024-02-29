@@ -7,7 +7,7 @@ import { Button, Input } from 'react-daisyui';
 import { useTranslation } from 'next-i18next';
 
 import type { ApiResponse } from 'types';
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, maxLengthPolicies } from '@/lib/common';
 import { availableRoles } from '@/lib/permissions';
 import type { Team } from '@prisma/client';
 
@@ -20,7 +20,10 @@ const InviteViaEmail = ({ setVisible, team }: InviteViaEmailProps) => {
   const { t } = useTranslation('common');
 
   const FormValidationSchema = Yup.object().shape({
-    email: Yup.string().email().required(t('require-email')),
+    email: Yup.string()
+      .email()
+      .max(maxLengthPolicies.email)
+      .required(t('require-email')),
     role: Yup.string()
       .required(t('required-role'))
       .oneOf(availableRoles.map((r) => r.id)),
@@ -65,6 +68,7 @@ const InviteViaEmail = ({ setVisible, team }: InviteViaEmailProps) => {
           required
           className="text-sm w-1/2"
           type="email"
+          maxLength={maxLengthPolicies.email}
         />
         <select
           className="select-bordered select rounded"

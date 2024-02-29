@@ -1,5 +1,5 @@
 import { InputWithLabel, Loading } from '@/components/shared';
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, maxLengthPolicies } from '@/lib/common';
 import fetcher from '@/lib/fetcher';
 import type { Directory } from '@boxyhq/saml-jackson';
 import { Team } from '@prisma/client';
@@ -31,8 +31,8 @@ const CreateDirectory = ({
       provider: 'generic-scim-v2',
     },
     validationSchema: Yup.object().shape({
-      name: Yup.string().required(),
-      provider: Yup.string().required(),
+      name: Yup.string().required().max(maxLengthPolicies.directoryName),
+      provider: Yup.string().required().oneOf(Object.keys(data?.data)),
     }),
     onSubmit: async (values) => {
       const response = await fetch(`/api/teams/${team.slug}/directory-sync`, {
@@ -89,6 +89,7 @@ const CreateDirectory = ({
               value={formik.values.name}
               placeholder={t('directory-name-placeholder')}
               label={t('directory-name')}
+              maxLength={maxLengthPolicies.directoryName}
             />
             <div className="form-control w-full">
               <label className="label">

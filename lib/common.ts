@@ -25,5 +25,9 @@ export const maxLengthPolicies = {
   team: 50,
   slug: 50,
   domain: 253,
+  domains: 1024,
   apiKeyName: 64,
+  directoryName: 64,
+  webhookDescription: 100,
+  webhookEndpoint: 2083,
 };
