@@ -22,7 +22,7 @@
     "test:cov": "jest --coverage --env=jsdom",
     "build-ci": "next build",
     "sync-stripe": "node --env-file .env syncStripe.js",
-    "locale-check": "node locale-check.js"
+    "check-locale": "node check-locale.js"
   },
   "dependencies": {
     "@boxyhq/metrics": "0.2.6",
