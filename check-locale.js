@@ -13,6 +13,9 @@ const exceptionList = [
   'confirm-your-email',
   'exceeded-login-attempts',
   'account-unlocked',
+  'invalid-credentials',
+  'no-credentials',
+  'token-not-found',
 ]
 
 const allStrings = {};

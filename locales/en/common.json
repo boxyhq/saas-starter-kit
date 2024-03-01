@@ -233,5 +233,8 @@
   "signin-with-saml-sso": "Sign in with SAML SSO",
   "log-in-to-account": "Log in to your account",
   "desc-sso-login": "Select an Identity Provider to continue with SSO",
-  "desc-signin-with-saml-sso": "Your ID is the slug after the hostname."
+  "desc-signin-with-saml-sso": "Your ID is the slug after the hostname.",
+  "invalid-credentials": "Invalid credentials",
+  "no-credentials": "No credentials provided",
+  "token-not-found": "Verification token not found"
 }
