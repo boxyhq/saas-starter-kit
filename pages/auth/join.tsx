@@ -7,13 +7,12 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { type ReactElement, useEffect } from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import Join from '@/components/auth/Join';
 import type { NextPageWithLayout } from 'types';
 import { authProviderEnabled } from '@/lib/auth';
 import { AuthLayout } from '@/components/layouts';
 import GithubButton from '@/components/auth/GithubButton';
 import GoogleButton from '@/components/auth/GoogleButton';
-import JoinWithInvitation from '@/components/auth/JoinWithInvitation';
+import { JoinWithInvitation, Join } from '@/components/auth';
 import Head from 'next/head';
 import { Loading } from '@/components/shared';
 import env from '@/lib/env';

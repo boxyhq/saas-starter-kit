@@ -13,7 +13,7 @@ export async function verifyPassword(password: string, hashedPassword: string) {
   return await compare(password, hashedPassword);
 }
 
-export function getAuthProviders() {
+function getAuthProviders() {
   return env.authProviders?.split(',') || [];
 }
 

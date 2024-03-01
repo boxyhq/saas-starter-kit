@@ -7,7 +7,7 @@ import { Button } from 'react-daisyui';
 import type { WebookFormSchema } from 'types';
 import * as Yup from 'yup';
 import Modal from '../shared/Modal';
-import EventTypes from './EventTypes';
+import { EventTypes } from '@/components/webhook';
 
 interface FormProps {
   visible: boolean;
