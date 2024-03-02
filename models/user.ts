@@ -82,7 +82,7 @@ export const findFirstUserOrThrow = async ({ where }) => {
   return normalizeUser(user);
 };
 
-export const isAllowed = (role: Role, resource: Resource, action: Action) => {
+const isAllowed = (role: Role, resource: Resource, action: Action) => {
   const rolePermissions = permissions[role];
 
   if (!rolePermissions) {

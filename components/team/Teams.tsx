@@ -11,7 +11,7 @@ import type { ApiResponse } from 'types';
 import { useRouter } from 'next/router';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
 import { WithLoadingAndError } from '@/components/shared';
-import CreateTeam from './CreateTeam';
+import { CreateTeam } from '@/components/team';
 import { Table } from '@/components/shared/table/Table';
 
 const Teams = () => {
