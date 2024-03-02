@@ -5,7 +5,7 @@ import type { User } from 'next-auth';
 
 import env from './env';
 
-export type EventType =
+type EventType =
   | 'member.invitation.create'
   | 'member.invitation.delete'
   | 'member.remove'
