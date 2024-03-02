@@ -6,11 +6,11 @@ interface CreateApiKeyParams {
   teamId: string;
 }
 
-export const hashApiKey = (apiKey: string) => {
+const hashApiKey = (apiKey: string) => {
   return createHash('sha256').update(apiKey).digest('hex');
 };
 
-export const generateUniqueApiKey = () => {
+const generateUniqueApiKey = () => {
   const apiKey = randomBytes(16).toString('hex');
 
   return [hashApiKey(apiKey), apiKey];
@@ -51,23 +51,6 @@ export const deleteApiKey = async (id: string) => {
       id,
     },
   });
-};
-
-export const isApiKeyValid = async (apiKey: string) => {
-  const apiKeyRecord = await prisma.apiKey.findUnique({
-    where: {
-      hashedKey: hashApiKey(apiKey),
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  if (!apiKeyRecord) {
-    return false;
-  }
-
-  return true;
 };
 
 export const getApiKey = async (apiKey: string) => {

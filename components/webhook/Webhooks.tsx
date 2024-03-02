@@ -8,8 +8,7 @@ import { Button } from 'react-daisyui';
 import toast from 'react-hot-toast';
 import type { EndpointOut } from 'svix';
 
-import CreateWebhook from './CreateWebhook';
-import EditWebhook from './EditWebhook';
+import { CreateWebhook, EditWebhook } from '@/components/webhook';
 import { defaultHeaders } from '@/lib/common';
 import type { ApiResponse } from 'types';
 import ConfirmationDialog from '../shared/ConfirmationDialog';

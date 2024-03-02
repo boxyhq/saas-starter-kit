@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import type { WebookFormSchema } from 'types';
 
-export const eventTypes = [
+const eventTypes = [
   'member.created',
   'member.removed',
   'invitation.created',

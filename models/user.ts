@@ -50,7 +50,7 @@ export const deleteUser = async (key: { id: string } | { email: string }) => {
   });
 };
 
-export const isAllowed = (role: Role, resource: Resource, action: Action) => {
+const isAllowed = (role: Role, resource: Resource, action: Action) => {
   const rolePermissions = permissions[role];
 
   if (!rolePermissions) {
