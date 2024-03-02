@@ -1,4 +1,4 @@
-import styles from 'styles/sdk-override.module.css';
+import styles from '../styles/sdk-override.module.css';
 
 export const BOXYHQ_UI_CSS = {
   button: {
