@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client';
 
-export type ApiError = {
+type ApiError = {
   code: number;
   message: string;
   values: { [key: string]: string };
@@ -15,8 +15,6 @@ export type ApiResponse<T = unknown> =
       data: never;
       error: ApiError;
     };
-
-export type Role = 'owner' | 'member';
 
 export type TeamWithMemberCount = Prisma.TeamGetPayload<{
   include: {
