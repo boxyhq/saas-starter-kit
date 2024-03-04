@@ -81,7 +81,7 @@
     "autoprefixer": "10.4.17",
     "daisyui": "4.7.2",
     "eslint": "8.57.0",
-    "eslint-config-next": "14.1.0",
+    "eslint-config-next": "14.1.2",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-i18next": "6.0.3",
     "eslint-plugin-react": "7.34.0",
