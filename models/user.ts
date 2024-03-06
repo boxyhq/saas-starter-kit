@@ -8,7 +8,7 @@ import { getSession } from '@/lib/session';
 import { maxLengthPolicies } from '@/lib/common';
 
 export const normalizeUser = (user) => {
-  if (user.name) {
+  if (user?.name) {
     user.name = user.name.substring(0, maxLengthPolicies.name);
   }
 

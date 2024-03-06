@@ -15,6 +15,9 @@ import { Team } from '@prisma/client';
 import { maxLengthPolicies } from '@/lib/common';
 import { createVerificationToken } from 'models/verificationToken';
 
+// TODO:
+// Add zod schema validation
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -67,12 +70,11 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   if (name.length > maxLengthPolicies.name) {
     throw new ApiError(400, 'Name is too long');
   }
+
   if (emailToUse.length > maxLengthPolicies.email) {
     throw new ApiError(400, 'Email is too long');
   }
-  if (team.length > maxLengthPolicies.team) {
-    throw new ApiError(400, 'Team name is too long');
-  }
+
   if (password.length > maxLengthPolicies.password) {
     throw new ApiError(400, 'Password is too long');
   }
@@ -96,11 +98,12 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       throw new ApiError(400, 'A team name is required.');
     }
 
-    const slug = slugify(team);
-
     if (team.length > maxLengthPolicies.team) {
       throw new ApiError(400, 'Team name is too long');
     }
+
+    const slug = slugify(team);
+
     if (slug.length > maxLengthPolicies.slug) {
       throw new ApiError(400, 'Team slug is too long');
     }

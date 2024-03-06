@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { isValidDomain, maxLengthPolicies } from '../common';
+import { slugify } from '../server-common';
 
 export const createApiKeySchema = z.object({
   name: z.string().min(1, 'Name is required').max(maxLengthPolicies.apiKeyName),
@@ -18,7 +19,8 @@ export const updateTeamSchema = z.object({
   slug: z
     .string()
     .min(3, 'Slug must be at least 3 characters')
-    .max(maxLengthPolicies.slug),
+    .max(maxLengthPolicies.slug)
+    .transform((slug) => slugify(slug)),
   domain: z
     .string()
     .max(maxLengthPolicies.domain)
