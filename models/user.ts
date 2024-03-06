@@ -8,7 +8,7 @@ import { getSession } from '@/lib/session';
 import { maxLengthPolicies } from '@/lib/common';
 
 export const normalizeUser = (user) => {
-  if (user?.name) {
+  if (user.name) {
     user.name = user.name.substring(0, maxLengthPolicies.name);
   }
 
@@ -51,7 +51,7 @@ export const getUser = async (key: { id: string } | { email: string }) => {
     where: key,
   });
 
-  return normalizeUser(user);
+  return user ? normalizeUser(user) : null;
 };
 
 export const getUserBySession = async (session: Session | null) => {
