@@ -6,6 +6,7 @@ export const BOXYHQ_UI_CSS = {
     destructive: 'btn btn-md btn-error',
   },
   input: `${styles['sdk-input']} input input-bordered`,
+  select: styles['sdk-select'],
   textarea: styles['sdk-input'],
   confirmationPrompt: {
     button: {
