@@ -35,7 +35,10 @@ const DirectorySync = ({ teamFeatures }) => {
       <DirectoriesWrapper
         classNames={BOXYHQ_UI_CSS}
         componentProps={{
-          directoryList: { cols: ['name', 'type', 'status', 'actions'] },
+          directoryList: {
+            cols: ['name', 'type', 'status', 'actions'],
+            hideViewAction: true,
+          },
           createDirectory: {
             excludeFields: [
               'product',
