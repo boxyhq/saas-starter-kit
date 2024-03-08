@@ -47,6 +47,7 @@ const DirectorySync = ({ teamFeatures }) => {
               'webhook_url',
               'log_webhook_events',
             ],
+            disableGoogleProvider: true,
           },
           editDirectory: {
             excludeFields: [
