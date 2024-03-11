@@ -79,14 +79,6 @@
   "pricing": "Pricing",
   "buy-now": "Buy now",
   "features": "Features",
-  "create-directory-connection": "Create Directory Connection",
-  "create-directory": "Create Directory",
-  "directory-sync-provider": "Directory Sync Provider",
-  "create-directory-message": "Automatically provision and de-provision users with your directory provider.",
-  "directory-sync-message": "Directory Sync Provider will ask you for the following information to configure your SCIM app.",
-  "scim-url": "SCIM URL.",
-  "auth-token": "Auth Token",
-  "directory-connection-created": "Directory connection successfully.",
   "password-reset-link-sent": "Password reset link sent",
   "email-password-reset-link": "Email Password Reset Link",
   "reset-password": "Reset Password",
@@ -107,8 +99,6 @@
   "email-placeholder": "example@boxyhq.com",
   "confirm-password": "Confirm Password",
   "enter-new-password": "Enter new password",
-  "directory-name": "Directory Name",
-  "directory-name-placeholder": "Example Directory",
   "member-role-updated": "Member role updated successfully.",
   "member-deleted": "Member deleted successfully.",
   "team-slug": "Team Slug",
@@ -243,5 +233,8 @@
   "signin-with-saml-sso": "Sign in with SAML SSO",
   "log-in-to-account": "Log in to your account",
   "desc-sso-login": "Select an Identity Provider to continue with SSO",
-  "desc-signin-with-saml-sso": "Your ID is the slug after the hostname."
+  "desc-signin-with-saml-sso": "Your ID is the slug after the hostname.",
+  "invalid-credentials": "Invalid credentials",
+  "no-credentials": "No credentials provided",
+  "token-not-found": "Verification token not found"
 }

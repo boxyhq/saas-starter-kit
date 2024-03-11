@@ -82,10 +82,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const slug = slugify(team);
-    const nameCollisions = await isTeamExists([{ name: team }, { slug }]);
+    const slugCollisions = await isTeamExists(slug);
 
-    if (nameCollisions > 0) {
-      throw new ApiError(400, 'A team with this name already exists.');
+    if (slugCollisions > 0) {
+      throw new ApiError(400, 'A team with this slug already exists.');
     }
   }
 

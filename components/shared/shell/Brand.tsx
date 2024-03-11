@@ -5,7 +5,7 @@ const Brand = () => {
   return (
     <div className="flex pt-6 shrink-0 items-center text-xl font-bold gap-2">
       <Image
-        className="w-auto"
+        className="h-8 w-auto"
         src={app.logoUrl}
         alt={app.name}
         width={30}

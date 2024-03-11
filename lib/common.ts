@@ -1,5 +1,14 @@
-import { enc, lib } from 'crypto-js';
+import { randomBytes } from 'crypto';
 import type { NextApiRequest } from 'next';
+
+// Function to force consume the response body to avoid memory leaks
+export const forceConsume = async (response) => {
+  try {
+    await response.text();
+  } catch (error) {
+    // Do nothing
+  }
+};
 
 export const createRandomString = (length = 6) => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -16,9 +25,9 @@ export const createRandomString = (length = 6) => {
 
 // Create token
 export function generateToken(length = 64) {
-  const tokenBytes = lib.WordArray.random(length);
+  const tokenBytes = randomBytes(Math.ceil(length / 2)); // Convert length from bytes to hex
 
-  return enc.Base64.stringify(tokenBytes);
+  return tokenBytes.toString('hex').slice(0, length);
 }
 
 export const slugify = (text: string) => {
@@ -39,7 +48,7 @@ export const extractAuthToken = (req: NextApiRequest): string | null => {
   return authHeader ? authHeader.split(' ')[1] : null;
 };
 
-export const domainRegex =
+const domainRegex =
   /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/;
 
 export const isValidDomain = (domain: string): boolean => {
@@ -49,35 +58,6 @@ export const isValidDomain = (domain: string): boolean => {
 export const validateEmail = (email: string): boolean => {
   const re = /\S+@\S+\.\S+/;
   return re.test(email);
-};
-
-export const validatePassword = (password: string): boolean => {
-  // Password should be at least 8 characters long
-  if (password.length < 8) {
-    return false;
-  }
-
-  // Password should have at least one lowercase letter
-  if (!/[a-z]/.test(password)) {
-    return false;
-  }
-
-  // Password should have at least one uppercase letter
-  if (!/[A-Z]/.test(password)) {
-    return false;
-  }
-
-  // Password should have at least one number
-  if (!/\d/.test(password)) {
-    return false;
-  }
-
-  // Password should have at least one special character
-  if (!/[^a-zA-Z0-9]/.test(password)) {
-    return false;
-  }
-
-  return true;
 };
 
 export const copyToClipboard = (text: string) => {
