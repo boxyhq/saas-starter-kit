@@ -52,6 +52,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new ApiError(400, 'Your current password is incorrect');
   }
 
+  validatePasswordPolicy(newPassword);
+
   await updateUser({
     where: { id: session?.user.id },
     data: { password: await hashPassword(newPassword) },
