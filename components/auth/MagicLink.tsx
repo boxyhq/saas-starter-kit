@@ -82,7 +82,6 @@ const MagicLink = ({ csrfToken }: MagicLinkProps) => {
               descriptionText="We’ll email you a magic link for a password-free sign in."
               error={formik.touched.email ? formik.errors.email : undefined}
               onChange={formik.handleChange}
-              maxLength={maxLengthPolicies.email}
             />
             <Button
               type="submit"

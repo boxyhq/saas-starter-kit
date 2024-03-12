@@ -114,7 +114,6 @@ const JoinWithInvitation = ({
           value={formik.values.name}
           error={formik.errors.name}
           onChange={formik.handleChange}
-          maxLength={maxLengthPolicies.name}
         />
 
         {invitation.sentViaEmail ? (
@@ -133,7 +132,6 @@ const JoinWithInvitation = ({
             value={formik.values.email}
             error={formik.errors.email}
             onChange={formik.handleChange}
-            maxLength={maxLengthPolicies.email}
           />
         )}
 
@@ -146,7 +144,6 @@ const JoinWithInvitation = ({
             value={formik.values.password}
             error={formik.errors.password}
             onChange={formik.handleChange}
-            maxLength={maxLengthPolicies.password}
           />
           <TogglePasswordVisibility
             isPasswordVisible={isPasswordVisible}

@@ -76,7 +76,6 @@ const ResetPassword = () => {
             value={formik.values.password}
             error={formik.touched.password ? formik.errors.password : undefined}
             onChange={formik.handleChange}
-            maxLength={maxLengthPolicies.password}
           />
           <InputWithLabel
             type="password"
@@ -90,7 +89,6 @@ const ResetPassword = () => {
                 : undefined
             }
             onChange={formik.handleChange}
-            maxLength={maxLengthPolicies.password}
           />
         </div>
         <div className="mt-4">

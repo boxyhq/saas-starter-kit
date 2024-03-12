@@ -68,7 +68,6 @@ const CreateTeam = ({ visible, setVisible }: CreateTeamProps) => {
             onChange={formik.handleChange}
             value={formik.values.name}
             placeholder={t('team-name')}
-            maxLength={maxLengthPolicies.team}
             required
           />
         </Modal.Body>

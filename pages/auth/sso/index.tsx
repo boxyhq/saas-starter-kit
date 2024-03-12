@@ -77,7 +77,6 @@ const SSO: NextPageWithLayout<
               descriptionText="Contact your administrator to get your team slug"
               error={formik.touched.slug ? formik.errors.slug : undefined}
               onChange={formik.handleChange}
-              maxLength={maxLengthPolicies.slug}
             />
             <Button
               type="submit"

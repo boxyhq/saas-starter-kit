@@ -137,7 +137,6 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
           value={formik.values.domains}
           placeholder="Restrict domain: boxyhq.com"
           className="text-sm w-1/2"
-          maxLength={maxLengthPolicies.domains}
         />
         <select
           className="select-bordered select rounded"

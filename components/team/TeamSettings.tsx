@@ -67,7 +67,6 @@ const TeamSettings = ({ team }: { team: Team }) => {
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 error={formik.errors.name}
-                maxLength={maxLengthPolicies.team}
               />
               <InputWithLabel
                 name="slug"
@@ -75,7 +74,6 @@ const TeamSettings = ({ team }: { team: Team }) => {
                 value={formik.values.slug}
                 onChange={formik.handleChange}
                 error={formik.errors.slug}
-                maxLength={maxLengthPolicies.slug}
               />
               <InputWithLabel
                 name="domain"

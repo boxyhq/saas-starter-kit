@@ -67,7 +67,6 @@ const UpdateName = ({ user }: { user: Partial<User> }) => {
             onChange={formik.handleChange}
             className="w-full max-w-md"
             required
-            maxLength={maxLengthPolicies.name}
           />
         </Card.Body>
         <Card.Footer>

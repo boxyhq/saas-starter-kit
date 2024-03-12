@@ -92,7 +92,6 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
           value={formik.values.name}
           error={formik.touched.name ? formik.errors.name : undefined}
           onChange={formik.handleChange}
-          maxLength={maxLengthPolicies.name}
         />
         <InputWithLabel
           type="text"
@@ -102,7 +101,6 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
           value={formik.values.team}
           error={formik.errors.team}
           onChange={formik.handleChange}
-          maxLength={maxLengthPolicies.team}
         />
         <InputWithLabel
           type="email"
@@ -112,7 +110,6 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
           value={formik.values.email}
           error={formik.errors.email}
           onChange={formik.handleChange}
-          maxLength={maxLengthPolicies.email}
         />
         <div className="relative flex">
           <InputWithLabel
@@ -123,7 +120,6 @@ const Join = ({ recaptchaSiteKey }: JoinProps) => {
             value={formik.values.password}
             error={formik.errors.password}
             onChange={formik.handleChange}
-            maxLength={maxLengthPolicies.password}
           />
           <TogglePasswordVisibility
             isPasswordVisible={isPasswordVisible}

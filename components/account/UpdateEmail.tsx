@@ -67,7 +67,6 @@ const UpdateEmail = ({ user, allowEmailChange }: UpdateEmailProps) => {
             className="w-full max-w-md"
             required
             disabled={!allowEmailChange}
-            maxLength={maxLengthPolicies.email}
           />
         </Card.Body>
         <Card.Footer>

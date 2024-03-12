@@ -100,7 +100,6 @@ const CreateAPIKeyForm = ({
           placeholder="My API Key"
           className="text-sm"
           error={formik.errors.name}
-          maxLength={maxLengthPolicies.apiKeyName}
         />
       </Modal.Body>
       <Modal.Footer>
