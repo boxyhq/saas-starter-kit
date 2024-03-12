@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isValidDomain, maxLengthPolicies } from '../common';
+import { isValidDomain, maxLengthPolicies, passwordPolicies } from '../common';
 import { slugify } from '../server-common';
 
 export const createApiKeySchema = z.object({
@@ -75,3 +75,22 @@ export const updateAccountSchema = z.union([
       }, 'Avatar must be less than 2MB'),
   }),
 ]);
+
+export const updatePasswordSchema = z.object({
+  currentPassword: z
+    .string()
+    .max(maxLengthPolicies.password, 'Current password is too long')
+    .min(
+      passwordPolicies.minLength,
+      `Current password must have at least ${passwordPolicies.minLength} characters`
+    ),
+  newPassword: z
+    .string()
+    .max(maxLengthPolicies.password, 'New password is too long')
+    .min(
+      passwordPolicies.minLength,
+      `New password must have at least ${passwordPolicies.minLength} characters`
+    ),
+});
+
+// export const

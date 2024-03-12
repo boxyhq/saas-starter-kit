@@ -10,9 +10,9 @@ import { recordMetric } from '@/lib/metrics';
 import { getCookie } from 'cookies-next';
 import { sessionTokenCookieName } from '@/lib/nextAuth';
 import env from '@/lib/env';
-import { maxLengthPolicies } from '@/lib/common';
 import { findFirstUserOrThrow, updateUser } from 'models/user';
 import { deleteManySessions } from 'models/session';
+import { updatePasswordSchema } from '@/lib/zod/schema';
 
 export default async function handler(
   req: NextApiRequest,
@@ -42,17 +42,7 @@ export default async function handler(
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
-  const { currentPassword, newPassword } = req.body as {
-    currentPassword: string;
-    newPassword: string;
-  };
-
-  if (currentPassword.length > maxLengthPolicies.password) {
-    throw new ApiError(400, 'Current password is too long');
-  }
-  if (newPassword.length > maxLengthPolicies.password) {
-    throw new ApiError(400, 'New password is too long');
-  }
+  const { currentPassword, newPassword } = updatePasswordSchema.parse(req.body);
 
   const user = await findFirstUserOrThrow({
     where: { id: session?.user.id },
@@ -61,8 +51,6 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await verifyPassword(currentPassword, user.password as string))) {
     throw new ApiError(400, 'Your current password is incorrect');
   }
-
-  validatePasswordPolicy(newPassword);
 
   await updateUser({
     where: { id: session?.user.id },
