@@ -1,10 +1,9 @@
-import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { ApiError } from '@/lib/errors';
 import env from '@/lib/env';
-import { getUser } from 'models/user';
+import { getUser, updateUser } from 'models/user';
 import { isEmailAllowed } from '@/lib/email/utils';
 import { updateAccountSchema } from '@/lib/zod/schema';
 
@@ -53,7 +52,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  await prisma.user.update({
+  await updateUser({
     where: { id: session?.user.id },
     data,
   });

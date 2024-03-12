@@ -1,5 +1,9 @@
 import { InputWithLabel } from '@/components/shared';
-import { defaultHeaders, passwordPolicies } from '@/lib/common';
+import {
+  defaultHeaders,
+  maxLengthPolicies,
+  passwordPolicies,
+} from '@/lib/common';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -21,12 +25,17 @@ const ResetPassword = () => {
       confirmPassword: '',
     },
     validationSchema: Yup.object().shape({
-      password: Yup.string().required().min(passwordPolicies.minLength),
-      confirmPassword: Yup.string().test(
-        'passwords-match',
-        'Passwords must match',
-        (value, context) => value === context.parent.password
-      ),
+      password: Yup.string()
+        .required()
+        .min(passwordPolicies.minLength)
+        .max(maxLengthPolicies.password),
+      confirmPassword: Yup.string()
+        .max(maxLengthPolicies.password)
+        .test(
+          'passwords-match',
+          'Passwords must match',
+          (value, context) => value === context.parent.password
+        ),
     }),
     onSubmit: async (values) => {
       setSubmitting(true);

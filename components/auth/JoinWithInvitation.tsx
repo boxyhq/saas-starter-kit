@@ -4,7 +4,11 @@ import {
   Loading,
   WithLoadingAndError,
 } from '@/components/shared';
-import { defaultHeaders, passwordPolicies } from '@/lib/common';
+import {
+  defaultHeaders,
+  maxLengthPolicies,
+  passwordPolicies,
+} from '@/lib/common';
 import { useFormik } from 'formik';
 import useInvitation from 'hooks/useInvitation';
 import { useTranslation } from 'next-i18next';
@@ -25,13 +29,18 @@ interface JoinWithInvitationProps {
 }
 
 const JoinUserSchema = Yup.object().shape({
-  name: Yup.string().required(),
-  password: Yup.string().required().min(passwordPolicies.minLength),
+  name: Yup.string().required().max(maxLengthPolicies.name),
+  password: Yup.string()
+    .required()
+    .min(passwordPolicies.minLength)
+    .max(maxLengthPolicies.password),
   sentViaEmail: Yup.boolean().required(),
-  email: Yup.string().when('sentViaEmail', {
-    is: false,
-    then: (schema) => schema.required().email(),
-  }),
+  email: Yup.string()
+    .max(maxLengthPolicies.email)
+    .when('sentViaEmail', {
+      is: false,
+      then: (schema) => schema.required().email().max(maxLengthPolicies.email),
+    }),
 });
 
 const JoinWithInvitation = ({

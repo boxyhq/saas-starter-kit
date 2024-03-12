@@ -14,6 +14,7 @@ import { toast } from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
 import * as Yup from 'yup';
 import Head from 'next/head';
+import { maxLengthPolicies } from '@/lib/common';
 
 const SSO: NextPageWithLayout<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -27,7 +28,9 @@ const SSO: NextPageWithLayout<
       slug: '',
     },
     validationSchema: Yup.object().shape({
-      slug: Yup.string().required('Team slug is required'),
+      slug: Yup.string()
+        .required('Team slug is required')
+        .max(maxLengthPolicies.slug),
     }),
     onSubmit: async (values) => {
       const response = await fetch('/api/auth/sso/verify', {

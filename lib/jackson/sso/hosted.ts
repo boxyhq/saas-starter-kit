@@ -7,7 +7,7 @@ import env from '@/lib/env';
 import { options } from '../config';
 import { ApiError } from '@/lib/errors';
 import { type JacksonSSO } from './utils';
-import { forceConsume } from '@/lib/common';
+import { forceConsume } from '@/lib/server-common';
 
 export class JacksonHosted implements JacksonSSO {
   private ssoUrl = `${env.jackson.url}/api/v1/sso`;

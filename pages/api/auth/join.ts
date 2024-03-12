@@ -1,7 +1,6 @@
 import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
-import { generateToken, slugify } from '@/lib/common';
+import { slugify } from '@/lib/server-common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
-import { prisma } from '@/lib/prisma';
 import { isEmailAllowed } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
@@ -13,6 +12,11 @@ import { getInvitation, isInvitationExpired } from 'models/invitation';
 import { validateRecaptcha } from '@/lib/recaptcha';
 import { slackNotify } from '@/lib/slack';
 import { Team } from '@prisma/client';
+import { maxLengthPolicies } from '@/lib/common';
+import { createVerificationToken } from 'models/verificationToken';
+
+// TODO:
+// Add zod schema validation
 
 export default async function handler(
   req: NextApiRequest,
@@ -62,6 +66,19 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
+  // maxLength check
+  if (name.length > maxLengthPolicies.name) {
+    throw new ApiError(400, 'Name is too long');
+  }
+
+  if (emailToUse.length > maxLengthPolicies.email) {
+    throw new ApiError(400, 'Email is too long');
+  }
+
+  if (password.length > maxLengthPolicies.password) {
+    throw new ApiError(400, 'Password is too long');
+  }
+
   if (!isEmailAllowed(emailToUse)) {
     throw new ApiError(
       400,
@@ -81,7 +98,16 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       throw new ApiError(400, 'A team name is required.');
     }
 
+    if (team.length > maxLengthPolicies.team) {
+      throw new ApiError(400, 'Team name is too long');
+    }
+
     const slug = slugify(team);
+
+    if (slug.length > maxLengthPolicies.slug) {
+      throw new ApiError(400, 'Team slug is too long');
+    }
+
     const slugCollisions = await isTeamExists(slug);
 
     if (slugCollisions > 0) {
@@ -112,12 +138,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Send account verification email
   if (env.confirmEmail && !user.emailVerified) {
-    const verificationToken = await prisma.verificationToken.create({
-      data: {
-        identifier: user.email,
-        token: generateToken(),
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      },
+    const verificationToken = await createVerificationToken({
+      identifier: user.email,
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
     await sendVerificationEmail({ user, verificationToken });
