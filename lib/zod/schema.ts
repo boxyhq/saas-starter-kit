@@ -93,4 +93,37 @@ export const updatePasswordSchema = z.object({
     ),
 });
 
-// export const
+export const userJoinSchema = z.union([
+  z.object({
+    team: z.string().min(1, 'Name is required').max(maxLengthPolicies.team),
+    slug: z
+      .string()
+      .min(3, 'Slug must be at least 3 characters')
+      .max(maxLengthPolicies.slug),
+  }),
+  z.object({
+    name: z.string().min(1, 'Name is required').max(maxLengthPolicies.name),
+    email: z
+      .string()
+      .email('Enter a valid email address')
+      .max(maxLengthPolicies.email),
+    password: z
+      .string()
+      .max(maxLengthPolicies.password, 'Password is too long')
+      .min(
+        passwordPolicies.minLength,
+        `Password must have at least ${passwordPolicies.minLength} characters`
+      ),
+  }),
+]);
+
+export const resetPasswordSchema = z.object({
+  password: z
+    .string()
+    .max(maxLengthPolicies.password, 'Password is too long')
+    .min(
+      passwordPolicies.minLength,
+      `Password must have at least ${passwordPolicies.minLength} characters`
+    ),
+  token: z.string(),
+});
