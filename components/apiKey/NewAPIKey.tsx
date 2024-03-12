@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import { useSWRConfig } from 'swr';
 import type { ApiResponse } from 'types';
 import Modal from '../shared/Modal';
-import { defaultHeaders, maxLengthPolicies } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import { useFormik } from 'formik';
 import { z } from 'zod';
 import { createApiKeySchema } from '@/lib/zod/schema';

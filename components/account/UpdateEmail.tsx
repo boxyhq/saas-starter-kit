@@ -8,7 +8,6 @@ import { Card } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import type { User } from '@prisma/client';
 import { updateAccountSchema } from '@/lib/zod/schema';
-import { maxLengthPolicies } from '@/lib/common';
 
 interface UpdateEmailProps {
   user: Partial<User>;

@@ -1,5 +1,5 @@
 import { Card, InputWithLabel } from '@/components/shared';
-import { defaultHeaders, maxLengthPolicies } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import { Team } from '@prisma/client';
 import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
