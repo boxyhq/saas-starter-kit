@@ -58,7 +58,6 @@ const Form = ({
               value={formik.values.name}
               placeholder="Description of what this endpoint is used for."
               error={formik.errors.name}
-              maxLength={maxLengthPolicies.webhookDescription}
             />
             <InputWithLabel
               name="url"
@@ -68,7 +67,6 @@ const Form = ({
               placeholder="https://api.example.com/svix-webhooks"
               error={formik.errors.url}
               descriptionText="The endpoint URL must be HTTPS"
-              maxLength={maxLengthPolicies.webhookEndpoint}
             />
             <div className="divider"></div>
             <div className="form-control w-full">

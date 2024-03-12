@@ -67,7 +67,6 @@ const UpdatePassword = () => {
                 }
                 onChange={formik.handleChange}
                 className="text-sm"
-                maxLength={maxLengthPolicies.password}
               />
               <InputWithLabel
                 type="password"
@@ -82,7 +81,6 @@ const UpdatePassword = () => {
                 }
                 onChange={formik.handleChange}
                 className="text-sm"
-                maxLength={maxLengthPolicies.password}
               />
             </div>
           </Card.Body>

@@ -5,7 +5,7 @@ import { Button, Input } from 'react-daisyui';
 
 import type { ApiResponse } from 'types';
 import { Card } from '@/components/shared';
-import { defaultHeaders, maxLengthPolicies } from '@/lib/common';
+import { defaultHeaders } from '@/lib/common';
 import { User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -67,7 +67,6 @@ const UpdateName = ({ user }: { user: Partial<User> }) => {
             onChange={formik.handleChange}
             className="w-full max-w-md"
             required
-            maxLength={maxLengthPolicies.name}
           />
         </Card.Body>
         <Card.Footer>

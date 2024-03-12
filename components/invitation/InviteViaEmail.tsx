@@ -68,7 +68,6 @@ const InviteViaEmail = ({ setVisible, team }: InviteViaEmailProps) => {
           required
           className="text-sm w-1/2"
           type="email"
-          maxLength={maxLengthPolicies.email}
         />
         <select
           className="select-bordered select rounded"

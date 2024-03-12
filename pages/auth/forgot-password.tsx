@@ -73,7 +73,6 @@ const ForgotPassword: NextPageWithLayout<
               value={formik.values.email}
               error={formik.touched.email ? formik.errors.email : undefined}
               onChange={formik.handleChange}
-              maxLength={maxLengthPolicies.email}
             />
             <GoogleReCAPTCHA
               recaptchaRef={recaptchaRef}

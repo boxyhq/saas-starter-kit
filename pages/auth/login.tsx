@@ -141,7 +141,6 @@ const Login: NextPageWithLayout<
                 value={formik.values.email}
                 error={formik.touched.email ? formik.errors.email : undefined}
                 onChange={formik.handleChange}
-                maxLength={maxLengthPolicies.email}
               />
               <div className="relative flex">
                 <InputWithLabel
@@ -149,7 +148,6 @@ const Login: NextPageWithLayout<
                   name="password"
                   placeholder={t('password')}
                   value={formik.values.password}
-                  maxLength={maxLengthPolicies.password}
                   label={
                     <label className="label">
                       <span className="label-text">{t('password')}</span>
