@@ -31,7 +31,16 @@ export default async function handler(
 }
 
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const data = updateAccountSchema.parse(req.body);
+  const result = updateAccountSchema.safeParse(req.body);
+  if (!result.success) {
+    throw new ApiError(
+      422,
+      result.error.errors.map((e) => e.message).join(', ')
+    );
+  }
+
+  const data = result.data;
+
   const session = await getSession(req, res);
 
   if ('email' in data) {

@@ -66,12 +66,18 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  // maxLength check
-  userJoinSchema.parse({
+  const result = userJoinSchema.safeParse({
     name,
     email,
     password,
   });
+
+  if (!result.success) {
+    throw new ApiError(
+      422,
+      result.error.errors.map((e) => e.message).join(', ')
+    );
+  }
 
   if (!isEmailAllowed(email)) {
     throw new ApiError(
@@ -92,10 +98,17 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const slug = slugify(team);
 
-    userJoinSchema.parse({
+    const result = userJoinSchema.safeParse({
       team,
       slug,
     });
+
+    if (!result.success) {
+      throw new ApiError(
+        422,
+        result.error.errors.map((e) => e.message).join(', ')
+      );
+    }
 
     const slugCollisions = await isTeamExists(slug);
 

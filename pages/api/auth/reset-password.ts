@@ -35,7 +35,16 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { token, password } = resetPasswordSchema.parse(req.body);
+  const { token, password } = req.body;
+
+  const result = resetPasswordSchema.safeParse(req.body);
+
+  if (!result.success) {
+    throw new ApiError(
+      422,
+      result.error.errors.map((e) => e.message).join(', ')
+    );
+  }
 
   if (!token) {
     throw new ApiError(422, 'Password reset token is required');

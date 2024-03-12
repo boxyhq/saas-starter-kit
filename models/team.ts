@@ -6,6 +6,7 @@ import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCurrentUser } from './user';
 import { normalizeUser } from './user';
+import { ApiError } from '@/lib/errors';
 
 export const createTeam = async (param: {
   userId: string;
@@ -432,7 +433,18 @@ export const getCurrentUserWithTeam = async (
 ) => {
   const user = await getCurrentUser(req, res);
 
-  const { slug } = teamSlugSchema.parse(req.query);
+  const { slug } = req.query as {
+    slug: string;
+  };
+
+  const result = teamSlugSchema.safeParse(req.query);
+
+  if (!result.success) {
+    throw new ApiError(
+      422,
+      result.error.errors.map((e) => e.message).join(', ')
+    );
+  }
 
   const { role, team } = await getTeamMember(user.id, slug);
 

@@ -42,7 +42,16 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(user, 'team_api_key', 'delete');
 
-  const { apiKeyId } = deleteApiKeySchema.parse(req.query);
+  const { apiKeyId } = req.query as { apiKeyId: string };
+
+  const result = deleteApiKeySchema.safeParse(req.query);
+
+  if (!result.success) {
+    throw new ApiError(
+      422,
+      result.error.errors.map((e) => e.message).join(', ')
+    );
+  }
 
   await deleteApiKey(apiKeyId);
 

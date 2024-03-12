@@ -18,6 +18,7 @@ import { recordMetric } from '@/lib/metrics';
 import { extractEmailDomain, isEmailAllowed } from '@/lib/email/utils';
 import { Invitation } from '@prisma/client';
 import { countTeamMembers } from 'models/teamMember';
+import { inviteViaEmailSchema } from '@/lib/zod/schema';
 
 export default async function handler(
   req: NextApiRequest,
@@ -59,6 +60,15 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   throwIfNotAllowed(teamMember, 'team_invitation', 'create');
 
   const { email, role, sentViaEmail, domains } = req.body;
+
+  const result = inviteViaEmailSchema.safeParse(req.body);
+
+  if (!result.success) {
+    throw new ApiError(
+      422,
+      result.error.errors.map((e) => e.message).join(', ')
+    );
+  }
 
   let invitation: undefined | Invitation = undefined;
 

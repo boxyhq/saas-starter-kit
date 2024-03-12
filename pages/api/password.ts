@@ -38,7 +38,16 @@ export default async function handler(
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
-  const { currentPassword, newPassword } = updatePasswordSchema.parse(req.body);
+  const { currentPassword, newPassword } = req.body;
+
+  const result = updatePasswordSchema.safeParse(req.body);
+
+  if (!result.success) {
+    throw new ApiError(
+      422,
+      result.error.errors.map((e) => e.message).join(', ')
+    );
+  }
 
   const user = await findFirstUserOrThrow({
     where: { id: session?.user.id },

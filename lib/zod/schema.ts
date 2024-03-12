@@ -1,10 +1,14 @@
 import { z } from 'zod';
 import { isValidDomain, maxLengthPolicies, passwordPolicies } from '../common';
 import { slugify } from '../server-common';
+import { Role } from '@prisma/client';
 
 const password = z
   .string()
-  .max(maxLengthPolicies.password, 'Password is too long')
+  .max(
+    maxLengthPolicies.password,
+    `Password should have at most ${maxLengthPolicies.password} characters`
+  )
   .min(
     passwordPolicies.minLength,
     `Password must have at least ${passwordPolicies.minLength} characters`
@@ -13,19 +17,34 @@ const password = z
 const email = z
   .string()
   .email('Enter a valid email address')
-  .max(maxLengthPolicies.email);
+  .max(
+    maxLengthPolicies.email,
+    `Email should have at most ${maxLengthPolicies.email} characters`
+  );
 
 const teamName = z
   .string()
   .min(1, 'Name is required')
-  .max(maxLengthPolicies.team);
+  .max(
+    maxLengthPolicies.team,
+    `Team name should have at most ${maxLengthPolicies.team} characters`
+  );
 
-const name = z.string().min(1, 'Name is required').max(maxLengthPolicies.name);
+const name = z
+  .string()
+  .min(1, 'Name is required')
+  .max(
+    maxLengthPolicies.name,
+    `Name should have at most ${maxLengthPolicies.name} characters`
+  );
 
 const slug = z
   .string()
   .min(3, 'Slug must be at least 3 characters')
-  .max(maxLengthPolicies.slug);
+  .max(
+    maxLengthPolicies.slug,
+    `Slug should have at most ${maxLengthPolicies.slug} characters`
+  );
 
 const image = z
   .string()
@@ -36,13 +55,19 @@ const image = z
   )
   .refine((imageUri) => {
     const [, base64] = imageUri.split(',');
+    if (!base64) {
+      return false;
+    }
     const size = base64.length * (3 / 4) - 2;
     return size < 2000000;
   }, 'Avatar must be less than 2MB');
 
 const domain = z
   .string()
-  .max(maxLengthPolicies.domain)
+  .max(
+    maxLengthPolicies.domain,
+    `Domain should have at most ${maxLengthPolicies.domain} characters`
+  )
   .optional()
   .refine(
     (domain) => {
@@ -118,4 +143,29 @@ export const userJoinSchema = z.union([
 export const resetPasswordSchema = z.object({
   password,
   token: z.string(),
+});
+
+export const inviteViaEmailSchema = z.union([
+  z.object({
+    email,
+    role: z.nativeEnum(Role),
+  }),
+  z.object({
+    role: z.nativeEnum(Role),
+    domains: z
+      .string()
+      .refine(
+        (domains) => domains.split(',').every(isValidDomain),
+        'Invalid domain in the list'
+      ),
+  }),
+]);
+
+export const resendLinkRequestSchema = z.object({
+  email,
+  expiredToken: z.string(),
+});
+
+export const deleteSessionSchema = z.object({
+  id: z.string(),
 });

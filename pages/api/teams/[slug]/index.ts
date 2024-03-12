@@ -64,7 +64,15 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(user, 'team', 'update');
 
-  const { name, slug, domain } = updateTeamSchema.parse(req.body);
+  const { name, slug, domain } = req.body;
+  const result = updateTeamSchema.safeParse(req.body);
+
+  if (!result.success) {
+    throw new ApiError(
+      422,
+      result.error.errors.map((e) => e.message).join(', ')
+    );
+  }
 
   let updatedTeam: Team | null = null;
 
