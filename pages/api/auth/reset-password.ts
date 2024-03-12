@@ -1,4 +1,4 @@
-import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
+import { hashPassword } from '@/lib/auth';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from 'next/dist/server/api-utils';
 import { recordMetric } from '@/lib/metrics';
@@ -40,8 +40,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!token) {
     throw new ApiError(422, 'Password reset token is required');
   }
-
-  validatePasswordPolicy(password);
 
   const passwordReset = await getPasswordReset(token);
 

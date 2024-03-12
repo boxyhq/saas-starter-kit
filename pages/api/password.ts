@@ -1,8 +1,4 @@
-import {
-  hashPassword,
-  validatePasswordPolicy,
-  verifyPassword,
-} from '@/lib/auth';
+import { hashPassword, verifyPassword } from '@/lib/auth';
 import { getSession } from '@/lib/session';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from 'next/dist/server/api-utils';
@@ -51,8 +47,6 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!(await verifyPassword(currentPassword, user.password as string))) {
     throw new ApiError(400, 'Your current password is incorrect');
   }
-
-  validatePasswordPolicy(newPassword);
 
   await updateUser({
     where: { id: session?.user.id },
