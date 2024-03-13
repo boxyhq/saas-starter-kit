@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCookie } from 'cookies-next';
-
-import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { sessionTokenCookieName } from '@/lib/nextAuth';
+import { findManySessions } from 'models/session';
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,7 +32,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
   const sessionToken = getCookie(sessionTokenCookieName, { req, res });
 
-  let sessions = await prisma.session.findMany({
+  let sessions = await findManySessions({
     where: {
       userId: session?.user.id,
     },

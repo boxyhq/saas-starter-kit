@@ -8,6 +8,7 @@ import type { WebookFormSchema } from 'types';
 import * as Yup from 'yup';
 import Modal from '../shared/Modal';
 import { EventTypes } from '@/components/webhook';
+import { maxLengthPolicies } from '@/lib/common';
 
 interface FormProps {
   visible: boolean;
@@ -26,8 +27,8 @@ const Form = ({
 }: FormProps) => {
   const formik = useFormik<WebookFormSchema>({
     validationSchema: Yup.object().shape({
-      name: Yup.string().required(),
-      url: Yup.string().required().url(),
+      name: Yup.string().required().max(maxLengthPolicies.webhookDescription),
+      url: Yup.string().required().url().max(maxLengthPolicies.webhookEndpoint),
       eventTypes: Yup.array().min(1, 'Please choose at least one event type'),
     }),
     initialValues,

@@ -5,6 +5,7 @@ import { teamSlugSchema } from '@/lib/zod/schema';
 import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCurrentUser } from './user';
+import { normalizeUser } from './user';
 
 export const createTeam = async (param: {
   userId: string;
@@ -235,7 +236,7 @@ Planning Time: 0.351 ms
 Execution Time: 0.045 ms
 */
 export const getTeamMembers = async (slug: string) => {
-  return await prisma.teamMember.findMany({
+  const members = await prisma.teamMember.findMany({
     where: {
       team: {
         slug,
@@ -250,6 +251,11 @@ export const getTeamMembers = async (slug: string) => {
         },
       },
     },
+  });
+
+  return members?.map((member) => {
+    member.user = normalizeUser(member.user);
+    return member;
   });
 };
 

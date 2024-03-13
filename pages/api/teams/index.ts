@@ -1,4 +1,4 @@
-import { slugify } from '@/lib/common';
+import { slugify } from '@/lib/server-common';
 import { ApiError } from '@/lib/errors';
 import { createTeam, getTeams, isTeamExists } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';

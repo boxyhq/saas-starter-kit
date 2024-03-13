@@ -11,6 +11,7 @@ import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { maxLengthPolicies } from '@/lib/common';
 
 const TeamDropdown = () => {
   const router = useRouter();
@@ -71,7 +72,11 @@ const TeamDropdown = () => {
         tabIndex={0}
         className="border border-gray-300 dark:border-gray-600 flex h-10 items-center px-4 justify-between cursor-pointer rounded text-sm font-bold"
       >
-        {currentTeam?.name || data?.user?.name}{' '}
+        {currentTeam?.name ||
+          data?.user?.name?.substring(
+            0,
+            maxLengthPolicies.nameShortDisplay
+          )}{' '}
         <ChevronUpDownIcon className="w-5 h-5" />
       </div>
       <ul

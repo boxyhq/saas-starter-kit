@@ -1,4 +1,4 @@
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, maxLengthPolicies } from '@/lib/common';
 import type { Team } from '@prisma/client';
 import { useFormik } from 'formik';
 import useTeams from 'hooks/useTeams';
@@ -27,7 +27,7 @@ const CreateTeam = ({ visible, setVisible }: CreateTeamProps) => {
       name: '',
     },
     validationSchema: Yup.object().shape({
-      name: Yup.string().required(),
+      name: Yup.string().required().max(maxLengthPolicies.team),
     }),
     onSubmit: async (values) => {
       const response = await fetch('/api/teams/', {

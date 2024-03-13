@@ -1,8 +1,9 @@
 import { z } from 'zod';
-import { isValidDomain } from '../common';
+import { isValidDomain, maxLengthPolicies } from '../common';
+import { slugify } from '../server-common';
 
 export const createApiKeySchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: z.string().min(1, 'Name is required').max(maxLengthPolicies.apiKeyName),
 });
 
 export const deleteApiKeySchema = z.object({
@@ -10,14 +11,19 @@ export const deleteApiKeySchema = z.object({
 });
 
 export const teamSlugSchema = z.object({
-  slug: z.string(),
+  slug: z.string().max(maxLengthPolicies.slug),
 });
 
 export const updateTeamSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  slug: z.string().min(3, 'Slug must be at least 3 characters'),
+  name: z.string().min(1, 'Name is required').max(maxLengthPolicies.team),
+  slug: z
+    .string()
+    .min(3, 'Slug must be at least 3 characters')
+    .max(maxLengthPolicies.slug)
+    .transform((slug) => slugify(slug)),
   domain: z
     .string()
+    .max(maxLengthPolicies.domain)
     .optional()
     .refine(
       (domain) => {
@@ -41,12 +47,19 @@ export const updateTeamSchema = z.object({
 });
 
 export const createTeamSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: z.string().min(1, 'Name is required').max(maxLengthPolicies.team),
 });
 
 export const updateAccountSchema = z.union([
-  z.object({ email: z.string().email('Enter a valid email address') }),
-  z.object({ name: z.string().min(1, 'Name is required') }),
+  z.object({
+    email: z
+      .string()
+      .email('Enter a valid email address')
+      .max(maxLengthPolicies.email),
+  }),
+  z.object({
+    name: z.string().min(1, 'Name is required').max(maxLengthPolicies.name),
+  }),
   z.object({
     image: z
       .string()
