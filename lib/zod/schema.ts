@@ -173,3 +173,12 @@ export const deleteSessionSchema = z.object({
 export const forgotPasswordSchema = z.object({
   email,
 });
+
+export const resendEmailToken = z.object({
+  email,
+});
+
+export const checkoutSessionSchema = z.object({
+  priceId: z.string(),
+  quantity: z.number().optional(),
+});
