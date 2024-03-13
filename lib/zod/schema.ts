@@ -142,7 +142,10 @@ export const userJoinSchema = z.union([
 
 export const resetPasswordSchema = z.object({
   password,
-  token: z.string(),
+  token: z.string({
+    required_error: 'Token is required',
+    invalid_type_error: 'Token must be a string',
+  }),
 });
 
 export const inviteViaEmailSchema = z.union([
@@ -154,8 +157,9 @@ export const inviteViaEmailSchema = z.union([
     role: z.nativeEnum(Role),
     domains: z
       .string()
+      .optional()
       .refine(
-        (domains) => domains.split(',').every(isValidDomain),
+        (domains) => (domains ? domains.split(',').every(isValidDomain) : true),
         'Invalid domain in the list'
       ),
   }),
@@ -163,11 +167,17 @@ export const inviteViaEmailSchema = z.union([
 
 export const resendLinkRequestSchema = z.object({
   email,
-  expiredToken: z.string(),
+  expiredToken: z.string({
+    required_error: 'Expired token is required',
+    invalid_type_error: 'Expired token must be a string',
+  }),
 });
 
 export const deleteSessionSchema = z.object({
-  id: z.string(),
+  id: z.string({
+    required_error: 'Session id is required',
+    invalid_type_error: 'Session id must be a string',
+  }),
 });
 
 export const forgotPasswordSchema = z.object({
@@ -179,6 +189,9 @@ export const resendEmailToken = z.object({
 });
 
 export const checkoutSessionSchema = z.object({
-  priceId: z.string(),
+  priceId: z.string({
+    required_error: 'PriceId is required',
+    invalid_type_error: 'PriceId must be a string',
+  }),
   quantity: z.number().optional(),
 });
