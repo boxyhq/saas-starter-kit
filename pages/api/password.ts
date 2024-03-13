@@ -8,7 +8,7 @@ import { sessionTokenCookieName } from '@/lib/nextAuth';
 import env from '@/lib/env';
 import { findFirstUserOrThrow, updateUser } from 'models/user';
 import { deleteManySessions } from 'models/session';
-import { updatePasswordSchema } from '@/lib/zod/schema';
+import { validateWithSchema, updatePasswordSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -40,14 +40,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { currentPassword, newPassword } = req.body;
 
-  const result = updatePasswordSchema.safeParse(req.body);
-
-  if (!result.success) {
-    throw new ApiError(
-      422,
-      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
-    );
-  }
+  validateWithSchema(updatePasswordSchema, req.body);
 
   const user = await findFirstUserOrThrow({
     where: { id: session?.user.id },

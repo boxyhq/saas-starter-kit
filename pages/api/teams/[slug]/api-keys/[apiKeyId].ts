@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
-import { deleteApiKeySchema } from '@/lib/zod/schema';
+import { deleteApiKeySchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -44,14 +44,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { apiKeyId } = req.query as { apiKeyId: string };
 
-  const result = deleteApiKeySchema.safeParse(req.query);
-
-  if (!result.success) {
-    throw new ApiError(
-      422,
-      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
-    );
-  }
+  validateWithSchema(deleteApiKeySchema, req.query);
 
   await deleteApiKey(apiKeyId);
 

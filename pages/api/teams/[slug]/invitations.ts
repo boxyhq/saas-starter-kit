@@ -18,7 +18,7 @@ import { recordMetric } from '@/lib/metrics';
 import { extractEmailDomain, isEmailAllowed } from '@/lib/email/utils';
 import { Invitation } from '@prisma/client';
 import { countTeamMembers } from 'models/teamMember';
-import { inviteViaEmailSchema } from '@/lib/zod/schema';
+import { inviteViaEmailSchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -61,14 +61,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { email, role, sentViaEmail, domains } = req.body;
 
-  const result = inviteViaEmailSchema.safeParse(req.body);
-
-  if (!result.success) {
-    throw new ApiError(
-      422,
-      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
-    );
-  }
+  validateWithSchema(inviteViaEmailSchema, req.body);
 
   let invitation: undefined | Invitation = undefined;
 

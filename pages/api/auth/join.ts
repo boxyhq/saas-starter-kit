@@ -13,7 +13,7 @@ import { validateRecaptcha } from '@/lib/recaptcha';
 import { slackNotify } from '@/lib/slack';
 import { Team } from '@prisma/client';
 import { createVerificationToken } from 'models/verificationToken';
-import { userJoinSchema } from '@/lib/zod/schema';
+import { userJoinSchema, validateWithSchema } from '@/lib/zod';
 
 // TODO:
 // Add zod schema validation
@@ -66,18 +66,11 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  const result = userJoinSchema.safeParse({
+  validateWithSchema(userJoinSchema, {
     name,
     email,
     password,
   });
-
-  if (!result.success) {
-    throw new ApiError(
-      422,
-      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
-    );
-  }
 
   if (!isEmailAllowed(email)) {
     throw new ApiError(
@@ -98,17 +91,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const slug = slugify(team);
 
-    const result = userJoinSchema.safeParse({
-      team,
-      slug,
-    });
-
-    if (!result.success) {
-      throw new ApiError(
-        422,
-        `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
-      );
-    }
+    validateWithSchema(userJoinSchema, { team, slug });
 
     const slugCollisions = await isTeamExists(slug);
 

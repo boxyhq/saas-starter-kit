@@ -4,8 +4,7 @@ import { getSession } from '@/lib/session';
 import { throwIfNoTeamAccess } from 'models/team';
 import { stripe, getStripeCustomerId } from '@/lib/stripe';
 import env from '@/lib/env';
-import { checkoutSessionSchema } from '@/lib/zod/schema';
-import { ApiError } from '@/lib/errors';
+import { checkoutSessionSchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,14 +30,7 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const result = checkoutSessionSchema.safeParse(req.body);
-
-  if (!result.success) {
-    throw new ApiError(
-      422,
-      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
-    );
-  }
+  validateWithSchema(checkoutSessionSchema, req.body);
 
   const teamMember = await throwIfNoTeamAccess(req, res);
   const session = await getSession(req, res);

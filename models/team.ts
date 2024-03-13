@@ -1,12 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
-import { teamSlugSchema } from '@/lib/zod/schema';
 import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCurrentUser } from './user';
 import { normalizeUser } from './user';
-import { ApiError } from '@/lib/errors';
+import { validateWithSchema, teamSlugSchema } from '@/lib/zod';
 
 export const createTeam = async (param: {
   userId: string;
@@ -437,14 +436,7 @@ export const getCurrentUserWithTeam = async (
     slug: string;
   };
 
-  const result = teamSlugSchema.safeParse(req.query);
-
-  if (!result.success) {
-    throw new ApiError(
-      422,
-      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
-    );
-  }
+  validateWithSchema(teamSlugSchema, req.query);
 
   const { role, team } = await getTeamMember(user.id, slug);
 

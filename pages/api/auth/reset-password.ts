@@ -7,7 +7,7 @@ import env from '@/lib/env';
 import { updateUser } from 'models/user';
 import { deletePasswordReset, getPasswordReset } from 'models/passwordReset';
 import { deleteManySessions } from 'models/session';
-import { resetPasswordSchema } from '@/lib/zod/schema';
+import { resetPasswordSchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,14 +37,7 @@ export default async function handler(
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { token, password } = req.body;
 
-  const result = resetPasswordSchema.safeParse(req.body);
-
-  if (!result.success) {
-    throw new ApiError(
-      422,
-      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
-    );
-  }
+  validateWithSchema(resetPasswordSchema, req.body);
 
   if (!token) {
     throw new ApiError(422, 'Password reset token is required');

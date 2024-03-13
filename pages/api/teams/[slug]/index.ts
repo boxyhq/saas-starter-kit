@@ -11,7 +11,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { ApiError } from '@/lib/errors';
 import env from '@/lib/env';
-import { updateTeamSchema } from '@/lib/zod/schema';
+import { updateTeamSchema, validateWithSchema } from '@/lib/zod';
 import { Prisma, Team } from '@prisma/client';
 
 export default async function handler(
@@ -65,14 +65,8 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   throwIfNotAllowed(user, 'team', 'update');
 
   const { name, slug, domain } = req.body;
-  const result = updateTeamSchema.safeParse(req.body);
 
-  if (!result.success) {
-    throw new ApiError(
-      422,
-      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
-    );
-  }
+  validateWithSchema(updateTeamSchema, req.body);
 
   let updatedTeam: Team | null = null;
 

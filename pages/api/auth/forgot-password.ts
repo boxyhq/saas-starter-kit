@@ -6,7 +6,7 @@ import { recordMetric } from '@/lib/metrics';
 import { validateRecaptcha } from '@/lib/recaptcha';
 import { getUser } from 'models/user';
 import { createPasswordReset } from 'models/passwordReset';
-import { forgotPasswordSchema } from '@/lib/zod/schema';
+import { forgotPasswordSchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,14 +34,7 @@ export default async function handler(
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, recaptchaToken } = req.body;
 
-  const result = forgotPasswordSchema.safeParse({ email });
-
-  if (!result.success) {
-    throw new ApiError(
-      422,
-      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
-    );
-  }
+  validateWithSchema(forgotPasswordSchema, { email });
 
   await validateRecaptcha(recaptchaToken);
 

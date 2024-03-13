@@ -4,7 +4,7 @@ import { getUser } from 'models/user';
 import { ApiError } from '@/lib/errors';
 import { deleteVerificationToken } from 'models/verificationToken';
 import { isAccountLocked, sendLockoutEmail } from '@/lib/accountLock';
-import { resendLinkRequestSchema } from '@/lib/zod/schema';
+import { resendLinkRequestSchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,14 +33,7 @@ export default async function handler(
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, expiredToken } = req.body;
 
-  const result = resendLinkRequestSchema.safeParse(req.body);
-
-  if (!result.success) {
-    throw new ApiError(
-      422,
-      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
-    );
-  }
+  validateWithSchema(resendLinkRequestSchema, req.body);
 
   const user = await getUser({ email });
 
