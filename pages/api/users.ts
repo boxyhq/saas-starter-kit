@@ -32,10 +32,11 @@ export default async function handler(
 
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const result = updateAccountSchema.safeParse(req.body);
+
   if (!result.success) {
     throw new ApiError(
       422,
-      result.error.errors.map((e) => e.message).join(', ')
+      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
     );
   }
 

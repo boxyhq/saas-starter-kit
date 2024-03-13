@@ -45,7 +45,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!result.success) {
     throw new ApiError(
       422,
-      result.error.errors.map((e) => e.message).join(', ')
+      `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
     );
   }
 
