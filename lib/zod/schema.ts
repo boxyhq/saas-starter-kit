@@ -157,8 +157,8 @@ const sessionId = z
 
 const priceId = z
   .string({
-    required_error: 'PriceId is required',
-    invalid_type_error: 'PriceId must be a string',
+    required_error: 'Price Id is required',
+    invalid_type_error: 'Price Id must be a string',
   })
   .min(1, 'PriceId is required');
 
@@ -258,6 +258,6 @@ export const resendEmailToken = z.object({
 });
 
 export const checkoutSessionSchema = z.object({
-  priceId,
+  price: priceId,
   quantity: quantity.optional(),
 });

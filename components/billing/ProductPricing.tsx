@@ -17,7 +17,7 @@ const ProductPricing = ({ plans, subscriptions }: ProductPricingProps) => {
   const { team } = useTeam();
   const { t } = useTranslation('common');
 
-  const initiateCheckout = async (priceId: string, quantity?: number) => {
+  const initiateCheckout = async (price: string, quantity?: number) => {
     const res = await fetch(
       `/api/teams/${team?.slug}/payments/create-checkout-session`,
       {
@@ -25,7 +25,7 @@ const ProductPricing = ({ plans, subscriptions }: ProductPricingProps) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ priceId, quantity }),
+        body: JSON.stringify({ price, quantity }),
       }
     );
 

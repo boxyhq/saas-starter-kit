@@ -30,7 +30,7 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { priceId, quantity } = validateWithSchema(
+  const { price, quantity } = validateWithSchema(
     checkoutSessionSchema,
     req.body
   );
@@ -44,8 +44,8 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     mode: 'subscription',
     line_items: [
       {
-        price: priceId,
-        // For metered billing, do not pass quantity
+        price,
+        // For metered billing, do not pass quantity will be undefined
         quantity,
       },
     ],

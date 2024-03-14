@@ -79,7 +79,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     );
   }
 
-  if (await getUser({ email: email })) {
+  if (await getUser({ email })) {
     throw new ApiError(400, 'An user with this email already exists.');
   }
 

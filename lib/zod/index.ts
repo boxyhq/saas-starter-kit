@@ -2,6 +2,7 @@ import { ZodType } from 'zod';
 import { ApiError } from '../errors';
 
 export * from './schema';
+
 export const validateWithSchema = (
   schema: ZodType,
   data: any
