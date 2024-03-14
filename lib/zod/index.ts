@@ -2,7 +2,12 @@ import { ZodType } from 'zod';
 import { ApiError } from '../errors';
 
 export * from './schema';
-export const validateWithSchema = (schema: ZodType, data: any): any => {
+export const validateWithSchema = (
+  schema: ZodType,
+  data: any
+): {
+  [key: string]: any;
+} => {
   const result = schema.safeParse(data);
 
   if (!result.success) {
