@@ -4,7 +4,10 @@ import { slugify } from '../server-common';
 import { Role } from '@prisma/client';
 
 const password = z
-  .string()
+  .string({
+    required_error: 'Password is required',
+    invalid_type_error: 'Password must be a string',
+  })
   .max(
     maxLengthPolicies.password,
     `Password should have at most ${maxLengthPolicies.password} characters`
@@ -15,7 +18,10 @@ const password = z
   );
 
 const email = z
-  .string()
+  .string({
+    required_error: 'Email is required',
+    invalid_type_error: 'Email must be a string',
+  })
   .email('Enter a valid email address')
   .max(
     maxLengthPolicies.email,
@@ -23,7 +29,10 @@ const email = z
   );
 
 const teamName = z
-  .string()
+  .string({
+    required_error: 'Team name is required',
+    invalid_type_error: 'Team name must be a string',
+  })
   .min(1, 'Name is required')
   .max(
     maxLengthPolicies.team,
@@ -31,7 +40,10 @@ const teamName = z
   );
 
 const name = z
-  .string()
+  .string({
+    required_error: 'Name is required',
+    invalid_type_error: 'Name must be a string',
+  })
   .min(1, 'Name is required')
   .max(
     maxLengthPolicies.name,
@@ -39,7 +51,10 @@ const name = z
   );
 
 const slug = z
-  .string()
+  .string({
+    required_error: 'Slug is required',
+    invalid_type_error: 'Slug must be a string',
+  })
   .min(3, 'Slug must be at least 3 characters')
   .max(
     maxLengthPolicies.slug,
@@ -63,7 +78,9 @@ const image = z
   }, 'Avatar must be less than 2MB');
 
 const domain = z
-  .string()
+  .string({
+    invalid_type_error: 'Domain must be a string',
+  })
   .max(
     maxLengthPolicies.domain,
     `Domain should have at most ${maxLengthPolicies.domain} characters`
@@ -89,12 +106,72 @@ const domain = z
     return domain.trim().toLowerCase();
   });
 
+const apiKeyId = z
+  .string({
+    required_error: 'API key is required',
+    invalid_type_error: 'API key must be a string',
+  })
+  .min(1, 'API key is required');
+
+const token = z
+  .string({
+    required_error: 'Token is required',
+    invalid_type_error: 'Token must be a string',
+  })
+  .min(1, 'Token is required');
+
+const role = z.nativeEnum(Role, {
+  required_error: 'Role is required',
+  invalid_type_error: 'Role must be a string',
+});
+
+const sentViaEmail = z
+  .boolean({
+    invalid_type_error: 'Sent via email must be a boolean',
+  })
+  .default(false);
+
+const domains = z
+  .string({
+    invalid_type_error: 'Domains must be a string',
+  })
+  .optional()
+  .refine(
+    (domains) => (domains ? domains.split(',').every(isValidDomain) : true),
+    'Invalid domain in the list'
+  );
+
+const expiredToken = z
+  .string({
+    required_error: 'Expired token is required',
+    invalid_type_error: 'Expired token must be a string',
+  })
+  .min(1, 'Expired token is required');
+
+const sessionId = z
+  .string({
+    required_error: 'Session id is required',
+    invalid_type_error: 'Session id must be a string',
+  })
+  .min(1, 'Session id is required');
+
+const priceId = z
+  .string({
+    required_error: 'PriceId is required',
+    invalid_type_error: 'PriceId must be a string',
+  })
+  .min(1, 'PriceId is required');
+
+const quantity = z.number({
+  invalid_type_error: 'Quantity must be a number',
+});
+
 export const createApiKeySchema = z.object({
   name: teamName,
 });
 
 export const deleteApiKeySchema = z.object({
-  apiKeyId: z.string().min(1, 'API key is required'),
+  apiKeyId,
 });
 
 export const teamSlugSchema = z.object({
@@ -142,35 +219,29 @@ export const userJoinSchema = z.union([
 
 export const resetPasswordSchema = z.object({
   password,
-  token: z.string().min(1, 'Token is required'),
+  token,
 });
 
 export const inviteViaEmailSchema = z.union([
   z.object({
     email,
-    role: z.nativeEnum(Role),
+    role,
     sentViaEmail: z.boolean().default(false),
   }),
   z.object({
-    role: z.nativeEnum(Role),
-    sentViaEmail: z.boolean().default(false),
-    domains: z
-      .string()
-      .optional()
-      .refine(
-        (domains) => (domains ? domains.split(',').every(isValidDomain) : true),
-        'Invalid domain in the list'
-      ),
+    role,
+    sentViaEmail,
+    domains,
   }),
 ]);
 
 export const resendLinkRequestSchema = z.object({
   email,
-  expiredToken: z.string().min(1, 'Token is required'),
+  expiredToken,
 });
 
 export const deleteSessionSchema = z.object({
-  id: z.string().min(1, 'Session id is required'),
+  id: sessionId,
 });
 
 export const forgotPasswordSchema = z.object({
@@ -182,6 +253,6 @@ export const resendEmailToken = z.object({
 });
 
 export const checkoutSessionSchema = z.object({
-  priceId: z.string().min(1, 'PriceId is required'),
-  quantity: z.number().optional(),
+  priceId,
+  quantity: quantity.optional(),
 });
