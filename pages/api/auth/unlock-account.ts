@@ -31,9 +31,10 @@ export default async function handler(
 
 // Resend unlock account email
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, expiredToken } = req.body;
-
-  validateWithSchema(resendLinkRequestSchema, req.body);
+  const { email, expiredToken } = validateWithSchema(
+    resendLinkRequestSchema,
+    req.body
+  );
 
   const user = await getUser({ email });
 

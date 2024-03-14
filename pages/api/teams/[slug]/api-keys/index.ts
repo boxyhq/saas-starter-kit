@@ -58,9 +58,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(user, 'team_api_key', 'create');
 
-  const { name } = req.body;
-
-  validateWithSchema(createApiKeySchema, req.body);
+  const { name } = validateWithSchema(createApiKeySchema, req.body);
 
   const apiKey = await createApiKey({
     name,

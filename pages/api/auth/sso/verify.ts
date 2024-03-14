@@ -31,9 +31,10 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = JSON.parse(req.body) as { slug: string };
-
-  validateWithSchema(teamSlugSchema, req.body);
+  const { slug } = validateWithSchema(
+    teamSlugSchema,
+    JSON.parse(req.body) as { slug: string }
+  );
 
   if (!slug) {
     throw new Error('Missing the SSO identifier.');

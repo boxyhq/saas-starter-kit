@@ -46,9 +46,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Create a team
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name } = req.body;
-
-  validateWithSchema(createTeamSchema, req.body);
+  const { name } = validateWithSchema(createTeamSchema, req.body);
 
   const user = await getCurrentUser(req, res);
   const slug = slugify(name);

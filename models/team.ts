@@ -432,11 +432,7 @@ export const getCurrentUserWithTeam = async (
 ) => {
   const user = await getCurrentUser(req, res);
 
-  const { slug } = req.query as {
-    slug: string;
-  };
-
-  validateWithSchema(teamSlugSchema, req.query);
+  const { slug } = validateWithSchema(teamSlugSchema, req.query);
 
   const { role, team } = await getTeamMember(user.id, slug);
 

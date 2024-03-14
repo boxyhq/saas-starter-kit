@@ -29,9 +29,7 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email } = req.body;
-
-  validateWithSchema(resendEmailToken, req.body);
+  const { email } = validateWithSchema(resendEmailToken, req.body);
 
   const user = await getUser({ email });
 

@@ -35,9 +35,7 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { token, password } = req.body;
-
-  validateWithSchema(resetPasswordSchema, req.body);
+  const { token, password } = validateWithSchema(resetPasswordSchema, req.body);
 
   if (!token) {
     throw new ApiError(422, 'Password reset token is required');

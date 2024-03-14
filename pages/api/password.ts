@@ -38,9 +38,10 @@ export default async function handler(
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
-  const { currentPassword, newPassword } = req.body;
-
-  validateWithSchema(updatePasswordSchema, req.body);
+  const { currentPassword, newPassword } = validateWithSchema(
+    updatePasswordSchema,
+    req.body
+  );
 
   const user = await findFirstUserOrThrow({
     where: { id: session?.user.id },

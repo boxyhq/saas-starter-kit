@@ -59,9 +59,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_invitation', 'create');
 
-  const { email, role, sentViaEmail, domains } = req.body;
-
-  validateWithSchema(inviteViaEmailSchema, req.body);
+  const { email, role, sentViaEmail, domains } = validateWithSchema(
+    inviteViaEmailSchema,
+    req.body
+  );
 
   let invitation: undefined | Invitation = undefined;
 

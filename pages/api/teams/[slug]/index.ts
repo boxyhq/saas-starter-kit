@@ -64,9 +64,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(user, 'team', 'update');
 
-  const { name, slug, domain } = req.body;
-
-  validateWithSchema(updateTeamSchema, req.body);
+  const { name, slug, domain } = validateWithSchema(updateTeamSchema, req.body);
 
   let updatedTeam: Team | null = null;
 

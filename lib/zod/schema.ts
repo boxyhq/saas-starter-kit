@@ -149,9 +149,11 @@ export const inviteViaEmailSchema = z.union([
   z.object({
     email,
     role: z.nativeEnum(Role),
+    sentViaEmail: z.boolean().default(false),
   }),
   z.object({
     role: z.nativeEnum(Role),
+    sentViaEmail: z.boolean().default(false),
     domains: z
       .string()
       .optional()

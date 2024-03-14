@@ -42,9 +42,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(user, 'team_api_key', 'delete');
 
-  const { apiKeyId } = req.query as { apiKeyId: string };
-
-  validateWithSchema(deleteApiKeySchema, req.query);
+  const { apiKeyId } = validateWithSchema(deleteApiKeySchema, req.query);
 
   await deleteApiKey(apiKeyId);
 

@@ -32,9 +32,10 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, recaptchaToken } = req.body;
-
-  validateWithSchema(forgotPasswordSchema, { email });
+  const { email, recaptchaToken } = validateWithSchema(
+    forgotPasswordSchema,
+    req.body
+  );
 
   await validateRecaptcha(recaptchaToken);
 
