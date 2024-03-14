@@ -33,7 +33,7 @@ const teamName = z
     required_error: 'Team name is required',
     invalid_type_error: 'Team name must be a string',
   })
-  .min(1, 'Name is required')
+  .min(1, 'Team Name is required')
   .max(
     maxLengthPolicies.team,
     `Team name should have at most ${maxLengthPolicies.team} characters`
@@ -166,6 +166,10 @@ const quantity = z.number({
   invalid_type_error: 'Quantity must be a number',
 });
 
+const recaptchaToken = z.string({
+  invalid_type_error: 'Recaptcha token must be a string',
+});
+
 export const createApiKeySchema = z.object({
   name: teamName,
 });
@@ -226,7 +230,7 @@ export const inviteViaEmailSchema = z.union([
   z.object({
     email,
     role,
-    sentViaEmail: z.boolean().default(false),
+    sentViaEmail,
   }),
   z.object({
     role,
@@ -246,6 +250,7 @@ export const deleteSessionSchema = z.object({
 
 export const forgotPasswordSchema = z.object({
   email,
+  recaptchaToken: recaptchaToken.optional(),
 });
 
 export const resendEmailToken = z.object({
