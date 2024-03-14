@@ -46,7 +46,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       {
         price: priceId,
         // For metered billing, do not pass quantity
-        quantity: quantity || undefined,
+        quantity,
       },
     ],
 
