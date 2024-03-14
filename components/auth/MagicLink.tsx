@@ -1,4 +1,5 @@
 import { InputWithLabel, Loading } from '@/components/shared';
+import { maxLengthPolicies } from '@/lib/common';
 import env from '@/lib/env';
 import { useFormik } from 'formik';
 import useInvitation from 'hooks/useInvitation';
@@ -32,7 +33,7 @@ const MagicLink = ({ csrfToken }: MagicLinkProps) => {
       email: '',
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string().required().email(),
+      email: Yup.string().required().email().max(maxLengthPolicies.email),
     }),
     onSubmit: async (values) => {
       const response = await signIn('email', {

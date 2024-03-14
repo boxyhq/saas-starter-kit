@@ -6,10 +6,14 @@ import * as Yup from 'yup';
 
 import { Card, InputWithLabel } from '@/components/shared';
 import { defaultHeaders, passwordPolicies } from '@/lib/common';
+import { maxLengthPolicies } from '@/lib/common';
 
 const schema = Yup.object().shape({
-  currentPassword: Yup.string().required(),
-  newPassword: Yup.string().required().min(passwordPolicies.minLength),
+  currentPassword: Yup.string().required().max(maxLengthPolicies.password),
+  newPassword: Yup.string()
+    .required()
+    .min(passwordPolicies.minLength)
+    .max(maxLengthPolicies.password),
 });
 
 const UpdatePassword = () => {

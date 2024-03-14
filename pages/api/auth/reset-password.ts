@@ -1,10 +1,12 @@
 import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from 'next/dist/server/api-utils';
 import { recordMetric } from '@/lib/metrics';
 import { unlockAccount } from '@/lib/accountLock';
 import env from '@/lib/env';
+import { updateUser } from 'models/user';
+import { deletePasswordReset, getPasswordReset } from 'models/passwordReset';
+import { deleteManySessions } from 'models/session';
 
 export default async function handler(
   req: NextApiRequest,
@@ -40,9 +42,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   validatePasswordPolicy(password);
 
-  const passwordReset = await prisma.passwordReset.findUnique({
-    where: { token },
-  });
+  const passwordReset = await getPasswordReset(token);
 
   if (!passwordReset) {
     throw new ApiError(
@@ -60,7 +60,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const hashedPassword = await hashPassword(password);
 
-  const updatedUser = await prisma.user.update({
+  const updatedUser = await updateUser({
     where: { email: passwordReset.email },
     data: {
       password: hashedPassword,
@@ -75,14 +75,12 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Remove all active sessions for the user
   if (env.nextAuth.sessionStrategy === 'database') {
-    await prisma.session.deleteMany({
+    await deleteManySessions({
       where: { userId: updatedUser.id },
     });
   }
 
-  await prisma.passwordReset.delete({
-    where: { token },
-  });
+  await deletePasswordReset(token);
 
   recordMetric('user.password.reset');
 

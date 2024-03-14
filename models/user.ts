@@ -5,29 +5,53 @@ import { Role, TeamMember } from '@prisma/client';
 import type { Session } from 'next-auth';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from '@/lib/session';
+import { maxLengthPolicies } from '@/lib/common';
 
-export const createUser = async (param: {
+export const normalizeUser = (user) => {
+  if (user?.name) {
+    user.name = user.name.substring(0, maxLengthPolicies.name);
+  }
+
+  return user;
+};
+
+export const createUser = async (data: {
   name: string;
   email: string;
   password?: string;
   emailVerified?: Date | null;
 }) => {
-  const { name, email, password, emailVerified } = param;
-
   return await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: password ? password : '',
-      emailVerified: emailVerified ? emailVerified : null,
-    },
+    data: normalizeUser(data),
+  });
+};
+
+export const updateUser = async ({ where, data }) => {
+  data = normalizeUser(data);
+
+  return await prisma.user.update({
+    where,
+    data,
+  });
+};
+
+export const upsertUser = async ({ where, update, create }) => {
+  update = normalizeUser(update);
+  create = normalizeUser(create);
+
+  return await prisma.user.upsert({
+    where,
+    update,
+    create,
   });
 };
 
 export const getUser = async (key: { id: string } | { email: string }) => {
-  return await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: key,
   });
+
+  return normalizeUser(user);
 };
 
 export const getUserBySession = async (session: Session | null) => {
@@ -48,6 +72,14 @@ export const deleteUser = async (key: { id: string } | { email: string }) => {
   return await prisma.user.delete({
     where: key,
   });
+};
+
+export const findFirstUserOrThrow = async ({ where }) => {
+  const user = await prisma.user.findFirstOrThrow({
+    where,
+  });
+
+  return normalizeUser(user);
 };
 
 const isAllowed = (role: Role, resource: Resource, action: Action) => {

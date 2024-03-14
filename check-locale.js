@@ -23,7 +23,6 @@ const allStrings = {};
 const localeFile = require('./locales/en/common.json');
 
 const files = fs.readdirSync('./', { recursive: true, withFileTypes: true });
-//console.log('files:', files);
 
 let error = false;
 
@@ -43,7 +42,6 @@ files.forEach((file) => {
 
     (fileContent.match(regExp) || []).forEach((match) => {
       const id = match.replace("t('", '').replace("'", '');
-      // console.log('match:', match);
       allStrings[id] = true;
       if (!localeFile[id]) {
         error = true;
@@ -55,7 +53,6 @@ files.forEach((file) => {
 
     (fileContent.match(altRegExp) || []).forEach((match) => {
       const id = match.replace('i18nKey="', '').replace('"', '');
-      // console.log('match:', match, id);
       allStrings[id] = true;
       if (!localeFile[id]) {
         error = true;
@@ -68,13 +65,11 @@ files.forEach((file) => {
     [authHeadingRegExp, authDescriptionRegExp].forEach((regExp) => {
       const authGroups = fileContent.match(regExp) || [];
       authGroups.forEach((match) => {
-        // console.log('match:', match);
         const parts = match.replace('AuthLayout ', '');
         parts.split(' ').forEach((part) => {
           const id = part.startsWith('heading=')
             ? part.replace('heading="', '').replace('"', '')
             : part.replace('description="', '').replace('"', '');
-          // console.log('part:', part, id);
 
           allStrings[id] = true;
           if (!localeFile[id]) {

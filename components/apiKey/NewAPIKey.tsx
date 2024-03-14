@@ -132,6 +132,7 @@ const DisplayAPIKey = ({ apiKey, closeModal }: DisplayAPIKeyProps) => {
           label={t('api-key')}
           value={apiKey}
           className="text-sm"
+          readOnly
         />
       </Modal.Body>
       <Modal.Footer>

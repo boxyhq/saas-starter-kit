@@ -10,7 +10,7 @@ import type { ApiResponse } from 'types';
 import useInvitations from 'hooks/useInvitations';
 import { availableRoles } from '@/lib/permissions';
 import type { Team } from '@prisma/client';
-import { defaultHeaders, isValidDomain } from '@/lib/common';
+import { defaultHeaders, isValidDomain, maxLengthPolicies } from '@/lib/common';
 import { InputWithCopyButton } from '../shared';
 import ConfirmationDialog from '../shared/ConfirmationDialog';
 
@@ -29,6 +29,7 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
   const FormValidationSchema = Yup.object().shape({
     domains: Yup.string()
       .nullable()
+      .max(maxLengthPolicies.domains)
       .test(
         'domains',
         'Enter one or more valid domains, separated by commas.',
