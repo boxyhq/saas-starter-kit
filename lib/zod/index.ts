@@ -3,12 +3,10 @@ import { ApiError } from '../errors';
 
 export * from './schema';
 
-export const validateWithSchema = (
-  schema: ZodType,
+export const validateWithSchema = <ZSchema extends ZodType>(
+  schema: ZSchema,
   data: any
-): {
-  [key: string]: any;
-} => {
+) => {
   const result = schema.safeParse(data);
 
   if (!result.success) {
@@ -17,5 +15,6 @@ export const validateWithSchema = (
       `Validation Error: ${result.error.errors.map((e) => e.message)[0]}`
     );
   }
-  return result.data;
+
+  return result.data as z.infer<ZSchema>;
 };
