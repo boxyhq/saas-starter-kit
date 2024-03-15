@@ -1,4 +1,4 @@
-import { ZodType } from 'zod';
+import z, { ZodType } from 'zod';
 import { ApiError } from '../errors';
 
 export * from './schema';
