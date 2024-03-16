@@ -2,9 +2,6 @@
 ALTER TABLE "Team" ADD COLUMN     "billingId" TEXT,
 ADD COLUMN     "billingProvider" TEXT;
 
--- CreateIndex
-CREATE INDEX "Team_billingId_idx" ON "Team"("billingId");
-
 -- CreateTable
 CREATE TABLE "Subscription" (
     "id" TEXT NOT NULL,
