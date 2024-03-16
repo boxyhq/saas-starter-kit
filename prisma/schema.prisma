@@ -84,7 +84,7 @@ model Team {
   invitations     Invitation[]
   apiKeys         ApiKey[]
 
-   @@index([billingId])
+  @@index([billingId])
 }
 
 model TeamMember {
