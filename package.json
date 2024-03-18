@@ -87,7 +87,7 @@
     "eslint-plugin-react": "7.34.1",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
-    "postcss": "8.4.35",
+    "postcss": "8.4.36",
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "0.5.12",
     "prisma": "5.11.0",
