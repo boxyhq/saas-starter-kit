@@ -31,8 +31,9 @@ export default async function handler(
 }
 
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const teamMember = await throwIfNoTeamAccess(req, res);
   const session = await getSession(req, res);
+  const teamMember = await throwIfNoTeamAccess(req, res);
+  if (!session?.user?.id) throw Error('Could not get user');
   const customerId = await getStripeCustomerId(teamMember, session);
 
   const [subscriptions, products, prices] = await Promise.all([
