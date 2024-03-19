@@ -16,7 +16,7 @@ const exceptionList = [
   'invalid-credentials',
   'no-credentials',
   'token-not-found',
-]
+];
 
 const allStrings = {};
 
