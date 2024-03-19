@@ -38,11 +38,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   const session = await getSession(req, res);
   const customer = await getStripeCustomerId(teamMember, session);
-  const price = req.body.priceId;
-
-  // For metered billing, do not pass quantity
-  const quantity = req.body.quantity || undefined;
-
+  
   const checkoutSession = await stripe.checkout.sessions.create({
     customer,
     mode: 'subscription',
