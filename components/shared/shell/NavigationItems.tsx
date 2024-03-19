@@ -50,7 +50,7 @@ const NavigationItem = ({ menu, className }: NavigationItemProps) => {
       href={menu.href}
       className={`flex items-center rounded text-sm text-gray-900 hover:bg-gray-100 px-2 p-2 gap-2 hover:dark:text-black ${
         menu.active ? 'bg-gray-100 font-semibold' : ''
-      }${className}`}
+      } ${className}`}
     >
       {menu.icon && (
         <menu.icon
