@@ -16,7 +16,7 @@ const Modal = ({ open, close, children }: ModalProps) => {
   const { t } = useTranslation('common');
 
   return (
-    <DModal open={open}>
+    <DModal open={open} className="dark:border dark:border-gray-100">
       <Button
         type="button"
         size="sm"
