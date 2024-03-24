@@ -3,7 +3,7 @@
   "version": "1.4.1",
   "private": true,
   "prisma": {
-    "seed": "npx ts-node ./prisma/seed.ts"
+    "seed": "ts-node ./prisma/seed.ts"
   },
   "scripts": {
     "release": "git checkout release && git merge origin/main && release-it && git checkout main && git merge origin/release && git push origin main",
