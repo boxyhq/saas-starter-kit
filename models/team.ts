@@ -1,11 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
-import { teamSlugSchema } from '@/lib/zod/schema';
 import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCurrentUser } from './user';
 import { normalizeUser } from './user';
+import { validateWithSchema, teamSlugSchema } from '@/lib/zod';
 
 export const createTeam = async (param: {
   userId: string;
@@ -432,7 +432,7 @@ export const getCurrentUserWithTeam = async (
 ) => {
   const user = await getCurrentUser(req, res);
 
-  const { slug } = teamSlugSchema.parse(req.query);
+  const { slug } = validateWithSchema(teamSlugSchema, req.query);
 
   const { role, team } = await getTeamMember(user.id, slug);
 

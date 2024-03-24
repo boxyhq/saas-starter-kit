@@ -1,11 +1,7 @@
-import { z } from 'zod';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from '@/lib/session';
 import { deleteSession, findFirstSessionOrThrown } from 'models/session';
-
-const deleteSessionSchema = z.object({
-  id: z.string(),
-});
+import { validateWithSchema, deleteSessionSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,19 +28,20 @@ export default async function handler(
 
 // Delete a session for the current user
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const params = deleteSessionSchema.parse(req.query);
+  const { id } = validateWithSchema(deleteSessionSchema, req.query);
+
   const session = await getSession(req, res);
 
   await findFirstSessionOrThrown({
     where: {
-      id: params.id,
+      id,
       userId: session?.user.id,
     },
   });
 
   await deleteSession({
     where: {
-      id: params.id,
+      id,
     },
   });
 

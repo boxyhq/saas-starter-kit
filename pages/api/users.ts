@@ -5,7 +5,7 @@ import { ApiError } from '@/lib/errors';
 import env from '@/lib/env';
 import { getUser, updateUser } from 'models/user';
 import { isEmailAllowed } from '@/lib/email/utils';
-import { updateAccountSchema } from '@/lib/zod/schema';
+import { updateAccountSchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,7 +31,8 @@ export default async function handler(
 }
 
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const data = updateAccountSchema.parse(req.body);
+  const data = validateWithSchema(updateAccountSchema, req.body);
+
   const session = await getSession(req, res);
 
   if ('email' in data) {

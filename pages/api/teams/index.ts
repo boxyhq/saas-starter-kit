@@ -3,7 +3,7 @@ import { ApiError } from '@/lib/errors';
 import { createTeam, getTeams, isTeamExists } from 'models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
-import { createTeamSchema } from '@/lib/zod/schema';
+import { createTeamSchema, validateWithSchema } from '@/lib/zod';
 import { getCurrentUser } from 'models/user';
 
 export default async function handler(
@@ -46,7 +46,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Create a team
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name } = createTeamSchema.parse(req.body);
+  const { name } = validateWithSchema(createTeamSchema, req.body);
 
   const user = await getCurrentUser(req, res);
   const slug = slugify(name);

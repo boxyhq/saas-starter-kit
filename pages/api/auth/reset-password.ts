@@ -1,4 +1,4 @@
-import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
+import { hashPassword } from '@/lib/auth';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from 'next/dist/server/api-utils';
 import { recordMetric } from '@/lib/metrics';
@@ -7,6 +7,7 @@ import env from '@/lib/env';
 import { updateUser } from 'models/user';
 import { deletePasswordReset, getPasswordReset } from 'models/passwordReset';
 import { deleteManySessions } from 'models/session';
+import { resetPasswordSchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,13 +35,11 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { token, password } = req.body;
+  const { token, password } = validateWithSchema(resetPasswordSchema, req.body);
 
   if (!token) {
     throw new ApiError(422, 'Password reset token is required');
   }
-
-  validatePasswordPolicy(password);
 
   const passwordReset = await getPasswordReset(token);
 

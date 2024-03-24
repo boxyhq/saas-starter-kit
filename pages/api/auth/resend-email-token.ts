@@ -1,9 +1,9 @@
-import { validateEmail } from '@/lib/server-common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { ApiError } from '@/lib/errors';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUser } from 'models/user';
 import { createVerificationToken } from 'models/verificationToken';
+import { resendEmailToken, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -29,11 +29,7 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email } = req.body;
-
-  if (!email || !validateEmail(email)) {
-    throw new ApiError(422, 'The email address you entered is invalid');
-  }
+  const { email } = validateWithSchema(resendEmailToken, req.body);
 
   const user = await getUser({ email });
 

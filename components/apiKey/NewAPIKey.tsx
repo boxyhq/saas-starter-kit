@@ -10,7 +10,7 @@ import Modal from '../shared/Modal';
 import { defaultHeaders } from '@/lib/common';
 import { useFormik } from 'formik';
 import { z } from 'zod';
-import { createApiKeySchema } from '@/lib/zod/schema';
+import { createApiKeySchema } from '@/lib/zod';
 
 const NewAPIKey = ({
   team,
