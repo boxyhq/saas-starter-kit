@@ -77,7 +77,7 @@
     "@types/nodemailer": "6.4.14",
     "@types/react": "18.2.69",
     "@typescript-eslint/eslint-plugin": "7.3.1",
-    "@typescript-eslint/parser": "7.3.1",
+    "@typescript-eslint/parser": "7.4.0",
     "autoprefixer": "10.4.19",
     "daisyui": "4.8.0",
     "eslint": "8.57.0",
