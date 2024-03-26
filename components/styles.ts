@@ -4,6 +4,7 @@ export const BOXYHQ_UI_CSS = {
   button: {
     ctoa: 'btn btn-md btn-primary',
     destructive: 'btn btn-md btn-error',
+    cancel: 'btn-md',
   },
   input: `${styles['sdk-input']} input input-bordered`,
   select: styles['sdk-select'],
@@ -11,7 +12,7 @@ export const BOXYHQ_UI_CSS = {
   confirmationPrompt: {
     button: {
       ctoa: 'btn-md',
-      cancel: 'btn-md btn-outline',
+      cancel: 'btn-md',
     },
   },
   secretInput: 'input input-bordered',
