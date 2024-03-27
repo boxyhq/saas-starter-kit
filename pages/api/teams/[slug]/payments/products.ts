@@ -33,7 +33,9 @@ export default async function handler(
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
   const teamMember = await throwIfNoTeamAccess(req, res);
-  if (!session?.user?.id) throw Error('Could not get user');
+  if (!session?.user?.id) {
+    throw Error('Could not get user');
+  }
   const customerId = await getStripeCustomerId(teamMember, session);
 
   const [subscriptions, products, prices] = await Promise.all([
@@ -51,7 +53,9 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   // Subscriptions with product and price
   const _subscriptions: any[] = subscriptions.map((subscription: any) => {
     const _price = prices.find((p) => p.id === subscription.priceId);
-    if (!_price) return undefined;
+    if (!_price) {
+      return undefined;
+    }
     const subscriptionProduct = products.find((p) => p.id === _price.serviceId);
 
     return {
