@@ -33,7 +33,9 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   }
 
   const deleteInvitation = async (invitation: TeamInvitation | null) => {
-    if (!invitation) return;
+    if (!invitation) {
+      return;
+    }
 
     const sp = new URLSearchParams({ id: invitation.id });
 
