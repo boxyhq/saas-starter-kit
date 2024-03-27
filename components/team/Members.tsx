@@ -42,7 +42,9 @@ const Members = ({ team }: { team: Team }) => {
   }
 
   const removeTeamMember = async (member: TeamMember | null) => {
-    if (!member) return;
+    if (!member) {
+      return;
+    }
 
     const sp = new URLSearchParams({ memberId: member.userId });
 
