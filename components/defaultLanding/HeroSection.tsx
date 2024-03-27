@@ -6,7 +6,7 @@ const HeroSection = () => {
   return (
     <div className="hero py-52">
       <div className="hero-content text-center">
-        <div className="max-w-7md">
+        <div className="max-w-7xl">
           <h1 className="text-5xl font-bold"> {t('enterprise-saas-kit')}</h1>
           <p className="py-6 text-2xl font-normal">
             {t('kickstart-your-enterprise')}
