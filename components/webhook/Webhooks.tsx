@@ -32,7 +32,9 @@ const Webhooks = ({ team }: { team: Team }) => {
   );
 
   const deleteWebhook = async (webhook: EndpointOut | null) => {
-    if (!webhook) return;
+    if (!webhook) {
+      return;
+    }
 
     const sp = new URLSearchParams({ webhookId: webhook.id });
 
