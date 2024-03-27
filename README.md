@@ -150,28 +150,62 @@ _Note: HTML test report is generated inside the `report` folder. Currently suppo
 
 ## 🥇 Features
 
-- Create account
-- Sign in with Email and Password
-- Sign in with Magic Link
-- Sign in with SAML SSO
-- Sign in with Google [[Setting up Google OAuth](https://support.google.com/cloud/answer/6158849?hl=en)]
-- Sign in with GitHub [[Creating a Github OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)]
-- Directory Sync (SCIM)
-- Update account
-- Create team
-- Invite users to the team
-- Manage team members
-- Update team settings
-- Webhooks & Events
-- Internationalization
-- Audit logs
-- Roles and Permissions
-- Dark mode
+Each feature in our application is designed with user experience in mind:
+
+- **Create account**: Users can create their own account.
+- **Sign in with Email and Password**: Users can sign in using their email and password.
+- **Sign in with Magic Link**: Users can sign in using a magic link sent to their email.
+- **Sign in with SAML SSO**: Users can sign in using SAML Single Sign-On.
+- **Sign in with Google**: Users can sign in using their Google account. [Setting up Google OAuth](https://support.google.com/cloud/answer/6158849?hl=en)
+- **Sign in with GitHub**: Users can sign in using their GitHub account. [Creating a Github OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
+- **Directory Sync (SCIM)**: Our application supports directory synchronization using SCIM.
+- **Update account**: Users can update their account details.
+- **Create team**: Users can create their own teams.
+- **Delete team**: Users can delete their teams.
+- **Invite users to the team**: Team owners can invite other users to their team.
+- **Manage team members**: Team owners can manage their team members.
+- **Update team settings**: Team owners can update their team settings.
+- **Webhooks & Events**: Our application supports webhooks and events for real-time updates.
+- **Internationalization**: Our application supports multiple languages.
+- **Audit logs**: Our application maintains audit logs for security and compliance.
+- **Roles and Permissions**: Our application has a robust roles and permissions system.
+- **Dark mode**: Users can switch to dark mode for a better viewing experience in low light.
+- **Email notifications**: Our application sends email notifications for important updates.
+- **E2E tests**: Our application is thoroughly tested with end-to-end tests.
+- **Docker compose**: Our application supports Docker compose for easy deployment.
+- **Prisma Studio**: Our application uses Prisma Studio for database management.
+- **Update member role**: Team owners can update the roles of their team members.
+- **Directory Sync Events**: Our application handles directory sync events.
+- **Avatar Upload**: Users can upload their own avatars.
+- **SAML SSO**: Our application supports SAML Single Sign-On.
+- **Audit Log**: Our application maintains audit logs for security and compliance.
+- **Webhook**: Our application supports webhooks for real-time updates.
+- **Payments**: Our application supports online payments.
+- **Security Headers**: Our application sets security-related HTTP headers.
 
 ## ➡️ Coming Soon
 
 - Billing & subscriptions
 - Unit and integration tests
+
+## 📚 Architecture
+Next.js: This is a React framework that provides features such as server-side rendering and static site generation. It's used for building the user interface of your application. The main configuration for Next.js can be found in next.config.js.
+
+React: This is a JavaScript library for building user interfaces. It's used for creating the interactive elements of your application. The React components are located in the components directory.
+
+TypeScript: This is a typed superset of JavaScript that compiles to plain JavaScript. It's used to make the code more robust and maintainable. TypeScript definitions and configurations can be found in files like next-env.d.ts and i18next.d.ts.
+
+Prisma: This is an open-source database toolkit. It's used for object-relational mapping, which simplifies the process of writing database queries. Prisma configuration and schema can be found in the prisma directory.
+
+Postgres: This is a powerful, open source object-relational database system. It's used for storing application data. The connection to Postgres is likely managed through Prisma.
+
+Tailwind CSS: This is a utility-first CSS framework for rapidly building custom user interfaces. It's used for styling the application. The configuration for Tailwind CSS can be found in postcss.config.js.
+
+Svix: This is a service for handling webhooks. It's used to emit events on user/team CRUD operations, which can then be caught and handled by other parts of the application or external services. The integration of Svix is distributed throughout the codebase, primarily in areas where Create, Read, Update, and Delete (CRUD) operations are executed.
+
+SAML Jackson: This is a service for handling SAML SSO (Single Sign-On). It's used to allow users to sign in with a single ID and password to any of several related systems i.e (using a single set of credentials). The implementation of SAML Jackson is primarily located within the files associated with authentication.
+
+Retraced: This is a service for audit logging and data visibility. It helps track user activities within the application i.e (who did what and when in the application). The usage of Retraced would be dispersed throughout the codebase, likely in the files where important actions are performed.
 
 ## ✨ Contributing
 
