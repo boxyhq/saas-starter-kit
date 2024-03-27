@@ -8,7 +8,9 @@ export default function SAMLIdPLogin() {
   const { isReady, query } = router;
 
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady) {
+      return;
+    }
 
     signIn('boxyhq-idp', {
       callbackUrl: '/dashboard',
