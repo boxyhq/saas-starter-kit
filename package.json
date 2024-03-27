@@ -37,7 +37,7 @@
     "@retracedhq/logs-viewer": "2.7.1",
     "@retracedhq/retraced": "0.7.8",
     "@sentry/nextjs": "7.108.0",
-    "@tailwindcss/typography": "0.5.10",
+    "@tailwindcss/typography": "0.5.11",
     "bcryptjs": "2.4.3",
     "classnames": "2.5.1",
     "cookies-next": "4.1.1",
