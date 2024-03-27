@@ -90,10 +90,11 @@ const isAllowed = (role: Role, resource: Resource, action: Action) => {
   }
 
   for (const permission of rolePermissions) {
-    if (permission.resource === resource) {
-      if (permission.actions === '*' || permission.actions.includes(action)) {
-        return true;
-      }
+    if (
+      permission.resource === resource &&
+      (permission.actions === '*' || permission.actions.includes(action))
+    ) {
+      return true;
     }
   }
 
