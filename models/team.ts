@@ -155,17 +155,15 @@ export const getTeams = async (userId: string) => {
 };
 
 export async function getTeamRoles(userId: string) {
-  const teamRoles = await prisma.teamMember.findMany({
-    where: {
-      userId,
-    },
-    select: {
-      teamId: true,
-      role: true,
-    },
-  });
-
-  return teamRoles;
+  return await prisma.teamMember.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        teamId: true,
+        role: true,
+      },
+    });
 }
 
 // Check if the user is an admin or owner of the team
@@ -407,22 +405,20 @@ Execution Time: 0.050 ms
 
 // Get the current user's team member object
 export const getTeamMember = async (userId: string, slug: string) => {
-  const teamMember = await prisma.teamMember.findFirstOrThrow({
-    where: {
-      userId,
-      team: {
-        slug,
+  return await prisma.teamMember.findFirstOrThrow({
+      where: {
+        userId,
+        team: {
+          slug,
+        },
+        role: {
+          in: ['ADMIN', 'MEMBER', 'OWNER'],
+        },
       },
-      role: {
-        in: ['ADMIN', 'MEMBER', 'OWNER'],
+      include: {
+        team: true,
       },
-    },
-    include: {
-      team: true,
-    },
-  });
-
-  return teamMember;
+    });
 };
 
 // Get current user with team info
