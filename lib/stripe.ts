@@ -18,7 +18,9 @@ export async function getStripeCustomerId(teamMember, session?: any) {
         teamId: teamMember.teamId,
       },
     };
-    if (session?.user?.email) customerData.email = session?.user?.email;
+    if (session?.user?.email) {
+      customerData.email = session?.user?.email;
+    }
     const customer = await stripe.customers.create({
       ...customerData,
       name: session?.user?.name as string,
