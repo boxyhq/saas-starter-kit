@@ -38,7 +38,9 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   let event: Stripe.Event;
 
   try {
-    if (!sig || !webhookSecret) return;
+    if (!sig || !webhookSecret) {
+      return;
+    }
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
   } catch (err: any) {
     return res.status(400).json({ error: { message: err.message } });
