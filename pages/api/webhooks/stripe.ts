@@ -34,7 +34,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   const rawBody = await getRawBody(req);
 
   const sig = req.headers['stripe-signature'] as string;
-  const webhookSecret = env.stripe.webhookSecret;
+  const { webhookSecret } = env.stripe;
   let event: Stripe.Event;
 
   try {
