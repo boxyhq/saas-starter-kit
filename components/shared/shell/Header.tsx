@@ -26,7 +26,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
     return null;
   }
 
-  const user = data.user;
+  const { user } = data;
 
   return (
     <div className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b px-4 sm:gap-x-6 sm:px-6 lg:px-8 bg-white">
