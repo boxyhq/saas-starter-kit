@@ -75,20 +75,22 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
       domain,
     });
   } catch (error: any) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2002' && error.meta?.target) {
-        const target = error.meta.target as string[];
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002' &&
+      error.meta?.target
+    ) {
+      const target = error.meta.target as string[];
 
-        if (target.includes('slug')) {
-          throw new ApiError(409, 'This slug is already taken for a team.');
-        }
+      if (target.includes('slug')) {
+        throw new ApiError(409, 'This slug is already taken for a team.');
+      }
 
-        if (target.includes('domain')) {
-          throw new ApiError(
-            409,
-            'This domain is already associated with a team.'
-          );
-        }
+      if (target.includes('domain')) {
+        throw new ApiError(
+          409,
+          'This domain is already associated with a team.'
+        );
       }
     }
 
