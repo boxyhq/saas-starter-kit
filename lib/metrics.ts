@@ -6,7 +6,7 @@ import env from './env';
 
 initializeMetrics({ name: packageInfo.name, version: packageInfo.version });
 
-const prefix = env.otel.prefix;
+const { prefix } = env.otel;
 const meter = packageInfo.name;
 
 export const recordMetric = (metric: AppEvent) => {
