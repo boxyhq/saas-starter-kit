@@ -90,7 +90,7 @@ const CreateAPIKeyForm = ({
   return (
     <form onSubmit={formik.handleSubmit} method="POST">
       <Modal.Header>{t('new-api-key')}</Modal.Header>
-      <Modal.Description>{t('new-api-key-description')}</Modal.Description>
+      <Modal.Description>{t('api-key-description')}</Modal.Description>
       <Modal.Body>
         <InputWithLabel
           label={t('name')}
