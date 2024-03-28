@@ -22,7 +22,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --env=jsdom",
     "build-ci": "next build",
-    "sync-stripe": "node --env-file .env syncStripe.js",
+    "sync-stripe": "node --env-file .env sync-stripe.js",
     "check-locale": "node check-locale.js"
   },
   "dependencies": {
