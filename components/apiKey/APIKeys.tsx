@@ -71,7 +71,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
         {apiKeys.length === 0 ? (
           <EmptyState
             title={t('no-api-key-title')}
-            description={t('no-api-key-description')}
+            description={t('api-key-description')}
           />
         ) : (
           <>

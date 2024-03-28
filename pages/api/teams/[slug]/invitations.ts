@@ -257,13 +257,11 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const email = session?.user.email as string;
 
   // Make sure the user is logged in with the invited email address (Join via email)
-  if (invitation.sentViaEmail) {
-    if (invitation.email !== email) {
-      throw new ApiError(
-        400,
-        'You must be logged in with the email address you were invited with.'
-      );
-    }
+  if (invitation.sentViaEmail && invitation.email !== email) {
+    throw new ApiError(
+      400,
+      'You must be logged in with the email address you were invited with.'
+    );
   }
 
   // Make sure the user is logged in with an allowed domain (Join via link)
