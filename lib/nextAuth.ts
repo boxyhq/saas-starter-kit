@@ -306,7 +306,7 @@ export const getAuthOptions = (
 
         // Login via email (Magic Link)
         if (account?.provider === 'email') {
-          return !!existingUser;
+          return Boolean(existingUser);
         }
 
         // First time users
