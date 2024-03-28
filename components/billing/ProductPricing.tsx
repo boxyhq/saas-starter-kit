@@ -1,4 +1,3 @@
-import router from 'next/router';
 import toast from 'react-hot-toast';
 import { Button } from 'react-daisyui';
 import { useTranslation } from 'next-i18next';
@@ -32,7 +31,7 @@ const ProductPricing = ({ plans, subscriptions }: ProductPricingProps) => {
     const data = await res.json();
 
     if (data?.data?.url) {
-      router.push(data.data.url);
+      window.open(data.data.url, '_blank', 'noopener,noreferrer');
     } else {
       toast.error(
         data?.error?.message ||
