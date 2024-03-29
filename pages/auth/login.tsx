@@ -26,6 +26,7 @@ import TogglePasswordVisibility from '@/components/shared/TogglePasswordVisibili
 import AgreeMessage from '@/components/auth/AgreeMessage';
 import GoogleReCAPTCHA from '@/components/shared/GoogleReCAPTCHA';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { maxLengthPolicies } from '@/lib/common';
 
 interface Message {
   text: string | null;
@@ -73,8 +74,8 @@ const Login: NextPageWithLayout<
       password: '',
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string().required().email(),
-      password: Yup.string().required(),
+      email: Yup.string().required().email().max(maxLengthPolicies.email),
+      password: Yup.string().required().max(maxLengthPolicies.password),
     }),
     onSubmit: async (values) => {
       const { email, password } = values;

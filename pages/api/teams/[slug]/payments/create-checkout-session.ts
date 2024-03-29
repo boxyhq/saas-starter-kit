@@ -4,6 +4,7 @@ import { getSession } from '@/lib/session';
 import { throwIfNoTeamAccess } from 'models/team';
 import { stripe, getStripeCustomerId } from '@/lib/stripe';
 import env from '@/lib/env';
+import { checkoutSessionSchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -29,18 +30,22 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { price, quantity } = validateWithSchema(
+    checkoutSessionSchema,
+    req.body
+  );
+
   const teamMember = await throwIfNoTeamAccess(req, res);
   const session = await getSession(req, res);
-  const customerId = await getStripeCustomerId(teamMember, session);
+  const customer = await getStripeCustomerId(teamMember, session);
 
   const checkoutSession = await stripe.checkout.sessions.create({
-    customer: customerId,
+    customer,
     mode: 'subscription',
     line_items: [
       {
-        price: req.body.priceId,
-        // For metered billing, do not pass quantity
-        quantity: req.body.quantity || undefined,
+        price,
+        quantity,
       },
     ],
 

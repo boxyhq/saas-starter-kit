@@ -1,10 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
-import { teamSlugSchema } from '@/lib/zod/schema';
 import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCurrentUser } from './user';
+import { normalizeUser } from './user';
+import { validateWithSchema, teamSlugSchema } from '@/lib/zod';
 
 export const createTeam = async (param: {
   userId: string;
@@ -154,7 +155,7 @@ export const getTeams = async (userId: string) => {
 };
 
 export async function getTeamRoles(userId: string) {
-  const teamRoles = await prisma.teamMember.findMany({
+  return await prisma.teamMember.findMany({
     where: {
       userId,
     },
@@ -163,8 +164,6 @@ export async function getTeamRoles(userId: string) {
       role: true,
     },
   });
-
-  return teamRoles;
 }
 
 // Check if the user is an admin or owner of the team
@@ -235,7 +234,7 @@ Planning Time: 0.351 ms
 Execution Time: 0.045 ms
 */
 export const getTeamMembers = async (slug: string) => {
-  return await prisma.teamMember.findMany({
+  const members = await prisma.teamMember.findMany({
     where: {
       team: {
         slug,
@@ -250,6 +249,11 @@ export const getTeamMembers = async (slug: string) => {
         },
       },
     },
+  });
+
+  return members?.map((member) => {
+    member.user = normalizeUser(member.user);
+    return member;
   });
 };
 
@@ -401,7 +405,7 @@ Execution Time: 0.050 ms
 
 // Get the current user's team member object
 export const getTeamMember = async (userId: string, slug: string) => {
-  const teamMember = await prisma.teamMember.findFirstOrThrow({
+  return await prisma.teamMember.findFirstOrThrow({
     where: {
       userId,
       team: {
@@ -415,8 +419,6 @@ export const getTeamMember = async (userId: string, slug: string) => {
       team: true,
     },
   });
-
-  return teamMember;
 };
 
 // Get current user with team info
@@ -426,7 +428,7 @@ export const getCurrentUserWithTeam = async (
 ) => {
   const user = await getCurrentUser(req, res);
 
-  const { slug } = teamSlugSchema.parse(req.query);
+  const { slug } = validateWithSchema(teamSlugSchema, req.query);
 
   const { role, team } = await getTeamMember(user.id, slug);
 

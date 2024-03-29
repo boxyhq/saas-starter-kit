@@ -11,7 +11,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { ApiError } from '@/lib/errors';
 import env from '@/lib/env';
-import { updateTeamSchema } from '@/lib/zod/schema';
+import { updateTeamSchema, validateWithSchema } from '@/lib/zod';
 import { Prisma, Team } from '@prisma/client';
 
 export default async function handler(
@@ -64,7 +64,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(user, 'team', 'update');
 
-  const { name, slug, domain } = updateTeamSchema.parse(req.body);
+  const { name, slug, domain } = validateWithSchema(updateTeamSchema, req.body);
 
   let updatedTeam: Team | null = null;
 
@@ -75,20 +75,22 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
       domain,
     });
   } catch (error: any) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2002' && error.meta?.target) {
-        const target = error.meta.target as string[];
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002' &&
+      error.meta?.target
+    ) {
+      const target = error.meta.target as string[];
 
-        if (target.includes('slug')) {
-          throw new ApiError(409, 'This slug is already taken for a team.');
-        }
+      if (target.includes('slug')) {
+        throw new ApiError(409, 'This slug is already taken for a team.');
+      }
 
-        if (target.includes('domain')) {
-          throw new ApiError(
-            409,
-            'This domain is already associated with a team.'
-          );
-        }
+      if (target.includes('domain')) {
+        throw new ApiError(
+          409,
+          'This domain is already associated with a team.'
+        );
       }
     }
 

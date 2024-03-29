@@ -1,14 +1,13 @@
 import { EmptyState, WithLoadingAndError } from '@/components/shared';
 import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
-import fetcher from '@/lib/fetcher';
 import type { ApiKey, Team } from '@prisma/client';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
-import useSWR from 'swr';
 import type { ApiResponse } from 'types';
 import NewAPIKey from './NewAPIKey';
+import useAPIKeys from 'hooks/useAPIKeys';
 import { Table } from '@/components/shared/table/Table';
 
 interface APIKeysProps {
@@ -17,20 +16,17 @@ interface APIKeysProps {
 
 const APIKeys = ({ team }: APIKeysProps) => {
   const { t } = useTranslation('common');
+  const { data, isLoading, error, mutate } = useAPIKeys(team.slug);
   const [selectedApiKey, setSelectedApiKey] = useState<ApiKey | null>(null);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [confirmationDialogVisible, setConfirmationDialogVisible] =
     useState(false);
 
-  // Fetch API Keys
-  const { data, isLoading, error, mutate } = useSWR<{ data: ApiKey[] }>(
-    `/api/teams/${team.slug}/api-keys`,
-    fetcher
-  );
-
   // Delete API Key
   const deleteApiKey = async (apiKey: ApiKey | null) => {
-    if (!apiKey) return;
+    if (!apiKey) {
+      return;
+    }
 
     const response = await fetch(
       `/api/teams/${team.slug}/api-keys/${apiKey.id}`,
@@ -77,7 +73,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
         {apiKeys.length === 0 ? (
           <EmptyState
             title={t('no-api-key-title')}
-            description={t('no-api-key-description')}
+            description={t('api-key-description')}
           />
         ) : (
           <>

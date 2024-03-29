@@ -1,7 +1,6 @@
-import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
-import { generateToken, slugify } from '@/lib/common';
+import { hashPassword } from '@/lib/auth';
+import { slugify } from '@/lib/server-common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
-import { prisma } from '@/lib/prisma';
 import { isEmailAllowed } from '@/lib/email/utils';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
@@ -13,6 +12,11 @@ import { getInvitation, isInvitationExpired } from 'models/invitation';
 import { validateRecaptcha } from '@/lib/recaptcha';
 import { slackNotify } from '@/lib/slack';
 import { Team } from '@prisma/client';
+import { createVerificationToken } from 'models/verificationToken';
+import { userJoinSchema, validateWithSchema } from '@/lib/zod';
+
+// TODO:
+// Add zod schema validation
 
 export default async function handler(
   req: NextApiRequest,
@@ -49,7 +53,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     ? await getInvitation({ token: inviteToken })
     : null;
 
-  let emailToUse: string = req.body.email;
+  let email: string = req.body.email;
 
   // When join via invitation
   if (invitation) {
@@ -58,22 +62,26 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (invitation.sentViaEmail) {
-      emailToUse = invitation.email!;
+      email = invitation.email!;
     }
   }
 
-  if (!isEmailAllowed(emailToUse)) {
+  validateWithSchema(userJoinSchema, {
+    name,
+    email,
+    password,
+  });
+
+  if (!isEmailAllowed(email)) {
     throw new ApiError(
       400,
       `We currently only accept work email addresses for sign-up. Please use your work email to create an account. If you don't have a work email, feel free to contact our support team for assistance.`
     );
   }
 
-  if (await getUser({ email: emailToUse })) {
+  if (await getUser({ email })) {
     throw new ApiError(400, 'An user with this email already exists.');
   }
-
-  validatePasswordPolicy(password);
 
   // Check if team name is available
   if (!invitation) {
@@ -82,6 +90,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const slug = slugify(team);
+
+    validateWithSchema(userJoinSchema, { team, slug });
+
     const slugCollisions = await isTeamExists(slug);
 
     if (slugCollisions > 0) {
@@ -91,7 +102,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const user = await createUser({
     name,
-    email: emailToUse,
+    email,
     password: await hashPassword(password),
     emailVerified: invitation ? new Date() : null,
   });
@@ -112,12 +123,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Send account verification email
   if (env.confirmEmail && !user.emailVerified) {
-    const verificationToken = await prisma.verificationToken.create({
-      data: {
-        identifier: user.email,
-        token: generateToken(),
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      },
+    const verificationToken = await createVerificationToken({
+      identifier: user.email,
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
     await sendVerificationEmail({ user, verificationToken });

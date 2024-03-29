@@ -1,9 +1,4 @@
-import {
-  hashPassword,
-  validatePasswordPolicy,
-  verifyPassword,
-} from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+import { hashPassword, verifyPassword } from '@/lib/auth';
 import { getSession } from '@/lib/session';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from 'next/dist/server/api-utils';
@@ -11,6 +6,9 @@ import { recordMetric } from '@/lib/metrics';
 import { getCookie } from 'cookies-next';
 import { sessionTokenCookieName } from '@/lib/nextAuth';
 import env from '@/lib/env';
+import { findFirstUserOrThrow, updateUser } from 'models/user';
+import { deleteManySessions } from 'models/session';
+import { validateWithSchema, updatePasswordSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -40,12 +38,12 @@ export default async function handler(
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
 
-  const { currentPassword, newPassword } = req.body as {
-    currentPassword: string;
-    newPassword: string;
-  };
+  const { currentPassword, newPassword } = validateWithSchema(
+    updatePasswordSchema,
+    req.body
+  );
 
-  const user = await prisma.user.findFirstOrThrow({
+  const user = await findFirstUserOrThrow({
     where: { id: session?.user.id },
   });
 
@@ -53,9 +51,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     throw new ApiError(400, 'Your current password is incorrect');
   }
 
-  validatePasswordPolicy(newPassword);
-
-  await prisma.user.update({
+  await updateUser({
     where: { id: session?.user.id },
     data: { password: await hashPassword(newPassword) },
   });
@@ -64,7 +60,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   if (env.nextAuth.sessionStrategy === 'database') {
     const sessionToken = getCookie(sessionTokenCookieName, { req, res });
 
-    await prisma.session.deleteMany({
+    await deleteManySessions({
       where: {
         userId: session?.user.id,
         NOT: {

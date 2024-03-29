@@ -1,5 +1,4 @@
 import { ApiError } from '@/lib/errors';
-import { prisma } from '@/lib/prisma';
 import { sendAudit } from '@/lib/retraced';
 import { sendEvent } from '@/lib/svix';
 import { Role } from '@prisma/client';
@@ -11,6 +10,7 @@ import {
 import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
+import { countTeamMembers, updateTeamMember } from 'models/teamMember';
 
 export default async function handler(
   req: NextApiRequest,
@@ -117,7 +117,7 @@ Planning Time: 0.625 ms
 Execution Time: 0.057 ms
 */
 
-  const totalTeamOwners = await prisma.teamMember.count({
+  const totalTeamOwners = await countTeamMembers({
     where: {
       role: Role.OWNER,
       teamId: teamMember.teamId,
@@ -142,7 +142,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { memberId, role } = req.body as { memberId: string; role: Role };
 
-  const memberUpdated = await prisma.teamMember.update({
+  const memberUpdated = await updateTeamMember({
     where: {
       teamId_userId: {
         teamId: teamMember.teamId,

@@ -36,7 +36,7 @@ export const deleteStripeSubscription = async (id: string) => {
 };
 
 export const updateStripeSubscription = async (id: string, data: any) => {
-  return await prisma.subscription.updateMany({
+  return await prisma.subscription.update({
     where: {
       id,
     },

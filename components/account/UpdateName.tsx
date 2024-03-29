@@ -9,7 +9,7 @@ import { defaultHeaders } from '@/lib/common';
 import { User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { updateAccountSchema } from '@/lib/zod/schema';
+import { updateAccountSchema } from '@/lib/zod';
 
 const UpdateName = ({ user }: { user: Partial<User> }) => {
   const { t } = useTranslation('common');

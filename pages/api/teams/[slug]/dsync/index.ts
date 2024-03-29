@@ -60,7 +60,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(teamMember, 'team_dsync', 'create');
 
-  const body = req.body;
+  const { body } = req;
 
   const connection = await dsync.createConnection({
     ...body,

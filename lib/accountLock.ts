@@ -3,15 +3,15 @@ import { render } from '@react-email/components';
 import app from './app';
 import env from './env';
 import { User } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
 import { sendEmail } from './email/sendEmail';
 import { createVerificationToken } from 'models/verificationToken';
 import AccountLocked from '@/components/emailTemplates/AccountLocked';
+import { updateUser } from 'models/user';
 
 const UNLOCK_ACCOUNT_TOKEN_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 export const incrementLoginAttempts = async (user: User) => {
-  const updatedUser = await prisma.user.update({
+  const updatedUser = await updateUser({
     where: { id: user.id },
     data: {
       invalid_login_attempts: {
@@ -21,7 +21,7 @@ export const incrementLoginAttempts = async (user: User) => {
   });
 
   if (exceededLoginAttemptsThreshold(updatedUser)) {
-    await prisma.user.update({
+    await updateUser({
       where: { id: user.id },
       data: {
         lockedAt: new Date(),
@@ -35,7 +35,7 @@ export const incrementLoginAttempts = async (user: User) => {
 };
 
 export const clearLoginAttempts = async (user: User) => {
-  await prisma.user.update({
+  await updateUser({
     where: { id: user.id },
     data: {
       invalid_login_attempts: 0,
@@ -44,7 +44,7 @@ export const clearLoginAttempts = async (user: User) => {
 };
 
 export const unlockAccount = async (user: User) => {
-  await prisma.user.update({
+  await updateUser({
     where: { id: user.id },
     data: {
       invalid_login_attempts: 0,

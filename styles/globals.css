@@ -52,6 +52,14 @@ a {
   .modal-box {
     @apply rounded;
   }
+
+  .btn-primary:focus-visible {
+    @apply outline-primary;
+  }
+
+  .btn-error:focus-visible {
+    @apply outline-error;
+  }
 }
 
 .btn-md {

@@ -11,7 +11,7 @@ import type { ApiResponse } from 'types';
 
 import { AccessControl } from '../shared/AccessControl';
 import { z } from 'zod';
-import { updateTeamSchema } from '@/lib/zod/schema';
+import { updateTeamSchema } from '@/lib/zod';
 
 const TeamSettings = ({ team }: { team: Team }) => {
   const router = useRouter();

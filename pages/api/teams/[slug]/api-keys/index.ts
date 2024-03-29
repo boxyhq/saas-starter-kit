@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
-import { createApiKeySchema } from '@/lib/zod/schema';
+import { createApiKeySchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -58,7 +58,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   throwIfNotAllowed(user, 'team_api_key', 'create');
 
-  const { name } = createApiKeySchema.parse(req.body);
+  const { name } = validateWithSchema(createApiKeySchema, req.body);
 
   const apiKey = await createApiKey({
     name,

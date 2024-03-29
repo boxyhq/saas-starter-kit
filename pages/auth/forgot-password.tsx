@@ -1,6 +1,6 @@
 import { AuthLayout } from '@/components/layouts';
 import { InputWithLabel } from '@/components/shared';
-import { defaultHeaders } from '@/lib/common';
+import { defaultHeaders, maxLengthPolicies } from '@/lib/common';
 import { useFormik } from 'formik';
 import type {
   GetServerSidePropsContext,
@@ -31,7 +31,7 @@ const ForgotPassword: NextPageWithLayout<
       email: '',
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string().required().email(),
+      email: Yup.string().required().email().max(maxLengthPolicies.email),
     }),
     onSubmit: async (values) => {
       const response = await fetch('/api/auth/forgot-password', {

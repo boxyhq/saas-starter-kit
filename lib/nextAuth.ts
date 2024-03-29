@@ -32,7 +32,8 @@ import {
   incrementLoginAttempts,
 } from '@/lib/accountLock';
 import { slackNotify } from './slack';
-import { forceConsume } from './common';
+import { maxLengthPolicies } from '@/lib/common';
+import { forceConsume } from '@/lib/server-common';
 
 const adapter = PrismaAdapter(prisma);
 const providers: Provider[] = [];
@@ -305,7 +306,7 @@ export const getAuthOptions = (
 
         // Login via email (Magic Link)
         if (account?.provider === 'email') {
-          return existingUser ? true : false;
+          return Boolean(existingUser);
         }
 
         // First time users
@@ -359,6 +360,16 @@ export const getAuthOptions = (
         // When using database sessions, the User (user) object is provided.
         if (session && (token || user)) {
           session.user.id = token?.sub || user?.id;
+        }
+
+        if (user?.name) {
+          user.name = user.name.substring(0, maxLengthPolicies.name);
+        }
+        if (session?.user?.name) {
+          session.user.name = session.user.name.substring(
+            0,
+            maxLengthPolicies.name
+          );
         }
 
         return session;

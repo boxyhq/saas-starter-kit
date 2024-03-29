@@ -1,8 +1,9 @@
-import { generateToken, validateEmail } from '@/lib/common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { ApiError } from '@/lib/errors';
-import { prisma } from '@/lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getUser } from 'models/user';
+import { createVerificationToken } from 'models/verificationToken';
+import { resendEmailToken, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,26 +29,17 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email } = req.body;
+  const { email } = validateWithSchema(resendEmailToken, req.body);
 
-  if (!email || !validateEmail(email)) {
-    throw new ApiError(422, 'The email address you entered is invalid');
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
+  const user = await getUser({ email });
 
   if (!user) {
     throw new ApiError(422, `We can't find a user with that e-mail address`);
   }
 
-  const newVerificationToken = await prisma.verificationToken.create({
-    data: {
-      identifier: email,
-      token: generateToken(),
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 24 hours),
-    },
+  const newVerificationToken = await createVerificationToken({
+    identifier: email,
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 24 hours),
   });
 
   await sendVerificationEmail({

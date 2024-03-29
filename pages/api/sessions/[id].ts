@@ -1,12 +1,7 @@
-import { z } from 'zod';
 import type { NextApiRequest, NextApiResponse } from 'next';
-
-import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
-
-const deleteSessionSchema = z.object({
-  id: z.string(),
-});
+import { deleteSession, findFirstSessionOrThrown } from 'models/session';
+import { validateWithSchema, deleteSessionSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,19 +28,20 @@ export default async function handler(
 
 // Delete a session for the current user
 const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
-  const params = deleteSessionSchema.parse(req.query);
+  const { id } = validateWithSchema(deleteSessionSchema, req.query);
+
   const session = await getSession(req, res);
 
-  await prisma.session.findFirstOrThrow({
+  await findFirstSessionOrThrown({
     where: {
-      id: params.id,
+      id,
       userId: session?.user.id,
     },
   });
 
-  await prisma.session.delete({
+  await deleteSession({
     where: {
-      id: params.id,
+      id,
     },
   });
 
