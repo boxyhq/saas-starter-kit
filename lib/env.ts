@@ -78,7 +78,7 @@ const env = {
   },
 
   disableNonBusinessEmailSignup:
-    process.env.DISABLE_NON_BUSINESS_EMAIL_SIGNUP === 'true',
+    process.env.DISABLE_NON_BUSINESS_EMAIL_SIGNUP === 'true' ? true : false,
 
   authProviders: process.env.AUTH_PROVIDERS || 'github,credentials',
 
@@ -86,23 +86,23 @@ const env = {
     prefix: process.env.OTEL_PREFIX || 'boxyhq.saas',
   },
 
-  hideLandingPage: process.env.HIDE_LANDING_PAGE === 'true',
+  hideLandingPage: process.env.HIDE_LANDING_PAGE === 'true' ? true : false,
 
-  darkModeEnabled: process.env.NEXT_PUBLIC_DARK_MODE !== 'false',
+  darkModeEnabled: process.env.NEXT_PUBLIC_DARK_MODE === 'false' ? false : true,
 
   teamFeatures: {
-    sso: process.env.FEATURE_TEAM_SSO !== 'false',
-    dsync: process.env.FEATURE_TEAM_DSYNC !== 'false',
-    webhook: process.env.FEATURE_TEAM_WEBHOOK !== 'false',
-    apiKey: process.env.FEATURE_TEAM_API_KEY !== 'false',
-    auditLog: process.env.FEATURE_TEAM_AUDIT_LOG !== 'false',
+    sso: process.env.FEATURE_TEAM_SSO === 'false' ? false : true,
+    dsync: process.env.FEATURE_TEAM_DSYNC === 'false' ? false : true,
+    webhook: process.env.FEATURE_TEAM_WEBHOOK === 'false' ? false : true,
+    apiKey: process.env.FEATURE_TEAM_API_KEY === 'false' ? false : true,
+    auditLog: process.env.FEATURE_TEAM_AUDIT_LOG === 'false' ? false : true,
     payments:
       process.env.FEATURE_TEAM_PAYMENTS === 'false'
         ? false
-        : Boolean(
-            process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET
-          ),
-    deleteTeam: process.env.FEATURE_TEAM_DELETION !== 'false',
+        : process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET
+          ? true
+          : false,
+    deleteTeam: process.env.FEATURE_TEAM_DELETION === 'false' ? false : true,
   },
 
   recaptcha: {
