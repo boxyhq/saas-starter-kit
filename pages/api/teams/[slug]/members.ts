@@ -11,6 +11,7 @@ import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { countTeamMembers, updateTeamMember } from 'models/teamMember';
+import { validateUpdateRole } from '@/lib/rbac';
 
 export default async function handler(
   req: NextApiRequest,
@@ -141,6 +142,8 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
   throwIfNotAllowed(teamMember, 'team_member', 'update');
 
   const { memberId, role } = req.body as { memberId: string; role: Role };
+
+  await validateUpdateRole(memberId, teamMember);
 
   const memberUpdated = await updateTeamMember({
     where: {
