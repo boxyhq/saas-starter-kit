@@ -235,5 +235,6 @@
   "desc-signin-with-saml-sso": "Your ID is the slug after the hostname.",
   "invalid-credentials": "Invalid credentials",
   "no-credentials": "No credentials provided",
-  "token-not-found": "Verification token not found"
+  "token-not-found": "Verification token not found",
+  "update-webhook": "Update Webhook"
 }
