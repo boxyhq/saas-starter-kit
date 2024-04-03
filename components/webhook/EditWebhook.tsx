@@ -73,6 +73,7 @@ const EditWebhook = ({
       }}
       onSubmit={onSubmit}
       title={t('edit-webhook-endpoint')}
+      editMode={true}
     />
   );
 };

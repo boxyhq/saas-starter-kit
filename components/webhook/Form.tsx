@@ -16,6 +16,7 @@ interface FormProps {
   initialValues: WebookFormSchema;
   onSubmit: FormikConfig<WebookFormSchema>['onSubmit'];
   title: string;
+  editMode?: boolean;
 }
 
 const Form = ({
@@ -24,6 +25,7 @@ const Form = ({
   initialValues,
   onSubmit,
   title,
+  editMode = false,
 }: FormProps) => {
   const formik = useFormik<WebookFormSchema>({
     validationSchema: Yup.object().shape({
@@ -104,7 +106,7 @@ const Form = ({
             active={formik.dirty}
             size="md"
           >
-            {t('create-webhook')}
+            {editMode ? t('update-webhook') : t('create-webhook')}
           </Button>
         </Modal.Footer>
       </form>
