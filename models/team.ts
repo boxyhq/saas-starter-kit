@@ -318,10 +318,9 @@ export const throwIfNoTeamAccess = async (
     throw new Error('Unauthorized');
   }
 
-  const teamMember = await getTeamMember(
-    session.user.id,
-    req.query.slug as string
-  );
+  const { slug } = validateWithSchema(teamSlugSchema, req.query);
+
+  const teamMember = await getTeamMember(session.user.id, slug);
 
   if (!teamMember) {
     throw new Error('You do not have access to this team');

@@ -62,7 +62,10 @@ const slug = z
   );
 
 const image = z
-  .string()
+  .string({
+    required_error: 'Avatar is required',
+    invalid_type_error: 'Avatar must be a string',
+  })
   .url('Enter a valid URL')
   .refine(
     (imageUri) => imageUri.startsWith('data:image/'),
@@ -146,7 +149,11 @@ const expiredToken = z
     required_error: 'Expired token is required',
     invalid_type_error: 'Expired token must be a string',
   })
-  .min(1, 'Expired token is required');
+  .min(1, 'Expired token is required')
+  .max(
+    maxLengthPolicies.expiredToken,
+    `Expired token should have at most ${maxLengthPolicies.expiredToken} characters`
+  );
 
 const sessionId = z
   .string({
@@ -169,6 +176,95 @@ const quantity = z.number({
 const recaptchaToken = z.string({
   invalid_type_error: 'Recaptcha token must be a string',
 });
+
+const sentViaEmailString = z
+  .string()
+  .max(
+    maxLengthPolicies.sendViaEmail,
+    `Send via email should be at most ${maxLengthPolicies.sendViaEmail} characters`
+  )
+  .refine((value) => value === 'true' || !value || value === 'false', {
+    message: 'sentViaEmail must be a string "true" or "false" or empty',
+  });
+
+const invitationId = z
+  .string({
+    required_error: 'Invitation id is required',
+    invalid_type_error: 'Invitation id must be a string',
+  })
+  .min(1, 'Invitation id is required')
+  .max(
+    maxLengthPolicies.invitationId,
+    `Invitation id should be at most ${maxLengthPolicies.invitationId} characters`
+  );
+
+const endpointId = z
+  .string({
+    required_error: 'Endpoint id is required',
+    invalid_type_error: 'Endpoint id must be a string',
+  })
+  .min(1, `Endpoint id is required`)
+  .max(
+    maxLengthPolicies.endpointId,
+    `Endpoint id should be at most ${maxLengthPolicies.endpointId} characters`
+  );
+
+const eventTypes = z
+  .array(
+    z
+      .string({
+        invalid_type_error: 'Event type must be a string',
+        required_error: 'Event type is required',
+      })
+      .min(1)
+      .max(
+        maxLengthPolicies.eventType,
+        `Event type should be at most ${maxLengthPolicies.eventType} characters`
+      )
+  )
+  .min(1, 'At least one event type is required')
+  .max(maxLengthPolicies.eventTypes, 'Too many event types');
+
+const url = z
+  .string({
+    invalid_type_error: 'URL must be a string',
+  })
+  .url('Enter a valid URL')
+  .min(1, 'URL is required')
+  .max(
+    maxLengthPolicies.domain,
+    `URL should have at most ${maxLengthPolicies.domain} characters`
+  )
+  .refine((url) => {
+    if (url) {
+      if (url.startsWith('https://') || url.startsWith('http://')) {
+        return true;
+      }
+    }
+    return false;
+  });
+
+const inviteToken = z
+  .string({
+    required_error: 'Invite token is required',
+    invalid_type_error: 'Invite token must be a string',
+  })
+  .min(1, 'Invite token is required')
+  .max(
+    maxLengthPolicies.inviteToken,
+    `Invite token should be at most ${maxLengthPolicies.inviteToken} characters`
+  );
+
+const memberId = z
+  .string({
+    required_error: 'Member id is required',
+    invalid_type_error: 'Member id must be a string',
+  })
+  .min(1)
+  .max(
+    maxLengthPolicies.memberId,
+    `Member id should be at most ${maxLengthPolicies.memberId} characters`
+  );
 
 export const createApiKeySchema = z.object({
   name: teamName,
@@ -260,4 +356,47 @@ export const resendEmailToken = z.object({
 export const checkoutSessionSchema = z.object({
   price: priceId,
   quantity: quantity.optional(),
+});
+
+export const updateMemberSchema = z.object({
+  role,
+  memberId,
+});
+
+export const acceptInvitationSchema = z.object({
+  inviteToken,
+});
+
+export const getInvitationSchema = z.object({
+  token: inviteToken,
+});
+
+export const webhookEndpointSchema = z.object({
+  name,
+  url,
+  eventTypes,
+});
+
+export const updateWebhookEndpointSchema = webhookEndpointSchema.extend({
+  endpointId,
+});
+
+export const getInvitationsSchema = z.object({
+  sentViaEmail: sentViaEmailString,
+});
+
+export const deleteInvitationSchema = z.object({
+  id: invitationId,
+});
+
+export const getWebhookSchema = z.object({
+  endpointId,
+});
+
+export const deleteWebhookSchema = z.object({
+  webhookId: endpointId,
+});
+
+export const deleteMemberSchema = z.object({
+  memberId,
 });
