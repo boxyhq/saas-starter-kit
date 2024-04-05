@@ -1,6 +1,6 @@
 {
   "name": "saas-starter-kit",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "private": true,
   "prisma": {
     "seed": "ts-node ./prisma/seed.ts"
