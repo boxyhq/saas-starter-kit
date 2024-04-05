@@ -1,12 +1,6 @@
+import { eventTypes } from '@/lib/common';
 import React, { ReactElement } from 'react';
 import type { WebookFormSchema } from 'types';
-
-const eventTypes = [
-  'member.created',
-  'member.removed',
-  'invitation.created',
-  'invitation.removed',
-];
 
 const EventTypes = ({
   onChange,

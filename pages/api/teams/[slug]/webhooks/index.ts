@@ -12,6 +12,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { EndpointIn } from 'svix';
 import { recordMetric } from '@/lib/metrics';
 import env from '@/lib/env';
+import {
+  deleteWebhookSchema,
+  validateWithSchema,
+  webhookEndpointSchema,
+} from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -53,8 +58,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_webhook', 'create');
 
-  const { name, url, eventTypes } = req.body;
-
+  const { name, url, eventTypes } = validateWithSchema(
+    webhookEndpointSchema,
+    req.body
+  );
   const app = await findOrCreateApp(teamMember.team.name, teamMember.team.id);
 
   // TODO: The endpoint URL must be HTTPS.
@@ -110,7 +117,10 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_webhook', 'delete');
 
-  const { webhookId } = req.query as { webhookId: string };
+  const { webhookId } = validateWithSchema(
+    deleteWebhookSchema,
+    req.query as { webhookId: string }
+  );
 
   const app = await findOrCreateApp(teamMember.team.name, teamMember.team.id);
 
