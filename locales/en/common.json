@@ -236,5 +236,6 @@
   "invalid-credentials": "Invalid credentials",
   "no-credentials": "No credentials provided",
   "token-not-found": "Verification token not found",
-  "update-webhook": "Update Webhook"
+  "update-webhook": "Update Webhook",
+  "error-404": "Page not found"
 }
