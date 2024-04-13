@@ -236,5 +236,14 @@
   "invalid-credentials": "Invalid credentials",
   "no-credentials": "No credentials provided",
   "token-not-found": "Verification token not found",
-  "update-webhook": "Update Webhook"
+  "update-webhook": "Update Webhook",
+  "page-not-found": "Page not found",
+  "sorry-not-found": "Sorry, the page you are looking for could not be found.",
+  "error-404": "404",
+  "go-home": "Go Home",
+  "go-back": "Go Back",
+  "error-500": "500",
+  "internal-server-error": "Internal Server Error !",
+  "unable-to-find": "We're unable to find out what's happening! We suggest you to",
+  "try-again-later": "or visit here later."
 }
