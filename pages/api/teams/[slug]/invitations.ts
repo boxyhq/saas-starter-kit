@@ -18,7 +18,13 @@ import { recordMetric } from '@/lib/metrics';
 import { extractEmailDomain, isEmailAllowed } from '@/lib/email/utils';
 import { Invitation, Role } from '@prisma/client';
 import { countTeamMembers } from 'models/teamMember';
-import { inviteViaEmailSchema, validateWithSchema } from '@/lib/zod';
+import {
+  acceptInvitationSchema,
+  deleteInvitationSchema,
+  getInvitationsSchema,
+  inviteViaEmailSchema,
+  validateWithSchema,
+} from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -196,7 +202,10 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_invitation', 'read');
 
-  const { sentViaEmail } = req.query as { sentViaEmail: string };
+  const { sentViaEmail } = validateWithSchema(
+    getInvitationsSchema,
+    req.query as { sentViaEmail: string }
+  );
 
   const invitations = await getInvitations(
     teamMember.teamId,
@@ -213,7 +222,10 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_invitation', 'delete');
 
-  const { id } = req.query as { id: string };
+  const { id } = validateWithSchema(
+    deleteInvitationSchema,
+    req.query as { id: string }
+  );
 
   const invitation = await getInvitation({ id });
 
@@ -245,7 +257,10 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // Accept an invitation to an organization
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { inviteToken } = req.body as { inviteToken: string };
+  const { inviteToken } = validateWithSchema(
+    acceptInvitationSchema,
+    req.body as { inviteToken: string }
+  );
 
   const invitation = await getInvitation({ token: inviteToken });
 

@@ -11,6 +11,12 @@ import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { countTeamMembers, updateTeamMember } from 'models/teamMember';
+import { validateUpdateRole } from '@/lib/rbac';
+import {
+  deleteMemberSchema,
+  updateMemberSchema,
+  validateWithSchema,
+} from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -63,7 +69,10 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_member', 'delete');
 
-  const { memberId } = req.query as { memberId: string };
+  const { memberId } = validateWithSchema(
+    deleteMemberSchema,
+    req.query as { memberId: string }
+  );
 
   const teamMemberRemoved = await removeTeamMember(teamMember.teamId, memberId);
 
@@ -140,7 +149,12 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
   throwIfNotAllowed(teamMember, 'team_member', 'update');
 
-  const { memberId, role } = req.body as { memberId: string; role: Role };
+  const { memberId, role } = validateWithSchema(
+    updateMemberSchema,
+    req.body as { memberId: string; role: Role }
+  );
+
+  await validateUpdateRole(memberId, teamMember);
 
   const memberUpdated = await updateTeamMember({
     where: {
