@@ -71,7 +71,7 @@
     "@testing-library/jest-dom": "6.4.2",
     "@types/bcryptjs": "2.4.6",
     "@types/jest": "29.5.12",
-    "@types/micromatch": "4.0.6",
+    "@types/micromatch": "4.0.7",
     "@types/mixpanel-browser": "2.49.0",
     "@types/node": "20.12.7",
     "@types/nodemailer": "6.4.14",
