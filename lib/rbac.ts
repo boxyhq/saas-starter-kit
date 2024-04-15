@@ -2,7 +2,10 @@ import { Role } from '@prisma/client';
 import { ApiError } from './errors';
 import { getTeamMember } from 'models/team';
 
-export async function validateUpdateRole(memberId: string, teamMember) {
+export async function validateMembershipOperation(
+  memberId: string,
+  teamMember
+) {
   const updatingMember = await getTeamMember(memberId, teamMember.team.slug);
   // Member and Admin can't update the role of Owner
   if (
