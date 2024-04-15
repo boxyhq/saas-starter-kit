@@ -29,10 +29,10 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
   const { user } = data;
 
   return (
-    <div className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b px-4 sm:gap-x-6 sm:px-6 lg:px-8 bg-white">
+    <div className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b px-4 sm:gap-x-6 sm:px-6 lg:px-8 bg-white dark:bg-black dark:text-white">
       <button
         type="button"
-        className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+        className="-m-2.5 p-2.5 text-gray-700 dark:text-gray-50 lg:hidden"
         onClick={() => setSidebarOpen(true)}
       >
         <span className="sr-only">{t('open-sidebar')}</span>
@@ -45,7 +45,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
             <div className="flex items-center cursor-pointer" tabIndex={0}>
               <span className="hidden lg:flex lg:items-center">
                 <button
-                  className="ml-4 text-sm font-semibold leading-6 text-gray-900"
+                  className="ml-4 text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50"
                   aria-hidden="true"
                 >
                   {user.name}
@@ -69,7 +69,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
               >
                 <Link
                   href="/settings/account"
-                  className="block px-2 py-1 text-sm leading-6 text-gray-900 cursor-pointer"
+                  className="block px-2 py-1 text-sm leading-6 text-gray-900 dark:text-gray-50 cursor-pointer"
                 >
                   <div className="flex items-center">
                     <UserCircleIcon className="w-5 h-5 mr-1" /> {t('account')}
@@ -80,7 +80,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
               {env.darkModeEnabled && (
                 <li>
                   <button
-                    className="block px-2 py-1 text-sm leading-6 text-gray-900 cursor-pointer"
+                    className="block px-2 py-1 text-sm leading-6 text-gray-900 dark:text-gray-50 cursor-pointer"
                     type="button"
                     onClick={toggleTheme}
                   >
@@ -93,7 +93,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
 
               <li>
                 <button
-                  className="block px-2 py-1 text-sm leading-6 text-gray-900 cursor-pointer"
+                  className="block px-2 py-1 text-sm leading-6 text-gray-900 dark:text-gray-50 cursor-pointer"
                   type="button"
                   onClick={() => signOut()}
                 >

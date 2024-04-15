@@ -48,15 +48,16 @@ const NavigationItem = ({ menu, className }: NavigationItemProps) => {
   return (
     <Link
       href={menu.href}
-      className={`flex items-center rounded text-sm text-gray-900 hover:bg-gray-100 px-2 p-2 gap-2 hover:dark:text-black ${
-        menu.active ? 'bg-gray-100 font-semibold' : ''
-      } ${className}`}
+      className={`group flex items-center rounded text-sm text-gray-900 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-gray-100 dark:hover:bg-gray-800 px-2 p-2 gap-2 ${
+        menu.active ? 'text-white bg-gray-800 font-semibold' : ''
+      }${className}`}
     >
       {menu.icon && (
         <menu.icon
           className={classNames({
-            'h-5 w-5 shrink-0': true,
-            'text-primary': menu.active,
+            'h-5 w-5 shrink-0 group-hover:text-gray-900 dark:group-hover:text-gray-100':
+              true,
+            'text-gray-100': menu.active,
           })}
           aria-hidden="true"
         />
