@@ -11,7 +11,7 @@ import { throwIfNotAllowed } from 'models/user';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { recordMetric } from '@/lib/metrics';
 import { countTeamMembers, updateTeamMember } from 'models/teamMember';
-import { validateUpdateRole } from '@/lib/rbac';
+import { validateMembershipOperation } from '@/lib/rbac';
 import {
   deleteMemberSchema,
   updateMemberSchema,
@@ -154,7 +154,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     req.body as { memberId: string; role: Role }
   );
 
-  await validateUpdateRole(memberId, teamMember);
+  await validateMembershipOperation(memberId, teamMember);
 
   const memberUpdated = await updateTeamMember({
     where: {
