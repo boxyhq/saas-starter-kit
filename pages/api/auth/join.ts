@@ -1,4 +1,4 @@
-import { hashPassword, validatePasswordPolicy } from '@/lib/auth';
+import { hashPassword } from '@/lib/auth';
 import { slugify } from '@/lib/server-common';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { isEmailAllowed } from '@/lib/email/utils';
@@ -12,8 +12,8 @@ import { getInvitation, isInvitationExpired } from 'models/invitation';
 import { validateRecaptcha } from '@/lib/recaptcha';
 import { slackNotify } from '@/lib/slack';
 import { Team } from '@prisma/client';
-import { maxLengthPolicies } from '@/lib/common';
 import { createVerificationToken } from 'models/verificationToken';
+import { userJoinSchema, validateWithSchema } from '@/lib/zod';
 
 // TODO:
 // Add zod schema validation
@@ -53,7 +53,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     ? await getInvitation({ token: inviteToken })
     : null;
 
-  let emailToUse: string = req.body.email;
+  let email: string = req.body.email;
 
   // When join via invitation
   if (invitation) {
@@ -62,35 +62,26 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (invitation.sentViaEmail) {
-      emailToUse = invitation.email!;
+      email = invitation.email!;
     }
   }
 
-  // maxLength check
-  if (name.length > maxLengthPolicies.name) {
-    throw new ApiError(400, 'Name is too long');
-  }
+  validateWithSchema(userJoinSchema, {
+    name,
+    email,
+    password,
+  });
 
-  if (emailToUse.length > maxLengthPolicies.email) {
-    throw new ApiError(400, 'Email is too long');
-  }
-
-  if (password.length > maxLengthPolicies.password) {
-    throw new ApiError(400, 'Password is too long');
-  }
-
-  if (!isEmailAllowed(emailToUse)) {
+  if (!isEmailAllowed(email)) {
     throw new ApiError(
       400,
       `We currently only accept work email addresses for sign-up. Please use your work email to create an account. If you don't have a work email, feel free to contact our support team for assistance.`
     );
   }
 
-  if (await getUser({ email: emailToUse })) {
+  if (await getUser({ email })) {
     throw new ApiError(400, 'An user with this email already exists.');
   }
-
-  validatePasswordPolicy(password);
 
   // Check if team name is available
   if (!invitation) {
@@ -98,15 +89,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       throw new ApiError(400, 'A team name is required.');
     }
 
-    if (team.length > maxLengthPolicies.team) {
-      throw new ApiError(400, 'Team name is too long');
-    }
-
     const slug = slugify(team);
 
-    if (slug.length > maxLengthPolicies.slug) {
-      throw new ApiError(400, 'Team slug is too long');
-    }
+    validateWithSchema(userJoinSchema, { team, slug });
 
     const slugCollisions = await isTeamExists(slug);
 
@@ -117,7 +102,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const user = await createUser({
     name,
-    email: emailToUse,
+    email,
     password: await hashPassword(password),
     emailVerified: invitation ? new Date() : null,
   });

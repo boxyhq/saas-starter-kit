@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { BadgeProps, Badge as BaseBadge } from 'react-daisyui';
 
 const Badge = (props: BadgeProps) => {
@@ -7,7 +8,7 @@ const Badge = (props: BadgeProps) => {
     <>
       <BaseBadge
         {...props}
-        className={`rounded text-xs py-2 text-white ${className}`}
+        className={classNames('rounded text-xs py-2 text-white', className)}
       >
         {children}
       </BaseBadge>

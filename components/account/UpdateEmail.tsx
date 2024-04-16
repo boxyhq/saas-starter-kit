@@ -7,7 +7,7 @@ import type { ApiResponse } from 'types';
 import { Card } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import type { User } from '@prisma/client';
-import { updateAccountSchema } from '@/lib/zod/schema';
+import { updateAccountSchema } from '@/lib/zod';
 
 interface UpdateEmailProps {
   user: Partial<User>;

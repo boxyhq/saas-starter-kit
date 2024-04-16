@@ -1,4 +1,3 @@
-import router from 'next/router';
 import toast from 'react-hot-toast';
 import { Button } from 'react-daisyui';
 import { useTranslation } from 'next-i18next';
@@ -17,7 +16,7 @@ const ProductPricing = ({ plans, subscriptions }: ProductPricingProps) => {
   const { team } = useTeam();
   const { t } = useTranslation('common');
 
-  const initiateCheckout = async (priceId: string, quantity?: number) => {
+  const initiateCheckout = async (price: string, quantity?: number) => {
     const res = await fetch(
       `/api/teams/${team?.slug}/payments/create-checkout-session`,
       {
@@ -25,14 +24,14 @@ const ProductPricing = ({ plans, subscriptions }: ProductPricingProps) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ priceId, quantity }),
+        body: JSON.stringify({ price, quantity }),
       }
     );
 
     const data = await res.json();
 
     if (data?.data?.url) {
-      router.push(data.data.url);
+      window.open(data.data.url, '_blank', 'noopener,noreferrer');
     } else {
       toast.error(
         data?.error?.message ||
@@ -47,7 +46,7 @@ const ProductPricing = ({ plans, subscriptions }: ProductPricingProps) => {
 
   return (
     <section className="py-3">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {plans.map((plan) => {
           return (
             <div
@@ -60,9 +59,9 @@ const ProductPricing = ({ plans, subscriptions }: ProductPricingProps) => {
                     {plan.name}
                   </h3>
                 </div>
-                <p className="mt-2 text-gray-500 h-10">{plan.description}</p>
+                <p className="mt-2 text-gray-500 h-20">{plan.description}</p>
               </div>
-              <div className="flex justify-center flex-col gap-2 border-b border-t border-gray-200 bg-gray-50 px-8 py-5 h-32">
+              <div className="flex justify-center flex-col gap-2 border-gray-200 px-8 h-10">
                 {plan.prices.map((price: Price) =>
                   hasActiveSubscription(price) ? (
                     <Button

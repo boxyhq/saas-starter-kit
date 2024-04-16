@@ -10,7 +10,7 @@ import Modal from '../shared/Modal';
 import { defaultHeaders } from '@/lib/common';
 import { useFormik } from 'formik';
 import { z } from 'zod';
-import { createApiKeySchema } from '@/lib/zod/schema';
+import { createApiKeySchema } from '@/lib/zod';
 
 const NewAPIKey = ({
   team,
@@ -90,7 +90,7 @@ const CreateAPIKeyForm = ({
   return (
     <form onSubmit={formik.handleSubmit} method="POST">
       <Modal.Header>{t('new-api-key')}</Modal.Header>
-      <Modal.Description>{t('new-api-key-description')}</Modal.Description>
+      <Modal.Description>{t('api-key-description')}</Modal.Description>
       <Modal.Body>
         <InputWithLabel
           label={t('name')}

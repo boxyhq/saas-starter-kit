@@ -1,77 +1,163 @@
 import { z } from 'zod';
-import { isValidDomain, maxLengthPolicies } from '../common';
 import { slugify } from '../server-common';
+import {
+  teamName,
+  apiKeyId,
+  slug,
+  domain,
+  email,
+  password,
+  token,
+  role,
+  sentViaEmail,
+  domains,
+  expiredToken,
+  sessionId,
+  recaptchaToken,
+  priceId,
+  quantity,
+  memberId,
+  inviteToken,
+  url,
+  endpointId,
+  sentViaEmailString,
+  invitationId,
+  name,
+  image,
+  eventTypes,
+} from './primitives';
 
 export const createApiKeySchema = z.object({
-  name: z.string().min(1, 'Name is required').max(maxLengthPolicies.apiKeyName),
+  name: teamName,
 });
 
 export const deleteApiKeySchema = z.object({
-  apiKeyId: z.string(),
+  apiKeyId,
 });
 
 export const teamSlugSchema = z.object({
-  slug: z.string().max(maxLengthPolicies.slug),
+  slug,
 });
 
 export const updateTeamSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(maxLengthPolicies.team),
-  slug: z
-    .string()
-    .min(3, 'Slug must be at least 3 characters')
-    .max(maxLengthPolicies.slug)
-    .transform((slug) => slugify(slug)),
-  domain: z
-    .string()
-    .max(maxLengthPolicies.domain)
-    .optional()
-    .refine(
-      (domain) => {
-        if (!domain) {
-          return true;
-        }
-
-        return isValidDomain(domain);
-      },
-      {
-        message: 'Enter a domain name in the format example.com',
-      }
-    )
-    .transform((domain) => {
-      if (!domain) {
-        return null;
-      }
-
-      return domain.trim().toLowerCase();
-    }),
+  name: teamName,
+  slug: slug.transform((slug) => slugify(slug)),
+  domain,
 });
 
 export const createTeamSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(maxLengthPolicies.team),
+  name: teamName,
 });
 
 export const updateAccountSchema = z.union([
   z.object({
-    email: z
-      .string()
-      .email('Enter a valid email address')
-      .max(maxLengthPolicies.email),
+    email,
   }),
   z.object({
-    name: z.string().min(1, 'Name is required').max(maxLengthPolicies.name),
+    name,
   }),
   z.object({
-    image: z
-      .string()
-      .url('Enter a valid URL')
-      .refine(
-        (imageUri) => imageUri.startsWith('data:image/'),
-        'Avatar must be an image'
-      )
-      .refine((imageUri) => {
-        const [, base64] = imageUri.split(',');
-        const size = base64.length * (3 / 4) - 2;
-        return size < 2000000;
-      }, 'Avatar must be less than 2MB'),
+    image,
   }),
 ]);
+
+export const updatePasswordSchema = z.object({
+  currentPassword: password,
+  newPassword: password,
+});
+
+export const userJoinSchema = z.union([
+  z.object({
+    team: teamName,
+    slug,
+  }),
+  z.object({
+    name,
+    email,
+    password,
+  }),
+]);
+
+export const resetPasswordSchema = z.object({
+  password,
+  token,
+});
+
+export const inviteViaEmailSchema = z.union([
+  z.object({
+    email,
+    role,
+    sentViaEmail,
+  }),
+  z.object({
+    role,
+    sentViaEmail,
+    domains,
+  }),
+]);
+
+export const resendLinkRequestSchema = z.object({
+  email,
+  expiredToken,
+});
+
+export const deleteSessionSchema = z.object({
+  id: sessionId,
+});
+
+export const forgotPasswordSchema = z.object({
+  email,
+  recaptchaToken: recaptchaToken.optional(),
+});
+
+export const resendEmailToken = z.object({
+  email,
+});
+
+export const checkoutSessionSchema = z.object({
+  price: priceId,
+  quantity: quantity.optional(),
+});
+
+export const updateMemberSchema = z.object({
+  role,
+  memberId,
+});
+
+export const acceptInvitationSchema = z.object({
+  inviteToken,
+});
+
+export const getInvitationSchema = z.object({
+  token: inviteToken,
+});
+
+export const webhookEndpointSchema = z.object({
+  name,
+  url,
+  eventTypes,
+});
+
+export const updateWebhookEndpointSchema = webhookEndpointSchema.extend({
+  endpointId,
+});
+
+export const getInvitationsSchema = z.object({
+  sentViaEmail: sentViaEmailString,
+});
+
+export const deleteInvitationSchema = z.object({
+  id: invitationId,
+});
+
+export const getWebhookSchema = z.object({
+  endpointId,
+});
+
+export const deleteWebhookSchema = z.object({
+  webhookId: endpointId,
+});
+
+export const deleteMemberSchema = z.object({
+  memberId,
+});

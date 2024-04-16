@@ -1,5 +1,6 @@
 import env from '@/lib/env';
 import { ssoManager } from '@/lib/jackson/sso';
+import { teamSlugSchema, validateWithSchema } from '@/lib/zod';
 import { getTeam } from 'models/team';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -30,7 +31,10 @@ export default async function handler(
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = JSON.parse(req.body) as { slug: string };
+  const { slug } = validateWithSchema(
+    teamSlugSchema,
+    JSON.parse(req.body) as { slug: string }
+  );
 
   if (!slug) {
     throw new Error('Missing the SSO identifier.');

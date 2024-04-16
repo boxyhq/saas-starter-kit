@@ -1,10 +1,10 @@
-import { z } from 'zod';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getUser } from 'models/user';
 import { ApiError } from '@/lib/errors';
 import { deleteVerificationToken } from 'models/verificationToken';
 import { isAccountLocked, sendLockoutEmail } from '@/lib/accountLock';
+import { resendLinkRequestSchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,12 +31,10 @@ export default async function handler(
 
 // Resend unlock account email
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const resendLinkRequest = z.object({
-    email: z.string(),
-    expiredToken: z.string(),
-  });
-
-  const { email, expiredToken } = resendLinkRequest.parse(req.body);
+  const { email, expiredToken } = validateWithSchema(
+    resendLinkRequestSchema,
+    req.body
+  );
 
   const user = await getUser({ email });
 

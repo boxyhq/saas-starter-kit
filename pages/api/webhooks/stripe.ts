@@ -27,27 +27,29 @@ async function getRawBody(readable: Readable): Promise<Buffer> {
   return Buffer.concat(chunks);
 }
 
-const relevantEvents = new Set([
+const relevantEvents: Stripe.Event.Type[] = [
   'customer.subscription.created',
   'customer.subscription.updated',
   'customer.subscription.deleted',
-]);
+];
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   const rawBody = await getRawBody(req);
 
   const sig = req.headers['stripe-signature'] as string;
-  const webhookSecret = env.stripe.webhookSecret;
+  const { webhookSecret } = env.stripe;
   let event: Stripe.Event;
 
   try {
-    if (!sig || !webhookSecret) return;
+    if (!sig || !webhookSecret) {
+      return;
+    }
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
   } catch (err: any) {
     return res.status(400).json({ error: { message: err.message } });
   }
 
-  if (relevantEvents.has(event.type)) {
+  if (relevantEvents.includes(event.type)) {
     try {
       switch (event.type) {
         case 'customer.subscription.created':

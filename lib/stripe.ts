@@ -4,7 +4,7 @@ import { updateTeam } from 'models/team';
 
 export const stripe = new Stripe(env.stripe.secretKey ?? '', {
   // https://github.com/stripe/stripe-node#configuration
-  apiVersion: '2023-10-16',
+  apiVersion: '2024-04-10',
 });
 
 export async function getStripeCustomerId(teamMember, session?: any) {
@@ -18,7 +18,9 @@ export async function getStripeCustomerId(teamMember, session?: any) {
         teamId: teamMember.teamId,
       },
     };
-    if (session?.user?.email) customerData.email = session?.user?.email;
+    if (session?.user?.email) {
+      customerData.email = session?.user?.email;
+    }
     const customer = await stripe.customers.create({
       ...customerData,
       name: session?.user?.name as string,

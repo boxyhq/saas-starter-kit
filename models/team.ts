@@ -1,11 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
-import { teamSlugSchema } from '@/lib/zod/schema';
 import { Role, Team } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCurrentUser } from './user';
 import { normalizeUser } from './user';
+import { validateWithSchema, teamSlugSchema } from '@/lib/zod';
 
 export const createTeam = async (param: {
   userId: string;
@@ -155,7 +155,7 @@ export const getTeams = async (userId: string) => {
 };
 
 export async function getTeamRoles(userId: string) {
-  const teamRoles = await prisma.teamMember.findMany({
+  return await prisma.teamMember.findMany({
     where: {
       userId,
     },
@@ -164,8 +164,6 @@ export async function getTeamRoles(userId: string) {
       role: true,
     },
   });
-
-  return teamRoles;
 }
 
 // Check if the user is an admin or owner of the team
@@ -320,10 +318,9 @@ export const throwIfNoTeamAccess = async (
     throw new Error('Unauthorized');
   }
 
-  const teamMember = await getTeamMember(
-    session.user.id,
-    req.query.slug as string
-  );
+  const { slug } = validateWithSchema(teamSlugSchema, req.query);
+
+  const teamMember = await getTeamMember(session.user.id, slug);
 
   if (!teamMember) {
     throw new Error('You do not have access to this team');
@@ -407,7 +404,7 @@ Execution Time: 0.050 ms
 
 // Get the current user's team member object
 export const getTeamMember = async (userId: string, slug: string) => {
-  const teamMember = await prisma.teamMember.findFirstOrThrow({
+  return await prisma.teamMember.findFirstOrThrow({
     where: {
       userId,
       team: {
@@ -421,8 +418,6 @@ export const getTeamMember = async (userId: string, slug: string) => {
       team: true,
     },
   });
-
-  return teamMember;
 };
 
 // Get current user with team info
@@ -432,7 +427,7 @@ export const getCurrentUserWithTeam = async (
 ) => {
   const user = await getCurrentUser(req, res);
 
-  const { slug } = teamSlugSchema.parse(req.query);
+  const { slug } = validateWithSchema(teamSlugSchema, req.query);
 
   const { role, team } = await getTeamMember(user.id, slug);
 

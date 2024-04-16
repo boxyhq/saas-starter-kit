@@ -106,7 +106,7 @@
   "new-api-key": "New API Key",
   "api-key-created": "API key created successfully",
   "api-key-deleted": "API key deleted successfully",
-  "new-api-key-description": "API keys allow your app to communicate with our APIs.",
+  "api-key-description": "API keys allow your app to communicate with our APIs.",
   "create-api-key": "Create API Key",
   "new-api-warning": "Save this API key somewhere safe. You won't be able to see it again once you close this dialog.",
   "revoke": "Revoke",
@@ -114,7 +114,6 @@
   "revoke-api-key": "Revoke API Key",
   "active": "Active",
   "no-api-key-title": "You haven't created any API Keys yet",
-  "no-api-key-description": "API keys allow your app to communicate with our APIs.",
   "revoke-api-key-confirm": "Are you sure you want to revoke this API Key? This action can not be undone.",
   "delete": "Delete",
   "copy-to-clipboard": "Copy",
@@ -236,5 +235,15 @@
   "desc-signin-with-saml-sso": "Your ID is the slug after the hostname.",
   "invalid-credentials": "Invalid credentials",
   "no-credentials": "No credentials provided",
-  "token-not-found": "Verification token not found"
+  "token-not-found": "Verification token not found",
+  "update-webhook": "Update Webhook",
+  "page-not-found": "Page not found",
+  "sorry-not-found": "Sorry, the page you are looking for could not be found.",
+  "error-404": "404",
+  "go-home": "Go Home",
+  "go-back": "Go Back",
+  "error-500": "500",
+  "internal-server-error": "Internal Server Error !",
+  "unable-to-find": "We're unable to find out what's happening! We suggest you to",
+  "try-again-later": "or visit here later."
 }

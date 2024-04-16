@@ -19,9 +19,9 @@ const InputWithCopyButton = (props: InputWithCopyButtonProps) => {
         <CopyToClipboardButton value={value?.toString() || ''} />
       </div>
       <Input
-        className="input input-bordered w-full"
+        className="input input-bordered w-full text-sm"
         {...rest}
-        defaultValue={value}
+        value={value}
       />
       {description && (
         <label className="label">
