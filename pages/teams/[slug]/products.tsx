@@ -8,7 +8,14 @@ const Products: NextPageWithLayout = () => {
 
   return (
     <div className="p-3">
-      <p className="text-sm">{t('product-placeholder')}</p>
+      {/* Example iframe embedding a sample website */}
+      <iframe
+        src="https://app.windmill.dev/public/bluewind/22a8b7403d21b256f99e78a184d739ad"
+        title="Product Frame"
+        width="100%"
+        height="500px"
+        style={{ border: 'none' }}
+      ></iframe>
     </div>
   );
 };
