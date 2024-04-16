@@ -73,6 +73,7 @@ const InviteViaEmail = ({ setVisible, team }: InviteViaEmailProps) => {
           className="select-bordered select rounded"
           name="role"
           onChange={formik.handleChange}
+          value={formik.values.role}
           required
         >
           {availableRoles.map((role) => (
