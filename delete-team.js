@@ -139,7 +139,7 @@ async function removeSSOConnections(team) {
 }
 
 async function removeDSyncConnections(team) {
-  console.log(`\Checking team DSync connections`);
+  console.log(`\nChecking team DSync connections`);
   const connections = await getConnections(team.id);
   console.log(`Found ${connections.length} DSync connections`);
   for (const connection of connections) {
