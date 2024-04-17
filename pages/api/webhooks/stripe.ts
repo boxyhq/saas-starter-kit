@@ -6,11 +6,11 @@ import type { Readable } from 'node:stream';
 import {
   createStripeSubscription,
   deleteStripeSubscription,
-  getByCustomerId,
   getBySubscriptionId,
   updateStripeSubscription,
 } from 'models/subscription';
 import { getServiceByPriceId } from 'models/price';
+import { getByCustomerId } from 'models/team';
 
 export const config = {
   api: {
