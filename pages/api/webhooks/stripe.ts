@@ -9,8 +9,8 @@ import {
   getBySubscriptionId,
   updateStripeSubscription,
 } from 'models/subscription';
-import { getServiceByPriceId } from 'models/price';
 import { getByCustomerId } from 'models/team';
+import { getServiceByPriceId } from 'models/price';
 
 export const config = {
   api: {
