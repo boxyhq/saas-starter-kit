@@ -6,8 +6,11 @@ import type { Readable } from 'node:stream';
 import {
   createStripeSubscription,
   deleteStripeSubscription,
+  getBySubscriptionId,
   updateStripeSubscription,
 } from 'models/subscription';
+import { getByCustomerId } from 'models/team';
+import { getServiceByPriceId } from 'models/price';
 
 export const config = {
   api: {
@@ -75,17 +78,41 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handleSubscriptionUpdated(event: Stripe.Event) {
-  const { cancel_at, id, status, current_period_end } = event.data
-    .object as Stripe.Subscription;
+  const {
+    cancel_at,
+    id,
+    status,
+    current_period_end,
+    current_period_start,
+    customer,
+  } = event.data.object as Stripe.Subscription;
 
-  //type Stripe.Subscription.Status = "active" | "canceled" | "incomplete" | "incomplete_expired" | "past_due" | "paused" | "trialing" | "unpaid"
-  await updateStripeSubscription(id, {
-    active: status === 'active',
-    endDate: current_period_end
-      ? new Date(current_period_end * 1000)
-      : undefined,
-    cancelAt: cancel_at ? new Date(cancel_at * 1000) : undefined,
-  });
+  const subscription = await getBySubscriptionId(id);
+  if (!subscription) {
+    const teamExists = await getByCustomerId(customer as string);
+    if (!teamExists) {
+      return;
+    } else {
+      await handleSubscriptionCreated(event);
+    }
+  } else {
+    //type Stripe.Subscription.Status = "active" | "canceled" | "incomplete" | "incomplete_expired" | "past_due" | "paused" | "trialing" | "unpaid"
+    await updateStripeSubscription(id, {
+      active: status === 'active',
+      endDate: current_period_end
+        ? new Date(current_period_end * 1000)
+        : undefined,
+      startDate: current_period_start
+        ? new Date(current_period_start * 1000)
+        : undefined,
+      cancelAt: cancel_at ? new Date(cancel_at * 1000) : undefined,
+    });
+    const [product, team] = await Promise.all([
+      getServiceByPriceId(subscription.priceId),
+      getByCustomerId(subscription.customerId),
+    ]);
+    if (!product || !team) return;
+  }
 }
 
 async function handleSubscriptionCreated(event: Stripe.Event) {
