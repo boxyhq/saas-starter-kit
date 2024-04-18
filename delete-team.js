@@ -1,31 +1,16 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jackson = require('@boxyhq/saml-jackson');
-const product = process.env.JACKSON_PRODUCT_ID || 'boxyhq';
 const readline = require('readline');
+
+const product = process.env.JACKSON_PRODUCT_ID || 'boxyhq';
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-async function askForConfirmation(teamId) {
-  return new Promise((resolve) => {
-    rl.question(
-      `Are you sure you want to delete team ${teamId}? (yes/no): `,
-      (answer) => {
-        if (answer.toLowerCase() === 'yes') {
-          resolve(true);
-        } else {
-          console.log('Deletion canceled.');
-          resolve(false);
-        }
-        rl.close();
-      }
-    );
-  });
-}
-const opts = {
+const jacksonOpts = {
   externalUrl: `${process.env.APP_URL}`,
   samlPath: '/api/oauth/saml',
   oidcPath: '/api/oauth/oidc',
@@ -40,7 +25,7 @@ const opts = {
   openid: {},
 };
 
-const options = {
+const jacksonOptions = {
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${process.env.JACKSON_API_KEY}`,
@@ -74,7 +59,7 @@ async function init() {
   } else {
     if (!useHostedJackson) {
       console.log('Using embedded Jackson');
-      jacksonInstance = await jackson.default(opts);
+      jacksonInstance = await jackson.default(jacksonOpts);
     }
     let i = 2;
     if (process.argv.map((a) => a.toLowerCase()).includes('--dry-run')) {
@@ -263,7 +248,7 @@ async function removeSSOConnections(team) {
     const query = new URLSearchParams(params);
 
     const response = await fetch(`${ssoUrl}?${query}`, {
-      ...options,
+      ...jacksonOptions,
       method: 'DELETE',
     });
     if (!response.ok) {
@@ -283,7 +268,7 @@ async function getSSOConnections(params) {
     const query = new URLSearchParams(params);
 
     const response = await fetch(`${ssoUrl}?${query}`, {
-      ...options,
+      ...jacksonOptions,
     });
     if (!response.ok) {
       const result = await response.json();
@@ -404,7 +389,7 @@ async function getConnections(tenant) {
     const response = await fetch(
       `${process.env.JACKSON_URL}/api/v1/dsync?${searchParams}`,
       {
-        ...options,
+        ...jacksonOptions,
       }
     );
 
@@ -437,7 +422,7 @@ async function deleteConnection(directoryId) {
     const response = await fetch(
       `${process.env.JACKSON_URL}/api/v1/dsync/${directoryId}`,
       {
-        ...options,
+        ...jacksonOptions,
         method: 'DELETE',
       }
     );
@@ -461,6 +446,23 @@ async function deleteConnection(directoryId) {
 
     return { data };
   }
+}
+
+async function askForConfirmation(teamId) {
+  return new Promise((resolve) => {
+    rl.question(
+      `Are you sure you want to delete team ${teamId}? (yes/no): `,
+      (answer) => {
+        if (answer.toLowerCase() === 'yes') {
+          resolve(true);
+        } else {
+          console.log('Deletion canceled.');
+          resolve(false);
+        }
+        rl.close();
+      }
+    );
+  });
 }
 
 // handle uncaught errors
