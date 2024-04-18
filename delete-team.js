@@ -186,6 +186,24 @@ async function displayDeletionArtifacts(teamId) {
   }
   console.log('\nTeam Members:');
   console.table(teamMembers, ['id', 'email', 'name', 'teams', 'action']);
+
+  const apiKeys = await prisma.apiKey.findMany({ where: { teamId: team.id } });
+  if (apiKeys.length > 0) {
+    console.log('\nAPI Keys:');
+    console.table(apiKeys, ['id', 'name']);
+  } else {
+    console.log('\nNo API keys found');
+  }
+
+  const invitations = await prisma.invitation.findMany({
+    where: { teamId: team.id },
+  });
+  if (invitations.length > 0) {
+    console.log('\nInvitations:');
+    console.table(invitations, ['id', 'email', 'role']);
+  } else {
+    console.log('\nNo invitations found');
+  }
 }
 
 async function handleTeamDeletion(teamId) {
