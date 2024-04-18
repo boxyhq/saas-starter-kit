@@ -10,7 +10,7 @@ const rl = readline.createInterface({
 });
 
 async function askForConfirmation(teamId) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     rl.question(
       `Are you sure you want to delete team ${teamId}? (yes/no): `,
       (answer) => {
