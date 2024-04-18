@@ -2,7 +2,29 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jackson = require('@boxyhq/saml-jackson');
 const product = process.env.JACKSON_PRODUCT_ID || 'boxyhq';
+const readline = require('readline');
 
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+async function askForConfirmation(teamId) {
+  return new Promise((resolve, reject) => {
+    rl.question(
+      `Are you sure you want to delete team ${teamId}? (yes/no): `,
+      (answer) => {
+        if (answer.toLowerCase() === 'yes') {
+          resolve(true);
+        } else {
+          console.log('Deletion canceled.');
+          resolve(false);
+        }
+        rl.close();
+      }
+    );
+  });
+}
 const opts = {
   externalUrl: `${process.env.APP_URL}`,
   samlPath: '/api/oauth/saml',
@@ -29,14 +51,19 @@ const useHostedJackson = process.env.JACKSON_URL ? true : false;
 
 let jacksonInstance;
 
+let dryRun = false;
+
 init();
 
 async function init() {
   if (process.argv.length < 3) {
     console.log(
       `Usage: 
-        node delete-team.js <teamId> [teamId]
-        npm run delete-team -- <teamId> [teamId]`
+        node delete-team.js [options] <teamId> [teamId]
+        npm run delete-team -- [options] <teamId> [teamId]
+        
+      Options:
+        --dry-run: Run the script without deleting anything`
     );
     console.log(
       `Example: 
@@ -49,23 +76,120 @@ async function init() {
       console.log('Using embedded Jackson');
       jacksonInstance = await jackson.default(opts);
     }
-    for (let i = 2; i < process.argv.length; i++) {
+    let i = 2;
+    if (process.argv.map((a) => a.toLowerCase()).includes('--dry-run')) {
+      console.log('Running in dry-run mode');
+      dryRun = true;
+      i++;
+    }
+    for (i; i < process.argv.length; i++) {
       const teamId = process.argv[i];
       try {
-        await handleTeamDeletion(teamId);
+        await displayDeletionArtifacts(teamId);
+
+        if (!dryRun) {
+          const confirmed = await askForConfirmation(teamId);
+          if (confirmed) {
+            await handleTeamDeletion(teamId);
+          }
+        }
       } catch (error) {
         console.log('Error deleting team:', error?.message);
       }
     }
-    console.log('\nDone deleting teams');
     await prisma.$disconnect();
-    console.log('Disconnected from database');
+    console.log('\nDisconnected from database');
     process.exit(0);
   }
 }
 
+async function displayDeletionArtifacts(teamId) {
+  // Team Details
+  const team = await getTeamById(teamId);
+  if (!team) {
+    throw new Error(`Team not found: ${teamId}`);
+  }
+  console.log('\nTeam Details:');
+  console.table([team], ['id', 'name', 'billingId']);
+
+  // SSO Connections
+  const ssoConnections = await getSSOConnections({
+    tenant: team.id,
+    product,
+  });
+  if (ssoConnections.length > 0) {
+    console.log('\nSSO Connections:');
+    console.table(ssoConnections, ['product', 'tenant', 'clientID']);
+  } else {
+    console.log('\nNo SSO connections found');
+  }
+
+  // DSync Connections
+  const dsyncConnections = await getConnections(team.id);
+  if (dsyncConnections.length > 0) {
+    console.log('\nDSync Connections:');
+    console.table(dsyncConnections, ['id', 'type', 'name', 'product']);
+  } else {
+    console.log('\nNo DSync connections found');
+  }
+
+  if (team?.billingId) {
+    // Active Subscriptions
+    const activeSubscriptions = await getActiveSubscriptions(team);
+    if (activeSubscriptions.length > 0) {
+      console.log('\nActive Subscriptions:');
+      console.table(activeSubscriptions, ['id', 'startDate', 'endDate']);
+    } else {
+      console.log('\nNo active subscriptions found');
+    }
+
+    // All subscriptions
+    const subscriptions = await prisma.subscription.findMany({
+      where: {
+        customerId: team?.billingId,
+      },
+    });
+    if (subscriptions.length > 0) {
+      console.log('\nAll Subscriptions:');
+      console.table(subscriptions, ['id', 'startDate', 'endDate', 'active']);
+    } else {
+      console.log('\nNo subscriptions found');
+    }
+  } else {
+    console.log('\nNo billingId found');
+  }
+
+  // Team Members
+  const teamMembers = await prisma.user.findMany({
+    where: {
+      teamMembers: {
+        some: {
+          teamId: team.id,
+        },
+      },
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+    },
+  });
+  for (let i = 0; i < teamMembers.length; i++) {
+    const user = teamMembers[i];
+    const userTeams = await prisma.teamMember.findMany({
+      where: {
+        userId: user.id,
+      },
+    });
+    teamMembers[i].teams = userTeams.length;
+    teamMembers[i].action = userTeams.length > 1 ? 'Remove' : 'Delete';
+  }
+  console.log('\nTeam Members:');
+  console.table(teamMembers, ['id', 'email', 'name', 'teams', 'action']);
+}
+
 async function handleTeamDeletion(teamId) {
-  console.log(`Checking team: ${teamId}`);
+  console.log(`\nChecking team: ${teamId}`);
   let team = await getTeamById(teamId);
   if (!team) {
     console.log(`Team not found: ${teamId}`);
@@ -73,13 +197,13 @@ async function handleTeamDeletion(teamId) {
   } else {
     console.log('Team found:', team.name);
     if (team?.billingId) {
-      console.log('Checking active team subscriptions');
+      console.log('\nChecking active team subscriptions');
       const activeSubscriptions = await getActiveSubscriptions(team);
       if (activeSubscriptions.length > 0) {
         console.log(
           `${activeSubscriptions.length} Active subscriptions found. Please cancel them before deleting the team.`
         );
-        console.table(activeSubscriptions);
+        console.table(activeSubscriptions, ['id', 'startDate', 'endDate']);
         return;
       } else {
         console.log('No active subscriptions found');
@@ -112,8 +236,6 @@ async function removeTeam(team) {
 }
 
 async function removeSSOConnections(team) {
-  console.log(`\nRemoving team SSO connections`);
-
   const params = {
     tenant: team.id,
     product,
@@ -135,7 +257,27 @@ async function removeSSOConnections(team) {
 
     await apiController.deleteConnections(params);
   }
-  console.log(`Done removing team SSO connections`);
+}
+
+async function getSSOConnections(params) {
+  if (useHostedJackson) {
+    const ssoUrl = `${process.env.JACKSON_URL}/api/v1/sso`;
+    const query = new URLSearchParams(params);
+
+    const response = await fetch(`${ssoUrl}?${query}`, {
+      ...options,
+    });
+    if (!response.ok) {
+      const result = await response.json();
+      throw new Error(result.error.message);
+    }
+    const data = await response.json();
+    return data;
+  } else {
+    const { apiController } = jacksonInstance;
+
+    await apiController.getConnections(params);
+  }
 }
 
 async function removeDSyncConnections(team) {
