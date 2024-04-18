@@ -276,7 +276,7 @@ async function getSSOConnections(params) {
   } else {
     const { apiController } = jacksonInstance;
 
-    await apiController.getConnections(params);
+    return await apiController.getConnections(params);
   }
 }
 
@@ -285,9 +285,9 @@ async function removeDSyncConnections(team) {
   const connections = await getConnections(team.id);
   console.log(`Found ${connections.length} DSync connections`);
   for (const connection of connections) {
-    console.log('\nDeleting connection:', connection.id);
+    console.log('\nDeleting DSync connection:', connection.id);
     await deleteConnection(connection.id);
-    console.log('Connection deleted:', connection.id);
+    console.log('DSync connection deleted:', connection.id);
   }
   console.log(`\nDone removing team DSync connections`);
 }
