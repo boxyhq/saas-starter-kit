@@ -155,7 +155,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     updateMemberSchema,
     req.body as { memberId: string; role: Role }
   );
-  debugger;
+
   await validateMembershipOperation(memberId, teamMember, {
     role,
   });
