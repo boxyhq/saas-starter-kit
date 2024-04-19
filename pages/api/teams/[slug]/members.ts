@@ -156,7 +156,9 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     req.body as { memberId: string; role: Role }
   );
 
-  await validateMembershipOperation(memberId, teamMember);
+  await validateMembershipOperation(memberId, teamMember, {
+    role,
+  });
 
   const memberUpdated = await updateTeamMember({
     where: {
