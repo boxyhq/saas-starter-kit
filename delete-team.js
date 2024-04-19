@@ -95,7 +95,7 @@ async function displayDeletionArtifacts(teamId) {
     throw new Error(`Team not found: ${teamId}`);
   }
   console.log('\nTeam Details:');
-  console.table([team], ['id', 'name', 'billingId']);
+  printTable([team], ['id', 'name', 'billingId']);
 
   // SSO Connections
   const ssoConnections = await getSSOConnections({
@@ -104,7 +104,7 @@ async function displayDeletionArtifacts(teamId) {
   });
   if (ssoConnections.length > 0) {
     console.log('\nSSO Connections:');
-    console.table(ssoConnections, ['product', 'tenant', 'clientID']);
+    printTable(ssoConnections, ['product', 'tenant', 'clientID']);
   } else {
     console.log('\nNo SSO connections found');
   }
@@ -113,7 +113,7 @@ async function displayDeletionArtifacts(teamId) {
   const dsyncConnections = await getConnections(team.id);
   if (dsyncConnections.length > 0) {
     console.log('\nDSync Connections:');
-    console.table(dsyncConnections, ['id', 'type', 'name', 'product']);
+    printTable(dsyncConnections, ['id', 'type', 'name', 'product']);
   } else {
     console.log('\nNo DSync connections found');
   }
@@ -123,7 +123,7 @@ async function displayDeletionArtifacts(teamId) {
     const activeSubscriptions = await getActiveSubscriptions(team);
     if (activeSubscriptions.length > 0) {
       console.log('\nActive Subscriptions:');
-      console.table(activeSubscriptions, ['id', 'startDate', 'endDate']);
+      printTable(activeSubscriptions, ['id', 'startDate', 'endDate']);
     } else {
       console.log('\nNo active subscriptions found');
     }
@@ -136,7 +136,7 @@ async function displayDeletionArtifacts(teamId) {
     });
     if (subscriptions.length > 0) {
       console.log('\nAll Subscriptions:');
-      console.table(subscriptions, ['id', 'startDate', 'endDate', 'active']);
+      printTable(subscriptions, ['id', 'startDate', 'endDate', 'active']);
     } else {
       console.log('\nNo subscriptions found');
     }
@@ -170,12 +170,12 @@ async function displayDeletionArtifacts(teamId) {
     teamMembers[i].action = userTeams.length > 1 ? 'Remove' : 'Delete';
   }
   console.log('\nTeam Members:');
-  console.table(teamMembers, ['id', 'email', 'name', 'teams', 'action']);
+  printTable(teamMembers, ['id', 'email', 'name', 'teams', 'action']);
 
   const apiKeys = await prisma.apiKey.findMany({ where: { teamId: team.id } });
   if (apiKeys.length > 0) {
     console.log('\nAPI Keys:');
-    console.table(apiKeys, ['id', 'name']);
+    printTable(apiKeys, ['id', 'name']);
   } else {
     console.log('\nNo API keys found');
   }
@@ -185,7 +185,7 @@ async function displayDeletionArtifacts(teamId) {
   });
   if (invitations.length > 0) {
     console.log('\nInvitations:');
-    console.table(invitations, ['id', 'email', 'role']);
+    printTable(invitations, ['id', 'email', 'role']);
   } else {
     console.log('\nNo invitations found');
   }
@@ -206,7 +206,7 @@ async function handleTeamDeletion(teamId) {
         console.log(
           `${activeSubscriptions.length} Active subscriptions found. Please cancel them before deleting the team.`
         );
-        console.table(activeSubscriptions, ['id', 'startDate', 'endDate']);
+        printTable(activeSubscriptions, ['id', 'startDate', 'endDate']);
         return;
       } else {
         console.log('No active subscriptions found');
@@ -344,7 +344,7 @@ async function removeTeamMembers(team) {
     },
   });
   console.log(`Found ${teamMembers.length} team members`);
-  console.table(teamMembers);
+  printTable(teamMembers);
 
   for (const user of teamMembers) {
     await checkAndRemoveUser(user, team);
@@ -463,6 +463,14 @@ async function askForConfirmation(teamId) {
       }
     );
   });
+}
+
+function printTable(data, columns) {
+  const final = {};
+  data.forEach((ele, index) => {
+    final[index + 1] = ele;
+  });
+  console.table(final, columns);
 }
 
 // handle uncaught errors
