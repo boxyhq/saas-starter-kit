@@ -4,7 +4,9 @@ const jackson = require('@boxyhq/saml-jackson');
 const readline = require('readline');
 const { Svix } = require('svix');
 
-const svix = new Svix(`${process.env.SVIX_API_KEY}`);
+const svix = process.env.SVIX_API_KEY
+  ? new Svix(`${process.env.SVIX_API_KEY}`)
+  : undefined;
 
 const product = process.env.JACKSON_PRODUCT_ID || 'boxyhq';
 
@@ -193,18 +195,20 @@ async function displayDeletionArtifacts(teamId) {
     console.log('\nNo invitations found');
   }
 
-  console.log('\nChecking Svix application');
-  const application = await getSvixApplication(team.id);
-  if (!application) {
-    console.log('No Svix application found');
-  } else {
-    printTable([application], ['id', 'name', 'uid']);
-    const webhooks = await svix.endpoint.list(application.id);
-    if (webhooks?.data?.length) {
-      console.log('\nSvix Webhooks:');
-      printTable(webhooks.data, ['id', 'filterTypes', 'url']);
+  if (svix) {
+    console.log('\nChecking Svix application');
+    const application = await getSvixApplication(team.id);
+    if (!application) {
+      console.log('No Svix application found');
     } else {
-      console.log('\nNo webhooks found');
+      printTable([application], ['id', 'name', 'uid']);
+      const webhooks = await svix.endpoint.list(application.id);
+      if (webhooks?.data?.length) {
+        console.log('\nSvix Webhooks:');
+        printTable(webhooks.data, ['id', 'filterTypes', 'url']);
+      } else {
+        console.log('\nNo webhooks found');
+      }
     }
   }
 }
@@ -479,6 +483,9 @@ async function getSvixApplication(teamId) {
 }
 
 async function removeSvixApplication(teamId) {
+  if (!svix) {
+    return;
+  }
   console.log('\nDeleting Svix application:', teamId);
   try {
     await svix.application.delete(teamId);
