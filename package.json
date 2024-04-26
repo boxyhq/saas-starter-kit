@@ -51,9 +51,9 @@
     "next-auth": "4.24.7",
     "next-i18next": "13.3.0",
     "nodemailer": "6.9.13",
-    "react": "18.2.0",
+    "react": "18.3.0",
     "react-daisyui": "5.0.0",
-    "react-dom": "18.2.0",
+    "react-dom": "18.3.0",
     "react-email": "2.1.1",
     "react-google-recaptcha": "3.1.0",
     "react-hot-toast": "2.4.1",
@@ -76,7 +76,7 @@
     "@types/mixpanel-browser": "2.49.0",
     "@types/node": "20.12.7",
     "@types/nodemailer": "6.4.14",
-    "@types/react": "18.2.79",
+    "@types/react": "18.3.0",
     "@typescript-eslint/eslint-plugin": "7.7.1",
     "@typescript-eslint/parser": "7.7.1",
     "autoprefixer": "10.4.19",
@@ -96,5 +96,15 @@
     "tailwindcss": "3.4.3",
     "ts-node": "10.9.2",
     "typescript": "5.4.5"
+  },
+  "overrides": {
+    "@retracedhq/logs-viewer": {
+      "react": ">=18.2.0",
+      "react-dom": ">=18.2.0"
+    },
+    "@react-email/components": {
+      "react": ">=18.2.0",
+      "react-dom": ">=18.2.0"
+    }
   }
 }
