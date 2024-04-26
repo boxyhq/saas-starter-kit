@@ -2,6 +2,11 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jackson = require('@boxyhq/saml-jackson');
 const readline = require('readline');
+const { Svix } = require('svix');
+
+const svix = process.env.SVIX_API_KEY
+  ? new Svix(`${process.env.SVIX_API_KEY}`)
+  : undefined;
 
 const product = process.env.JACKSON_PRODUCT_ID || 'boxyhq';
 
@@ -189,6 +194,23 @@ async function displayDeletionArtifacts(teamId) {
   } else {
     console.log('\nNo invitations found');
   }
+
+  if (svix) {
+    console.log('\nChecking Svix application');
+    const application = await getSvixApplication(team.id);
+    if (!application) {
+      console.log('No Svix application found');
+    } else {
+      printTable([application], ['id', 'name', 'uid']);
+      const webhooks = await svix.endpoint.list(application.id);
+      if (webhooks?.data?.length) {
+        console.log('\nSvix Webhooks:');
+        printTable(webhooks.data, ['id', 'filterTypes', 'url']);
+      } else {
+        console.log('\nNo webhooks found');
+      }
+    }
+  }
 }
 
 async function handleTeamDeletion(teamId) {
@@ -216,6 +238,9 @@ async function handleTeamDeletion(teamId) {
     await removeSSOConnections(team);
     await removeTeamSubscriptions(team);
     await removeTeamMembers(team);
+
+    await removeSvixApplication(team.id);
+
     await removeTeam(team);
   }
 }
@@ -446,6 +471,28 @@ async function deleteConnection(directoryId) {
 
     return { data };
   }
+}
+
+async function getSvixApplication(teamId) {
+  try {
+    const application = await svix.application.get(teamId);
+    return application;
+  } catch (ex) {
+    console.log('Error getting application:', ex);
+  }
+}
+
+async function removeSvixApplication(teamId) {
+  if (!svix) {
+    return;
+  }
+  console.log('\nDeleting Svix application:', teamId);
+  try {
+    await svix.application.delete(teamId);
+  } catch (ex) {
+    console.log('Error deleting application:', ex);
+  }
+  console.log('Svix application deleted:', teamId);
 }
 
 async function askForConfirmation(teamId) {
