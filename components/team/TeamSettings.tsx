@@ -12,10 +12,12 @@ import type { ApiResponse } from 'types';
 import { AccessControl } from '../shared/AccessControl';
 import { z } from 'zod';
 import { updateTeamSchema } from '@/lib/zod';
+import useTeams from 'hooks/useTeams';
 
 const TeamSettings = ({ team }: { team: Team }) => {
   const router = useRouter();
   const { t } = useTranslation('common');
+  const { mutateTeams } = useTeams();
 
   const formik = useFormik<z.infer<typeof updateTeamSchema>>({
     initialValues: {
@@ -47,6 +49,7 @@ const TeamSettings = ({ team }: { team: Team }) => {
       }
 
       toast.success(t('successfully-updated'));
+      mutateTeams();
       router.push(`/teams/${json.data.slug}/settings`);
     },
   });
