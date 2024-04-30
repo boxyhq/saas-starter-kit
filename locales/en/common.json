@@ -245,5 +245,6 @@
   "error-500": "500",
   "internal-server-error": "Internal Server Error !",
   "unable-to-find": "We're unable to find out what's happening! We suggest you to",
-  "try-again-later": "or visit here later."
+  "try-again-later": "or visit here later.",
+  "something-went-wrong": "Something went wrong"
 }

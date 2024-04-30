@@ -59,7 +59,11 @@ const Members = ({ team }: { team: Team }) => {
     const json = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
-      toast.error(json.error.message);
+      if (json.error.message === 'Something went wrong') {
+        toast.error(t('something-went-wrong'));
+      } else {
+        toast.error(`this is ${json.error.message}`);
+      }
       return;
     }
 
