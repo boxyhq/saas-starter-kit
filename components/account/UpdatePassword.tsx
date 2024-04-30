@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { Card, InputWithLabel } from '@/components/shared';
 import { defaultHeaders, passwordPolicies } from '@/lib/common';
 import { maxLengthPolicies } from '@/lib/common';
+import type { ApiResponse } from 'types';
 
 const schema = Yup.object().shape({
   currentPassword: Yup.string().required().max(maxLengthPolicies.password),
@@ -32,9 +33,13 @@ const UpdatePassword = () => {
         body: JSON.stringify(values),
       });
 
-      const json = await response.json();
+      const json = (await response.json()) as ApiResponse;
 
       if (!response.ok) {
+        if (json.error.message === 'Something went wrong') {
+          toast.error(t('something-went-wrong'));
+          return;
+        }
         toast.error(json.error.message);
         return;
       }

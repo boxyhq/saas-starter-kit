@@ -41,6 +41,10 @@ const SSO: NextPageWithLayout<
       const { data, error } = await response.json();
 
       if (error) {
+        if (error.message === 'Something went wrong') {
+          toast.error(t('something-went-wrong'));
+          return;
+        }
         toast.error(error.message);
         return;
       }

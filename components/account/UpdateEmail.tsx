@@ -37,8 +37,13 @@ const UpdateEmail = ({ user, allowEmailChange }: UpdateEmailProps) => {
         body: JSON.stringify(values),
       });
 
+      const json = (await response.json()) as ApiResponse;
+
       if (!response.ok) {
-        const json = (await response.json()) as ApiResponse;
+        if (json.error.message === 'Something went wrong') {
+          toast.error(t('something-went-wrong'));
+          return;
+        }
         toast.error(json.error.message);
         return;
       }

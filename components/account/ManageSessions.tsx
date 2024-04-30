@@ -9,6 +9,7 @@ import { Session } from '@prisma/client';
 import { WithLoadingAndError } from '@/components/shared';
 import ConfirmationDialog from '@/components/shared/ConfirmationDialog';
 import { Table } from '@/components/shared/table/Table';
+import type { ApiResponse } from 'types';
 
 type NextAuthSession = Session & { isCurrent: boolean };
 
@@ -34,8 +35,12 @@ const ManageSessions = () => {
         method: 'DELETE',
       });
 
+      const json = (await response.json()) as ApiResponse;
+
       if (!response.ok) {
-        const json = await response.json();
+        if (json.error.message === 'Something went wrong') {
+          throw new Error(t('something-went-wrong'));
+        }
         throw new Error(json.error.message);
       }
 

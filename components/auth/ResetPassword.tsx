@@ -54,10 +54,13 @@ const ResetPassword = () => {
       setSubmitting(false);
 
       if (!response.ok) {
+        if (json.error.message === 'Something went wrong') {
+          toast.error(t('something-went-wrong'));
+          return;
+        }
         toast.error(json.error.message);
         return;
       }
-
       formik.resetForm();
       toast.success(t('password-updated'));
       router.push('/auth/login');

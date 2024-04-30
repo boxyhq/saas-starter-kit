@@ -39,6 +39,10 @@ const Teams = () => {
     const json = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
+      if (json.error.message === 'Something went wrong') {
+        toast.error(t('something-went-wrong'));
+        return;
+      }
       toast.error(json.error.message);
       return;
     }
