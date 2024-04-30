@@ -64,7 +64,7 @@
     "svix": "1.21.0",
     "swr": "2.2.5",
     "yup": "1.4.0",
-    "zod": "3.23.4"
+    "zod": "3.23.5"
   },
   "devDependencies": {
     "@faker-js/faker": "8.4.1",
