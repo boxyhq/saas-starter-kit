@@ -1,6 +1,7 @@
 import React from 'react';
+import { Checkbox } from 'react-daisyui';
 
-const Checkbox = ({
+const CheckboxComponent = ({
   onChange,
   name,
   value,
@@ -18,13 +19,12 @@ const Checkbox = ({
   return (
     <div className={`flex items-center ${className || ''}`} key={value}>
       <label className="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
+        <Checkbox
           name={name}
           value={value}
           onChange={onChange}
-          className="h-4 w-4 rounded bg-primary checkbox-primary"
           defaultChecked={Boolean(defaultChecked)}
+          className="h-4 w-4 rounded [--chkfg:oklch(var(--p))] [--chkbg:white]"
         />
         <span className="text-gray-700">{label}</span>
       </label>
@@ -32,4 +32,4 @@ const Checkbox = ({
   );
 };
 
-export default Checkbox;
+export default CheckboxComponent;
