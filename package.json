@@ -97,10 +97,5 @@
     "ts-node": "10.9.2",
     "typescript": "5.4.5"
   },
-  "overrides": {
-    "@react-email/components": {
-      "react": ">=18.2.0",
-      "react-dom": ">=18.2.0"
-    }
-  }
+  "overrides": {}
 }
