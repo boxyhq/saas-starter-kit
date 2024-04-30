@@ -21,7 +21,7 @@ export default function AuthLayout({
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <Image
             src={app.logoUrl}
-            className="mx-auto h-12 w-auto"
+            className="mx-auto h-12"
             alt={app.name}
             width={48}
             height={48}
