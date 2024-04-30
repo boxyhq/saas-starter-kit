@@ -14,6 +14,7 @@ import { defaultHeaders } from '@/lib/common';
 import { AuthLayout } from '@/components/layouts';
 import { unlockAccount } from '@/lib/accountLock';
 import { getUser } from 'models/user';
+import type { ApiResponse } from 'types';
 
 interface UnlockAccountProps {
   email: string;
@@ -61,7 +62,7 @@ const UnlockAccount = ({
       });
 
       if (!response.ok) {
-        const json = await response.json();
+        const json = (await response.json()) as ApiResponse;
         throw new Error(json.error.message);
       }
 
