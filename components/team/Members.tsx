@@ -114,8 +114,9 @@ const Members = ({ team }: { team: Team }) => {
                     <span>{member.user.name}</span>
                   </div>
                 ),
+                minWidth: 200,
               },
-              { wrap: true, text: member.user.email },
+              { wrap: true, text: member.user.email, minWidth: 250 },
               {
                 element: canUpdateRole(member) ? (
                   <UpdateMemberRole team={team} member={member} />

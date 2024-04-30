@@ -87,9 +87,14 @@ const PendingInvitations = ({ team }: { team: Team }) => {
                     <span>{invitation.email}</span>
                   </div>
                 ) : undefined,
+                minWidth: 250,
               },
               { text: invitation.role },
-              { wrap: true, text: new Date(invitation.expires).toDateString() },
+              {
+                wrap: true,
+                text: new Date(invitation.expires).toDateString(),
+                minWidth: 160,
+              },
               {
                 buttons: [
                   {
