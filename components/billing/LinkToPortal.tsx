@@ -32,7 +32,11 @@ const LinkToPortal = ({ team }: LinkToPortalProps) => {
     const result = (await response.json()) as ApiResponse<{ url: string }>;
 
     if (!response.ok) {
-      toast.error(result.error.message === 'Something went wrong' ? t('something-went-wrong') : result.error.message);
+      toast.error(
+        result.error.message === 'Something went wrong'
+          ? t('something-went-wrong')
+          : result.error.message
+      );
       return;
     }
 

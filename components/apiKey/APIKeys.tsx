@@ -41,7 +41,11 @@ const APIKeys = ({ team }: APIKeysProps) => {
     const { error } = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
-      toast.error(error.message === 'Something went wrong' ? t('something-went-wrong') : error.message);
+      toast.error(
+        error.message === 'Something went wrong'
+          ? t('something-went-wrong')
+          : error.message
+      );
       return;
     }
 

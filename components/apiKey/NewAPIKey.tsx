@@ -76,7 +76,11 @@ const CreateAPIKeyForm = ({
       }>;
 
       if (error) {
-        toast.error(error.message === 'Something went wrong' ? t('something-went-wrong') : error.message);
+        toast.error(
+          error.message === 'Something went wrong'
+            ? t('something-went-wrong')
+            : error.message
+        );
         return;
       }
 

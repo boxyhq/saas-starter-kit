@@ -46,7 +46,11 @@ const InviteViaEmail = ({ setVisible, team }: InviteViaEmailProps) => {
       const result = (await response.json()) as ApiResponse;
 
       if (!response.ok) {
-        toast.error(result.error.message === 'Something went wrong' ? t('something-went-wrong') : result.error.message);
+        toast.error(
+          result.error.message === 'Something went wrong'
+            ? t('something-went-wrong')
+            : result.error.message
+        );
         return;
       }
 
