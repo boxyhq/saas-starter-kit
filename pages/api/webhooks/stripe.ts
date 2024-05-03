@@ -10,7 +10,6 @@ import {
   updateStripeSubscription,
 } from 'models/subscription';
 import { getByCustomerId } from 'models/team';
-import { getServiceByPriceId } from 'models/price';
 
 export const config = {
   api: {
@@ -85,6 +84,7 @@ async function handleSubscriptionUpdated(event: Stripe.Event) {
     current_period_end,
     current_period_start,
     customer,
+    items,
   } = event.data.object as Stripe.Subscription;
 
   const subscription = await getBySubscriptionId(id);
@@ -96,6 +96,7 @@ async function handleSubscriptionUpdated(event: Stripe.Event) {
       await handleSubscriptionCreated(event);
     }
   } else {
+    const priceId = items.data.length > 0 ? items.data[0].plan?.id : '';
     //type Stripe.Subscription.Status = "active" | "canceled" | "incomplete" | "incomplete_expired" | "past_due" | "paused" | "trialing" | "unpaid"
     await updateStripeSubscription(id, {
       active: status === 'active',
@@ -106,12 +107,8 @@ async function handleSubscriptionUpdated(event: Stripe.Event) {
         ? new Date(current_period_start * 1000)
         : undefined,
       cancelAt: cancel_at ? new Date(cancel_at * 1000) : undefined,
+      priceId,
     });
-    const [product, team] = await Promise.all([
-      getServiceByPriceId(subscription.priceId),
-      getByCustomerId(subscription.customerId),
-    ]);
-    if (!product || !team) return;
   }
 }
 
