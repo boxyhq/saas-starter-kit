@@ -38,10 +38,7 @@ const ManageSessions = () => {
       const json = (await response.json()) as ApiResponse;
 
       if (!response.ok) {
-        if (json.error.message === 'Something went wrong') {
-          throw new Error(t('something-went-wrong'));
-        }
-        throw new Error(json.error.message);
+        toast.error(json.error.message === 'Something went wrong' ? t('something-went-wrong') : json.error.message);
       }
 
       toast.success(t('session-removed'));

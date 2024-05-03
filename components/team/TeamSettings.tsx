@@ -44,11 +44,7 @@ const TeamSettings = ({ team }: { team: Team }) => {
       const json = (await response.json()) as ApiResponse<Team>;
 
       if (!response.ok) {
-        if (json.error.message === 'Something went wrong') {
-          toast.error(t('something-went-wrong'));
-          return;
-        }
-        toast.error(json.error.message);
+        toast.error(json.error.message === 'Something went wrong' ? t('something-went-wrong') : json.error.message);
         return;
       }
 
