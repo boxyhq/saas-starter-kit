@@ -53,6 +53,7 @@ const env = {
   // SAML Jackson configuration
   jackson: {
     url: process.env.JACKSON_URL,
+    externalUrl: process.env.JACKSON_EXTERNAL_URL || process.env.JACKSON_URL,
     apiKey: process.env.JACKSON_API_KEY,
     productId: process.env.JACKSON_PRODUCT_ID || 'boxyhq',
     selfHosted: process.env.JACKSON_URL !== undefined,

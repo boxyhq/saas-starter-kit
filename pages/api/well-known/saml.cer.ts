@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import jackson from '@/lib/jackson';
+import env from '@/lib/env';
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,6 +12,11 @@ export default async function handler(
 
   const { spConfig } = await jackson();
   const config = await spConfig.get();
+
+  if (env.jackson.selfHosted) {
+    res.redirect(`${env.jackson.externalUrl}/.well-known/saml.cer`);
+    return;
+  }
 
   res
     .status(200)

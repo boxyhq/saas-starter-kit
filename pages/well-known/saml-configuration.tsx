@@ -1,16 +1,27 @@
 import type { InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { useTranslation, Trans } from 'next-i18next';
 import jackson from '@/lib/jackson';
 import InputWithCopyButton from '@/components/shared/InputWithCopyButton';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { NextPageWithLayout } from 'types';
+import env from '@/lib/env';
 
 const SPConfig: NextPageWithLayout<
   InferGetStaticPropsType<typeof getServerSideProps>
-> = ({ config }) => {
+> = ({ config, jacksonEnv }) => {
   const { t } = useTranslation('common');
+
+  useEffect(() => {
+    if (jacksonEnv.selfHosted) {
+      window.location.href = `${jacksonEnv.externalUrl}/.well-known/saml-configuration`;
+    }
+  }, []);
+
+  if (jacksonEnv.selfHosted) {
+    return null;
+  }
 
   return (
     <>
@@ -121,6 +132,10 @@ export const getServerSideProps = async ({ locale }) => {
     props: {
       ...(await serverSideTranslations(locale, ['common'])),
       config: await spConfig.get(),
+      jacksonEnv: {
+        selfHosted: env.jackson.selfHosted,
+        externalUrl: env.jackson.externalUrl || null,
+      },
     },
   };
 };
