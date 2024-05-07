@@ -81,7 +81,7 @@ export async function getServerSideProps({
   }
 
   const SPConfigURL = env.jackson.selfHosted
-    ? `${env.jackson.url}/well-known/saml-configuration`
+    ? `${env.jackson.externalUrl}/.well-known/saml-configuration`
     : '/well-known/saml-configuration';
 
   return {
