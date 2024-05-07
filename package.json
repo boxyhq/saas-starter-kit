@@ -68,7 +68,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "8.4.1",
-    "@playwright/test": "1.43.1",
+    "@playwright/test": "1.44.0",
     "@testing-library/jest-dom": "6.4.5",
     "@types/bcryptjs": "2.4.6",
     "@types/jest": "29.5.12",
