@@ -41,7 +41,7 @@ const useHostedJackson = process.env.JACKSON_URL ? true : false;
 
 let jacksonInstance;
 
-let dryRun = false;
+let dryRun = true;
 
 init();
 
@@ -53,12 +53,13 @@ async function init() {
         npm run delete-team -- [options] <teamId> [teamId]
         
       Options:
-        --dry-run: Run the script without deleting anything`
+        --dry-run (default): Run the script without deleting anything
+        --apply: Run the script to apply changes`
     );
     console.log(
       `Example: 
-        node delete-team.js 01850e43-d1e0-4b92-abe5-271b159ff99b
-        npm run delete-team -- 01850e43-d1e0-4b92-abe5-271b159ff99b`
+        node delete-team.js --apply 01850e43-d1e0-4b92-abe5-271b159ff99b
+        npm run delete-team -- --apply 01850e43-d1e0-4b92-abe5-271b159ff99b`
     );
     process.exit(1);
   } else {
@@ -67,9 +68,9 @@ async function init() {
       jacksonInstance = await jackson.default(jacksonOpts);
     }
     let i = 2;
-    if (process.argv.map((a) => a.toLowerCase()).includes('--dry-run')) {
-      console.log('Running in dry-run mode');
-      dryRun = true;
+    if (process.argv.map((a) => a.toLowerCase()).includes('--apply')) {
+      console.log('Running in apply mode');
+      dryRun = false;
       i++;
     }
     for (i; i < process.argv.length; i++) {
@@ -478,7 +479,10 @@ async function getSvixApplication(teamId) {
     const application = await svix.application.get(teamId);
     return application;
   } catch (ex) {
-    console.log('Error getting application:', ex);
+    console.log(
+      'Error getting application:',
+      ex?.code === 404 ? 'Not found' : ex
+    );
   }
 }
 
@@ -490,7 +494,10 @@ async function removeSvixApplication(teamId) {
   try {
     await svix.application.delete(teamId);
   } catch (ex) {
-    console.log('Error deleting application:', ex);
+    console.log(
+      'Error deleting application:',
+      ex?.code === 404 ? 'Not found' : ex
+    );
   }
   console.log('Svix application deleted:', teamId);
 }
