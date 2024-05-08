@@ -48,17 +48,21 @@ init();
 async function init() {
   if (process.argv.length < 3) {
     console.log(
-      `Usage: 
+      `
+      Usage: 
         node delete-team.js [options] <teamId> [teamId]
         npm run delete-team -- [options] <teamId> [teamId]
         
       Options:
-        --apply: Run the script to apply changes`
+        --apply: Run the script to apply changes
+        `
     );
     console.log(
-      `Example: 
+      `
+      Example: 
         node delete-team.js --apply 01850e43-d1e0-4b92-abe5-271b159ff99b
-        npm run delete-team -- --apply 01850e43-d1e0-4b92-abe5-271b159ff99b`
+        npm run delete-team -- --apply 01850e43-d1e0-4b92-abe5-271b159ff99b
+        `
     );
     process.exit(1);
   } else {
