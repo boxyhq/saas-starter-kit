@@ -53,7 +53,6 @@ async function init() {
         npm run delete-team -- [options] <teamId> [teamId]
         
       Options:
-        --dry-run (default): Run the script without deleting anything
         --apply: Run the script to apply changes`
     );
     console.log(
@@ -73,9 +72,6 @@ async function init() {
       dryRun = false;
       i++;
     } else {
-      i = process.argv.map((a) => a.toLowerCase()).includes('--dry-run')
-        ? i + 1
-        : i;
       console.log('Running in dry-run mode');
       dryRun = true;
     }
