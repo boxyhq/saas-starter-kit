@@ -72,11 +72,10 @@ async function init() {
       console.log('Running in apply mode');
       dryRun = false;
       i++;
-    } else if (process.argv.map((a) => a.toLowerCase()).includes('--dry-run')) {
-      console.log('Running in dry-run mode');
-      dryRun = true;
-      i++;
     } else {
+      i = process.argv.map((a) => a.toLowerCase()).includes('--dry-run')
+        ? i + 1
+        : i;
       console.log('Running in dry-run mode');
       dryRun = true;
     }
