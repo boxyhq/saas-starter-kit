@@ -47,7 +47,6 @@ const PendingInvitations = ({ team }: { team: Team }) => {
       }
     );
 
-    
     if (!response.ok) {
       const json = (await response.json()) as ApiResponse<unknown>;
       toast.error(t(json?.error?.message || 'Something went wrong'));

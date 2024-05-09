@@ -35,7 +35,6 @@ const ManageSessions = () => {
         method: 'DELETE',
       });
 
-      
       if (!response.ok) {
         const json = (await response.json()) as ApiResponse;
         toast.error(t(json?.error?.message || 'Something went wrong'));
