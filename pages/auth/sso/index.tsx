@@ -56,6 +56,7 @@ const SSO: NextPageWithLayout<
         return;
       }
       if (data.useSlug) {
+        formik.resetForm();
         setUseEmail(false);
         toast.error(t('multiple-sso-teams'));
         return;
