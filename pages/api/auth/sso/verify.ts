@@ -1,6 +1,7 @@
 import env from '@/lib/env';
 import { ssoManager } from '@/lib/jackson/sso';
 import { ssoVerifySchema, validateWithSchema } from '@/lib/zod';
+import { Team } from '@prisma/client';
 import { getTeam, getTeams } from 'models/team';
 import { getUser } from 'models/user';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -37,6 +38,11 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     JSON.parse(req.body) as { slug: string }
   );
 
+  if (!slug && !email) {
+    return res.status(400).json({ error: 'Invalid request.' });
+  }
+
+  // If slug is provided, verify SSO connections for the team
   if (slug) {
     const team = await getTeam({ slug });
 
@@ -44,12 +50,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       throw new Error('Team not found.');
     }
 
-    const connections = await sso.getConnections({
-      tenant: team.id,
-      product: env.jackson.productId,
-    });
+    const exists = await teamSSOExists(team.id);
 
-    if (!connections || connections.length === 0) {
+    if (!exists) {
       throw new Error('No SSO connections found for this team.');
     }
 
@@ -57,8 +60,11 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       teamId: team.id,
     };
 
-    res.json({ data });
-  } else if (email) {
+    return res.json({ data });
+  }
+
+  // If email is provided, verify SSO connections for the user
+  if (email) {
     const user = await getUser({ email });
     if (!user) {
       throw new Error('User not found.');
@@ -67,49 +73,92 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!teams.length) {
       throw new Error('User does not belong to any team.');
     }
-    if (teams.length === 1) {
-      const team = teams[0];
-      const connections = await sso.getConnections({
-        tenant: team.id,
-        product: env.jackson.productId,
-      });
 
-      if (!connections || connections.length === 0) {
+    if (teams.length === 1) {
+      const exists = await teamSSOExists(teams[0].id);
+
+      // No SSO connections found for the team
+      if (!exists) {
         throw new Error('No SSO connections found for the team.');
       }
 
-      const data = {
-        teamId: team.id,
-      };
-
-      res.json({ data });
+      return res.json({
+        data: {
+          teamId: teams[0].id,
+        },
+      });
     } else {
-      const teamsWithConnections: any[] = [];
-      for (const team of teams) {
-        const connections = await sso.getConnections({
-          tenant: team.id,
-          product: env.jackson.productId,
-        });
+      let { teamId, useSlug } = await processTeamsForSSOVerification(teams);
 
-        if (connections && connections.length > 0) {
-          teamsWithConnections.push({
-            teamId: team.id,
-          });
-        }
-      }
-      if (!teamsWithConnections.length) {
-        throw new Error('No SSO connections found for any team.');
-      } else if (teamsWithConnections.length === 1) {
-        res.json({ data: teamsWithConnections[0] });
-      } else {
-        res.json({
+      // Multiple teams with SSO connections found
+      if (useSlug) {
+        return res.json({
           data: {
-            useSlug: true,
+            useSlug,
+          },
+        });
+      }
+
+      // No teams with SSO connections found
+      if (!teamId) {
+        throw new Error('No SSO connections found for any team.');
+      } else {
+        // Only one team with SSO connections found
+        return res.json({
+          data: {
+            teamId,
           },
         });
       }
     }
-  } else {
-    throw new Error('Invalid request.');
   }
 };
+
+/**
+ * Check if SSO connections exist for a team
+ */
+async function teamSSOExists(teamId: string): Promise<boolean> {
+  const connections = await sso.getConnections({
+    tenant: teamId,
+    product: env.jackson.productId,
+  });
+
+  if (connections && connections.length > 0) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Process teams to find the team with SSO connections
+ * If multiple teams with SSO connections are found, return useSlug as true
+ * If no teams with SSO connections are found, return teamId as empty string
+ * If only one team with SSO connections is found, return teamId
+ */
+async function processTeamsForSSOVerification(teams: Team[]): Promise<{
+  teamId: string;
+  useSlug: boolean;
+}> {
+  let teamId = '';
+  for (const team of teams) {
+    const exists = await teamSSOExists(team.id);
+
+    if (exists) {
+      if (teamId) {
+        // Multiple teams with SSO connections found
+        return {
+          teamId: '',
+          useSlug: true,
+        };
+      } else {
+        // First team with SSO connections found
+        teamId = team.id;
+      }
+    }
+  }
+  return {
+    teamId,
+    useSlug: false,
+  };
+}
