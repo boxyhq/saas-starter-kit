@@ -26,11 +26,7 @@ const UpdateMemberRole = ({ team, member }: UpdateMemberRoleProps) => {
     const json = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
-      toast.error(
-        json.error.message === 'Something went wrong'
-          ? t('something-went-wrong')
-          : json.error.message
-      );
+      toast.error(t(json?.error?.message || 'Something went wrong'));
       return;
     }
 
