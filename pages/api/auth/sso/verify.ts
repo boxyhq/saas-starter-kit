@@ -50,16 +50,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       throw new Error('Team not found.');
     }
 
-    const exists = await teamSSOExists(team.id);
-
-    if (!exists) {
-      throw new Error('No SSO connections found for this team.');
-    }
-
-    const data = {
-      teamId: team.id,
-    };
-
+    const data = await handleTeamSSOVerification(team.id);
     return res.json({ data });
   }
 
@@ -68,44 +59,48 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     const teams = await getTeamsFromEmail(email);
 
     if (teams.length === 1) {
-      const exists = await teamSSOExists(teams[0].id);
+      const data = await handleTeamSSOVerification(teams[0].id);
+      return res.json({ data });
+    }
 
-      // No SSO connections found for the team
-      if (!exists) {
-        throw new Error('No SSO connections found for the team.');
-      }
+    const { teamId, useSlug } = await processTeamsForSSOVerification(teams);
 
+    // Multiple teams with SSO connections found
+    // Ask user to provide team slug
+    if (useSlug) {
       return res.json({
         data: {
-          teamId: teams[0].id,
+          useSlug,
         },
       });
+    }
+
+    // No teams with SSO connections found
+    if (!teamId) {
+      throw new Error('No SSO connections found for any team.');
     } else {
-      const { teamId, useSlug } = await processTeamsForSSOVerification(teams);
-
-      // Multiple teams with SSO connections found
-      if (useSlug) {
-        return res.json({
-          data: {
-            useSlug,
-          },
-        });
-      }
-
-      // No teams with SSO connections found
-      if (!teamId) {
-        throw new Error('No SSO connections found for any team.');
-      } else {
-        // Only one team with SSO connections found
-        return res.json({
-          data: {
-            teamId,
-          },
-        });
-      }
+      // Only one team with SSO connections found
+      return res.json({
+        data: {
+          teamId,
+        },
+      });
     }
   }
 };
+
+/**
+ * Handle SSO verification for given team id
+ */
+async function handleTeamSSOVerification(teamId: string) {
+  const exists = await teamSSOExists(teamId);
+
+  if (!exists) {
+    throw new Error('No SSO connections found for this team.');
+  }
+
+  return { teamId };
+}
 
 /**
  * Get list of teams for a user from email
