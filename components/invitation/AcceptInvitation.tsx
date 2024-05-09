@@ -25,9 +25,9 @@ const AcceptInvitation = ({ invitation }: AcceptInvitationProps) => {
       }
     );
 
-    const result = (await response.json()) as ApiResponse;
-
+    
     if (!response.ok) {
+      const result = (await response.json()) as ApiResponse;
       toast.error(t(result?.error?.message || 'Something went wrong'));
       return;
     }

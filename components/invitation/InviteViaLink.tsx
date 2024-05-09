@@ -61,9 +61,9 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
         body: JSON.stringify(values),
       });
 
-      const result = (await response.json()) as ApiResponse;
-
+      
       if (!response.ok) {
+        const result = (await response.json()) as ApiResponse;
         toast.error(t(result?.error?.message || 'Something went wrong'));
         return;
       }
@@ -84,9 +84,9 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
       }
     );
 
-    const result = (await response.json()) as ApiResponse;
-
+    
     if (!response.ok) {
+      const result = (await response.json()) as ApiResponse;
       toast.error(t(result?.error?.message || 'Something went wrong'));
       return;
     }
