@@ -65,14 +65,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // If email is provided, verify SSO connections for the user
   if (email) {
-    const user = await getUser({ email });
-    if (!user) {
-      throw new Error('User not found.');
-    }
-    const teams = await getTeams(user.id);
-    if (!teams.length) {
-      throw new Error('User does not belong to any team.');
-    }
+    const teams = await getTeamsFromEmail(email);
 
     if (teams.length === 1) {
       const exists = await teamSSOExists(teams[0].id);
@@ -88,7 +81,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
     } else {
-      let { teamId, useSlug } = await processTeamsForSSOVerification(teams);
+      const { teamId, useSlug } = await processTeamsForSSOVerification(teams);
 
       // Multiple teams with SSO connections found
       if (useSlug) {
@@ -113,6 +106,21 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 };
+
+/**
+ * Get list of teams for a user from email
+ */
+async function getTeamsFromEmail(email: string): Promise<Team[]> {
+  const user = await getUser({ email });
+  if (!user) {
+    throw new Error('User not found.');
+  }
+  const teams = await getTeams(user.id);
+  if (!teams.length) {
+    throw new Error('User does not belong to any team.');
+  }
+  return teams;
+}
 
 /**
  * Check if SSO connections exist for a team
