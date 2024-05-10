@@ -19,7 +19,7 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
       NEXTAUTH_SECRET: secret
       NEXTAUTH_URL: http://localhost:4002
-      AUTH_PROVIDERS: saml,github,credentials
+      AUTH_PROVIDERS: github,credentials,saml
       FEATURE_TEAM_SSO: true
       FEATURE_TEAM_DSYNC: true
       FEATURE_TEAM_AUDIT_LOG: true
@@ -67,5 +67,7 @@ jobs:
       - run: npm run build-ci
       - name: Install playwright browser dependencies
         run: npx playwright install chromium
+      - name: migrate db
+        run: npx prisma migrate deploy
       - name: e2e tests
         run: npx playwright test
