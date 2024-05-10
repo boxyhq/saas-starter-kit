@@ -19,8 +19,8 @@ const secondTeam = {
 } as const;
 
 const ssoMetadataUrl = [
-  'https://mocksaml.com/api/saml/metadata',
-  'https://mocksaml.com/api/namespace/test/saml/metadata',
+  `${process.env.MOCKSAML_ORIGIN}/api/saml/metadata`,
+  `${process.env.MOCKSAML_ORIGIN}/api/namespace/test/saml/metadata`,
 ];
 
 test.afterAll(async () => {
