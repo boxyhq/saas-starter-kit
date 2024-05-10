@@ -18,6 +18,9 @@ const config: PlaywrightTestConfig = {
     command: 'npm run start',
     port: 4002,
     reuseExistingServer: !process.env.CI,
+    env: {
+      NEXTAUTH_URL: 'http://localhost:4002',
+    },
   },
   use: {
     headless: true,
