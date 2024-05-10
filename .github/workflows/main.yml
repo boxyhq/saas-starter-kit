@@ -32,6 +32,10 @@ jobs:
       HIDE_LANDING_PAGE: false
       GROUP_PREFIX: boxyhq-
       DISABLE_NON_BUSINESS_EMAIL_SIGNUP: false
+      APP_URL: http://localhost:4002
+      JACKSON_PRODUCT_ID: boxyhq
+      JACKSON_WEBHOOK_SECRET: your-webhook-secret
+      DB_MANUAL_MIGRATION: true
 
     services:
       postgres:
