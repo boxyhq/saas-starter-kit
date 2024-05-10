@@ -16,7 +16,6 @@ const config: PlaywrightTestConfig = {
   reporter: 'html',
   webServer: {
     command: 'npm run start',
-    url: 'http://localhost:4002',
     port: 4002,
     reuseExistingServer: !process.env.CI,
   },
