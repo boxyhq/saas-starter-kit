@@ -13,6 +13,13 @@ const team = {
   slug: 'example',
 } as const;
 
+const secondTeam = {
+  name: 'BoxyHQ',
+  slug: 'boxyhq',
+} as const;
+
+const ssoMetadataUrl = ['https://mocksaml.com/api/saml/metadata', 'https://mocksaml.com/api/namespace/test/saml/metadata'];
+
 test.afterAll(async () => {
   await prisma.teamMember.deleteMany();
   await prisma.team.deleteMany();
@@ -38,20 +45,10 @@ test('Sign up and create SSO connection', async ({ page }) => {
   await page.getByPlaceholder('Email').fill(user.email);
   await page.getByPlaceholder('Password').fill(user.password);
   await page.getByRole('button', { name: 'Sign in' }).click();
-  await page.waitForURL('/teams/example/settings');
+  await page.waitForURL(`/teams/${team.slug}/settings`);
   await page.waitForSelector('text=Team Settings');
-  await page.getByRole('link', { name: 'Single Sign-On' }).click();
-  await page.waitForURL('/teams/example/sso');
-  await page.waitForSelector('text=Manage SSO Connections');
-  await page.getByRole('button', { name: 'New Connection' }).click();
-  await page
-    .getByPlaceholder('Paste the Metadata URL here')
-    .fill('https://mocksaml.com/api/saml/metadata');
-  await page.getByRole('button', { name: 'Save' }).click();
-  await page.waitForURL('/teams/example/sso');
-  await expect(
-    page.getByRole('cell', { name: 'saml.example.com' })
-  ).toBeVisible();
+
+  await createSSOConnection(page, team.slug, ssoMetadataUrl[0]);
 });
 
 test('Login with SSO', async ({ page }) => {
@@ -63,7 +60,7 @@ test('Create a new team', async ({ page }) => {
   await page.getByText('Example').first().click();
   await page.getByRole('link', { name: 'New Team' }).click();
   await page.waitForSelector('text=Create Team');
-  await page.getByPlaceholder('Team Name').fill('BoxyHQ');
+  await page.getByPlaceholder('Team Name').fill(secondTeam.name);
   await page
     .getByRole('dialog')
     .getByRole('button', { name: 'Create Team' })
@@ -82,18 +79,7 @@ test('SSO login with 2 teams & one SSO connection', async ({ page }) => {
 test('Create SSO connection for new team', async ({ page }) => {
   await ssoLogin(page);
 
-  await page.goto('/teams/boxyhq/sso');
-  await page.waitForURL('/teams/boxyhq/sso');
-  await page.waitForSelector('text=Manage SSO Connections');
-  await page.getByRole('button', { name: 'New Connection' }).click();
-  await page
-    .getByPlaceholder('Paste the Metadata URL here')
-    .fill('https://mocksaml.com/api/namespace/test/saml/metadata');
-  await page.getByRole('button', { name: 'Save' }).click();
-  await page.waitForURL('/teams/boxyhq/sso');
-  await expect(
-    page.getByRole('cell', { name: 'saml.example.com' })
-  ).toBeVisible();
+  await createSSOConnection(page, secondTeam.slug, ssoMetadataUrl[1]);
 });
 
 test('SSO login with 2 teams & two SSO connection', async ({ page }) => {
@@ -111,8 +97,8 @@ test('SSO login with 2 teams & two SSO connection', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign In' }).click();
   await page.waitForSelector('text=Team Settings');
 
-  await page.goto('/teams/boxyhq/sso');
-  await page.waitForURL('/teams/boxyhq/sso');
+  await page.goto(`/teams/${secondTeam.slug}/sso`);
+  await page.waitForURL(`/teams/${secondTeam.slug}/sso`);
   await page.waitForSelector('text=Manage SSO Connections');
 
   await page.waitForSelector('text=saml.example.com');
@@ -123,13 +109,14 @@ test('SSO login with 2 teams & two SSO connection', async ({ page }) => {
     'text=Are you sure you want to delete the Connection? This action cannot be undone and will permanently delete the Connection.'
   );
   await page.getByRole('button', { name: 'Confirm' }).click();
+  await page.waitForSelector('text=Manage SSO Connections');
 });
 
 test('Delete SSO connection', async ({ page }) => {
   await ssoLogin(page);
 
-  await page.goto('/teams/example/sso');
-  await page.waitForURL('/teams/example/sso');
+  await page.goto(`/teams/${team.slug}/sso`);
+  await page.waitForURL(`/teams/${team.slug}/sso`);
   await page.waitForSelector('text=Manage SSO Connections');
 
   await page.getByRole('link', { name: 'Single Sign-On' }).click();
@@ -152,6 +139,16 @@ async function ssoLogin(page) {
   await page.getByRole('button', { name: 'Continue with SSO' }).click();
   await page.waitForSelector('text=SAML SSO Login');
   await page.getByRole('button', { name: 'Sign In' }).click();
-  // await page.waitForURL('/teams/example/settings');
   await page.waitForSelector('text=Team Settings');
+}
+
+async function createSSOConnection(page, teamSlug, metadataUrl) {
+  await page.goto(`/teams/${teamSlug}/sso`);
+  await page.waitForURL(`/teams/${teamSlug}/sso`);
+  await page.waitForSelector('text=Manage SSO Connections');
+  await page.getByRole('button', { name: 'New Connection' }).click();
+  await page.getByPlaceholder('Paste the Metadata URL here').fill(metadataUrl);
+  await page.getByRole('button', { name: 'Save' }).click();
+  await page.waitForURL(`/teams/${teamSlug}/sso`);
+  await expect(page.getByRole('cell', { name: 'saml.example.com' })).toBeVisible();
 }
