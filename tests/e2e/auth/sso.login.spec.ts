@@ -18,7 +18,10 @@ const secondTeam = {
   slug: 'boxyhq',
 } as const;
 
-const ssoMetadataUrl = ['https://mocksaml.com/api/saml/metadata', 'https://mocksaml.com/api/namespace/test/saml/metadata'];
+const ssoMetadataUrl = [
+  'https://mocksaml.com/api/saml/metadata',
+  'https://mocksaml.com/api/namespace/test/saml/metadata',
+];
 
 test.afterAll(async () => {
   await prisma.teamMember.deleteMany();
@@ -150,5 +153,7 @@ async function createSSOConnection(page, teamSlug, metadataUrl) {
   await page.getByPlaceholder('Paste the Metadata URL here').fill(metadataUrl);
   await page.getByRole('button', { name: 'Save' }).click();
   await page.waitForURL(`/teams/${teamSlug}/sso`);
-  await expect(page.getByRole('cell', { name: 'saml.example.com' })).toBeVisible();
+  await expect(
+    page.getByRole('cell', { name: 'saml.example.com' })
+  ).toBeVisible();
 }
