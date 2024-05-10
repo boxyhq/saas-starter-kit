@@ -6,13 +6,18 @@ const config: PlaywrightTestConfig = {
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:4002',
+        channel: 'chrome',
+      },
     },
   ],
   reporter: 'html',
   webServer: {
     command: 'npm run start',
     url: 'http://localhost:4002',
+    port: 4002,
     reuseExistingServer: !process.env.CI,
   },
   use: {
