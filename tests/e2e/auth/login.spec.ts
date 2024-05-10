@@ -14,7 +14,9 @@ const team = {
 } as const;
 
 test('Should signup a new user', async ({ page }) => {
+  console.log('Debug***********', page.url());
   await page.goto('/auth/join');
+  console.log('Debug***********', page.url());
   await expect(page).toHaveURL('/auth/join');
   await expect(
     page.getByRole('heading', { name: 'Get started' })

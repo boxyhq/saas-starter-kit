@@ -17,8 +17,9 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
-      NEXTAUTH_SECRET: secret
       NEXTAUTH_URL: http://localhost:4002
+      NEXTAUTH_SECRET: secret
+      NEXTAUTH_SESSION_STRATEGY: database
       AUTH_PROVIDERS: github,credentials,saml
       FEATURE_TEAM_SSO: true
       FEATURE_TEAM_DSYNC: true
