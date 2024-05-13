@@ -12,9 +12,19 @@ on:
       - main
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
 
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install
+      - run: npm run check-lint
+      - run: npm run check-types
+      - run: npm run check-format
+      - run: npm run check-locale
+
+  test:
+    runs-on: ubuntu-latest
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
       NEXTAUTH_URL: http://localhost:4002
@@ -65,10 +75,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm install
-      - run: npm run check-lint
-      - run: npm run check-types
-      - run: npm run check-format
-      - run: npm run check-locale
       - run: npm run test
       - run: npm run build-ci
       - name: Prisma Generate & deploy
