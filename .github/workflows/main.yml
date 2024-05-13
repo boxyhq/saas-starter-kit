@@ -24,7 +24,7 @@ jobs:
       FEATURE_TEAM_SSO: true
       FEATURE_TEAM_DSYNC: true
       FEATURE_TEAM_AUDIT_LOG: true
-      FEATURE_TEAM_WEBHOOK: true
+      FEATURE_TEAM_WEBHOOK: false
       FEATURE_TEAM_API_KEY: true
       FEATURE_TEAM_DELETION: true
       FEATURE_TEAM_PAYMENTS: true
@@ -35,7 +35,9 @@ jobs:
       APP_URL: http://localhost:4002
       JACKSON_PRODUCT_ID: boxyhq
       JACKSON_WEBHOOK_SECRET: your-webhook-secret
+      JACKSON_API_KEY: secret
       DB_MANUAL_MIGRATION: true
+      API_URL: https://api.eu.boxyhq.com
 
     services:
       postgres:
