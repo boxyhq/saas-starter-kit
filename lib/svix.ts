@@ -8,9 +8,8 @@ const svix = new Svix(env.svix.apiKey);
 export const findOrCreateApp = async (name: string, uid: string) => {
   if (!env?.svix?.apiKey || !env.teamFeatures.webhook) {
     return;
-  } else {
-    return await svix.application.getOrCreate({ name, uid });
   }
+  return await svix.application.getOrCreate({ name, uid });
 };
 
 export const createWebhook = async (appId: string, data: EndpointIn) => {
