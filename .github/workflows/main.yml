@@ -72,7 +72,8 @@ jobs:
       - run: npm run check-locale
       - run: npm run test
       - run: npm run build-ci
-      - run: npx prisma migrate deploy
+      - name: Prisma Generate & deploy
+        run: npx prisma generate && npx prisma migrate deploy
       - name: Install playwright browser dependencies
         run: npx playwright install chromium
       - name: e2e tests
