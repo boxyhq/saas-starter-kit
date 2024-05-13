@@ -37,7 +37,7 @@ jobs:
       JACKSON_WEBHOOK_SECRET: your-webhook-secret
       JACKSON_API_KEY: secret
       DB_MANUAL_MIGRATION: true
-      API_URL: https://api.eu.boxyhq.com
+      # API_URL: https://api.eu.boxyhq.com
 
     services:
       postgres:
