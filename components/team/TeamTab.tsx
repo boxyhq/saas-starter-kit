@@ -119,7 +119,7 @@ const TeamTab = ({ activeTab, team, heading, teamFeatures }: TeamTabProps) => {
         {heading ? heading : team.name}
       </h2>
       <nav
-        className=" flex space-x-5 border-b border-gray-300"
+        className=" flex flex-wrap border-b border-gray-300"
         aria-label="Tabs"
       >
         {navigations.map((menu) => {
@@ -128,7 +128,7 @@ const TeamTab = ({ activeTab, team, heading, teamFeatures }: TeamTabProps) => {
               href={menu.href}
               key={menu.href}
               className={classNames(
-                'inline-flex items-center border-b-2 py-4 text-sm font-medium',
+                'inline-flex items-center border-b-2 py-2 md-py-4 mr-5 text-sm font-medium',
                 menu.active
                   ? 'border-gray-900 text-gray-700 dark:text-gray-100'
                   : 'border-transparent text-gray-500 hover:border-gray-300  hover:text-gray-700 hover:dark:text-gray-100'

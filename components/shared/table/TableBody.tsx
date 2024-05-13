@@ -11,6 +11,7 @@ const tdClassWrap = `break-all ${tdClassBase}`;
 interface TableBodyCell {
   wrap?: boolean;
   text?: string;
+  minWidth?: number;
   buttons?: {
     text: string;
     color?: string;
@@ -69,7 +70,10 @@ export const TableBody = ({
               return (
                 <td
                   key={row.id + '-td-' + index}
-                  className={cell.wrap ? tdClassWrap : tdClass}
+                  className={`${cell.wrap ? tdClassWrap : tdClass}`}
+                  style={
+                    cell.minWidth ? { minWidth: `${cell.minWidth}px` } : {}
+                  }
                 >
                   {!cell.buttons || cell.buttons?.length === 0 ? null : (
                     <div className="flex space-x-2">
