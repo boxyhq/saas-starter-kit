@@ -38,9 +38,8 @@ const APIKeys = ({ team }: APIKeysProps) => {
     setSelectedApiKey(null);
     setConfirmationDialogVisible(false);
 
-    const { error } = (await response.json()) as ApiResponse;
-
     if (!response.ok) {
+      const { error } = (await response.json()) as ApiResponse;
       toast.error(t(error?.message || 'Something went wrong'));
       return;
     }
