@@ -70,7 +70,8 @@ jobs:
       - run: npm run check-format
       - run: npm run check-locale
       - run: npm run test
-      - run: npm run build
+      - run: npm run build-ci
+      - run: npx prisma migrate deploy
       - name: Install playwright browser dependencies
         run: npx playwright install chromium
       - name: e2e tests
