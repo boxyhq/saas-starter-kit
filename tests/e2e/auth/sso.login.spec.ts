@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
 
@@ -100,26 +100,18 @@ test('SSO login with 2 teams & two SSO connection', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign In' }).click();
   await page.waitForSelector('text=Team Settings');
 
-  await page.goto(`/teams/${secondTeam.slug}/sso`);
-  await page.waitForURL(`/teams/${secondTeam.slug}/sso`);
-  await page.waitForSelector('text=Manage SSO Connections');
-
-  await page.waitForSelector('text=saml.example.com');
-  await page.getByLabel('Edit').click();
-  await page.waitForSelector('text=Edit SSO Connection');
-  await page.getByRole('button', { name: 'Delete' }).click();
-  await page.waitForSelector(
-    'text=Are you sure you want to delete the Connection? This action cannot be undone and will permanently delete the Connection.'
-  );
-  await page.getByRole('button', { name: 'Confirm' }).click();
-  await page.waitForSelector('text=Manage SSO Connections');
+  await deleteSSOConnection(page, secondTeam.slug);
 });
 
 test('Delete SSO connection', async ({ page }) => {
   await ssoLogin(page);
 
-  await page.goto(`/teams/${team.slug}/sso`);
-  await page.waitForURL(`/teams/${team.slug}/sso`);
+  await deleteSSOConnection(page, team.slug);
+});
+
+async function deleteSSOConnection(page: Page, teamSlug: string) {
+  await page.goto(`/teams/${teamSlug}/sso`);
+  await page.waitForURL(`/teams/${teamSlug}/sso`);
   await page.waitForSelector('text=Manage SSO Connections');
 
   await page.getByRole('link', { name: 'Single Sign-On' }).click();
@@ -131,9 +123,10 @@ test('Delete SSO connection', async ({ page }) => {
     'text=Are you sure you want to delete the Connection? This action cannot be undone and will permanently delete the Connection.'
   );
   await page.getByRole('button', { name: 'Confirm' }).click();
-});
+  await page.waitForSelector('text=Manage SSO Connections');
+}
 
-async function ssoLogin(page) {
+async function ssoLogin(page: Page) {
   await page.goto('/auth/login');
   await expect(page).toHaveURL('/auth/login');
   await page.getByRole('link', { name: 'Continue with SSO' }).click();
@@ -145,7 +138,11 @@ async function ssoLogin(page) {
   await page.waitForSelector('text=Team Settings');
 }
 
-async function createSSOConnection(page, teamSlug, metadataUrl) {
+async function createSSOConnection(
+  page: Page,
+  teamSlug: string,
+  metadataUrl: string
+) {
   await page.goto(`/teams/${teamSlug}/sso`);
   await page.waitForURL(`/teams/${teamSlug}/sso`);
   await page.waitForSelector('text=Manage SSO Connections');
