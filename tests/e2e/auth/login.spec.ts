@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
+import { signUp } from '../support/helper';
 
 const user = {
   name: 'Jackson',
@@ -14,20 +15,7 @@ const team = {
 } as const;
 
 test('Should signup a new user', async ({ page }) => {
-  await page.goto('/auth/join');
-  await expect(page).toHaveURL('/auth/join');
-  await expect(
-    page.getByRole('heading', { name: 'Get started' })
-  ).toBeVisible();
-  await page.getByPlaceholder('Your name').fill(user.name);
-  await page.getByPlaceholder('Team Name').fill(team.name);
-  await page.getByPlaceholder('example@boxyhq.com').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Create Account' }).click();
-  await page.waitForURL('/auth/login');
-  await page.waitForSelector(
-    'text=You have successfully created your account.'
-  );
+  await signUp(page, user.name, team.name, user.email, user.password);
 });
 
 test('Should login a user', async ({ page }) => {

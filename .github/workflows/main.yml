@@ -20,7 +20,7 @@ jobs:
       NEXTAUTH_URL: http://localhost:4002
       NEXTAUTH_SECRET: secret
       NEXTAUTH_SESSION_STRATEGY: database
-      AUTH_PROVIDERS: github,credentials,saml
+      AUTH_PROVIDERS: github,credentials,saml,idp-initiated
       FEATURE_TEAM_SSO: true
       FEATURE_TEAM_DSYNC: true
       FEATURE_TEAM_AUDIT_LOG: true

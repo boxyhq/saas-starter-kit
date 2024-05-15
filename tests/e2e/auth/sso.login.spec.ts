@@ -1,6 +1,12 @@
-import { Page, expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
+import {
+  createSSOConnection,
+  deleteSSOConnection,
+  signUp,
+  ssoLogin,
+} from '../support/helper';
 
 const user = {
   name: 'Jackson',
@@ -31,20 +37,8 @@ test.afterAll(async () => {
 });
 
 test('Sign up and create SSO connection', async ({ page }) => {
-  await page.goto('/auth/join');
-  await expect(page).toHaveURL('/auth/join');
-  await expect(
-    page.getByRole('heading', { name: 'Get started' })
-  ).toBeVisible();
-  await page.getByPlaceholder('Your Name').fill(user.name);
-  await page.getByPlaceholder('Team Name').fill(team.name);
-  await page.getByPlaceholder('example@boxyhq.com').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Create Account' }).click();
-  await page.waitForURL('/auth/login');
-  await page.waitForSelector(
-    'text=You have successfully created your account.'
-  );
+  await signUp(page, user.name, team.name, user.email, user.password);
+
   await page.getByPlaceholder('Email').fill(user.email);
   await page.getByPlaceholder('Password').fill(user.password);
   await page.getByRole('button', { name: 'Sign in' }).click();
@@ -55,11 +49,11 @@ test('Sign up and create SSO connection', async ({ page }) => {
 });
 
 test('Login with SSO', async ({ page }) => {
-  await ssoLogin(page);
+  await ssoLogin(page, user.email);
 });
 
 test('Create a new team', async ({ page }) => {
-  await ssoLogin(page);
+  await ssoLogin(page, user.email);
   await page.getByText('Example').first().click();
   await page.getByRole('link', { name: 'New Team' }).click();
   await page.waitForSelector('text=Create Team');
@@ -73,14 +67,14 @@ test('Create a new team', async ({ page }) => {
 });
 
 test('SSO login with 2 teams & one SSO connection', async ({ page }) => {
-  await ssoLogin(page);
+  await ssoLogin(page, user.email);
   await expect(
     page.getByRole('heading', { name: 'Team Settings' })
   ).toBeVisible();
 });
 
 test('Create SSO connection for new team', async ({ page }) => {
-  await ssoLogin(page);
+  await ssoLogin(page, user.email);
 
   await createSSOConnection(page, secondTeam.slug, ssoMetadataUrl[1]);
 });
@@ -104,53 +98,7 @@ test('SSO login with 2 teams & two SSO connection', async ({ page }) => {
 });
 
 test('Delete SSO connection', async ({ page }) => {
-  await ssoLogin(page);
+  await ssoLogin(page, user.email);
 
   await deleteSSOConnection(page, team.slug);
 });
-
-async function deleteSSOConnection(page: Page, teamSlug: string) {
-  await page.goto(`/teams/${teamSlug}/sso`);
-  await page.waitForURL(`/teams/${teamSlug}/sso`);
-  await page.waitForSelector('text=Manage SSO Connections');
-
-  await page.getByRole('link', { name: 'Single Sign-On' }).click();
-  await page.waitForSelector('text=saml.example.com');
-  await page.getByLabel('Edit').click();
-  await page.waitForSelector('text=Edit SSO Connection');
-  await page.getByRole('button', { name: 'Delete' }).click();
-  await page.waitForSelector(
-    'text=Are you sure you want to delete the Connection? This action cannot be undone and will permanently delete the Connection.'
-  );
-  await page.getByRole('button', { name: 'Confirm' }).click();
-  await page.waitForSelector('text=Manage SSO Connections');
-}
-
-async function ssoLogin(page: Page) {
-  await page.goto('/auth/login');
-  await expect(page).toHaveURL('/auth/login');
-  await page.getByRole('link', { name: 'Continue with SSO' }).click();
-  await page.waitForSelector('text=Sign in with SAML SSO');
-  await page.getByPlaceholder('user@boxyhq.com').fill(user.email);
-  await page.getByRole('button', { name: 'Continue with SSO' }).click();
-  await page.waitForSelector('text=SAML SSO Login');
-  await page.getByRole('button', { name: 'Sign In' }).click();
-  await page.waitForSelector('text=Team Settings');
-}
-
-async function createSSOConnection(
-  page: Page,
-  teamSlug: string,
-  metadataUrl: string
-) {
-  await page.goto(`/teams/${teamSlug}/sso`);
-  await page.waitForURL(`/teams/${teamSlug}/sso`);
-  await page.waitForSelector('text=Manage SSO Connections');
-  await page.getByRole('button', { name: 'New Connection' }).click();
-  await page.getByPlaceholder('Paste the Metadata URL here').fill(metadataUrl);
-  await page.getByRole('button', { name: 'Save' }).click();
-  await page.waitForURL(`/teams/${teamSlug}/sso`);
-  await expect(
-    page.getByRole('cell', { name: 'saml.example.com' })
-  ).toBeVisible();
-}
