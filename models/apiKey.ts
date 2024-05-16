@@ -64,3 +64,15 @@ export const getApiKey = async (apiKey: string) => {
     },
   });
 };
+
+export const getApiKeyById = async (id: string) => {
+  return prisma.apiKey.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      teamId: true,
+    },
+  });
+};
