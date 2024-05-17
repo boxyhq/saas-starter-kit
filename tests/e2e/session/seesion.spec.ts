@@ -22,7 +22,7 @@ test.afterAll(async () => {
   await prisma.$disconnect();
 });
 
-test.afterEach(async ({ page }) => {
+test.afterEach(async () => {
   await prisma.session.deleteMany();
 });
 
