@@ -31,9 +31,6 @@ const nextConfig = {
       },
     ];
   },
-  sentry: {
-    hideSourceMaps: true,
-  },
   async headers() {
     return [
       {
@@ -61,6 +58,7 @@ const nextConfig = {
 // For all available options: https://github.com/getsentry/sentry-webpack-plugin#options.
 const sentryWebpackPluginOptions = {
   silent: true,
+  hideSourceMaps: true,
 };
 
 module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
