@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { signUp } from '../support/helper';
+import { signIn, signUp } from '../support/helper';
 
 const user = {
   name: 'Jackson',
@@ -31,11 +31,8 @@ test.afterAll(async () => {
 test('Should be able to update team name', async ({ page }) => {
   await signUp(page, user.name, team.name, user.email, user.password);
 
-  await page.goto('/auth/login');
-  await page.waitForURL(`/auth/login`);
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password);
+
   await page.waitForURL(`/teams/${team.slug}/settings`);
   await page.waitForSelector('text=Team Settings');
 
@@ -55,11 +52,8 @@ test('Should be able to update team name', async ({ page }) => {
 test('Should not allow to update team name with empty value', async ({
   page,
 }) => {
-  await page.goto('/auth/login');
-  await page.waitForURL(`/auth/login`);
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password);
+
   await page.waitForURL(`/teams/${team.slug}/settings`);
   await page.waitForSelector('text=Team Settings');
 
@@ -72,11 +66,8 @@ test('Should not allow to update team name with empty value', async ({
 test('Should not allow to update team name with more than 50 characters', async ({
   page,
 }) => {
-  await page.goto('/auth/login');
-  await page.waitForURL(`/auth/login`);
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password);
+
   await page.waitForURL(`/teams/${team.slug}/settings`);
   await page.waitForSelector('text=Team Settings');
 
@@ -90,11 +81,8 @@ test('Should not allow to update team name with more than 50 characters', async 
 });
 
 test('Should be able to update team slug', async ({ page }) => {
-  await page.goto('/auth/login');
-  await page.waitForURL(`/auth/login`);
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password);
+
   await page.waitForURL(`/teams/${team.slug}/settings`);
   await page.waitForSelector('text=Team Settings');
 
@@ -112,11 +100,8 @@ test('Should be able to update team slug', async ({ page }) => {
 });
 
 test('Should not allow empty slug', async ({ page }) => {
-  await page.goto('/auth/login');
-  await page.waitForURL(`/auth/login`);
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password);
+
   await page.waitForURL(`/teams/${teamNewInfo.sluggified}/settings`);
   await page.waitForSelector('text=Team Settings');
 
@@ -129,11 +114,8 @@ test('Should not allow empty slug', async ({ page }) => {
 test('Should not allow to update team slug with more than 50 characters', async ({
   page,
 }) => {
-  await page.goto('/auth/login');
-  await page.waitForURL(`/auth/login`);
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password);
+
   await page.waitForURL(`/teams/${teamNewInfo.sluggified}/settings`);
   await page.waitForSelector('text=Team Settings');
 
@@ -147,11 +129,8 @@ test('Should not allow to update team slug with more than 50 characters', async 
 });
 
 test('Should be able to set domain in team settings', async ({ page }) => {
-  await page.goto('/auth/login');
-  await page.waitForURL(`/auth/login`);
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password);
+
   await page.waitForURL(`/teams/${teamNewInfo.sluggified}/settings`);
   await page.waitForSelector('text=Team Settings');
 
@@ -170,11 +149,8 @@ test('Should be able to set domain in team settings', async ({ page }) => {
 test('Should not allow to set domain with more than 255 characters', async ({
   page,
 }) => {
-  await page.goto('/auth/login');
-  await page.waitForURL(`/auth/login`);
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password);
+
   await page.waitForURL(`/teams/${teamNewInfo.sluggified}/settings`);
   await page.waitForSelector('text=Team Settings');
 
@@ -188,11 +164,8 @@ test('Should not allow to set domain with more than 255 characters', async ({
 });
 
 test('Should not allow to set invalid domain', async ({ page }) => {
-  await page.goto('/auth/login');
-  await page.waitForURL(`/auth/login`);
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password);
+
   await page.waitForURL(`/teams/${teamNewInfo.sluggified}/settings`);
   await page.waitForSelector('text=Team Settings');
 

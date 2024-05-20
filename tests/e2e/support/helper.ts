@@ -58,3 +58,11 @@ export async function signUp(page, name, teamName, email, password) {
     'text=You have successfully created your account.'
   );
 }
+
+export async function signIn(page, email, password) {
+  await page.goto('/auth/login');
+  await page.waitForURL('/auth/login');
+  await page.getByPlaceholder('Email').fill(email);
+  await page.getByPlaceholder('Password').fill(password);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+}
