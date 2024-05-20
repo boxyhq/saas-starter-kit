@@ -1,5 +1,16 @@
 import { Page } from '@playwright/test';
 
+export const user = {
+  name: 'Jackson',
+  email: 'jackson@example.com',
+  password: 'password',
+} as const;
+
+export const team = {
+  name: 'Example',
+  slug: 'example',
+} as const;
+
 export async function createSSOConnection(
   page: Page,
   teamSlug: string,

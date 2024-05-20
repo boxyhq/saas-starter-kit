@@ -1,18 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { signIn, signUp } from '../support/helper';
-
-const user = {
-  name: 'Jackson',
-  email: 'jackson@example.com',
-  password: 'password',
-} as const;
-
-const team = {
-  name: 'Example',
-  slug: 'example',
-} as const;
+import { signIn, signUp, user, team } from '../support/helper';
 
 const teamNewInfo = {
   name: 'New Team Name',

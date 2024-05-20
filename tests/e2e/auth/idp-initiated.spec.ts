@@ -5,18 +5,9 @@ import {
   createSSOConnection,
   deleteSSOConnection,
   signUp,
+  user,
+  team,
 } from '../support/helper';
-
-const user = {
-  name: 'Jackson',
-  email: 'jackson@example.com',
-  password: 'password',
-} as const;
-
-const team = {
-  name: 'Example',
-  slug: 'example',
-} as const;
 
 const ssoMetadataUrl = `${process.env.MOCKSAML_ORIGIN}/api/saml/metadata`;
 const idpLoginUrl = `${process.env.MOCKSAML_ORIGIN}/saml/login`;

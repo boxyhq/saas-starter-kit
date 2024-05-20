@@ -1,18 +1,14 @@
 import { expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { signUp } from '../support/helper';
+import { signUp, user, team } from '../support/helper';
 
-const user = {
-  name: 'Jackson',
-  email: 'jackson@boxyhq.com',
-  password: 'password',
-} as const;
-
-const team = {
-  name: 'BoxyHQ',
-  slug: 'boxyhq',
-} as const;
+test.afterAll(async () => {
+  await prisma.teamMember.deleteMany();
+  await prisma.team.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.$disconnect();
+});
 
 test('Should signup a new user', async ({ page }) => {
   await signUp(page, user.name, team.name, user.email, user.password);

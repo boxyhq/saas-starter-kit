@@ -1,18 +1,7 @@
 import { chromium, expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { signUp } from '../support/helper';
-
-const user = {
-  name: 'Jackson',
-  email: 'jackson@example.com',
-  password: 'password',
-} as const;
-
-const team = {
-  name: 'Example',
-  slug: 'example',
-} as const;
+import { signUp, user, team } from '../support/helper';
 
 test.afterAll(async () => {
   await prisma.teamMember.deleteMany();
