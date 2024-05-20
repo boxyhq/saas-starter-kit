@@ -35,8 +35,6 @@ test('Session is shown in security page ', async ({ page }) => {
   await page.waitForURL(`/teams/${team.slug}/settings`);
   await page.waitForSelector('text=Team Settings');
 
-  console.log('Sign up and create SSO connection');
-
   await page.goto(`/settings/security`);
   await page.waitForURL(`/settings/security`);
 
