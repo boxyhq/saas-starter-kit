@@ -6,6 +6,7 @@ import { recordMetric } from '@/lib/metrics';
 import env from '@/lib/env';
 import { ApiError } from '@/lib/errors';
 import { deleteApiKeySchema, validateWithSchema } from '@/lib/zod';
+import { throwIfNoAccessToApiKey } from '@/lib/guards/team-api-key';
 
 export default async function handler(
   req: NextApiRequest,
@@ -43,6 +44,8 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   throwIfNotAllowed(user, 'team_api_key', 'delete');
 
   const { apiKeyId } = validateWithSchema(deleteApiKeySchema, req.query);
+
+  await throwIfNoAccessToApiKey(apiKeyId, user.team.id);
 
   await deleteApiKey(apiKeyId);
 
