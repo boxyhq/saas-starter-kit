@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { signUp, user, team, signIn } from '../support/helper';
+import { signUp, user, team, signIn, loggedInCheck } from '../support/helper';
 
 const apiKeyName = 'New Api Key';
 
@@ -17,8 +17,7 @@ test('Should be able to create new API Key', async ({ page }) => {
 
   await signIn(page, user.email, user.password);
 
-  await page.waitForURL(`/teams/${team.slug}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, team.slug);
 
   await page.goto(`/teams/${team.slug}/api-keys`);
   await page.waitForURL(`/teams/${team.slug}/api-keys`);
@@ -40,8 +39,7 @@ test('Should be able to create new API Key', async ({ page }) => {
 test('Should be able to delete API Key', async ({ page }) => {
   await signIn(page, user.email, user.password);
 
-  await page.waitForURL(`/teams/${team.slug}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, team.slug);
 
   await page.goto(`/teams/${team.slug}/api-keys`);
   await page.waitForURL(`/teams/${team.slug}/api-keys`);

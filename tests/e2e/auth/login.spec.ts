@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { signUp, user, team } from '../support/helper';
+import { signUp, user, team, loggedInCheck } from '../support/helper';
 
 test.afterAll(async () => {
   await prisma.teamMember.deleteMany();
@@ -24,8 +24,7 @@ test('Should login a user', async ({ page }) => {
   await page.getByPlaceholder('Password').fill(user.password);
   await page.getByRole('button', { name: 'Sign in' }).click();
   await page.waitForURL('/dashboard');
-  await page.waitForURL(`/teams/${team.slug}/settings`);
-  await page.waitForSelector('text=Settings');
+  await loggedInCheck(page, team.slug);
 });
 
 test.afterAll(async () => {

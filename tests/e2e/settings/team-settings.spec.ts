@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { signIn, signUp, user, team } from '../support/helper';
+import { signIn, signUp, user, team, loggedInCheck } from '../support/helper';
 
 const teamNewInfo = {
   name: 'New Team Name',
@@ -22,8 +22,7 @@ test('Should be able to update team name', async ({ page }) => {
 
   await signIn(page, user.email, user.password);
 
-  await page.waitForURL(`/teams/${team.slug}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, team.slug);
 
   await page.locator('input[name="name"]').fill(teamNewInfo.name);
   await page.getByRole('button', { name: 'Save Changes' }).click();

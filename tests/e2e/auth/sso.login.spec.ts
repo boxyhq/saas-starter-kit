@@ -8,6 +8,7 @@ import {
   ssoLogin,
   user,
   team,
+  loggedInCheck,
 } from '../support/helper';
 
 const secondTeam = {
@@ -33,8 +34,7 @@ test('Sign up and create SSO connection', async ({ page }) => {
   await page.getByPlaceholder('Email').fill(user.email);
   await page.getByPlaceholder('Password').fill(user.password);
   await page.getByRole('button', { name: 'Sign in' }).click();
-  await page.waitForURL(`/teams/${team.slug}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, team.slug);
 
   await createSSOConnection(page, team.slug, ssoMetadataUrl[0]);
 });

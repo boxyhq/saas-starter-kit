@@ -1,7 +1,7 @@
 import { chromium, expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { signUp, user, team } from '../support/helper';
+import { signUp, user, team, loggedInCheck } from '../support/helper';
 
 test.afterAll(async () => {
   await prisma.teamMember.deleteMany();
@@ -21,8 +21,7 @@ test('Session is shown in security page ', async ({ page }) => {
   await page.getByPlaceholder('Email').fill(user.email);
   await page.getByPlaceholder('Password').fill(user.password);
   await page.getByRole('button', { name: 'Sign in' }).click();
-  await page.waitForURL(`/teams/${team.slug}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, team.slug);
 
   await page.goto(`/settings/security`);
   await page.waitForURL(`/settings/security`);
@@ -37,8 +36,7 @@ test('2 session are shown in security page ', async ({ page }) => {
   await page.getByPlaceholder('Email').fill(user.email);
   await page.getByPlaceholder('Password').fill(user.password);
   await page.getByRole('button', { name: 'Sign in' }).click();
-  await page.waitForURL(`/teams/${team.slug}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, team.slug);
 
   const browser1 = await chromium.launch();
   const page1 = await browser1.newPage();
@@ -72,8 +70,7 @@ test('On Remove session user logs out', async ({ page }) => {
   await page.getByPlaceholder('Email').fill(user.email);
   await page.getByPlaceholder('Password').fill(user.password);
   await page.getByRole('button', { name: 'Sign in' }).click();
-  await page.waitForURL(`/teams/${team.slug}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, team.slug);
 
   const browser1 = await chromium.launch();
   const page1 = await browser1.newPage();
