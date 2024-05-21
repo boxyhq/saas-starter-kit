@@ -302,3 +302,26 @@ test('Should be able to remove a member', async ({ page }) => {
   await page.getByRole('button', { name: 'Delete' }).click();
   await expect(page.getByText('Member deleted successfully.')).toBeVisible();
 });
+
+test('Should not allow invalid email to be invited', async ({ page }) => {
+  await signIn(page, user.email, user.password);
+
+  await loggedInCheck(page, team.slug);
+
+  await page.goto(`/teams/${team.slug}/members`);
+  await page.waitForURL(`/teams/${team.slug}/members`);
+
+  await expect(page.getByRole('heading', { name: 'Members' })).toBeVisible();
+  await page.getByRole('button', { name: 'Invite Member' }).click();
+  await expect(
+    page.getByRole('heading', { name: 'Invite New Member' })
+  ).toBeVisible();
+
+  await page
+    .getByPlaceholder('jackson@boxyhq.com')
+    .fill('aaaaaaaaaaaaaaaaaaaa@.com');
+
+  await expect(
+    page.getByText('MemberAdminOwnerInvite').isDisabled()
+  ).toBeTruthy();
+});
