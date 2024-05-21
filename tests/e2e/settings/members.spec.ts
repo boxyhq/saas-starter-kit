@@ -284,3 +284,21 @@ test('Should not allow to invite a member with invalid domain', async ({
     )
   ).toBeVisible();
 });
+
+test('Should be able to remove a member', async ({ page }) => {
+  await signIn(page, user.email, user.password);
+
+  await loggedInCheck(page, team.slug);
+
+  await page.goto(`/teams/${team.slug}/members`);
+  await page.waitForURL(`/teams/${team.slug}/members`);
+
+  await expect(
+    await page.getByRole('heading', { name: 'Members' })
+  ).toBeVisible();
+
+  await page.getByRole('cell', { name: 'Remove' }).first().click();
+  await page.waitForSelector('text=Confirm deletion of member');
+  await page.getByRole('button', { name: 'Delete' }).click();
+  await expect(page.getByText('Member deleted successfully.')).toBeVisible();
+});
