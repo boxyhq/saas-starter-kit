@@ -322,6 +322,6 @@ test('Should not allow invalid email to be invited', async ({ page }) => {
     .fill('aaaaaaaaaaaaaaaaaaaa@.com');
 
   await expect(
-    page.getByText('MemberAdminOwnerInvite').isDisabled()
+    await page.getByRole('button', { name: 'Invite', exact: true }).isDisabled()
   ).toBeTruthy();
 });
