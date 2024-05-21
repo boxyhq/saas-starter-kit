@@ -46,8 +46,7 @@ test('2 session are shown in security page ', async ({ page }) => {
   await page1.getByPlaceholder('Email').fill(user.email);
   await page1.getByPlaceholder('Password').fill(user.password);
   await page1.getByRole('button', { name: 'Sign in' }).click();
-  await page1.waitForURL(`/teams/${team.slug}/settings`);
-  await page1.waitForSelector('text=Team Settings');
+  await loggedInCheck(page1, team.slug);
 
   await page1.goto(`/settings/security`);
   await page1.waitForURL(`/settings/security`);
@@ -80,8 +79,7 @@ test('On Remove session user logs out', async ({ page }) => {
   await page1.getByPlaceholder('Email').fill(user.email);
   await page1.getByPlaceholder('Password').fill(user.password);
   await page1.getByRole('button', { name: 'Sign in' }).click();
-  await page1.waitForURL(`/teams/${team.slug}/settings`);
-  await page1.waitForSelector('text=Team Settings');
+  await loggedInCheck(page1, team.slug);
 
   await page1.goto(`/settings/security`);
   await page1.waitForURL(`/settings/security`);

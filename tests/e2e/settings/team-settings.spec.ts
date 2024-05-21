@@ -42,8 +42,7 @@ test('Should not allow to update team name with empty value', async ({
 }) => {
   await signIn(page, user.email, user.password);
 
-  await page.waitForURL(`/teams/${team.slug}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, team.slug);
 
   await page.locator('input[name="name"]').fill('');
   await expect(
@@ -56,8 +55,7 @@ test('Should not allow to update team name with more than 50 characters', async 
 }) => {
   await signIn(page, user.email, user.password);
 
-  await page.waitForURL(`/teams/${team.slug}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, team.slug);
 
   await page.locator('input[name="name"]').fill('a'.repeat(51));
   await expect(
@@ -71,8 +69,7 @@ test('Should not allow to update team name with more than 50 characters', async 
 test('Should be able to update team slug', async ({ page }) => {
   await signIn(page, user.email, user.password);
 
-  await page.waitForURL(`/teams/${team.slug}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, team.slug);
 
   await page.locator('input[name="slug"]').fill(teamNewInfo.slug);
   await page.getByRole('button', { name: 'Save Changes' }).click();
@@ -90,8 +87,7 @@ test('Should be able to update team slug', async ({ page }) => {
 test('Should not allow empty slug', async ({ page }) => {
   await signIn(page, user.email, user.password);
 
-  await page.waitForURL(`/teams/${teamNewInfo.sluggified}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, teamNewInfo.sluggified);
 
   await page.locator('input[name="slug"]').fill('');
   await expect(
@@ -104,8 +100,7 @@ test('Should not allow to update team slug with more than 50 characters', async 
 }) => {
   await signIn(page, user.email, user.password);
 
-  await page.waitForURL(`/teams/${teamNewInfo.sluggified}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, teamNewInfo.sluggified);
 
   await page.locator('input[name="slug"]').fill('a'.repeat(51));
   await expect(
@@ -119,8 +114,7 @@ test('Should not allow to update team slug with more than 50 characters', async 
 test('Should be able to set domain in team settings', async ({ page }) => {
   await signIn(page, user.email, user.password);
 
-  await page.waitForURL(`/teams/${teamNewInfo.sluggified}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, teamNewInfo.sluggified);
 
   await page.locator('input[name="domain"]').fill('example.com');
   await page.getByRole('button', { name: 'Save Changes' }).click();
@@ -139,8 +133,7 @@ test('Should not allow to set domain with more than 255 characters', async ({
 }) => {
   await signIn(page, user.email, user.password);
 
-  await page.waitForURL(`/teams/${teamNewInfo.sluggified}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, teamNewInfo.sluggified);
 
   await page.locator('input[name="domain"]').fill('a'.repeat(256) + '.com');
   await expect(
@@ -154,8 +147,7 @@ test('Should not allow to set domain with more than 255 characters', async ({
 test('Should not allow to set invalid domain', async ({ page }) => {
   await signIn(page, user.email, user.password);
 
-  await page.waitForURL(`/teams/${teamNewInfo.sluggified}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  await loggedInCheck(page, teamNewInfo.sluggified);
 
   await page.locator('input[name="domain"]').fill('example');
   await expect(

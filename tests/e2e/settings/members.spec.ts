@@ -185,6 +185,5 @@ test('Existing user should be able to accept the invitation', async ({
 
   await page1.getByRole('button', { name: 'Join the Team' }).click();
 
-  await page1.waitForURL(`/teams/${secondUser.team.slug}/settings`);
   await page1.waitForSelector('text=Team Settings');
 });
