@@ -78,11 +78,7 @@ export async function signIn(page, email, password) {
   await page.getByRole('button', { name: 'Sign in' }).click();
 }
 
-export async function loggedInCheck(
-  page,
-  teamSlug: string,
-  customRoute?: string
-) {
-  await page.waitForURL(customRoute || `/teams/${teamSlug}/settings`);
+export async function loggedInCheck(page, teamSlug: string) {
+  await page.waitForURL(`/teams/${teamSlug}/settings`);
   await page.waitForSelector('text=Team Settings');
 }

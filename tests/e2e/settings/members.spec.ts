@@ -3,6 +3,8 @@ import { chromium, expect, test } from '@playwright/test';
 import { prisma } from '@/lib/prisma';
 import { signUp, user, team, signIn, loggedInCheck } from '../support/helper';
 
+let domainInviteLink = '';
+
 const invitedUser = {
   name: 'Admin',
   email: 'admin@example.com',
@@ -17,6 +19,18 @@ const secondUser = {
     name: 'Second Team',
     slug: 'second-team',
   },
+};
+
+const domainUser = {
+  name: 'DomainUser',
+  email: 'domain@example.com',
+  password: 'domain@123',
+};
+
+const invalidDomainUser = {
+  name: 'InvalidDomainUser',
+  email: 'user@invalid.com',
+  password: 'password',
 };
 
 test.afterAll(async () => {
@@ -186,4 +200,87 @@ test('Existing user should be able to accept the invitation', async ({
   await page1.getByRole('button', { name: 'Join the Team' }).click();
 
   await page1.waitForSelector('text=Team Settings');
+  await page1.close();
+});
+
+test('Should be able to create invite using domain', async ({ page }) => {
+  await signIn(page, user.email, user.password);
+
+  await loggedInCheck(page, team.slug);
+
+  await page.goto(`/teams/${team.slug}/members`);
+  await page.waitForURL(`/teams/${team.slug}/members`);
+
+  await page.getByRole('button', { name: 'Invite Member' }).click();
+  await page.waitForSelector('text=Invite New Member');
+
+  await page
+    .getByPlaceholder('Restrict domain: boxyhq.com')
+    .fill('example.com');
+  await page.getByRole('button', { name: 'Create Link' }).click();
+
+  await expect(page.getByText('Share your team invite link')).toBeVisible();
+  domainInviteLink = await page.getByRole('textbox').nth(1).inputValue();
+
+  const browser1 = await chromium.launch();
+  const page1 = await browser1.newPage();
+
+  await page1.goto(domainInviteLink);
+
+  await expect(
+    page1.getByRole('heading', { name: 'Example is inviting you to' })
+  ).toBeVisible();
+
+  await page1.getByRole('button', { name: 'Create a new account' }).click();
+  await page1.getByPlaceholder('Your Name').fill(domainUser.name);
+  await page1.getByPlaceholder('Email').fill(domainUser.email);
+  await page1.getByPlaceholder('Password').fill(domainUser.password);
+  await page1.getByRole('button', { name: 'Create Account' }).click();
+
+  await expect(page1.getByText('You have successfully created')).toBeVisible();
+
+  await page1.getByPlaceholder('Email').fill(domainUser.email);
+  await page1.getByPlaceholder('Password').fill(domainUser.password);
+  await page1.getByRole('button', { name: 'Sign in' }).click();
+
+  await expect(
+    page1.getByRole('heading', { name: 'Example is inviting you to' })
+  ).toBeVisible();
+
+  await page1.getByRole('button', { name: 'Join the Team' }).click();
+
+  await page1.waitForSelector('text=Team Settings');
+  await page1.close();
+});
+
+test('Should not allow to invite a member with invalid domain', async ({
+  page,
+}) => {
+  await page.goto(domainInviteLink);
+
+  await expect(
+    page.getByRole('heading', { name: 'Example is inviting you to' })
+  ).toBeVisible();
+
+  await page.getByRole('button', { name: 'Create a new account' }).click();
+  await page.getByPlaceholder('Your Name').fill(invalidDomainUser.name);
+  await page.getByPlaceholder('Email').fill(invalidDomainUser.email);
+  await page.getByPlaceholder('Password').fill(invalidDomainUser.password);
+  await page.getByRole('button', { name: 'Create Account' }).click();
+
+  await expect(page.getByText('You have successfully created')).toBeVisible();
+
+  await page.getByPlaceholder('Email').fill(invalidDomainUser.email);
+  await page.getByPlaceholder('Password').fill(invalidDomainUser.password);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+
+  await expect(
+    page.getByRole('heading', { name: 'Example is inviting you to' })
+  ).toBeVisible();
+
+  await expect(
+    page.getByText(
+      `Your email address domain ${invalidDomainUser.email.split('@')[1]} is not allowed`
+    )
+  ).toBeVisible();
 });
