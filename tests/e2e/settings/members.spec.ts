@@ -121,9 +121,7 @@ test('New memeber should be able to accept the invitation', async ({
 
   await expect(page.getByText('You have successfully created')).toBeVisible();
 
-  await page.getByPlaceholder('Email').fill(invitedUser.email);
-  await page.getByPlaceholder('Password').fill(invitedUser.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, invitedUser.email, invitedUser.password, true);
 
   await expect(
     page.getByRole('heading', { name: 'Example is inviting you to' })
@@ -193,9 +191,7 @@ test('Existing user should be able to accept the invitation', async ({
 
   await page1.getByRole('button', { name: 'Log in using an existing' }).click();
 
-  await page1.getByPlaceholder('Email').fill(secondUser.email);
-  await page1.getByPlaceholder('Password').fill(secondUser.password);
-  await page1.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page1, secondUser.email, secondUser.password, true);
 
   await expect(
     page1.getByRole('heading', { name: 'Example is inviting you to' })
@@ -291,9 +287,7 @@ test('Should not allow to invite a member with invalid domain', async ({
 
   await expect(page.getByText('You have successfully created')).toBeVisible();
 
-  await page.getByPlaceholder('Email').fill(invalidDomainUser.email);
-  await page.getByPlaceholder('Password').fill(invalidDomainUser.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, invalidDomainUser.email, invalidDomainUser.password, true);
 
   await expect(
     page.getByRole('heading', { name: 'Example is inviting you to' })
