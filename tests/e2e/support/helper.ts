@@ -71,9 +71,11 @@ export async function signUp(page, name, teamName, email, password) {
   );
 }
 
-export async function signIn(page, email, password) {
-  await page.goto('/auth/login');
-  await page.waitForURL('/auth/login');
+export async function signIn(page, email, password, skipGotoPage = false) {
+  if (!skipGotoPage) {
+    await page.goto('/auth/login');
+    await page.waitForURL('/auth/login');
+  }
   await page.getByPlaceholder('Email').fill(email);
   await page.getByPlaceholder('Password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
