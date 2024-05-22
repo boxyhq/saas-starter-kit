@@ -1,7 +1,14 @@
 import { chromium, expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { signUp, user, team, loggedInCheck, cleanup } from '../support/helper';
+import {
+  signUp,
+  user,
+  team,
+  loggedInCheck,
+  cleanup,
+  signIn,
+} from '../support/helper';
 
 test.afterAll(async () => {
   await cleanup();
@@ -14,9 +21,7 @@ test.afterEach(async () => {
 test('Session is shown in security page ', async ({ page }) => {
   await signUp(page, user.name, team.name, user.email, user.password);
 
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password, true);
   await loggedInCheck(page, team.slug);
 
   await page.goto(`/settings/security`);
@@ -29,19 +34,13 @@ test('Session is shown in security page ', async ({ page }) => {
 test('2 session are shown in security page ', async ({ page }) => {
   await page.goto('/auth/login');
 
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password, true);
   await loggedInCheck(page, team.slug);
 
   const browser1 = await chromium.launch();
   const page1 = await browser1.newPage();
 
-  await page1.goto('/auth/login');
-  await page1.waitForURL('/auth/login');
-  await page1.getByPlaceholder('Email').fill(user.email);
-  await page1.getByPlaceholder('Password').fill(user.password);
-  await page1.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page1, user.email, user.password);
   await loggedInCheck(page1, team.slug);
 
   await page1.goto(`/settings/security`);
@@ -62,19 +61,13 @@ test('2 session are shown in security page ', async ({ page }) => {
 test('On Remove session user logs out', async ({ page }) => {
   await page.goto('/auth/login');
 
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password, true);
   await loggedInCheck(page, team.slug);
 
   const browser1 = await chromium.launch();
   const page1 = await browser1.newPage();
 
-  await page1.goto('/auth/login');
-  await page1.waitForURL('/auth/login');
-  await page1.getByPlaceholder('Email').fill(user.email);
-  await page1.getByPlaceholder('Password').fill(user.password);
-  await page1.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page1, user.email, user.password);
   await loggedInCheck(page1, team.slug);
 
   await page1.goto(`/settings/security`);

@@ -8,6 +8,7 @@ import {
   team,
   loggedInCheck,
   cleanup,
+  signIn,
 } from '../support/helper';
 
 const secondTeam = {
@@ -15,7 +16,7 @@ const secondTeam = {
   slug: 'boxyhq',
 } as const;
 
-const ssoMetadataUrl = [
+const SSO_METADATA_URL = [
   `${process.env.MOCKSAML_ORIGIN}/api/saml/metadata`,
   `${process.env.MOCKSAML_ORIGIN}/api/namespace/test/saml/metadata`,
 ];
@@ -27,12 +28,10 @@ test.afterAll(async () => {
 test('Sign up and create SSO connection', async ({ page }) => {
   await signUp(page, user.name, team.name, user.email, user.password);
 
-  await page.getByPlaceholder('Email').fill(user.email);
-  await page.getByPlaceholder('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await signIn(page, user.email, user.password, true);
   await loggedInCheck(page, team.slug);
 
-  await createSSOConnection(page, team.slug, ssoMetadataUrl[0]);
+  await createSSOConnection(page, team.slug, SSO_METADATA_URL[0]);
 });
 
 test('Login with SSO', async ({ page }) => {
@@ -63,7 +62,7 @@ test('SSO login with 2 teams & one SSO connection', async ({ page }) => {
 test('Create SSO connection for new team', async ({ page }) => {
   await ssoLogin(page, user.email);
 
-  await createSSOConnection(page, secondTeam.slug, ssoMetadataUrl[1]);
+  await createSSOConnection(page, secondTeam.slug, SSO_METADATA_URL[1]);
 });
 
 test('SSO login with 2 teams & two SSO connection', async ({ page }) => {
