@@ -32,10 +32,10 @@ test('Should be able to create new API Key', async ({ page }) => {
     .getByLabel('Modal')
     .getByRole('button', { name: 'Create API Key' })
     .click();
-  await expect(await page.getByRole('textbox').inputValue()).toBeTruthy();
+  await expect(page.getByRole('textbox').inputValue()).toBeTruthy();
 
   await page.reload();
-  await expect(await page.locator(`text=${apiKeyName}`).first()).toBeVisible();
+  await expect(page.locator(`text=${apiKeyName}`).first()).toBeVisible();
 });
 
 test('Should be able to delete API Key', async ({ page }) => {
@@ -47,7 +47,7 @@ test('Should be able to delete API Key', async ({ page }) => {
   await page.waitForURL(`/teams/${team.slug}/api-keys`);
   await page.waitForSelector('text=API Keys');
 
-  await expect(await page.locator(`text=${apiKeyName}`).first()).toBeVisible();
+  await expect(page.locator(`text=${apiKeyName}`).first()).toBeVisible();
 
   await page.getByRole('button', { name: 'Revoke' }).click();
   await page.waitForSelector(
