@@ -237,9 +237,26 @@ test('Should be able to create invite using domain', async ({ page }) => {
   await page1.getByPlaceholder('Password').fill(domainUser.password);
   await page1.getByRole('button', { name: 'Create Account' }).click();
 
-  await expect(page1.getByText('You have successfully created')).toBeVisible();
+  await expect(
+    await page1.getByText('You have successfully created')
+  ).toBeVisible();
 
-  await page1.getByPlaceholder('Email').fill(domainUser.email);
+  expect(
+    await page1.getByText('Welcome back', {
+      exact: true,
+    })
+  ).toBeDefined();
+
+  await page1
+    .getByRole('textbox', {
+      name: 'Email',
+    })
+    .click();
+  await page1
+    .getByRole('textbox', {
+      name: 'Email',
+    })
+    .fill(domainUser.email);
   await page1.getByPlaceholder('Password').fill(domainUser.password);
   await page1.getByRole('button', { name: 'Sign in' }).click();
 
