@@ -1,16 +1,18 @@
 import { expect, test } from '@playwright/test';
-
-import { prisma } from '@/lib/prisma';
-import { signUp, user, team, signIn, loggedInCheck } from '../support/helper';
+import {
+  signUp,
+  user,
+  team,
+  signIn,
+  loggedInCheck,
+  cleanup,
+} from '../support/helper';
 
 const DIRECTORY_NAME = 'TestConnection';
 const DIRECTORY_NAME_NEW = 'TestConnection1';
 
 test.afterAll(async () => {
-  await prisma.teamMember.deleteMany();
-  await prisma.team.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.$disconnect();
+  await cleanup();
 });
 
 test('Should be able to create DSync connection', async ({ page }) => {

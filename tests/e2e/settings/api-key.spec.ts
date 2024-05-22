@@ -1,15 +1,17 @@
 import { expect, test } from '@playwright/test';
-
-import { prisma } from '@/lib/prisma';
-import { signUp, user, team, signIn, loggedInCheck } from '../support/helper';
+import {
+  signUp,
+  user,
+  team,
+  signIn,
+  loggedInCheck,
+  cleanup,
+} from '../support/helper';
 
 const apiKeyName = 'New Api Key';
 
 test.afterAll(async () => {
-  await prisma.teamMember.deleteMany();
-  await prisma.team.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.$disconnect();
+  await cleanup();
 });
 
 test('Should be able to create new API Key', async ({ page }) => {

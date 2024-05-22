@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { prisma } from '@/lib/prisma';
 
 export const user = {
   name: 'Jackson',
@@ -81,4 +82,12 @@ export async function signIn(page, email, password) {
 export async function loggedInCheck(page, teamSlug: string) {
   await page.waitForURL(`/teams/${teamSlug}/settings`);
   await page.waitForSelector('text=Team Settings');
+}
+
+export async function cleanup() {
+  await prisma.teamMember.deleteMany();
+  await prisma.team.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.session.deleteMany();
+  await prisma.$disconnect();
 }

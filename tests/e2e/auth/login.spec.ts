@@ -1,13 +1,10 @@
 import { expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { signUp, user, team, loggedInCheck } from '../support/helper';
+import { signUp, user, team, loggedInCheck, cleanup } from '../support/helper';
 
 test.afterAll(async () => {
-  await prisma.teamMember.deleteMany();
-  await prisma.team.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.$disconnect();
+  await cleanup();
 });
 
 test('Should signup a new user', async ({ page }) => {

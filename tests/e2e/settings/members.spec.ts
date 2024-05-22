@@ -1,7 +1,14 @@
 import { chromium, expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { signUp, user, team, signIn, loggedInCheck } from '../support/helper';
+import {
+  signUp,
+  user,
+  team,
+  signIn,
+  loggedInCheck,
+  cleanup,
+} from '../support/helper';
 
 let domainInviteLink = '';
 
@@ -34,10 +41,7 @@ const invalidDomainUser = {
 };
 
 test.afterAll(async () => {
-  await prisma.teamMember.deleteMany();
-  await prisma.team.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.$disconnect();
+  await cleanup();
 });
 
 test('Should be able to get the list of members', async ({ page }) => {

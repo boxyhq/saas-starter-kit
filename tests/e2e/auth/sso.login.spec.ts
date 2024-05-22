@@ -1,6 +1,4 @@
 import { expect, test } from '@playwright/test';
-
-import { prisma } from '@/lib/prisma';
 import {
   createSSOConnection,
   deleteSSOConnection,
@@ -9,6 +7,7 @@ import {
   user,
   team,
   loggedInCheck,
+  cleanup,
 } from '../support/helper';
 
 const secondTeam = {
@@ -22,10 +21,7 @@ const ssoMetadataUrl = [
 ];
 
 test.afterAll(async () => {
-  await prisma.teamMember.deleteMany();
-  await prisma.team.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.$disconnect();
+  await cleanup();
 });
 
 test('Sign up and create SSO connection', async ({ page }) => {

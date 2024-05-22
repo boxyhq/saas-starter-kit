@@ -1,6 +1,4 @@
 import { expect, test } from '@playwright/test';
-
-import { prisma } from '@/lib/prisma';
 import {
   createSSOConnection,
   deleteSSOConnection,
@@ -8,6 +6,7 @@ import {
   user,
   team,
   loggedInCheck,
+  cleanup,
 } from '../support/helper';
 
 const ssoMetadataUrl = `${process.env.MOCKSAML_ORIGIN}/api/saml/metadata`;
@@ -15,10 +14,7 @@ const idpLoginUrl = `${process.env.MOCKSAML_ORIGIN}/saml/login`;
 const acsUrl = `${process.env.APP_URL}/api/oauth/saml`;
 
 test.afterAll(async () => {
-  await prisma.teamMember.deleteMany();
-  await prisma.team.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.$disconnect();
+  await cleanup();
 });
 
 test('Sign up and create SSO connection', async ({ page }) => {

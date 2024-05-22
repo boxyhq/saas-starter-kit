@@ -1,7 +1,12 @@
 import { expect, test } from '@playwright/test';
-
-import { prisma } from '@/lib/prisma';
-import { signIn, signUp, user, team, loggedInCheck } from '../support/helper';
+import {
+  signIn,
+  signUp,
+  user,
+  team,
+  loggedInCheck,
+  cleanup,
+} from '../support/helper';
 
 const teamNewInfo = {
   name: 'New Team Name',
@@ -10,11 +15,7 @@ const teamNewInfo = {
 } as const;
 
 test.afterAll(async () => {
-  await prisma.teamMember.deleteMany();
-  await prisma.team.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.session.deleteMany();
-  await prisma.$disconnect();
+  await cleanup();
 });
 
 test('Should be able to update team name', async ({ page }) => {
