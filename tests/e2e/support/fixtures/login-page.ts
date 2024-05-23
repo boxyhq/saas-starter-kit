@@ -10,6 +10,7 @@ export class LoginPage {
   private readonly continueWithSSOButton: Locator;
   private readonly continueWithSSOLink: Locator;
   private readonly ssoEmailBox: Locator;
+  private readonly slugInput: Locator;
 
   constructor(public readonly page: Page) {
     this.emailBox = this.page.getByPlaceholder('Email');
@@ -22,6 +23,7 @@ export class LoginPage {
       name: 'Continue with SSO',
     });
     this.ssoEmailBox = this.page.getByPlaceholder('user@boxyhq.com');
+    this.slugInput = this.page.getByPlaceholder('boxyhq');
   }
 
   async goto() {
@@ -43,13 +45,23 @@ export class LoginPage {
     await this.signInButton.click();
   }
 
-  async ssoLogin(email: string) {
+  async ssoLogin(email: string, errorCase = false) {
     await this.continueWithSSOLink.click();
     await this.page.waitForSelector('text=Sign in with SAML SSO');
     await this.ssoEmailBox.fill(email);
     await this.continueWithSSOButton.click();
+    if (!errorCase) {
+      await this.page.waitForSelector('text=SAML SSO Login');
+      await this.signInButton.click();
+    }
+  }
+
+  async ssoLoginWithSlug(teamSlug: string) {
+    await this.slugInput.fill(teamSlug);
+    await this.continueWithSSOButton.click();
     await this.page.waitForSelector('text=SAML SSO Login');
     await this.signInButton.click();
+    await this.page.waitForSelector('text=Team Settings');
   }
 
   async idpInitiatedLogin() {
@@ -58,5 +70,13 @@ export class LoginPage {
       .getByPlaceholder('https://sso.eu.boxyhq.com/api')
       .fill(this.ACS_URL);
     await this.page.getByRole('button', { name: 'Sign In' }).click();
+  }
+
+  async logout(name: string) {
+    await this.page.locator('button').filter({ hasText: name }).click();
+    await this.page.getByRole('button', { name: 'Sign out' }).click();
+    await expect(
+      this.page.getByRole('heading', { name: 'Welcome back' })
+    ).toBeVisible();
   }
 }

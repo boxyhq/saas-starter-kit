@@ -1,15 +1,8 @@
-import { expect, test } from '@playwright/test';
-import {
-  createSSOConnection,
-  deleteSSOConnection,
-  user,
-  team,
-  loggedInCheck,
-  cleanup,
-  signIn,
-} from '../support/helper';
+import { test } from '@playwright/test';
+import { user, team, cleanup } from '../support/helper';
 import { LoginPage } from '../support/fixtures/login-page';
 import { JoinPage } from '../support/fixtures/join-page';
+import { SSOPage } from '../support/fixtures/sso-page';
 
 const SSO_METADATA_URL = `${process.env.MOCKSAML_ORIGIN}/api/saml/metadata`;
 
@@ -20,20 +13,21 @@ test.afterAll(async () => {
 test('Sign up and create SSO connection', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const joinPage = new JoinPage(page, user, team.name);
+  const ssoPage = new SSOPage(page, team.slug);
+
   await joinPage.goto();
   await joinPage.signUp();
-  await signIn(page, user.email, user.password, true);
-  await loggedInCheck(page, team.slug);
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
-  await createSSOConnection(page, team.slug, SSO_METADATA_URL);
+  await ssoPage.goto();
+  await ssoPage.createSSOConnection(SSO_METADATA_URL);
 
-  await page.locator('button').filter({ hasText: user.name }).click();
-  await page.getByRole('button', { name: 'Sign out' }).click();
-  await expect(
-    page.getByRole('heading', { name: 'Welcome back' })
-  ).toBeVisible();
+  await loginPage.logout(user.name);
   await loginPage.idpInitiatedLogin();
-  await page.waitForSelector('text=Team Settings');
+  await loginPage.loggedInCheck(team.slug);
 
-  await deleteSSOConnection(page, team.slug);
+  await ssoPage.goto();
+  await ssoPage.openEditSSOConnectionView();
+  await ssoPage.deleteSSOConnection();
 });

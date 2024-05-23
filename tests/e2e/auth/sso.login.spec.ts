@@ -1,15 +1,15 @@
 import { expect, test } from '@playwright/test';
 import {
-  createSSOConnection,
   deleteSSOConnection,
   ssoLogin,
   user,
   team,
-  loggedInCheck,
   cleanup,
-  signIn,
 } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
+import { LoginPage } from '../support/fixtures/login-page';
+import { SSOPage } from '../support/fixtures/sso-page';
+import { SettingsPage } from '../support/fixtures/settings-page';
 
 const secondTeam = {
   name: 'BoxyHQ',
@@ -30,63 +30,76 @@ test('Sign up and create SSO connection', async ({ page }) => {
   await joinPage.goto();
   await joinPage.signUp();
 
-  await signIn(page, user.email, user.password, true);
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
-  await createSSOConnection(page, team.slug, SSO_METADATA_URL[0]);
+  const ssoPage = new SSOPage(page, team.slug);
+  await ssoPage.goto();
+  await ssoPage.createSSOConnection(SSO_METADATA_URL[0]);
 });
 
 test('Login with SSO', async ({ page }) => {
-  await ssoLogin(page, user.email);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.ssoLogin(user.email);
+  await loginPage.loggedInCheck(team.slug);
 });
 
 test('Create a new team', async ({ page }) => {
-  await ssoLogin(page, user.email);
-  await page.getByText('Example').first().click();
-  await page.getByRole('link', { name: 'New Team' }).click();
-  await page.waitForSelector('text=Create Team');
-  await page.getByPlaceholder('Team Name').fill(secondTeam.name);
-  await page
-    .getByRole('dialog')
-    .getByRole('button', { name: 'Create Team' })
-    .click();
+  const loginPage = new LoginPage(page);
+  const settingsPage = new SettingsPage(page, user.name);
 
-  await page.waitForSelector('text=Team created successfully.');
+  await loginPage.goto();
+  await loginPage.ssoLogin(user.email);
+  await loginPage.loggedInCheck(team.slug);
+
+  await settingsPage.createNewTeam(secondTeam.name);
 });
 
 test('SSO login with 2 teams & one SSO connection', async ({ page }) => {
-  await ssoLogin(page, user.email);
-  await expect(
-    page.getByRole('heading', { name: 'Team Settings' })
-  ).toBeVisible();
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.ssoLogin(user.email);
+  await page.waitForSelector('text=Team Settings');
 });
 
 test('Create SSO connection for new team', async ({ page }) => {
-  await ssoLogin(page, user.email);
+  const loginPage = new LoginPage(page);
+  const ssoPage = new SSOPage(page, secondTeam.slug);
 
-  await createSSOConnection(page, secondTeam.slug, SSO_METADATA_URL[1]);
+  await loginPage.goto();
+  await loginPage.ssoLogin(user.email);
+  await page.waitForSelector('text=Team Settings');
+
+  await ssoPage.goto();
+  await ssoPage.createSSOConnection(SSO_METADATA_URL[1]);
 });
 
 test('SSO login with 2 teams & two SSO connection', async ({ page }) => {
-  await page.goto('/auth/login');
-  await expect(page).toHaveURL('/auth/login');
-  await page.getByRole('link', { name: 'Continue with SSO' }).click();
-  await page.waitForSelector('text=Sign in with SAML SSO');
-  await page.getByPlaceholder('user@boxyhq.com').fill(user.email);
-  await page.getByRole('button', { name: 'Continue with SSO' }).click();
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.ssoLogin(user.email, true);
   await page.waitForSelector('text=User belongs to multiple');
   await expect(page.getByText('User belongs to multiple')).toBeVisible();
-  await page.getByPlaceholder('boxyhq').fill(team.slug);
-  await page.getByRole('button', { name: 'Continue with SSO' }).click();
-  await page.waitForSelector('text=SAML SSO Login');
-  await page.getByRole('button', { name: 'Sign In' }).click();
-  await page.waitForSelector('text=Team Settings');
+  await loginPage.ssoLoginWithSlug(team.slug);
 
-  await deleteSSOConnection(page, secondTeam.slug);
+  const ssoPage = new SSOPage(page, secondTeam.slug);
+  await ssoPage.goto();
+
+  await ssoPage.openEditSSOConnectionView();
+  await ssoPage.deleteSSOConnection();
 });
 
 test('Delete SSO connection', async ({ page }) => {
-  await ssoLogin(page, user.email);
+  const loginPage = new LoginPage(page);
+  const ssoPage = new SSOPage(page, team.slug);
 
-  await deleteSSOConnection(page, team.slug);
+  await loginPage.goto();
+  await loginPage.ssoLogin(user.email);
+  await page.waitForSelector('text=Team Settings');
+
+  await ssoPage.goto();
+  await ssoPage.openEditSSOConnectionView();
+  await ssoPage.deleteSSOConnection();
 });
