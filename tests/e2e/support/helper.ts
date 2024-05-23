@@ -1,5 +1,7 @@
 import { Page, expect } from '@playwright/test';
 import { prisma } from '@/lib/prisma';
+import { LoginPage } from '../support/fixtures/login-page';
+import { SSOPage } from './fixtures/sso-page';
 
 export const user = {
   name: 'Jackson',
@@ -17,14 +19,9 @@ export async function createSSOConnection(
   teamSlug: string,
   metadataUrl: string
 ) {
-  await page.goto(`/teams/${teamSlug}/sso`);
-  await page.waitForURL(`/teams/${teamSlug}/sso`);
-  await page.waitForSelector('text=Manage SSO Connections');
-  await page.getByRole('button', { name: 'New Connection' }).click();
-  await page.getByPlaceholder('Paste the Metadata URL here').fill(metadataUrl);
-  await page.getByRole('button', { name: 'Save' }).click();
-  await page.waitForURL(`/teams/${teamSlug}/sso`);
-  await page.waitForSelector('text=saml.example.com');
+  const ssoPage = new SSOPage(page, teamSlug);
+  await ssoPage.goto();
+  await ssoPage.createSSOConnection(metadataUrl);
 }
 
 export async function deleteSSOConnection(page: Page, teamSlug: string) {
@@ -45,14 +42,9 @@ export async function deleteSSOConnection(page: Page, teamSlug: string) {
 }
 
 export async function ssoLogin(page: Page, email: string) {
-  await page.goto('/auth/login');
-  await page.waitForURL('/auth/login');
-  await page.getByRole('link', { name: 'Continue with SSO' }).click();
-  await page.waitForSelector('text=Sign in with SAML SSO');
-  await page.getByPlaceholder('user@boxyhq.com').fill(email);
-  await page.getByRole('button', { name: 'Continue with SSO' }).click();
-  await page.waitForSelector('text=SAML SSO Login');
-  await page.getByRole('button', { name: 'Sign In' }).click();
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.ssoLogin(email);
   await page.waitForSelector('text=Team Settings');
 }
 
@@ -72,21 +64,19 @@ export async function signUp(page, name, teamName, email, password) {
 }
 
 export async function signIn(page, email, password, skipGotoPage = false) {
+  const loginPage = new LoginPage(page);
   if (!skipGotoPage) {
-    await page.goto('/auth/login');
-    await page.waitForURL('/auth/login');
+    await loginPage.goto();
   }
   await expect(
     page.getByRole('heading', { name: 'Welcome back' })
   ).toBeVisible();
-  await page.getByPlaceholder('Email').fill(email);
-  await page.getByPlaceholder('Password').fill(password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await loginPage.credentialLogin(email, password);
 }
 
 export async function loggedInCheck(page, teamSlug: string) {
-  await page.waitForURL(`/teams/${teamSlug}/settings`);
-  await page.waitForSelector('text=Team Settings');
+  const loginPage = new LoginPage(page);
+  await loginPage.loggedInCheck(teamSlug);
 }
 
 export async function cleanup() {
