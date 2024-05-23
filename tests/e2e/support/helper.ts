@@ -2,7 +2,6 @@ import { Page } from '@playwright/test';
 import { prisma } from '@/lib/prisma';
 import { LoginPage } from '../support/fixtures/login-page';
 import { SSOPage } from './fixtures/sso-page';
-import { JoinPage } from './fixtures/join-page';
 
 export const user = {
   name: 'Jackson',
