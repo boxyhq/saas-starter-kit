@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { user, team, signIn, loggedInCheck, cleanup } from '../support/helper';
+import { user, team, cleanup } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
+import { LoginPage } from '../support/fixtures/login-page';
 
 const apiKeyName = 'New Api Key';
 
@@ -13,9 +14,10 @@ test('Should be able to create new API Key', async ({ page }) => {
   await joinPage.goto();
   await joinPage.signUp();
 
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.goto(`/teams/${team.slug}/api-keys`);
   await page.waitForURL(`/teams/${team.slug}/api-keys`);
@@ -35,9 +37,10 @@ test('Should be able to create new API Key', async ({ page }) => {
 });
 
 test('Should be able to delete API Key', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.goto(`/teams/${team.slug}/api-keys`);
   await page.waitForURL(`/teams/${team.slug}/api-keys`);

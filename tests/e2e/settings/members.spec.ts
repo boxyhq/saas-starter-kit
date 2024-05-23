@@ -1,8 +1,9 @@
 import { chromium, expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { user, team, signIn, loggedInCheck, cleanup } from '../support/helper';
+import { user, team, cleanup } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
+import { LoginPage } from '../support/fixtures/login-page';
 
 let domainInviteLink = '';
 
@@ -43,9 +44,10 @@ test('Should be able to get the list of members', async ({ page }) => {
   await joinPage.goto();
   await joinPage.signUp();
 
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.goto(`/teams/${team.slug}/members`);
   await page.waitForURL(`/teams/${team.slug}/members`);
@@ -66,9 +68,10 @@ test('Should be able to get the list of members', async ({ page }) => {
 });
 
 test('Should be able to invite a new member', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.goto(`/teams/${team.slug}/members`);
   await page.waitForURL(`/teams/${team.slug}/members`);
@@ -117,15 +120,15 @@ test('New memeber should be able to accept the invitation', async ({
 
   await expect(page.getByText('You have successfully created')).toBeVisible();
 
-  await signIn(page, invitedUser.email, invitedUser.password, true);
+  const loginPage = new LoginPage(page);
+  await loginPage.credentialLogin(invitedUser.email, invitedUser.password);
 
   await expect(
     page.getByRole('heading', { name: 'Example is inviting you to' })
   ).toBeVisible();
 
   await page.getByRole('button', { name: 'Join the Team' }).click();
-
-  await loggedInCheck(page, team.slug);
+  await loginPage.loggedInCheck(team.slug);
 });
 
 test('Existing user should be able to accept the invitation', async ({
@@ -135,9 +138,10 @@ test('Existing user should be able to accept the invitation', async ({
   await joinPage.goto();
   await joinPage.signUp();
 
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.goto(`/teams/${team.slug}/members`);
   await page.waitForURL(`/teams/${team.slug}/members`);
@@ -183,7 +187,8 @@ test('Existing user should be able to accept the invitation', async ({
 
   await page1.getByRole('button', { name: 'Log in using an existing' }).click();
 
-  await signIn(page1, secondUser.email, secondUser.password, true);
+  const loginPage1 = new LoginPage(page1);
+  await loginPage1.credentialLogin(secondUser.email, secondUser.password);
 
   await expect(
     page1.getByRole('heading', { name: 'Example is inviting you to' })
@@ -196,9 +201,10 @@ test('Existing user should be able to accept the invitation', async ({
 });
 
 test('Should be able to create invite using domain', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.goto(`/teams/${team.slug}/members`);
   await page.waitForURL(`/teams/${team.slug}/members`);
@@ -279,7 +285,11 @@ test('Should not allow to invite a member with invalid domain', async ({
 
   await expect(page.getByText('You have successfully created')).toBeVisible();
 
-  await signIn(page, invalidDomainUser.email, invalidDomainUser.password, true);
+  const loginPage = new LoginPage(page);
+  await loginPage.credentialLogin(
+    invalidDomainUser.email,
+    invalidDomainUser.password
+  );
 
   await expect(
     page.getByRole('heading', { name: 'Example is inviting you to' })
@@ -293,9 +303,10 @@ test('Should not allow to invite a member with invalid domain', async ({
 });
 
 test('Should be able to remove a member', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.goto(`/teams/${team.slug}/members`);
   await page.waitForURL(`/teams/${team.slug}/members`);
@@ -311,9 +322,10 @@ test('Should be able to remove a member', async ({ page }) => {
 });
 
 test('Should not allow invalid email to be invited', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.goto(`/teams/${team.slug}/members`);
   await page.waitForURL(`/teams/${team.slug}/members`);
@@ -334,9 +346,10 @@ test('Should not allow invalid email to be invited', async ({ page }) => {
 });
 
 test('Should not allow email with invalid length', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.goto(`/teams/${team.slug}/members`);
   await page.waitForURL(`/teams/${team.slug}/members`);

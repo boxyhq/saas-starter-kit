@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { user, team, signIn, loggedInCheck, cleanup } from '../support/helper';
+import { user, team, cleanup } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
+import { LoginPage } from '../support/fixtures/login-page';
 
 const DIRECTORY_NAME = 'TestConnection';
 const DIRECTORY_NAME_NEW = 'TestConnection1';
@@ -14,9 +15,10 @@ test('Should be able to create DSync connection', async ({ page }) => {
   await joinPage.goto();
   await joinPage.signUp();
 
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await navigateToDSyncSettings(page);
 
@@ -33,9 +35,10 @@ test('Should be able to create DSync connection', async ({ page }) => {
 });
 
 test('Should be able to show existing DSync connections', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await navigateToDSyncSettings(page);
 
@@ -47,9 +50,10 @@ test('Should be able to show existing DSync connections', async ({ page }) => {
 });
 
 test('Should be able to edit the DSync connection', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await navigateToDSyncSettings(page);
 
@@ -79,9 +83,10 @@ test('Should be able to edit the DSync connection', async ({ page }) => {
 });
 
 test('Should be able to disable the DSync connection', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await navigateToDSyncSettings(page);
 
@@ -104,9 +109,10 @@ test('Should be able to disable the DSync connection', async ({ page }) => {
 });
 
 test('Should be able to enable the DSync connection', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await navigateToDSyncSettings(page);
 
@@ -129,9 +135,10 @@ test('Should be able to enable the DSync connection', async ({ page }) => {
 });
 
 test('Should be able to delete the DSync connection', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await navigateToDSyncSettings(page);
 

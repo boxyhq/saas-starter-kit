@@ -1,11 +1,5 @@
 import { expect, test } from '@playwright/test';
-import {
-  deleteSSOConnection,
-  ssoLogin,
-  user,
-  team,
-  cleanup,
-} from '../support/helper';
+import { user, team, cleanup } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
 import { LoginPage } from '../support/fixtures/login-page';
 import { SSOPage } from '../support/fixtures/sso-page';

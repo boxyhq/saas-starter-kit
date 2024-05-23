@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { signIn, user, team, loggedInCheck, cleanup } from '../support/helper';
+import { user, team, cleanup } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
+import { LoginPage } from '../support/fixtures/login-page';
 
 const teamNewInfo = {
   name: 'New Team Name',
@@ -17,9 +18,10 @@ test('Should be able to update team name', async ({ page }) => {
   await joinPage.goto();
   await joinPage.signUp();
 
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.locator('input[name="name"]').fill(teamNewInfo.name);
   await page.getByRole('button', { name: 'Save Changes' }).click();
@@ -37,9 +39,10 @@ test('Should be able to update team name', async ({ page }) => {
 test('Should not allow to update team name with empty value', async ({
   page,
 }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.locator('input[name="name"]').fill('');
   await expect(
@@ -50,9 +53,10 @@ test('Should not allow to update team name with empty value', async ({
 test('Should not allow to update team name with more than 50 characters', async ({
   page,
 }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.locator('input[name="name"]').fill('a'.repeat(51));
   await expect(
@@ -64,9 +68,10 @@ test('Should not allow to update team name with more than 50 characters', async 
 });
 
 test('Should be able to update team slug', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.locator('input[name="slug"]').fill(teamNewInfo.slug);
   await page.getByRole('button', { name: 'Save Changes' }).click();
@@ -82,9 +87,10 @@ test('Should be able to update team slug', async ({ page }) => {
 });
 
 test('Should not allow empty slug', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, teamNewInfo.sluggified);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(teamNewInfo.sluggified);
 
   await page.locator('input[name="slug"]').fill('');
   await expect(
@@ -95,9 +101,10 @@ test('Should not allow empty slug', async ({ page }) => {
 test('Should not allow to update team slug with more than 50 characters', async ({
   page,
 }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, teamNewInfo.sluggified);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(teamNewInfo.sluggified);
 
   await page.locator('input[name="slug"]').fill('a'.repeat(51));
   await expect(
@@ -109,9 +116,10 @@ test('Should not allow to update team slug with more than 50 characters', async 
 });
 
 test('Should be able to set domain in team settings', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, teamNewInfo.sluggified);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(teamNewInfo.sluggified);
 
   await page.locator('input[name="domain"]').fill('example.com');
   await page.getByRole('button', { name: 'Save Changes' }).click();
@@ -128,9 +136,10 @@ test('Should be able to set domain in team settings', async ({ page }) => {
 test('Should not allow to set domain with more than 255 characters', async ({
   page,
 }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, teamNewInfo.sluggified);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(teamNewInfo.sluggified);
 
   await page.locator('input[name="domain"]').fill('a'.repeat(256) + '.com');
   await expect(
@@ -142,9 +151,10 @@ test('Should not allow to set domain with more than 255 characters', async ({
 });
 
 test('Should not allow to set invalid domain', async ({ page }) => {
-  await signIn(page, user.email, user.password);
-
-  await loggedInCheck(page, teamNewInfo.sluggified);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(teamNewInfo.sluggified);
 
   await page.locator('input[name="domain"]').fill('example');
   await expect(

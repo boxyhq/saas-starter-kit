@@ -1,8 +1,9 @@
 import { chromium, expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { user, team, loggedInCheck, cleanup, signIn } from '../support/helper';
+import { user, team, cleanup } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
+import { LoginPage } from '../support/fixtures/login-page';
 
 test.afterAll(async () => {
   await cleanup();
@@ -17,8 +18,9 @@ test('Session is shown in security page ', async ({ page }) => {
   await joinPage.goto();
   await joinPage.signUp();
 
-  await signIn(page, user.email, user.password, true);
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   await page.goto(`/settings/security`);
   await page.waitForURL(`/settings/security`);
@@ -28,16 +30,18 @@ test('Session is shown in security page ', async ({ page }) => {
 });
 
 test('2 session are shown in security page ', async ({ page }) => {
-  await page.goto('/auth/login');
-
-  await signIn(page, user.email, user.password, true);
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   const browser1 = await chromium.launch();
   const page1 = await browser1.newPage();
 
-  await signIn(page1, user.email, user.password);
-  await loggedInCheck(page1, team.slug);
+  const loginPage1 = new LoginPage(page1);
+  await loginPage1.goto();
+  await loginPage1.credentialLogin(user.email, user.password);
+  await loginPage1.loggedInCheck(team.slug);
 
   await page1.goto(`/settings/security`);
   await page1.waitForURL(`/settings/security`);
@@ -55,16 +59,18 @@ test('2 session are shown in security page ', async ({ page }) => {
 });
 
 test('On Remove session user logs out', async ({ page }) => {
-  await page.goto('/auth/login');
-
-  await signIn(page, user.email, user.password, true);
-  await loggedInCheck(page, team.slug);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
 
   const browser1 = await chromium.launch();
   const page1 = await browser1.newPage();
 
-  await signIn(page1, user.email, user.password);
-  await loggedInCheck(page1, team.slug);
+  const loginPage1 = new LoginPage(page1);
+  await loginPage1.goto();
+  await loginPage1.credentialLogin(user.email, user.password);
+  await loginPage1.loggedInCheck(team.slug);
 
   await page1.goto(`/settings/security`);
   await page1.waitForURL(`/settings/security`);
