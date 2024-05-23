@@ -1,14 +1,8 @@
 import { chromium, expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import {
-  signUp,
-  user,
-  team,
-  loggedInCheck,
-  cleanup,
-  signIn,
-} from '../support/helper';
+import { user, team, loggedInCheck, cleanup, signIn } from '../support/helper';
+import { JoinPage } from '../support/fixtures/join-page';
 
 test.afterAll(async () => {
   await cleanup();
@@ -19,7 +13,9 @@ test.afterEach(async () => {
 });
 
 test('Session is shown in security page ', async ({ page }) => {
-  await signUp(page, user.name, team.name, user.email, user.password);
+  const joinPage = new JoinPage(page, user, team.name);
+  await joinPage.goto();
+  await joinPage.signUp();
 
   await signIn(page, user.email, user.password, true);
   await loggedInCheck(page, team.slug);

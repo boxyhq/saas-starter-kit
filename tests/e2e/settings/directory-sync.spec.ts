@@ -1,12 +1,6 @@
 import { expect, test } from '@playwright/test';
-import {
-  signUp,
-  user,
-  team,
-  signIn,
-  loggedInCheck,
-  cleanup,
-} from '../support/helper';
+import { user, team, signIn, loggedInCheck, cleanup } from '../support/helper';
+import { JoinPage } from '../support/fixtures/join-page';
 
 const DIRECTORY_NAME = 'TestConnection';
 const DIRECTORY_NAME_NEW = 'TestConnection1';
@@ -16,7 +10,9 @@ test.afterAll(async () => {
 });
 
 test('Should be able to create DSync connection', async ({ page }) => {
-  await signUp(page, user.name, team.name, user.email, user.password);
+  const joinPage = new JoinPage(page, user, team.name);
+  await joinPage.goto();
+  await joinPage.signUp();
 
   await signIn(page, user.email, user.password);
 

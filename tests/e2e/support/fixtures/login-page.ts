@@ -1,4 +1,5 @@
 import type { Page, Locator } from '@playwright/test';
+import { expect } from '@playwright/test';
 
 export class LoginPage {
   private readonly IDP_LOGIN_URL = `${process.env.MOCKSAML_ORIGIN}/saml/login`;
@@ -34,6 +35,9 @@ export class LoginPage {
   }
 
   async credentialLogin(email: string, password: string) {
+    await expect(
+      this.page.getByRole('heading', { name: 'Welcome back' })
+    ).toBeVisible();
     await this.emailBox.fill(email);
     await this.passwordBox.fill(password);
     await this.signInButton.click();

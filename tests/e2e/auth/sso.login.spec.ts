@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 import {
   createSSOConnection,
   deleteSSOConnection,
-  signUp,
   ssoLogin,
   user,
   team,
@@ -10,6 +9,7 @@ import {
   cleanup,
   signIn,
 } from '../support/helper';
+import { JoinPage } from '../support/fixtures/join-page';
 
 const secondTeam = {
   name: 'BoxyHQ',
@@ -26,7 +26,9 @@ test.afterAll(async () => {
 });
 
 test('Sign up and create SSO connection', async ({ page }) => {
-  await signUp(page, user.name, team.name, user.email, user.password);
+  const joinPage = new JoinPage(page, user, team.name);
+  await joinPage.goto();
+  await joinPage.signUp();
 
   await signIn(page, user.email, user.password, true);
   await loggedInCheck(page, team.slug);

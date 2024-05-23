@@ -1,12 +1,6 @@
 import { expect, test } from '@playwright/test';
-import {
-  signIn,
-  signUp,
-  user,
-  team,
-  loggedInCheck,
-  cleanup,
-} from '../support/helper';
+import { signIn, user, team, loggedInCheck, cleanup } from '../support/helper';
+import { JoinPage } from '../support/fixtures/join-page';
 
 const teamNewInfo = {
   name: 'New Team Name',
@@ -19,7 +13,9 @@ test.afterAll(async () => {
 });
 
 test('Should be able to update team name', async ({ page }) => {
-  await signUp(page, user.name, team.name, user.email, user.password);
+  const joinPage = new JoinPage(page, user, team.name);
+  await joinPage.goto();
+  await joinPage.signUp();
 
   await signIn(page, user.email, user.password);
 

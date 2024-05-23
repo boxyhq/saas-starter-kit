@@ -1,14 +1,8 @@
 import { chromium, expect, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import {
-  signUp,
-  user,
-  team,
-  signIn,
-  loggedInCheck,
-  cleanup,
-} from '../support/helper';
+import { user, team, signIn, loggedInCheck, cleanup } from '../support/helper';
+import { JoinPage } from '../support/fixtures/join-page';
 
 let domainInviteLink = '';
 
@@ -45,7 +39,9 @@ test.afterAll(async () => {
 });
 
 test('Should be able to get the list of members', async ({ page }) => {
-  await signUp(page, user.name, team.name, user.email, user.password);
+  const joinPage = new JoinPage(page, user, team.name);
+  await joinPage.goto();
+  await joinPage.signUp();
 
   await signIn(page, user.email, user.password);
 
@@ -135,13 +131,9 @@ test('New memeber should be able to accept the invitation', async ({
 test('Existing user should be able to accept the invitation', async ({
   page,
 }) => {
-  await signUp(
-    page,
-    secondUser.name,
-    secondUser.team.name,
-    secondUser.email,
-    secondUser.password
-  );
+  const joinPage = new JoinPage(page, secondUser, secondUser.team.name);
+  await joinPage.goto();
+  await joinPage.signUp();
 
   await signIn(page, user.email, user.password);
 

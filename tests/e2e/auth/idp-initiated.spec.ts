@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 import {
   createSSOConnection,
   deleteSSOConnection,
-  signUp,
   user,
   team,
   loggedInCheck,
@@ -10,6 +9,7 @@ import {
   signIn,
 } from '../support/helper';
 import { LoginPage } from '../support/fixtures/login-page';
+import { JoinPage } from '../support/fixtures/join-page';
 
 const SSO_METADATA_URL = `${process.env.MOCKSAML_ORIGIN}/api/saml/metadata`;
 
@@ -19,7 +19,9 @@ test.afterAll(async () => {
 
 test('Sign up and create SSO connection', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  await signUp(page, user.name, team.name, user.email, user.password);
+  const joinPage = new JoinPage(page, user, team.name);
+  await joinPage.goto();
+  await joinPage.signUp();
   await signIn(page, user.email, user.password, true);
   await loggedInCheck(page, team.slug);
 

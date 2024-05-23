@@ -1,20 +1,16 @@
 import { test } from '@playwright/test';
 
-import {
-  signUp,
-  user,
-  team,
-  loggedInCheck,
-  cleanup,
-  signIn,
-} from '../support/helper';
+import { user, team, loggedInCheck, cleanup, signIn } from '../support/helper';
+import { JoinPage } from '../support/fixtures/join-page';
 
 test.afterAll(async () => {
   await cleanup();
 });
 
 test('Should signup a new user', async ({ page }) => {
-  await signUp(page, user.name, team.name, user.email, user.password);
+  const joinPage = new JoinPage(page, user, team.name);
+  await joinPage.goto();
+  await joinPage.signUp();
 });
 
 test('Should login a user', async ({ page }) => {
