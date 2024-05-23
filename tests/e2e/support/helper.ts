@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { prisma } from '@/lib/prisma';
 
 export const user = {
@@ -76,6 +76,9 @@ export async function signIn(page, email, password, skipGotoPage = false) {
     await page.goto('/auth/login');
     await page.waitForURL('/auth/login');
   }
+  await expect(
+    page.getByRole('heading', { name: 'Welcome back' })
+  ).toBeVisible();
   await page.getByPlaceholder('Email').fill(email);
   await page.getByPlaceholder('Password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
