@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { user, team, cleanup } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
 import { LoginPage } from '../support/fixtures/login-page';
+import { DirectorySyncPage } from '../support/fixtures/directory-sync-page';
 
 const DIRECTORY_NAME = 'TestConnection';
 const DIRECTORY_NAME_NEW = 'TestConnection1';
@@ -20,18 +21,14 @@ test('Should be able to create DSync connection', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await navigateToDSyncSettings(page);
+  const dsyncPage = new DirectorySyncPage(page, team.slug);
+  await dsyncPage.goto();
 
-  await expect(
-    page.getByRole('heading', { name: 'No directories found.' })
-  ).toBeVisible();
+  await dsyncPage.checkEmptyConnectionList();
 
-  await createDSyncConnection(page, DIRECTORY_NAME);
+  await dsyncPage.createConnection(DIRECTORY_NAME);
 
-  await expect(await page.getByLabel('SCIM Endpoint').inputValue()).toContain(
-    'http://localhost:4002/api/scim/v2.0/'
-  );
-  await expect(page.getByLabel('Directory name')).toHaveValue(DIRECTORY_NAME);
+  await dsyncPage.verifyNewConnection(DIRECTORY_NAME);
 });
 
 test('Should be able to show existing DSync connections', async ({ page }) => {
@@ -40,13 +37,10 @@ test('Should be able to show existing DSync connections', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await navigateToDSyncSettings(page);
+  const dsyncPage = new DirectorySyncPage(page, team.slug);
+  await dsyncPage.goto();
 
-  await expect(page.getByRole('cell', { name: DIRECTORY_NAME })).toBeVisible();
-  await expect(
-    page.getByRole('cell', { name: 'Azure SCIM v2.0' })
-  ).toBeVisible();
-  await expect(page.getByLabel('Active')).toBeVisible();
+  await dsyncPage.verifyListedConnection(DIRECTORY_NAME);
 });
 
 test('Should be able to edit the DSync connection', async ({ page }) => {
@@ -55,31 +49,14 @@ test('Should be able to edit the DSync connection', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await navigateToDSyncSettings(page);
+  const dsyncPage = new DirectorySyncPage(page, team.slug);
+  await dsyncPage.goto();
 
-  await page.getByLabel('Edit').click();
-  await expect(
-    page.getByRole('heading', { name: 'Edit DSync Connection' })
-  ).toBeVisible();
+  await dsyncPage.editConnection(DIRECTORY_NAME_NEW);
 
-  await page.getByLabel('Directory name').fill(DIRECTORY_NAME_NEW);
-  await page.getByRole('button', { name: 'Save' }).click();
+  await dsyncPage.goto();
 
-  await expect(page.getByText('Connection updated')).toBeVisible();
-
-  await page.goto(`/teams/${team.slug}/directory-sync`);
-  await page.waitForURL(`/teams/${team.slug}/directory-sync`);
-  await expect(
-    page.getByRole('heading', { name: 'Manage DSync Connections' })
-  ).toBeVisible();
-
-  await expect(
-    await page.getByRole('cell', { name: DIRECTORY_NAME_NEW })
-  ).toBeVisible();
-  await expect(
-    page.getByRole('cell', { name: 'Azure SCIM v2.0' })
-  ).toBeVisible();
-  await expect(page.getByLabel('Active')).toBeVisible();
+  await dsyncPage.verifyListedConnection(DIRECTORY_NAME_NEW);
 });
 
 test('Should be able to disable the DSync connection', async ({ page }) => {
@@ -88,24 +65,10 @@ test('Should be able to disable the DSync connection', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await navigateToDSyncSettings(page);
+  const dsyncPage = new DirectorySyncPage(page, team.slug);
+  await dsyncPage.goto();
 
-  await page.getByLabel('Edit').click();
-  await expect(
-    page.getByRole('heading', { name: 'Edit DSync Connection' })
-  ).toBeVisible();
-
-  await page
-    .locator('label')
-    .filter({ hasText: 'Active' })
-    .locator('span')
-    .click();
-  await expect(
-    page.getByRole('heading', { name: 'Do you want to deactivate the' })
-  ).toBeVisible();
-  await page.getByRole('button', { name: 'Confirm' }).click();
-  await expect(page.getByText('Connection updated')).toBeVisible();
-  await expect(page.getByLabel('Inactive')).toBeVisible();
+  await dsyncPage.disableConnection();
 });
 
 test('Should be able to enable the DSync connection', async ({ page }) => {
@@ -114,24 +77,10 @@ test('Should be able to enable the DSync connection', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await navigateToDSyncSettings(page);
+  const dsyncPage = new DirectorySyncPage(page, team.slug);
+  await dsyncPage.goto();
 
-  await page.getByLabel('Edit').click();
-  await expect(
-    page.getByRole('heading', { name: 'Edit DSync Connection' })
-  ).toBeVisible();
-
-  await page
-    .locator('label')
-    .filter({ hasText: 'Inactive' })
-    .locator('span')
-    .click();
-  await expect(
-    page.getByRole('heading', { name: 'Do you want to activate the' })
-  ).toBeVisible();
-  await page.getByRole('button', { name: 'Confirm' }).click();
-  await expect(page.getByText('Connection updated')).toBeVisible();
-  await expect(page.getByLabel('Active')).toBeVisible();
+  await dsyncPage.enableConnection();
 });
 
 test('Should be able to delete the DSync connection', async ({ page }) => {
@@ -140,38 +89,9 @@ test('Should be able to delete the DSync connection', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await navigateToDSyncSettings(page);
+  const dsyncPage = new DirectorySyncPage(page, team.slug);
+  await dsyncPage.goto();
 
-  await page.getByLabel('Edit').click();
-  await expect(
-    page.getByRole('heading', { name: 'Edit DSync Connection' })
-  ).toBeVisible();
-  await page.getByRole('button', { name: 'Delete' }).click();
-  await expect(
-    page.getByRole('heading', { name: 'Are you sure you want to' })
-  ).toBeVisible();
-  await page.getByRole('button', { name: 'Confirm' }).click();
-  await expect(page.getByText('Connection deleted')).toBeVisible();
-  await expect(
-    page.getByRole('heading', { name: 'No directories found.' })
-  ).toBeVisible();
+  await dsyncPage.deleteConnection();
+  await dsyncPage.checkEmptyConnectionList();
 });
-
-async function navigateToDSyncSettings(page) {
-  await page.goto(`/teams/${team.slug}/directory-sync`);
-  await page.waitForURL(`/teams/${team.slug}/directory-sync`);
-  await expect(
-    page.getByRole('heading', { name: 'Manage DSync Connections' })
-  ).toBeVisible();
-}
-
-async function createDSyncConnection(page, name: string) {
-  await page.getByRole('button', { name: 'New Directory' }).click();
-  await expect(
-    page.getByRole('heading', { name: 'Create DSync Connection' })
-  ).toBeVisible();
-
-  await page.getByLabel('Directory name').fill(name);
-  await page.getByRole('button', { name: 'Create Directory' }).click();
-  await expect(page.getByText('Connection created')).toBeVisible();
-}
