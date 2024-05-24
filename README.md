@@ -143,13 +143,13 @@ The Dev server can be started on either local host dev environment or docker con
 npm run dev
 ```
 
-**B. Start as a Docker container service**
+**B. Start as a development Docker container**
 
 ```bash
-docker-compose -f docker-compose.kit.yml up -d
+docker-compose -f docker-compose.kit.yml watch
 ```
 
-**C. Start as a Docker Compose stack** (include db container)
+**C. Start as a Docker Compose service stack** (include the db & pgadmin containers)
 
 ```bash
 docker-compose up -d
