@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { user, team, cleanup } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
 import { LoginPage } from '../support/fixtures/login-page';
+import { MemberPage } from '../support/fixtures/member-page';
 
 let domainInviteLink = '';
 
@@ -49,22 +50,9 @@ test('Should be able to get the list of members', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await page.goto(`/teams/${team.slug}/members`);
-  await page.waitForURL(`/teams/${team.slug}/members`);
-
-  await expect(
-    await page.getByRole('heading', { name: 'Members' })
-  ).toBeVisible();
-
-  await expect(
-    page.getByRole('cell', { name: 'J Jackson' }).locator('span')
-  ).toBeVisible();
-
-  await expect(
-    page.getByRole('cell', { name: 'jackson@example.com' })
-  ).toBeVisible();
-
-  await expect(page.getByRole('cell', { name: 'OWNER' })).toBeVisible();
+  const memberPage = new MemberPage(page, team.slug);
+  await memberPage.goto();
+  await memberPage.teamMemberExists(user.name, user.email, 'OWNER');
 });
 
 test('Should be able to invite a new member', async ({ page }) => {
@@ -73,62 +61,32 @@ test('Should be able to invite a new member', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await page.goto(`/teams/${team.slug}/members`);
-  await page.waitForURL(`/teams/${team.slug}/members`);
-
-  await page.getByRole('button', { name: 'Invite Member' }).click();
-  await page.waitForSelector('text=Invite New Member');
-
-  await page.getByPlaceholder('jackson@boxyhq.com').fill(invitedUser.email);
-  await page.getByRole('button', { name: 'Invite', exact: true }).click();
-  await expect(page.getByText('Invitation sent!')).toBeVisible();
-
-  await expect(
-    await page.getByRole('heading', { name: 'Members' })
-  ).toBeVisible();
-  await expect(page.getByText('Pending Invitations')).toBeVisible();
-
-  await expect(
-    page.getByRole('cell', { name: `A ${invitedUser.email}` })
-  ).toBeVisible();
-  await expect(page.getByRole('cell', { name: 'MEMBER' })).toBeVisible();
+  const memberPage = new MemberPage(page, team.slug);
+  await memberPage.goto();
+  await memberPage.inviteByEmail(invitedUser.email);
+  await memberPage.membersPageVisible();
+  await memberPage.checkPendingInvitation(invitedUser.email, 'MEMBER');
 });
 
 test('New memeber should be able to accept the invitation', async ({
   page,
 }) => {
-  const invitation = await prisma.invitation.findFirst({
-    where: {
-      email: invitedUser.email,
-    },
-  });
-  expect(invitation).not.toBeNull();
+  const loginPage = new LoginPage(page);
+  const invitation = await getAndVerifyInvitation(invitedUser.email);
 
   const invitationLink = `${process.env.APP_URL}/invitations/${invitation?.token}`;
-  await page.goto(invitationLink);
-  await page.waitForURL(invitationLink);
+  await loginPage.gotoInviteLink(invitationLink, team.name);
 
-  await expect(
-    page.getByRole('heading', { name: 'Example is inviting you to' })
-  ).toBeVisible();
+  await loginPage.createNewAccountViaInvite(
+    invitedUser.name,
+    invitedUser.password
+  );
 
-  await page.getByRole('button', { name: 'Create a new account' }).click();
-
-  await page.getByPlaceholder('Your Name').fill(invitedUser.name);
-  await page.getByPlaceholder('Password').fill(invitedUser.password);
-  await page.getByRole('button', { name: 'Create Account' }).click();
-
-  await expect(page.getByText('You have successfully created')).toBeVisible();
-
-  const loginPage = new LoginPage(page);
   await loginPage.credentialLogin(invitedUser.email, invitedUser.password);
 
-  await expect(
-    page.getByRole('heading', { name: 'Example is inviting you to' })
-  ).toBeVisible();
+  await loginPage.invitationAcceptPromptVisible(team.name);
 
-  await page.getByRole('button', { name: 'Join the Team' }).click();
-  await loginPage.loggedInCheck(team.slug);
+  await loginPage.acceptInvitation();
 });
 
 test('Existing user should be able to accept the invitation', async ({
@@ -143,20 +101,12 @@ test('Existing user should be able to accept the invitation', async ({
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await page.goto(`/teams/${team.slug}/members`);
-  await page.waitForURL(`/teams/${team.slug}/members`);
+  const memberPage = new MemberPage(page, team.slug);
+  await memberPage.goto();
 
-  await page.getByRole('button', { name: 'Invite Member' }).click();
-  await page.waitForSelector('text=Invite New Member');
+  await memberPage.inviteByEmail(secondUser.email);
 
-  await page.getByPlaceholder('jackson@boxyhq.com').fill(secondUser.email);
-  await page.getByRole('button', { name: 'Invite', exact: true }).click();
-  await expect(page.getByText('Invitation sent!')).toBeVisible();
-
-  await expect(
-    await page.getByRole('heading', { name: 'Members' })
-  ).toBeVisible();
-  await expect(page.getByText('Pending Invitations')).toBeVisible();
+  await memberPage.pendingMemberVisible();
 
   await expect(
     page.getByRole('cell', { name: `U ${secondUser.email}` })
@@ -165,38 +115,24 @@ test('Existing user should be able to accept the invitation', async ({
     (await page.getByRole('cell', { name: 'MEMBER' }).all()).length
   ).toBe(2);
 
-  const invitation = await prisma.invitation.findFirst({
-    where: {
-      email: secondUser.email,
-    },
-  });
-  expect(invitation).not.toBeNull();
+  const invitation = await getAndVerifyInvitation(secondUser.email);
 
   const invitationLink = `${process.env.APP_URL}/invitations/${invitation?.token}`;
 
   const browser1 = await chromium.launch();
   const page1 = await browser1.newPage();
 
-  await page1.goto(invitationLink);
-
-  await page1.waitForURL(invitationLink);
-
-  await expect(
-    page1.getByRole('heading', { name: 'Example is inviting you to' })
-  ).toBeVisible();
-
-  await page1.getByRole('button', { name: 'Log in using an existing' }).click();
-
   const loginPage1 = new LoginPage(page1);
-  await loginPage1.credentialLogin(secondUser.email, secondUser.password);
+  await loginPage1.gotoInviteLink(invitationLink, team.name);
 
-  await expect(
-    page1.getByRole('heading', { name: 'Example is inviting you to' })
-  ).toBeVisible();
+  await loginPage1.acceptInvitationWithExistingAccount(
+    secondUser.email,
+    secondUser.password
+  );
 
-  await page1.getByRole('button', { name: 'Join the Team' }).click();
+  await loginPage1.invitationAcceptPromptVisible(team.name);
 
-  await page1.waitForSelector('text=Team Settings');
+  await loginPage1.acceptInvitation();
   await page1.close();
 });
 
@@ -206,100 +142,50 @@ test('Should be able to create invite using domain', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await page.goto(`/teams/${team.slug}/members`);
-  await page.waitForURL(`/teams/${team.slug}/members`);
+  const memberPage = new MemberPage(page, team.slug);
+  await memberPage.goto();
 
-  await page.getByRole('button', { name: 'Invite Member' }).click();
-  await page.waitForSelector('text=Invite New Member');
-
-  await page
-    .getByPlaceholder('Restrict domain: boxyhq.com')
-    .fill('example.com');
-  await page.getByRole('button', { name: 'Create Link' }).click();
-
-  await expect(page.getByText('Share your team invite link')).toBeVisible();
-  domainInviteLink = await page.getByRole('textbox').nth(1).inputValue();
+  domainInviteLink = await memberPage.createInviteLink('example.com');
 
   const browser1 = await chromium.launch();
   const page1 = await browser1.newPage();
 
-  await page1.goto(domainInviteLink);
+  const loginPage1 = new LoginPage(page1);
+  await loginPage1.gotoInviteLink(domainInviteLink, team.name);
+  await loginPage1.createNewAccountViaInviteLink(
+    domainUser.name,
+    domainUser.email,
+    domainUser.password,
+    team.name
+  );
 
-  await expect(
-    page1.getByRole('heading', { name: 'Example is inviting you to' })
-  ).toBeVisible();
+  await loginPage1.credentialLogin(domainUser.email, domainUser.password);
 
-  await page1.getByRole('button', { name: 'Create a new account' }).click();
-  await page1.getByPlaceholder('Your Name').fill(domainUser.name);
-  await page1.getByPlaceholder('Email').fill(domainUser.email);
-  await page1.getByPlaceholder('Password').fill(domainUser.password);
-  await page1.getByRole('button', { name: 'Create Account' }).click();
-
-  await expect(
-    await page1.getByText('You have successfully created')
-  ).toBeVisible();
-
-  expect(
-    await page1.getByText('Welcome back', {
-      exact: true,
-    })
-  ).toBeDefined();
-
-  await page1
-    .getByRole('textbox', {
-      name: 'Email',
-    })
-    .click();
-  await page1
-    .getByRole('textbox', {
-      name: 'Email',
-    })
-    .fill(domainUser.email);
-  await page1.getByPlaceholder('Password').fill(domainUser.password);
-  await page1.getByRole('button', { name: 'Sign in' }).click();
-
-  await expect(
-    page1.getByRole('heading', { name: 'Example is inviting you to' })
-  ).toBeVisible();
-
-  await page1.getByRole('button', { name: 'Join the Team' }).click();
-
-  await page1.waitForSelector('text=Team Settings');
+  await loginPage1.invitationAcceptPromptVisible(team.name);
+  await loginPage1.acceptInvitation();
   await page1.close();
 });
 
 test('Should not allow to invite a member with invalid domain', async ({
   page,
 }) => {
-  await page.goto(domainInviteLink);
-
-  await expect(
-    page.getByRole('heading', { name: 'Example is inviting you to' })
-  ).toBeVisible();
-
-  await page.getByRole('button', { name: 'Create a new account' }).click();
-  await page.getByPlaceholder('Your Name').fill(invalidDomainUser.name);
-  await page.getByPlaceholder('Email').fill(invalidDomainUser.email);
-  await page.getByPlaceholder('Password').fill(invalidDomainUser.password);
-  await page.getByRole('button', { name: 'Create Account' }).click();
-
-  await expect(page.getByText('You have successfully created')).toBeVisible();
-
   const loginPage = new LoginPage(page);
+  await loginPage.gotoInviteLink(domainInviteLink, team.name);
+  await loginPage.createNewAccountViaInviteLink(
+    invalidDomainUser.name,
+    invalidDomainUser.email,
+    invalidDomainUser.password,
+    team.name
+  );
+
   await loginPage.credentialLogin(
     invalidDomainUser.email,
     invalidDomainUser.password
   );
 
-  await expect(
-    page.getByRole('heading', { name: 'Example is inviting you to' })
-  ).toBeVisible();
+  await loginPage.invitationAcceptPromptVisible(team.name);
 
-  await expect(
-    page.getByText(
-      `Your email address domain ${invalidDomainUser.email.split('@')[1]} is not allowed`
-    )
-  ).toBeVisible();
+  await loginPage.invalidDomainErrorVisible(invalidDomainUser.email);
 });
 
 test('Should be able to remove a member', async ({ page }) => {
@@ -308,17 +194,10 @@ test('Should be able to remove a member', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await page.goto(`/teams/${team.slug}/members`);
-  await page.waitForURL(`/teams/${team.slug}/members`);
+  const memberPage = new MemberPage(page, team.slug);
+  await memberPage.goto();
 
-  await expect(
-    await page.getByRole('heading', { name: 'Members' })
-  ).toBeVisible();
-
-  await page.getByRole('cell', { name: 'Remove' }).first().click();
-  await page.waitForSelector('text=Confirm deletion of member');
-  await page.getByRole('button', { name: 'Delete' }).click();
-  await expect(page.getByText('Member deleted successfully.')).toBeVisible();
+  await memberPage.removeMember();
 });
 
 test('Should not allow invalid email to be invited', async ({ page }) => {
@@ -327,22 +206,14 @@ test('Should not allow invalid email to be invited', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await page.goto(`/teams/${team.slug}/members`);
-  await page.waitForURL(`/teams/${team.slug}/members`);
+  const memberPage = new MemberPage(page, team.slug);
+  await memberPage.goto();
 
-  await expect(page.getByRole('heading', { name: 'Members' })).toBeVisible();
-  await page.getByRole('button', { name: 'Invite Member' }).click();
-  await expect(
-    page.getByRole('heading', { name: 'Invite New Member' })
-  ).toBeVisible();
+  await memberPage.openInviteModal();
 
-  await page
-    .getByPlaceholder('jackson@boxyhq.com')
-    .fill('aaaaaaaaaaaaaaaaaaaa@.com');
+  await memberPage.fillEmailForInvite('aaaaaaaaaaaaaaaaaaaa@.com');
 
-  await expect(
-    await page.getByRole('button', { name: 'Invite', exact: true }).isDisabled()
-  ).toBeTruthy();
+  await memberPage.isInviteButtonDisabled();
 });
 
 test('Should not allow email with invalid length', async ({ page }) => {
@@ -351,20 +222,22 @@ test('Should not allow email with invalid length', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await page.goto(`/teams/${team.slug}/members`);
-  await page.waitForURL(`/teams/${team.slug}/members`);
+  const memberPage = new MemberPage(page, team.slug);
+  await memberPage.goto();
 
-  await expect(page.getByRole('heading', { name: 'Members' })).toBeVisible();
-  await page.getByRole('button', { name: 'Invite Member' }).click();
-  await expect(
-    page.getByRole('heading', { name: 'Invite New Member' })
-  ).toBeVisible();
+  await memberPage.openInviteModal();
 
-  await page
-    .getByPlaceholder('jackson@boxyhq.com')
-    .fill('a'.repeat(256) + '@boxyhq.com');
+  await memberPage.fillEmailForInvite('a'.repeat(256) + '@boxyhq.com');
 
-  await expect(
-    await page.getByRole('button', { name: 'Invite', exact: true }).isDisabled()
-  ).toBeTruthy();
+  await memberPage.isInviteButtonDisabled();
 });
+
+async function getAndVerifyInvitation(email: string) {
+  const invitation = await prisma.invitation.findFirst({
+    where: {
+      email: email,
+    },
+  });
+  expect(invitation).not.toBeNull();
+  return invitation;
+}

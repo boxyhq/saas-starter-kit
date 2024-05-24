@@ -44,6 +44,7 @@ export class LoginPage {
     await expect(
       this.page.getByRole('heading', { name: 'Welcome back' })
     ).toBeVisible();
+    await this.emailBox.focus();
     await this.emailBox.fill(email);
     await this.passwordBox.fill(password);
     await this.signInButton.click();
@@ -90,5 +91,79 @@ export class LoginPage {
         exact: true,
       })
     ).toBeDefined();
+  }
+
+  async gotoInviteLink(invitationLink: string, invitingCompany: string) {
+    await this.page.goto(invitationLink);
+    await this.page.waitForURL(invitationLink);
+
+    await this.invitationAcceptPromptVisible(invitingCompany);
+  }
+
+  public async invitationAcceptPromptVisible(invitingCompany: string) {
+    await expect(
+      this.page.getByRole('heading', {
+        name: `${invitingCompany} is inviting you to`,
+      })
+    ).toBeVisible();
+  }
+
+  public async acceptInvitation() {
+    await this.page.getByRole('button', { name: 'Join the Team' }).click();
+    await this.page.waitForSelector('text=Team Settings');
+  }
+
+  async createNewAccountViaInvite(name: string, password: string) {
+    await this.page
+      .getByRole('button', { name: 'Create a new account' })
+      .click();
+
+    await this.page.getByPlaceholder('Your Name').fill(name);
+    await this.page.getByPlaceholder('Password').fill(password);
+    await this.page.getByRole('button', { name: 'Create Account' }).click();
+
+    await expect(
+      this.page.getByText('You have successfully created')
+    ).toBeVisible();
+  }
+
+  async createNewAccountViaInviteLink(
+    name: string,
+    email: string,
+    password: string,
+    invitingCompany: string
+  ) {
+    await expect(
+      this.page.getByRole('heading', {
+        name: `${invitingCompany} is inviting you to`,
+      })
+    ).toBeVisible();
+
+    await this.page
+      .getByRole('button', { name: 'Create a new account' })
+      .click();
+    await this.page.getByPlaceholder('Your Name').fill(name);
+    await this.page.getByPlaceholder('Email').fill(email);
+    await this.page.getByPlaceholder('Password').fill(password);
+    await this.page.getByRole('button', { name: 'Create Account' }).click();
+
+    await expect(
+      await this.page.getByText('You have successfully created')
+    ).toBeVisible();
+  }
+
+  async acceptInvitationWithExistingAccount(email: string, password: string) {
+    await this.page
+      .getByRole('button', { name: 'Log in using an existing' })
+      .click();
+    await this.credentialLogin(email, password);
+  }
+
+  async invalidDomainErrorVisible(email: string) {
+    await expect(
+      this.page.getByText(
+        `Your email address domain ${email.split('@')[1]} is not allowed`
+      )
+    ).toBeVisible();
   }
 }
