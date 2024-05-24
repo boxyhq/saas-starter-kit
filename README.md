@@ -137,19 +137,19 @@ npx prisma studio
 
 The Dev server can be started on either local host dev environment or docker container
 
-**1) Start as local development environment:** (ctrl-C to quit)
+*1) Start as local development environment:* (ctrl-C to quit)
 
 ```bash
 npm run dev
 ```
 
-**2) Start as a development Docker container** (ctrl-C to quit)
+*2) Start as a development Docker container* (ctrl-C to quit)
 
 ```bash
 docker-compose -f docker-compose.kit.yml watch
 ```
 
-**3) Start as a Docker Compose service stack** (include the db & pgadmin containers)
+*3) Start as a Docker Compose service stack* (include the db & pgadmin containers)
 
 ```bash
 docker-compose up -d
