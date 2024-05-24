@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  db:
+    container_name: saas-starter-db
+    image: postgres
+    restart: on-failure
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: saas-starter-kit
+    ports:
+      - 5432:5432

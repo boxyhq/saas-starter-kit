@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  saas-starter-kit:
+    container_name: saas-starter-kit
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    ports:
+      - "4002:4002"
+    env_file:
+      - .env
+    develop:
+      # rebuild image & recreate service
+      watch:
+        - path: ./componemts/
+          action: sync
+          target: /app/components/
+        - path: ./prisma/
+          action: sync
+          target: /app/prisma/
+        - path: ./pages/
+          action: sync
+          target: /app/pages/
+        - path: ./package.json
+          action: rebuild

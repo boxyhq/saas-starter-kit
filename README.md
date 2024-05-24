@@ -105,7 +105,7 @@ npm install
 
 #### 4. Set up your .env file
 
-Duplicate `.env.example` to `.env`.
+Duplicate `.env.example` to `.env`. And replace three placholders of the `DATABASE_URL=...` with the `environment:` settings of the `docker-compose.db.yml`
 
 ```bash
 cp .env.example .env
@@ -113,10 +113,10 @@ cp .env.example .env
 
 #### 5. Create a database (Optional)
 
-To make the process of installing dependencies easier, we offer a `docker-compose.yml` with a Postgres container.
+To make the process of installing dependencies easier, we offer a `docker-compose.db.yml` with a Postgres container.
 
 ```bash
-docker-compose up -d
+docker-compose -f docker-compose.db.yml up -d
 ```
 
 #### 6. Set up database schema
@@ -125,20 +125,34 @@ docker-compose up -d
 npx prisma db push
 ```
 
-#### 7. Start the server
+#### 7. Start the Prisma Studio
 
-In a development environment:
+Prisma Studio is a visual editor for the data in your database. Use `ctrl-C` to stop it.
+
+```bash
+npx prisma studio
+```
+
+#### 8. Start the Dev server
+
+The Dev server can be started on either local host dev environment or docker container
+
+**A. Start at local development environment:** (ctrl-C to quit)
 
 ```bash
 npm run dev
 ```
 
-#### 8. Start the Prisma Studio
-
-Prisma Studio is a visual editor for the data in your database.
+**B. Start as a Docker container service**
 
 ```bash
-npx prisma studio
+docker-compose -f docker-compose.kit.yml up -d
+```
+
+**C. Start as a Docker Compose stack** (include db container)
+
+```bash
+docker-compose up -d
 ```
 
 #### 9. Testing
