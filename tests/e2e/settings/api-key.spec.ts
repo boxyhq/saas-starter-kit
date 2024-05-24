@@ -1,7 +1,8 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { user, team, cleanup } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
 import { LoginPage } from '../support/fixtures/login-page';
+import { ApiKeysPage } from '../support/fixtures/api-keys-page';
 
 const apiKeyName = 'New Api Key';
 
@@ -19,21 +20,14 @@ test('Should be able to create new API Key', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await page.goto(`/teams/${team.slug}/api-keys`);
-  await page.waitForURL(`/teams/${team.slug}/api-keys`);
-  await page.waitForSelector('text=API Keys');
+  const apiKeyPage = new ApiKeysPage(page, team.slug);
 
-  await page.getByRole('button', { name: 'Create API Key' }).click();
-  await page.waitForSelector(`text=${apiKeyName}`);
-  await page.getByPlaceholder('My API Key').fill(apiKeyName);
-  await page
-    .getByLabel('Modal')
-    .getByRole('button', { name: 'Create API Key' })
-    .click();
-  await expect(page.getByRole('textbox').inputValue()).toBeTruthy();
+  await apiKeyPage.goto();
+
+  await apiKeyPage.createNewApiKey(apiKeyName);
 
   await page.reload();
-  await expect(page.locator(`text=${apiKeyName}`).first()).toBeVisible();
+  await apiKeyPage.apiKeyVisible(apiKeyName);
 });
 
 test('Should be able to delete API Key', async ({ page }) => {
@@ -42,19 +36,45 @@ test('Should be able to delete API Key', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await page.goto(`/teams/${team.slug}/api-keys`);
-  await page.waitForURL(`/teams/${team.slug}/api-keys`);
-  await page.waitForSelector('text=API Keys');
+  const apiKeyPage = new ApiKeysPage(page, team.slug);
 
-  await expect(page.locator(`text=${apiKeyName}`).first()).toBeVisible();
+  await apiKeyPage.goto();
 
-  await page.getByRole('button', { name: 'Revoke' }).click();
-  await page.waitForSelector(
-    'text=Are you sure you want to revoke this API key?'
-  );
-  await page.getByRole('button', { name: 'Revoke API Key' }).click();
-  await page.waitForSelector('text=API key deleted successfully');
-  await expect(
-    page.getByRole('heading', { name: "You haven't created any API" })
-  ).toBeVisible();
+  await apiKeyPage.apiKeyVisible(apiKeyName);
+
+  await apiKeyPage.revokeApiKey();
+  await apiKeyPage.checkNoApiKeys();
+});
+
+test('Should not allow to create API Key with empty name', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
+
+  const apiKeyPage = new ApiKeysPage(page, team.slug);
+
+  await apiKeyPage.goto();
+
+  await apiKeyPage.fillNewApiKeyName('');
+
+  await apiKeyPage.isCreateApiKeyButtonDisabled();
+});
+
+test('Should not allow to create API Key with more than 50 characters', async ({
+  page,
+}) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await loginPage.loggedInCheck(team.slug);
+
+  const apiKeyPage = new ApiKeysPage(page, team.slug);
+
+  await apiKeyPage.goto();
+
+  await apiKeyPage.fillNewApiKeyName('a'.repeat(51));
+
+  await apiKeyPage.isCreateApiKeyButtonDisabled();
+  await apiKeyPage.isApiKeyNameLengthErrorVisible();
 });

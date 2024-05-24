@@ -1,4 +1,4 @@
-import { chromium, expect, test } from '@playwright/test';
+import { chromium, test } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
 import { user, team, cleanup } from '../support/helper';
