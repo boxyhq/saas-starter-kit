@@ -32,6 +32,7 @@ export class DirectorySyncPage {
   }
 
   async verifyNewConnection(name: string) {
+    await expect(this.page.getByLabel('SCIM Endpoint')).toBeVisible();
     await expect(
       await this.page.getByLabel('SCIM Endpoint').inputValue()
     ).toContain('http://localhost:4002/api/scim/v2.0/');
@@ -39,6 +40,9 @@ export class DirectorySyncPage {
   }
 
   async verifyListedConnection(name: string) {
+    await expect(
+      this.page.getByRole('columnheader', { name: 'name' })
+    ).toBeVisible();
     await expect(this.page.getByRole('cell', { name })).toBeVisible();
     await expect(
       this.page.getByRole('cell', { name: 'Azure SCIM v2.0' })
