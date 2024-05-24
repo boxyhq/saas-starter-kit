@@ -1,11 +1,43 @@
 version: '3'
+
 services:
   db:
+    container_name: saas-starter-db
     image: postgres
-    restart: always
+    restart: on-failure
     environment:
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: admin
       POSTGRES_DB: saas-starter-kit
     ports:
       - 5432:5432
+  
+  pgadmin:
+    container_name: saas-pgadmin-ui
+    image: dpage/pgadmin4
+    restart: on-failure
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@data-cooker.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:5050"
+    depends_on:
+      - db
+
+  saas-starter-kit:
+    container_name: saas-starter-kit
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    ports:
+      - "4002:4002"
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+volumes:
+  pgadmin:
