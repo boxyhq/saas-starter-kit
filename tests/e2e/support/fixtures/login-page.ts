@@ -31,6 +31,10 @@ export class LoginPage {
     await this.page.waitForURL('/auth/login');
   }
 
+  async isMultipleTeamErrorVisible() {
+    await expect(this.page.getByText('User belongs to multiple')).toBeVisible();
+  }
+
   async loggedInCheck(teamSlug: string) {
     await this.page.waitForURL(`/teams/${teamSlug}/settings`);
     await this.page.waitForSelector('text=Team Settings');

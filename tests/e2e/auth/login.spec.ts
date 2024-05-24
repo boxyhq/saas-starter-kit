@@ -18,6 +18,6 @@ test('Should login a user', async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
-  await page.waitForURL('/dashboard');
+  await loginPage.page.waitForURL('/dashboard');
   await loginPage.loggedInCheck(team.slug);
 });

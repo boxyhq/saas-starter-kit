@@ -77,7 +77,7 @@ test('SSO login with 2 teams & two SSO connection', async ({ page }) => {
   await loginPage.goto();
   await loginPage.ssoLogin(user.email, true);
 
-  await expect(page.getByText('User belongs to multiple')).toBeVisible();
+  await loginPage.isMultipleTeamErrorVisible();
 
   await loginPage.ssoLoginWithSlug(team.slug);
 

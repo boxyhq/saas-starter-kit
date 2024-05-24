@@ -26,7 +26,7 @@ test('Should be able to create new API Key', async ({ page }) => {
 
   await apiKeyPage.createNewApiKey(apiKeyName);
 
-  await page.reload();
+  await apiKeyPage.page.reload();
   await apiKeyPage.apiKeyVisible(apiKeyName);
 });
 

@@ -27,7 +27,7 @@ test('Should be able to update team name', async ({ page }) => {
   const settingsPage = new SettingsPage(page, user.name);
   await settingsPage.updateTeamName(teamNewInfo.name);
 
-  await page.reload();
+  await settingsPage.page.reload();
   await settingsPage.isSettingsPageVisible();
   await settingsPage.checkTeamName(teamNewInfo.name);
 });
@@ -68,7 +68,7 @@ test('Should be able to update team slug', async ({ page }) => {
   const settingsPage = new SettingsPage(page, user.name);
   await settingsPage.updateTeamSlug(teamNewInfo.slug);
 
-  await page.reload();
+  await settingsPage.page.reload();
   await settingsPage.isSettingsPageVisible();
   await settingsPage.checkTeamSlug(teamNewInfo.sluggified);
 });
@@ -106,7 +106,7 @@ test('Should be able to set domain in team settings', async ({ page }) => {
 
   const settingsPage = new SettingsPage(page, user.name);
   await settingsPage.updateDomain('example.com');
-  await page.reload();
+  await settingsPage.page.reload();
   await settingsPage.isSettingsPageVisible();
   await settingsPage.checkDomain('example.com');
 });
