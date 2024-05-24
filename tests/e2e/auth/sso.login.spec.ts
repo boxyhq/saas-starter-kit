@@ -55,7 +55,8 @@ test('SSO login with 2 teams & one SSO connection', async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.goto();
   await loginPage.ssoLogin(user.email);
-  await page.waitForSelector('text=Team Settings');
+  const settingsPage = new SettingsPage(page, user.name);
+  await settingsPage.isSettingsPageVisible();
 });
 
 test('Create SSO connection for new team', async ({ page }) => {
@@ -64,7 +65,8 @@ test('Create SSO connection for new team', async ({ page }) => {
 
   await loginPage.goto();
   await loginPage.ssoLogin(user.email);
-  await page.waitForSelector('text=Team Settings');
+  const settingsPage = new SettingsPage(page, user.name);
+  await settingsPage.isSettingsPageVisible();
 
   await ssoPage.goto();
   await ssoPage.createSSOConnection(SSO_METADATA_URL[1]);
@@ -74,8 +76,9 @@ test('SSO login with 2 teams & two SSO connection', async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.goto();
   await loginPage.ssoLogin(user.email, true);
-  await page.waitForSelector('text=User belongs to multiple');
+
   await expect(page.getByText('User belongs to multiple')).toBeVisible();
+
   await loginPage.ssoLoginWithSlug(team.slug);
 
   const ssoPage = new SSOPage(page, secondTeam.slug);
@@ -91,7 +94,8 @@ test('Delete SSO connection', async ({ page }) => {
 
   await loginPage.goto();
   await loginPage.ssoLogin(user.email);
-  await page.waitForSelector('text=Team Settings');
+  const settingsPage = new SettingsPage(page, user.name);
+  await settingsPage.isSettingsPageVisible();
 
   await ssoPage.goto();
   await ssoPage.openEditSSOConnectionView();

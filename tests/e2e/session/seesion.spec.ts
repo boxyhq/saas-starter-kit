@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma';
 import { user, team, cleanup } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
 import { LoginPage } from '../support/fixtures/login-page';
+import { SettingsPage } from '../support/fixtures/settings-page';
+import { SecurityPage } from '../support/fixtures/security-page';
 
 test.afterAll(async () => {
   await cleanup();
@@ -22,11 +24,11 @@ test('Session is shown in security page ', async ({ page }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  await page.goto(`/settings/security`);
-  await page.waitForURL(`/settings/security`);
+  const settingsPage = new SettingsPage(page, team.slug);
+  await settingsPage.goto('security');
 
-  await page.waitForSelector('text=Browser Sessions');
-  expect(page.locator('text=This browser')).toBeVisible();
+  const securityPage = new SecurityPage(page);
+  await securityPage.checkCurrentSession();
 });
 
 test('2 session are shown in security page ', async ({ page }) => {
@@ -43,17 +45,13 @@ test('2 session are shown in security page ', async ({ page }) => {
   await loginPage1.credentialLogin(user.email, user.password);
   await loginPage1.loggedInCheck(team.slug);
 
-  await page1.goto(`/settings/security`);
-  await page1.waitForURL(`/settings/security`);
+  const settingsPage = new SettingsPage(page1, team.slug);
+  await settingsPage.goto('security');
 
-  await page1.waitForSelector('text=Browser Sessions');
-
-  await page1.waitForSelector('text=This browser');
-  expect(
-    await page1.getByText('Other', {
-      exact: true,
-    })
-  ).toBeDefined();
+  const securityPage = new SecurityPage(page1);
+  await securityPage.isPageVisible();
+  await securityPage.checkCurrentSession();
+  await securityPage.checkOtherSession();
 
   await browser1.close();
 });
@@ -72,33 +70,17 @@ test('On Remove session user logs out', async ({ page }) => {
   await loginPage1.credentialLogin(user.email, user.password);
   await loginPage1.loggedInCheck(team.slug);
 
-  await page1.goto(`/settings/security`);
-  await page1.waitForURL(`/settings/security`);
+  const settingsPage = new SettingsPage(page1, team.slug);
+  await settingsPage.goto('security');
 
-  await page1.waitForSelector('text=Browser Sessions');
+  const securityPage = new SecurityPage(page1);
+  await securityPage.isPageVisible();
+  await securityPage.checkCurrentSession();
+  await securityPage.checkOtherSession();
+  await securityPage.removeCurrentSession();
 
-  await page1.waitForSelector('text=This browser');
-  expect(
-    await page1.getByText('Other', {
-      exact: true,
-    })
-  ).toBeDefined();
+  loginPage1.isLoggedOut();
 
-  await page1
-    .getByRole('row', { name: 'This browser Remove' })
-    .getByRole('button')
-    .click();
-  await page1.waitForSelector('text=Remove Browser Session');
-
-  await page1
-    .getByLabel('Modal')
-    .getByRole('button', { name: 'Remove' })
-    .click();
-  expect(
-    await page1.getByText('Welcome back', {
-      exact: true,
-    })
-  ).toBeDefined();
   await browser1.close();
   await page.close();
 });

@@ -79,4 +79,12 @@ export class LoginPage {
       this.page.getByRole('heading', { name: 'Welcome back' })
     ).toBeVisible();
   }
+
+  async isLoggedOut() {
+    expect(
+      await this.page.getByText('Welcome back', {
+        exact: true,
+      })
+    ).toBeDefined();
+  }
 }

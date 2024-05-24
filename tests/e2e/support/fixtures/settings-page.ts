@@ -28,6 +28,98 @@ export class SettingsPage {
     ).toBeVisible();
   }
 
+  async isSettingsPageVisible() {
+    await this.page.waitForSelector('text=Team Settings');
+  }
+
+  async fillTeamName(teamName: string) {
+    await this.page.locator('input[name="name"]').fill(teamName);
+  }
+
+  async isSaveButtonDisabled() {
+    await expect(
+      await this.page.getByRole('button', { name: 'Save Changes' }).isDisabled()
+    ).toBeTruthy();
+  }
+
+  async isTeamNameLengthErrorVisible() {
+    await expect(
+      await this.page.getByText('Team name should have at most 50 characters')
+    ).toBeVisible();
+  }
+
+  async isTeamSlugLengthErrorVisible() {
+    await expect(
+      await this.page.getByText('Slug should have at most 50 characters')
+    ).toBeVisible();
+  }
+
+  async isDomainLengthErrorVisible() {
+    await expect(
+      await this.page.getByText('Domain should have at most 253 characters')
+    ).toBeVisible();
+  }
+
+  async isDomainInvalidErrorVisible() {
+    await expect(
+      await this.page.getByText('Enter a domain name in the format example.com')
+    ).toBeVisible();
+  }
+
+  async clickSaveButton() {
+    await this.page.getByRole('button', { name: 'Save Changes' }).click();
+  }
+
+  async updateTeamName(newTeamName: string) {
+    await this.fillTeamName(newTeamName);
+    await this.clickSaveButton();
+    await expect(
+      await this.page.getByText('Changes saved successfully.')
+    ).toBeVisible();
+  }
+
+  async fillTeamSlug(teamSlug: string) {
+    await this.page.locator('input[name="slug"]').fill(teamSlug);
+  }
+
+  async updateTeamSlug(newTeamSlug: string) {
+    await this.fillTeamSlug(newTeamSlug);
+    await this.clickSaveButton();
+    await expect(
+      await this.page.getByText('Changes saved successfully.')
+    ).toBeVisible();
+  }
+
+  async fillDomain(domain: string) {
+    await this.page.locator('input[name="domain"]').fill(domain);
+  }
+
+  async updateDomain(domain: string) {
+    await this.fillDomain(domain);
+    await this.clickSaveButton();
+    await expect(
+      await this.page.getByText('Changes saved successfully.')
+    ).toBeVisible();
+  }
+
+  async checkTeamName(teamName: string) {
+    await expect(
+      await this.page.locator('input[name="name"]').inputValue()
+    ).toBe(teamName);
+  }
+
+  async checkTeamSlug(teamSlug: string) {
+    await expect(
+      await this.page.locator('input[name="slug"]').inputValue()
+    ).toBe(teamSlug);
+  }
+
+  async checkDomain(domain: string) {
+    await expect(
+      await this.page.locator('input[name="domain"]').inputValue()
+    ).toBe(domain);
+  }
+
   async createNewTeam(teamName: string) {
     await this.page.getByText('Example').first().click();
     await this.newTeamMenu.click();
@@ -36,5 +128,10 @@ export class SettingsPage {
     await this.createTeamDialogButton.click();
 
     await this.page.waitForSelector('text=Team created successfully.');
+  }
+
+  async goto(pageName: 'security' | 'api-keys') {
+    await this.page.goto(`/settings/${pageName}`);
+    await this.page.waitForURL(`/settings/${pageName}`);
   }
 }
