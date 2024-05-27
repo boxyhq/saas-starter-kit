@@ -19,6 +19,7 @@ const test = base.extend<IdpInitiatedFixture>({
   },
   joinPage: async ({ page }, use) => {
     const joinPage = new JoinPage(page, user, team.name);
+    await joinPage.goto();
     await use(joinPage);
   },
   ssoPage: async ({ page }, use) => {
@@ -36,7 +37,6 @@ test('Sign up and create SSO connection', async ({
   ssoPage,
   loginPage,
 }) => {
-  await joinPage.goto();
   await joinPage.signUp();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
