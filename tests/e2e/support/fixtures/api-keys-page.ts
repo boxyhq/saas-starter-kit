@@ -1,11 +1,37 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 export class ApiKeysPage {
+  private readonly modalCreateApiKeyButton: Locator;
+  private readonly createApiKeyButton: Locator;
+  private readonly apiKeyNameInput: Locator;
+  private readonly noApiKeysExistsHeader: Locator;
+  private readonly revokeApiKeyButton: Locator;
+  private readonly revokeApiKeyConfirmationButton: Locator;
+  private readonly apiKeyTextBox: Locator;
+
   constructor(
     public readonly page: Page,
     public readonly teamSlug: string
-  ) {}
+  ) {
+    this.modalCreateApiKeyButton = this.page
+      .getByLabel('Modal')
+      .getByRole('button', { name: 'Create API Key' });
+    this.createApiKeyButton = this.page.getByRole('button', {
+      name: 'Create API Key',
+    });
+    this.apiKeyNameInput = this.page.getByPlaceholder('My API Key');
+    this.noApiKeysExistsHeader = this.page.getByRole('heading', {
+      name: "You haven't created any API",
+    });
+    this.revokeApiKeyButton = this.page.getByRole('button', {
+      name: 'Revoke',
+    });
+    this.revokeApiKeyConfirmationButton = this.page.getByRole('button', {
+      name: 'Revoke API Key',
+    });
+    this.apiKeyTextBox = this.page.getByRole('textbox');
+  }
 
   async goto() {
     await this.page.goto(`/teams/${this.teamSlug}/api-keys`);
@@ -15,17 +41,14 @@ export class ApiKeysPage {
 
   async createNewApiKey(name: string) {
     await this.fillNewApiKeyName(name);
-    await this.page
-      .getByLabel('Modal')
-      .getByRole('button', { name: 'Create API Key' })
-      .click();
-    await expect(this.page.getByRole('textbox').inputValue()).toBeTruthy();
+    await this.modalCreateApiKeyButton.click();
+    await expect(this.apiKeyTextBox.inputValue()).toBeTruthy();
   }
 
   async fillNewApiKeyName(name: string) {
-    await this.page.getByRole('button', { name: 'Create API Key' }).click();
+    await this.createApiKeyButton.click();
     await this.page.waitForSelector(`text=New API Key`);
-    await this.page.getByPlaceholder('My API Key').fill(name);
+    await this.apiKeyNameInput.fill(name);
   }
 
   async apiKeyVisible(name: string) {
@@ -33,11 +56,11 @@ export class ApiKeysPage {
   }
 
   async revokeApiKey() {
-    await this.page.getByRole('button', { name: 'Revoke' }).click();
+    await this.revokeApiKeyButton.click();
     await this.page.waitForSelector(
       'text=Are you sure you want to revoke this API key?'
     );
-    await this.page.getByRole('button', { name: 'Revoke API Key' }).click();
+    await this.revokeApiKeyConfirmationButton.click();
     await this.page.waitForSelector('text=API key deleted successfully');
   }
 
@@ -48,17 +71,10 @@ export class ApiKeysPage {
   }
 
   async isCreateApiKeyButtonDisabled() {
-    await expect(
-      await this.page
-        .getByLabel('Modal')
-        .getByRole('button', { name: 'Create API Key' })
-        .isDisabled()
-    ).toBeTruthy();
+    await expect(await this.modalCreateApiKeyButton.isDisabled()).toBeTruthy();
   }
 
   async checkNoApiKeys() {
-    await expect(
-      this.page.getByRole('heading', { name: "You haven't created any API" })
-    ).toBeVisible();
+    await expect(this.noApiKeysExistsHeader).toBeVisible();
   }
 }

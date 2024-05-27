@@ -2,8 +2,9 @@ import type { Page, Locator } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 export class LoginPage {
-  private readonly IDP_LOGIN_URL = `${process.env.MOCKSAML_ORIGIN}/saml/login`;
-  private readonly ACS_URL = `${process.env.APP_URL}/api/oauth/saml`;
+  private readonly IDP_LOGIN_URL: string;
+  private readonly ACS_URL: string;
+
   private readonly emailBox: Locator;
   private readonly passwordBox: Locator;
   private readonly signInButton: Locator;
@@ -11,8 +12,22 @@ export class LoginPage {
   private readonly continueWithSSOLink: Locator;
   private readonly ssoEmailBox: Locator;
   private readonly slugInput: Locator;
+  private readonly welcomeBackHeading: Locator;
+  private readonly multipleTeamErrorText: Locator;
+  private readonly createNewAccountButton: Locator;
+  private readonly yourNameInput: Locator;
+  private readonly yourEmailInput: Locator;
+  private readonly yourPasswordInput: Locator;
+  private readonly createAccountButton: Locator;
+  private readonly successfullyCreatedText: Locator;
+  private readonly logInUsingExistingButton: Locator;
+  private readonly idpSignInButton: Locator;
+  private readonly joinTeamButton: Locator;
 
   constructor(public readonly page: Page) {
+    this.IDP_LOGIN_URL = `${process.env.MOCKSAML_ORIGIN}/saml/login`;
+    this.ACS_URL = `${process.env.APP_URL}/api/oauth/saml`;
+
     this.emailBox = this.page.getByPlaceholder('Email');
     this.passwordBox = this.page.getByPlaceholder('Password');
     this.signInButton = this.page.getByRole('button', { name: 'Sign in' });
@@ -24,6 +39,33 @@ export class LoginPage {
     });
     this.ssoEmailBox = this.page.getByPlaceholder('user@boxyhq.com');
     this.slugInput = this.page.getByPlaceholder('boxyhq');
+    this.welcomeBackHeading = this.page.getByText('Welcome back', {
+      exact: true,
+    });
+    this.multipleTeamErrorText = this.page.getByText(
+      'User belongs to multiple'
+    );
+    this.createNewAccountButton = this.page.getByRole('button', {
+      name: 'Create a new account',
+    });
+    this.yourNameInput = this.page.getByPlaceholder('Your Name');
+    this.yourEmailInput = this.page.getByPlaceholder('Email');
+    this.yourPasswordInput = this.page.getByPlaceholder('Password');
+    this.createAccountButton = this.page.getByRole('button', {
+      name: 'Create Account',
+    });
+    this.successfullyCreatedText = this.page.getByText(
+      'You have successfully created'
+    );
+    this.logInUsingExistingButton = this.page.getByRole('button', {
+      name: 'Log in using an existing',
+    });
+    this.idpSignInButton = this.page.getByRole('button', {
+      name: 'Sign In',
+    });
+    this.joinTeamButton = this.page.getByRole('button', {
+      name: 'Join the Team',
+    });
   }
 
   async goto() {
@@ -32,7 +74,7 @@ export class LoginPage {
   }
 
   async isMultipleTeamErrorVisible() {
-    await expect(this.page.getByText('User belongs to multiple')).toBeVisible();
+    await expect(this.multipleTeamErrorText).toBeVisible();
   }
 
   async loggedInCheck(teamSlug: string) {
@@ -41,10 +83,7 @@ export class LoginPage {
   }
 
   async credentialLogin(email: string, password: string) {
-    await expect(
-      this.page.getByRole('heading', { name: 'Welcome back' })
-    ).toBeVisible();
-    await this.emailBox.focus();
+    await expect(this.welcomeBackHeading).toBeVisible();
     await this.emailBox.fill(email);
     await this.passwordBox.fill(password);
     await this.signInButton.click();
@@ -74,15 +113,13 @@ export class LoginPage {
     await this.page
       .getByPlaceholder('https://sso.eu.boxyhq.com/api')
       .fill(this.ACS_URL);
-    await this.page.getByRole('button', { name: 'Sign In' }).click();
+    await this.idpSignInButton.click();
   }
 
   async logout(name: string) {
     await this.page.locator('button').filter({ hasText: name }).click();
     await this.page.getByRole('button', { name: 'Sign out' }).click();
-    await expect(
-      this.page.getByRole('heading', { name: 'Welcome back' })
-    ).toBeVisible();
+    await expect(this.welcomeBackHeading).toBeVisible();
   }
 
   async isLoggedOut() {
@@ -101,30 +138,26 @@ export class LoginPage {
   }
 
   public async invitationAcceptPromptVisible(invitingCompany: string) {
-    await expect(
-      this.page.getByRole('heading', {
-        name: `${invitingCompany} is inviting you to`,
-      })
-    ).toBeVisible();
+    await expect(this.invitationMessage(invitingCompany)).toBeVisible();
+  }
+
+  private invitationMessage(invitingCompany: string): Locator {
+    return this.page.getByRole('heading', {
+      name: `${invitingCompany} is inviting you to`,
+    });
   }
 
   public async acceptInvitation() {
-    await this.page.getByRole('button', { name: 'Join the Team' }).click();
+    await this.joinTeamButton.click();
     await this.page.waitForSelector('text=Team Settings');
   }
 
   async createNewAccountViaInvite(name: string, password: string) {
-    await this.page
-      .getByRole('button', { name: 'Create a new account' })
-      .click();
-
-    await this.page.getByPlaceholder('Your Name').fill(name);
-    await this.page.getByPlaceholder('Password').fill(password);
-    await this.page.getByRole('button', { name: 'Create Account' }).click();
-
-    await expect(
-      this.page.getByText('You have successfully created')
-    ).toBeVisible();
+    await this.createNewAccountButton.click();
+    await this.yourNameInput.fill(name);
+    await this.yourPasswordInput.fill(password);
+    await this.createAccountButton.click();
+    await expect(this.successfullyCreatedText).toBeVisible();
   }
 
   async createNewAccountViaInviteLink(
@@ -133,29 +166,18 @@ export class LoginPage {
     password: string,
     invitingCompany: string
   ) {
-    await expect(
-      this.page.getByRole('heading', {
-        name: `${invitingCompany} is inviting you to`,
-      })
-    ).toBeVisible();
+    await expect(this.invitationMessage(invitingCompany)).toBeVisible();
 
-    await this.page
-      .getByRole('button', { name: 'Create a new account' })
-      .click();
-    await this.page.getByPlaceholder('Your Name').fill(name);
-    await this.page.getByPlaceholder('Email').fill(email);
-    await this.page.getByPlaceholder('Password').fill(password);
-    await this.page.getByRole('button', { name: 'Create Account' }).click();
-
-    await expect(
-      await this.page.getByText('You have successfully created')
-    ).toBeVisible();
+    await this.createNewAccountButton.click();
+    await this.yourNameInput.fill(name);
+    await this.yourEmailInput.fill(email);
+    await this.yourPasswordInput.fill(password);
+    await this.createAccountButton.click();
+    await expect(this.successfullyCreatedText).toBeVisible();
   }
 
   async acceptInvitationWithExistingAccount(email: string, password: string) {
-    await this.page
-      .getByRole('button', { name: 'Log in using an existing' })
-      .click();
+    await this.logInUsingExistingButton.click();
     await this.credentialLogin(email, password);
   }
 
