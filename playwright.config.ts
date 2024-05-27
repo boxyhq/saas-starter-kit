@@ -1,6 +1,8 @@
 import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
+  workers: 1,
+  globalSetup: require.resolve('./tests/e2e/support/globalSetup.ts'),
   projects: [
     {
       name: 'chromium',
@@ -19,7 +21,7 @@ const config: PlaywrightTestConfig = {
     baseURL: 'http://localhost:4002',
     video: 'off',
   },
-  testDir: './tests',
+  testDir: './tests/e2e',
 };
 
 export default config;

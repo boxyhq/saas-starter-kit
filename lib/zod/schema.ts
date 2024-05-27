@@ -28,7 +28,7 @@ import {
 } from './primitives';
 
 export const createApiKeySchema = z.object({
-  name: teamName,
+  name: name(50),
 });
 
 export const deleteApiKeySchema = z.object({
@@ -54,7 +54,7 @@ export const updateAccountSchema = z.union([
     email,
   }),
   z.object({
-    name,
+    name: name(),
   }),
   z.object({
     image,
@@ -72,7 +72,7 @@ export const userJoinSchema = z.union([
     slug,
   }),
   z.object({
-    name,
+    name: name(),
     email,
     password,
   }),
@@ -133,7 +133,7 @@ export const getInvitationSchema = z.object({
 });
 
 export const webhookEndpointSchema = z.object({
-  name,
+  name: name(),
   url,
   eventTypes,
 });
@@ -161,3 +161,13 @@ export const deleteWebhookSchema = z.object({
 export const deleteMemberSchema = z.object({
   memberId,
 });
+
+// email or slug
+export const ssoVerifySchema = z
+  .object({
+    email: email.optional().or(z.literal('')),
+    slug: slug.optional().or(z.literal('')),
+  })
+  .refine((data) => data.email || data.slug, {
+    message: 'At least one of email or slug is required',
+  });

@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { type ReactElement } from 'react';
+import { type ReactElement, useState } from 'react';
 import { Button } from 'react-daisyui';
 import { toast } from 'react-hot-toast';
 import type { NextPageWithLayout } from 'types';
@@ -22,16 +22,27 @@ const SSO: NextPageWithLayout<
   const { t } = useTranslation('common');
   const { status } = useSession();
   const router = useRouter();
+  const [useEmail, setUseEmail] = useState(true);
 
   const formik = useFormik({
     initialValues: {
       slug: '',
+      email: '',
     },
-    validationSchema: Yup.object().shape({
-      slug: Yup.string()
-        .required('Team slug is required')
-        .max(maxLengthPolicies.slug),
-    }),
+    validationSchema: Yup.object().shape(
+      useEmail
+        ? {
+            email: Yup.string()
+              .email()
+              .required('Email is required')
+              .max(maxLengthPolicies.email),
+          }
+        : {
+            slug: Yup.string()
+              .required('Team slug is required')
+              .max(maxLengthPolicies.slug),
+          }
+    ),
     onSubmit: async (values) => {
       const response = await fetch('/api/auth/sso/verify', {
         method: 'POST',
@@ -44,7 +55,12 @@ const SSO: NextPageWithLayout<
         toast.error(error.message);
         return;
       }
-
+      if (data.useSlug) {
+        formik.resetForm();
+        setUseEmail(false);
+        toast.error(t('multiple-sso-teams'));
+        return;
+      }
       await signIn('boxyhq-saml', undefined, {
         tenant: data.teamId,
         product: jacksonProductId,
@@ -68,16 +84,28 @@ const SSO: NextPageWithLayout<
       <div className="rounded p-6 border">
         <form onSubmit={formik.handleSubmit}>
           <div className="space-y-2">
-            <InputWithLabel
-              type="text"
-              label="Team slug"
-              name="slug"
-              placeholder="boxyhq"
-              value={formik.values.slug}
-              descriptionText="Contact your administrator to get your team slug"
-              error={formik.touched.slug ? formik.errors.slug : undefined}
-              onChange={formik.handleChange}
-            />
+            {useEmail ? (
+              <InputWithLabel
+                type="email"
+                label="Email"
+                name="email"
+                placeholder="user@boxyhq.com"
+                value={formik.values.email}
+                error={formik.touched.email ? formik.errors.email : undefined}
+                onChange={formik.handleChange}
+              />
+            ) : (
+              <InputWithLabel
+                type="text"
+                label="Team slug"
+                name="slug"
+                placeholder="boxyhq"
+                value={formik.values.slug}
+                descriptionText="Contact your administrator to get your team slug"
+                error={formik.touched.slug ? formik.errors.slug : undefined}
+                onChange={formik.handleChange}
+              />
+            )}
             <Button
               type="submit"
               color="primary"

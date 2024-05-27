@@ -38,16 +38,14 @@ export const teamName = z
     `Team name should have at most ${maxLengthPolicies.team} characters`
   );
 
-export const name = z
-  .string({
-    required_error: 'Name is required',
-    invalid_type_error: 'Name must be a string',
-  })
-  .min(1, 'Name is required')
-  .max(
-    maxLengthPolicies.name,
-    `Name should have at most ${maxLengthPolicies.name} characters`
-  );
+export const name = (length: number = maxLengthPolicies.name) =>
+  z
+    .string({
+      required_error: 'Name is required',
+      invalid_type_error: 'Name must be a string',
+    })
+    .min(1, 'Name is required')
+    .max(length, `Name should have at most ${length} characters`);
 
 export const slug = z
   .string({
