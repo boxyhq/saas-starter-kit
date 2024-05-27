@@ -1,4 +1,4 @@
-import { chromium, expect, test } from '@playwright/test';
+import { chromium, expect, test as base } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
 import { user, team, cleanup } from '../support/helper';
@@ -7,6 +7,28 @@ import { LoginPage } from '../support/fixtures/login-page';
 import { MemberPage } from '../support/fixtures/member-page';
 
 let domainInviteLink = '';
+
+type MemberFixture = {
+  joinPage: JoinPage;
+  loginPage: LoginPage;
+  memberPage: MemberPage;
+};
+
+const test = base.extend<MemberFixture>({
+  joinPage: async ({ page }, use) => {
+    const joinPage = new JoinPage(page, user, team.name);
+    await joinPage.goto();
+    await use(joinPage);
+  },
+  loginPage: async ({ page }, use) => {
+    const loginPage = new LoginPage(page);
+    await use(loginPage);
+  },
+  memberPage: async ({ page }, use) => {
+    const apiKeysPage = new MemberPage(page, team.slug);
+    await use(apiKeysPage);
+  },
+});
 
 const invitedUser = {
   name: 'Admin',
@@ -40,28 +62,30 @@ test.afterAll(async () => {
   await cleanup();
 });
 
-test('Should be able to get the list of members', async ({ page }) => {
-  const joinPage = new JoinPage(page, user, team.name);
+test('Should be able to get the list of members', async ({
+  loginPage,
+  memberPage,
+  joinPage,
+}) => {
   await joinPage.goto();
   await joinPage.signUp();
 
-  const loginPage = new LoginPage(page);
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  const memberPage = new MemberPage(page, team.slug);
   await memberPage.goto();
   await memberPage.teamMemberExists(user.name, user.email, 'OWNER');
 });
 
-test('Should be able to invite a new member', async ({ page }) => {
-  const loginPage = new LoginPage(page);
+test('Should be able to invite a new member', async ({
+  loginPage,
+  memberPage,
+}) => {
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  const memberPage = new MemberPage(page, team.slug);
   await memberPage.goto();
   await memberPage.inviteByEmail(invitedUser.email);
   await memberPage.membersPageVisible();
@@ -69,39 +93,34 @@ test('Should be able to invite a new member', async ({ page }) => {
 });
 
 test('New memeber should be able to accept the invitation', async ({
-  page,
+  loginPage,
 }) => {
-  const loginPage = new LoginPage(page);
   const invitation = await getAndVerifyInvitation(invitedUser.email);
-
   const invitationLink = `${process.env.APP_URL}/invitations/${invitation?.token}`;
   await loginPage.gotoInviteLink(invitationLink, team.name);
-
   await loginPage.createNewAccountViaInvite(
     invitedUser.name,
     invitedUser.password
   );
 
   await loginPage.credentialLogin(invitedUser.email, invitedUser.password);
-
   await loginPage.invitationAcceptPromptVisible(team.name);
-
   await loginPage.acceptInvitation();
 });
 
 test('Existing user should be able to accept the invitation', async ({
+  loginPage,
+  memberPage,
   page,
 }) => {
   const joinPage = new JoinPage(page, secondUser, secondUser.team.name);
   await joinPage.goto();
   await joinPage.signUp();
 
-  const loginPage = new LoginPage(page);
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  const memberPage = new MemberPage(page, team.slug);
   await memberPage.goto();
 
   await memberPage.inviteByEmail(secondUser.email);
@@ -136,13 +155,14 @@ test('Existing user should be able to accept the invitation', async ({
   await page1.close();
 });
 
-test('Should be able to create invite using domain', async ({ page }) => {
-  const loginPage = new LoginPage(page);
+test('Should be able to create invite using domain', async ({
+  loginPage,
+  memberPage,
+}) => {
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  const memberPage = new MemberPage(page, team.slug);
   await memberPage.goto();
 
   domainInviteLink = await memberPage.createInviteLink('example.com');
@@ -167,9 +187,8 @@ test('Should be able to create invite using domain', async ({ page }) => {
 });
 
 test('Should not allow to invite a member with invalid domain', async ({
-  page,
+  loginPage,
 }) => {
-  const loginPage = new LoginPage(page);
   await loginPage.gotoInviteLink(domainInviteLink, team.name);
   await loginPage.createNewAccountViaInviteLink(
     invalidDomainUser.name,
@@ -177,52 +196,45 @@ test('Should not allow to invite a member with invalid domain', async ({
     invalidDomainUser.password,
     team.name
   );
-
   await loginPage.credentialLogin(
     invalidDomainUser.email,
     invalidDomainUser.password
   );
-
   await loginPage.invitationAcceptPromptVisible(team.name);
-
   await loginPage.invalidDomainErrorVisible(invalidDomainUser.email);
 });
 
-test('Should be able to remove a member', async ({ page }) => {
-  const loginPage = new LoginPage(page);
+test('Should be able to remove a member', async ({ loginPage, memberPage }) => {
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  const memberPage = new MemberPage(page, team.slug);
   await memberPage.goto();
-
   await memberPage.removeMember();
 });
 
-test('Should not allow invalid email to be invited', async ({ page }) => {
-  const loginPage = new LoginPage(page);
+test('Should not allow invalid email to be invited', async ({
+  loginPage,
+  memberPage,
+}) => {
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  const memberPage = new MemberPage(page, team.slug);
   await memberPage.goto();
-
   await memberPage.openInviteModal();
-
   await memberPage.fillEmailForInvite('aaaaaaaaaaaaaaaaaaaa@.com');
-
   await memberPage.isInviteButtonDisabled();
 });
 
-test('Should not allow email with invalid length', async ({ page }) => {
-  const loginPage = new LoginPage(page);
+test('Should not allow email with invalid length', async ({
+  loginPage,
+  memberPage,
+}) => {
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
-  const memberPage = new MemberPage(page, team.slug);
   await memberPage.goto();
 
   await memberPage.openInviteModal();
