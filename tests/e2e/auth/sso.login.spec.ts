@@ -64,7 +64,7 @@ test('Sign up and create SSO connection', async ({
   await ssoPage.createSSOConnection(SSO_METADATA_URL[0]);
 });
 
-test('Login with SSO', async ({ loginPage, page }) => {
+test('Login with SSO', async ({ loginPage }) => {
   await loginPage.goto();
   await loginPage.ssoLogin(user.email);
   await loginPage.loggedInCheck(team.slug);
