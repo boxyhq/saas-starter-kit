@@ -102,7 +102,7 @@ export class DirectorySyncPage {
   async verifyNewConnection(name: string) {
     await expect(this.scimEndpointLabel).toBeVisible();
     await expect(await this.scimEndpointLabel.inputValue()).toContain(
-      `${process.env.JACKSON_URL || 'http://localhost:4003'}/api/scim/v2.0/`
+      `${process.env.JACKSON_URL || process.env.APP_URL}/api/scim/v2.0/`
     );
     await expect(this.directoryNameField).toHaveValue(name);
   }
