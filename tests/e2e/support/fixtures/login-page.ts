@@ -26,7 +26,7 @@ export class LoginPage {
 
   constructor(public readonly page: Page) {
     this.IDP_LOGIN_URL = `${process.env.MOCKSAML_ORIGIN}/saml/login`;
-    this.ACS_URL = `${process.env.APP_URL}/api/oauth/saml`;
+    this.ACS_URL = `${process.env.JACKSON_URL || process.env.APP_URL}/api/oauth/saml`;
 
     this.emailBox = this.page.getByPlaceholder('Email');
     this.passwordBox = this.page.getByPlaceholder('Password');
