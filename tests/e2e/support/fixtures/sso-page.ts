@@ -6,6 +6,8 @@ export class SSOPage {
   private readonly saveButton: Locator;
   private readonly deleteButton: Locator;
   private readonly confirmButton: Locator;
+  private readonly xmlField: Locator;
+
   constructor(
     public readonly page: Page,
     public readonly teamSlug: string
@@ -19,6 +21,7 @@ export class SSOPage {
     this.saveButton = page.getByRole('button', { name: 'Save' });
     this.deleteButton = page.getByRole('button', { name: 'Delete' });
     this.confirmButton = page.getByRole('button', { name: 'Confirm' });
+    this.xmlField = page.getByPlaceholder('Paste the raw XML here');
   }
 
   async goto() {
@@ -29,7 +32,7 @@ export class SSOPage {
 
   async createSSOConnection(metadataUrl: string) {
     await this.newConnectionButton.click();
-    await this.metadataUrlField.fill(metadataUrl);
+    await this.fillSSOConnectionForm(metadataUrl);
     await this.saveButton.click();
     await this.page.waitForURL(`/teams/${this.teamSlug}/sso`);
     await this.page.waitForSelector('text=saml.example.com');
@@ -48,5 +51,16 @@ export class SSOPage {
     );
     await this.confirmButton.click();
     await this.page.waitForSelector('text=Manage SSO Connections');
+  }
+
+  async fillSSOConnectionForm(metadataUrl: string) {
+    if (process.env.JACKSON_URL) {
+      // fetch the data from metadata url
+      const response = await fetch(metadataUrl);
+      const data = await response.text();
+      await this.xmlField.fill(data);
+    } else {
+      await this.metadataUrlField.fill(metadataUrl);
+    }
   }
 }
