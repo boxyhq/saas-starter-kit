@@ -30,7 +30,6 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-
   @@index([userId])
 }
 
@@ -192,7 +191,7 @@ model jackson_store {
   tag        String?   @db.VarChar(64)
   createdAt  DateTime  @default(now()) @db.Timestamp(6)
   modifiedAt DateTime? @db.Timestamp(6)
-  namespace  String?   @db.VarChar(64)
+  namespace  String?   @db.VarChar(256)
 
   jackson_index jackson_index[]
 
