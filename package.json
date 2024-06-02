@@ -89,7 +89,7 @@
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
     "postcss": "8.4.38",
-    "prettier": "3.2.5",
+    "prettier": "3.3.0",
     "prettier-plugin-tailwindcss": "0.6.1",
     "prisma": "5.14.0",
     "release-it": "17.3.0",
