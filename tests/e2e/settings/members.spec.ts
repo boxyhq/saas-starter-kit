@@ -119,9 +119,7 @@ test('Existing user should be able to accept the invitation', async ({
   await expect(
     page.getByRole('cell', { name: `U ${secondUser.email}` })
   ).toBeVisible();
-  await expect(
-    (await page.getByRole('cell', { name: 'MEMBER' }).all()).length
-  ).toBe(2);
+  await expect(page.getByRole('cell', { name: 'MEMBER' })).toHaveCount(2);
 
   const invitation = await getAndVerifyInvitation(secondUser.email);
 
