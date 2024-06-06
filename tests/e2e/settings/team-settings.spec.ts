@@ -1,8 +1,6 @@
 import { test as base } from '@playwright/test';
-import { user, team, cleanup } from '../support/helper';
-import { JoinPage } from '../support/fixtures/join-page';
-import { LoginPage } from '../support/fixtures/login-page';
-import { SettingsPage } from '../support/fixtures/settings-page';
+import { user, team } from '../support/helper';
+import { JoinPage, LoginPage, SettingsPage } from '../support/fixtures';
 
 const teamNewInfo = {
   name: 'New Team Name',
@@ -31,18 +29,10 @@ const test = base.extend<TeamSettingsFixture>({
   },
 });
 
-test.afterAll(async () => {
-  await cleanup();
-});
-
 test('Should be able to update team name', async ({
-  joinPage,
   loginPage,
   settingsPage,
 }) => {
-  await joinPage.goto();
-  await joinPage.signUp();
-
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);

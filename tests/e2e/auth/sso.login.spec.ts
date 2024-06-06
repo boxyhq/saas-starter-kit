@@ -1,9 +1,11 @@
 import { test as base } from '@playwright/test';
-import { user, team, cleanup, secondTeam } from '../support/helper';
-import { JoinPage } from '../support/fixtures/join-page';
-import { LoginPage } from '../support/fixtures/login-page';
-import { SSOPage } from '../support/fixtures/sso-page';
-import { SettingsPage } from '../support/fixtures/settings-page';
+import { user, team, secondTeam } from '../support/helper';
+import {
+  JoinPage,
+  LoginPage,
+  SSOPage,
+  SettingsPage,
+} from '../support/fixtures';
 
 const SSO_METADATA_URL = [
   `${process.env.MOCKSAML_ORIGIN}/api/saml/metadata`,
@@ -23,11 +25,6 @@ const test = base.extend<SSOLoginFixture>({
     const loginPage = new LoginPage(page);
     await use(loginPage);
   },
-  joinPage: async ({ page }, use) => {
-    const joinPage = new JoinPage(page, user, team.name);
-    await joinPage.goto();
-    await use(joinPage);
-  },
   ssoPageTeam: async ({ page }, use) => {
     const ssoPage = new SSOPage(page, team.slug);
     await use(ssoPage);
@@ -42,16 +39,11 @@ const test = base.extend<SSOLoginFixture>({
   },
 });
 
-test.afterAll(async () => {
-  await cleanup();
-});
-
-test('Sign up and create SSO connection', async ({
-  joinPage,
+test('Create SSO connection for team', async ({
   loginPage,
   ssoPageTeam: ssoPage,
 }) => {
-  await joinPage.signUp();
+  await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
@@ -123,4 +115,12 @@ test('Delete SSO connection', async ({
   await ssoPage.goto();
   await ssoPage.openEditSSOConnectionView();
   await ssoPage.deleteSSOConnection();
+});
+
+test('Remove second team', async ({ loginPage, settingsPage }) => {
+  await loginPage.goto();
+  await loginPage.credentialLogin(user.email, user.password);
+  await settingsPage.isSettingsPageVisible();
+
+  await settingsPage.removeTeam(secondTeam.slug);
 });
