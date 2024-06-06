@@ -37,6 +37,7 @@ jobs:
       JACKSON_WEBHOOK_SECRET: your-webhook-secret
       JACKSON_API_KEY: secret
       DB_MANUAL_MIGRATION: true
+      DEBUG: pw:webserver
 
     services:
       postgres:
