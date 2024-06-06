@@ -117,21 +117,17 @@ export class SettingsPage {
   }
 
   async checkTeamName(teamName: string) {
-    await expect(
-      await this.page.locator('input[name="name"]').inputValue()
-    ).toBe(teamName);
+    await expect(this.page.locator('input[name="name"]')).toHaveValue(teamName);
   }
 
   async checkTeamSlug(teamSlug: string) {
-    await expect(
-      await this.page.locator('input[name="slug"]').inputValue()
-    ).toBe(teamSlug);
+    await expect(this.page.locator('input[name="slug"]')).toHaveValue(teamSlug);
   }
 
   async checkDomain(domain: string) {
-    await expect(
-      await this.page.locator('input[name="domain"]').inputValue()
-    ).toBe(domain);
+    await expect(await this.page.locator('input[name="domain"]')).toHaveValue(
+      domain
+    );
   }
 
   async createNewTeam(teamName: string) {
