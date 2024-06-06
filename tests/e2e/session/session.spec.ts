@@ -44,10 +44,11 @@ test('Session is shown in security page ', async ({
   await securityPage.checkCurrentSession();
 });
 
-test('2 session are shown in security page ', async () => {
-  const browser1 = await chromium.launch();
-  const page1 = await browser1.newPage();
-
+test('2 session are shown in security page ', async ({ browser }) => {
+  // Create a new incognito browser context.
+  const context = await browser.newContext();
+  // Create a new incognito browser context.
+  const page1 = await context.newPage();
   const loginPage1 = new LoginPage(page1);
   await loginPage1.goto();
   await loginPage1.credentialLogin(user.email, user.password);
@@ -61,16 +62,14 @@ test('2 session are shown in security page ', async () => {
   await securityPage.checkCurrentSession();
   await securityPage.checkOtherSession();
 
-  await browser1.close();
+  await context.close();
 });
 
-test('On Remove session user logs out', async ({ loginPage }) => {
-  await loginPage.goto();
-  await loginPage.credentialLogin(user.email, user.password);
-  await loginPage.loggedInCheck(team.slug);
-
-  const browser1 = await chromium.launch();
-  const page1 = await browser1.newPage();
+test('On Remove session user logs out', async ({ browser }) => {
+  // Create a new incognito browser context.
+  const context = await browser.newContext();
+  // Create a new incognito browser context.
+  const page1 = await context.newPage();
 
   const loginPage1 = new LoginPage(page1);
   await loginPage1.goto();
@@ -88,6 +87,5 @@ test('On Remove session user logs out', async ({ loginPage }) => {
 
   loginPage1.isLoggedOut();
 
-  await browser1.close();
-  await securityPage.page.close();
+  await context.close();
 });
