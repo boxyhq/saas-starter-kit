@@ -1,23 +1,15 @@
 import { test as base } from '@playwright/test';
-import { user, team, cleanup } from '../support/helper';
-import { JoinPage } from '../support/fixtures/join-page';
-import { LoginPage } from '../support/fixtures/login-page';
-import { ApiKeysPage } from '../support/fixtures/api-keys-page';
+import { user, team } from '../support/helper';
+import { ApiKeysPage, LoginPage } from '../support/fixtures';
 
 const apiKeyName = 'New Api Key';
 
 type ApiKeyFixture = {
-  joinPage: JoinPage;
   loginPage: LoginPage;
   apiKeyPage: ApiKeysPage;
 };
 
 const test = base.extend<ApiKeyFixture>({
-  joinPage: async ({ page }, use) => {
-    const joinPage = new JoinPage(page, user, team.name);
-    await joinPage.goto();
-    await use(joinPage);
-  },
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await use(loginPage);
@@ -28,22 +20,13 @@ const test = base.extend<ApiKeyFixture>({
   },
 });
 
-test.afterAll(async () => {
-  await cleanup();
-});
-
-test('Should be able to create new API Key', async ({
-  joinPage,
-  loginPage,
-  apiKeyPage,
-}) => {
-  await joinPage.goto();
-  await joinPage.signUp();
-
+test.beforeEach(async ({ loginPage }) => {
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
+});
 
+test('Should be able to create new API Key', async ({ apiKeyPage }) => {
   await apiKeyPage.goto();
 
   await apiKeyPage.createNewApiKey(apiKeyName);
@@ -52,11 +35,7 @@ test('Should be able to create new API Key', async ({
   await apiKeyPage.apiKeyVisible(apiKeyName);
 });
 
-test('Should be able to delete API Key', async ({ loginPage, apiKeyPage }) => {
-  await loginPage.goto();
-  await loginPage.credentialLogin(user.email, user.password);
-  await loginPage.loggedInCheck(team.slug);
-
+test('Should be able to delete API Key', async ({ apiKeyPage }) => {
   await apiKeyPage.goto();
 
   await apiKeyPage.apiKeyVisible(apiKeyName);
@@ -66,13 +45,8 @@ test('Should be able to delete API Key', async ({ loginPage, apiKeyPage }) => {
 });
 
 test('Should not allow to create API Key with empty name', async ({
-  loginPage,
   apiKeyPage,
 }) => {
-  await loginPage.goto();
-  await loginPage.credentialLogin(user.email, user.password);
-  await loginPage.loggedInCheck(team.slug);
-
   await apiKeyPage.goto();
 
   await apiKeyPage.fillNewApiKeyName('');
@@ -81,13 +55,8 @@ test('Should not allow to create API Key with empty name', async ({
 });
 
 test('Should not allow to create API Key with more than 50 characters', async ({
-  loginPage,
   apiKeyPage,
 }) => {
-  await loginPage.goto();
-  await loginPage.credentialLogin(user.email, user.password);
-  await loginPage.loggedInCheck(team.slug);
-
   await apiKeyPage.goto();
 
   await apiKeyPage.fillNewApiKeyName('a'.repeat(51));

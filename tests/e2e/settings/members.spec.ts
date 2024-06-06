@@ -1,25 +1,18 @@
 import { chromium, expect, test as base } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
-import { user, team, cleanup } from '../support/helper';
-import { JoinPage } from '../support/fixtures/join-page';
-import { LoginPage } from '../support/fixtures/login-page';
-import { MemberPage } from '../support/fixtures/member-page';
+import { user, team } from '../support/helper';
+import { JoinPage, LoginPage, MemberPage } from '../support/fixtures';
 
 let domainInviteLink = '';
 
 type MemberFixture = {
-  joinPage: JoinPage;
   loginPage: LoginPage;
   memberPage: MemberPage;
+  secondUserJoinPage: JoinPage;
 };
 
 const test = base.extend<MemberFixture>({
-  joinPage: async ({ page }, use) => {
-    const joinPage = new JoinPage(page, user, team.name);
-    await joinPage.goto();
-    await use(joinPage);
-  },
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await use(loginPage);
@@ -27,6 +20,11 @@ const test = base.extend<MemberFixture>({
   memberPage: async ({ page }, use) => {
     const apiKeysPage = new MemberPage(page, team.slug);
     await use(apiKeysPage);
+  },
+  secondUserJoinPage: async ({ page }, use) => {
+    const joinPage = new JoinPage(page, secondUser, secondUser.team.name);
+    await joinPage.goto();
+    await use(joinPage);
   },
 });
 
@@ -58,18 +56,10 @@ const invalidDomainUser = {
   password: 'password',
 };
 
-test.afterAll(async () => {
-  await cleanup();
-});
-
 test('Should be able to get the list of members', async ({
   loginPage,
   memberPage,
-  joinPage,
 }) => {
-  await joinPage.goto();
-  await joinPage.signUp();
-
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
@@ -92,7 +82,7 @@ test('Should be able to invite a new member', async ({
   await memberPage.checkPendingInvitation(invitedUser.email, 'MEMBER');
 });
 
-test('New memeber should be able to accept the invitation', async ({
+test('New member should be able to accept the invitation', async ({
   loginPage,
 }) => {
   const invitation = await getAndVerifyInvitation(invitedUser.email);
@@ -109,13 +99,12 @@ test('New memeber should be able to accept the invitation', async ({
 });
 
 test('Existing user should be able to accept the invitation', async ({
+  secondUserJoinPage,
   loginPage,
   memberPage,
   page,
 }) => {
-  const joinPage = new JoinPage(page, secondUser, secondUser.team.name);
-  await joinPage.goto();
-  await joinPage.signUp();
+  await secondUserJoinPage.signUp();
 
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
@@ -130,9 +119,7 @@ test('Existing user should be able to accept the invitation', async ({
   await expect(
     page.getByRole('cell', { name: `U ${secondUser.email}` })
   ).toBeVisible();
-  await expect(
-    (await page.getByRole('cell', { name: 'MEMBER' }).all()).length
-  ).toBe(2);
+  await expect(page.getByRole('cell', { name: 'MEMBER' })).toHaveCount(2);
 
   const invitation = await getAndVerifyInvitation(secondUser.email);
 

@@ -1,4 +1,4 @@
-import type { Page, Locator } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 
 export class SSOPage {
   private readonly newConnectionButton: Locator;
@@ -34,8 +34,11 @@ export class SSOPage {
     await this.newConnectionButton.click();
     await this.fillSSOConnectionForm(metadataUrl);
     await this.saveButton.click();
-    await this.page.waitForURL(`/teams/${this.teamSlug}/sso`);
-    await this.page.waitForSelector('text=saml.example.com');
+    await expect(
+      this.page.getByRole('cell', {
+        name: 'saml.example.com',
+      })
+    ).toBeVisible();
   }
 
   async openEditSSOConnectionView() {

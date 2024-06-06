@@ -11,6 +11,11 @@ export const team = {
   slug: 'example',
 } as const;
 
+export const secondTeam = {
+  name: 'BoxyHQ',
+  slug: 'boxyhq',
+} as const;
+
 export async function cleanup() {
   await prisma.teamMember.deleteMany();
   await prisma.team.deleteMany();

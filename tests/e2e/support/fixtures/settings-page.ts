@@ -5,6 +5,10 @@ export class SettingsPage {
   private readonly newTeamMenu: Locator;
   private readonly newTeamNameInput: Locator;
   private readonly createTeamDialogButton: Locator;
+  private readonly removeTeamButton: Locator;
+  private readonly removeTeamConfirmPrompt: Locator;
+  private readonly removeTeamSuccessMessage: Locator;
+  private readonly deleteButton: Locator;
 
   constructor(
     public readonly page: Page,
@@ -15,6 +19,16 @@ export class SettingsPage {
     this.createTeamDialogButton = this.page
       .getByRole('dialog')
       .getByRole('button', { name: 'Create Team' });
+    this.removeTeamButton = this.page.getByRole('button', {
+      name: 'Remove Team',
+    });
+    this.removeTeamConfirmPrompt = this.page.getByText(
+      `Are you sure you want to delete the team? Deleting the team will delete all resources and data associated with the team forever.`
+    );
+    this.removeTeamSuccessMessage = this.page.getByText(
+      'Team removed successfully.'
+    );
+    this.deleteButton = page.getByRole('button', { name: 'Delete' });
   }
 
   async logout() {
@@ -38,8 +52,8 @@ export class SettingsPage {
 
   async isSaveButtonDisabled() {
     await expect(
-      await this.page.getByRole('button', { name: 'Save Changes' }).isDisabled()
-    ).toBeTruthy();
+      this.page.getByRole('button', { name: 'Save Changes' })
+    ).toBeDisabled();
   }
 
   async isTeamNameLengthErrorVisible() {
@@ -103,21 +117,17 @@ export class SettingsPage {
   }
 
   async checkTeamName(teamName: string) {
-    await expect(
-      await this.page.locator('input[name="name"]').inputValue()
-    ).toBe(teamName);
+    await expect(this.page.locator('input[name="name"]')).toHaveValue(teamName);
   }
 
   async checkTeamSlug(teamSlug: string) {
-    await expect(
-      await this.page.locator('input[name="slug"]').inputValue()
-    ).toBe(teamSlug);
+    await expect(this.page.locator('input[name="slug"]')).toHaveValue(teamSlug);
   }
 
   async checkDomain(domain: string) {
-    await expect(
-      await this.page.locator('input[name="domain"]').inputValue()
-    ).toBe(domain);
+    await expect(await this.page.locator('input[name="domain"]')).toHaveValue(
+      domain
+    );
   }
 
   async createNewTeam(teamName: string) {
@@ -130,8 +140,21 @@ export class SettingsPage {
     await this.page.waitForSelector('text=Team created successfully.');
   }
 
-  async goto(pageName: 'security' | 'api-keys') {
+  async removeTeam(teamSlug: string) {
+    this.goto(teamSlug);
+    this.removeTeamButton.click();
+    await expect(this.removeTeamConfirmPrompt).toBeVisible();
+    this.deleteButton.click();
+    await expect(this.removeTeamSuccessMessage).toBeVisible();
+  }
+
+  async gotoSection(pageName: 'security' | 'api-keys') {
     await this.page.goto(`/settings/${pageName}`);
     await this.page.waitForURL(`/settings/${pageName}`);
+  }
+
+  async goto(teamSlug?: string) {
+    await this.page.goto(`/teams/${teamSlug}/settings`);
+    await this.page.waitForURL(`/teams/${teamSlug}/settings`);
   }
 }

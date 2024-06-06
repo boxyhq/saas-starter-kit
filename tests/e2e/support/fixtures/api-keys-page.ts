@@ -71,7 +71,7 @@ export class ApiKeysPage {
   }
 
   async isCreateApiKeyButtonDisabled() {
-    await expect(await this.modalCreateApiKeyButton.isDisabled()).toBeTruthy();
+    await expect(this.modalCreateApiKeyButton).toBeDisabled();
   }
 
   async checkNoApiKeys() {
