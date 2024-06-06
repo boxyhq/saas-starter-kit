@@ -89,7 +89,7 @@ export class MemberPage {
   }
 
   async isInviteButtonDisabled() {
-    await expect(await this.inviteButton.isDisabled()).toBeTruthy();
+    await expect(this.inviteButton).toBeDisabled();
   }
 
   async inviteByEmail(email: string) {
