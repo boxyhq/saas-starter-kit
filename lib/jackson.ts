@@ -20,7 +20,6 @@ const opts = {
     engine: 'sql',
     type: 'postgres',
     url: env.databaseUrl,
-    manualMigration: true,
   },
   idpDiscoveryPath: '/auth/sso/idp-select',
   idpEnabled: true,
