@@ -52,8 +52,8 @@ export class SettingsPage {
 
   async isSaveButtonDisabled() {
     await expect(
-      await this.page.getByRole('button', { name: 'Save Changes' }).isDisabled()
-    ).toBeTruthy();
+      this.page.getByRole('button', { name: 'Save Changes' })
+    ).toBeDisabled();
   }
 
   async isTeamNameLengthErrorVisible() {
