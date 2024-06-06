@@ -1,4 +1,4 @@
-import { chromium, test as base } from '@playwright/test';
+import { test as base } from '@playwright/test';
 
 import { prisma } from '@/lib/prisma';
 import { user, team } from '../support/helper';
