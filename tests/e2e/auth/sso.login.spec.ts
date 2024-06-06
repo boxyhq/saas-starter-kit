@@ -1,14 +1,9 @@
 import { test as base } from '@playwright/test';
-import { user, team, cleanup } from '../support/helper';
+import { user, team, cleanup, secondTeam } from '../support/helper';
 import { JoinPage } from '../support/fixtures/join-page';
 import { LoginPage } from '../support/fixtures/login-page';
 import { SSOPage } from '../support/fixtures/sso-page';
 import { SettingsPage } from '../support/fixtures/settings-page';
-
-const secondTeam = {
-  name: 'BoxyHQ',
-  slug: 'boxyhq',
-} as const;
 
 const SSO_METADATA_URL = [
   `${process.env.MOCKSAML_ORIGIN}/api/saml/metadata`,
