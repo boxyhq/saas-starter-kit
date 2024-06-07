@@ -58,6 +58,10 @@ export class SSOPage {
     await expect(this.pageHeader).toBeVisible();
   }
 
+  async checkEmptyConnectionList() {
+    await expect(this.noConnectionsHeader).toBeVisible();
+  }
+
   async createSSOConnection({
     metadataUrl,
     type = 'saml',
