@@ -9,6 +9,7 @@ export class ApiKeysPage {
   private readonly revokeApiKeyButton: Locator;
   private readonly revokeApiKeyConfirmationButton: Locator;
   private readonly apiKeyTextBox: Locator;
+  private readonly apiKeyDeleteSuccessMessage: string;
 
   constructor(
     public readonly page: Page,
@@ -31,12 +32,15 @@ export class ApiKeysPage {
       name: 'Revoke API Key',
     });
     this.apiKeyTextBox = this.page.getByRole('textbox');
+    this.apiKeyDeleteSuccessMessage = 'API key deleted successfully';
   }
 
   async goto() {
     await this.page.goto(`/teams/${this.teamSlug}/api-keys`);
     await this.page.waitForURL(`/teams/${this.teamSlug}/api-keys`);
-    await this.page.waitForSelector('text=API Keys');
+    await expect(
+      this.page.getByRole('heading', { name: 'API Keys' })
+    ).toBeVisible();
   }
 
   async createNewApiKey(name: string) {
@@ -47,7 +51,9 @@ export class ApiKeysPage {
 
   async fillNewApiKeyName(name: string) {
     await this.createApiKeyButton.click();
-    await this.page.waitForSelector(`text=New API Key`);
+    await expect(
+      this.page.getByRole('heading', { name: 'New API Key' })
+    ).toBeVisible();
     await this.apiKeyNameInput.fill(name);
   }
 
@@ -57,11 +63,15 @@ export class ApiKeysPage {
 
   async revokeApiKey() {
     await this.revokeApiKeyButton.click();
-    await this.page.waitForSelector(
-      'text=Are you sure you want to revoke this API key?'
-    );
+    await expect(
+      this.page.getByText(
+        'Are you sure you want to revoke this API Key? This action can not be undone.'
+      )
+    ).toBeVisible();
     await this.revokeApiKeyConfirmationButton.click();
-    await this.page.waitForSelector('text=API key deleted successfully');
+    await expect(this.page.getByRole('status')).toHaveText(
+      this.apiKeyDeleteSuccessMessage
+    );
   }
 
   async isApiKeyNameLengthErrorVisible() {
