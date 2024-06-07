@@ -125,9 +125,7 @@ export class SettingsPage {
   }
 
   async checkDomain(domain: string) {
-    await expect(await this.page.locator('input[name="domain"]')).toHaveValue(
-      domain
-    );
+    await expect(this.page.locator('input[name="domain"]')).toHaveValue(domain);
   }
 
   async createNewTeam(teamName: string) {
