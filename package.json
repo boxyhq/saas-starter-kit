@@ -27,7 +27,7 @@
     "delete-team": "node --env-file .env delete-team.js"
   },
   "dependencies": {
-    "@boxyhq/metrics": "0.2.7",
+    "@boxyhq/metrics": "0.2.8",
     "@boxyhq/react-ui": "3.3.43",
     "@boxyhq/saml-jackson": "1.26.5",
     "@heroicons/react": "2.1.3",
