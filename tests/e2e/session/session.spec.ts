@@ -85,7 +85,7 @@ test('On Remove session user logs out', async ({ browser }) => {
   await securityPage.checkOtherSession();
   await securityPage.removeCurrentSession();
 
-  loginPage1.isLoggedOut();
+  await loginPage1.isLoggedOut();
 
   await context.close();
 });
