@@ -96,9 +96,12 @@ export class SSOPage {
   }
 
   async openEditSSOConnectionView() {
-    await this.page.waitForSelector('text=saml.example.com');
     await this.page.getByLabel('Edit').click();
-    await this.page.waitForSelector('text=Edit SSO Connection');
+    expect(
+      this.page.getByRole('heading', {
+        name: 'Edit SSO Connection',
+      })
+    ).toBeVisible();
   }
 
   async updateSSOConnection({ newStatus }: { newStatus: boolean }) {
@@ -119,10 +122,16 @@ export class SSOPage {
 
   async deleteSSOConnection() {
     await this.deleteButton.click();
-    await this.page.waitForSelector(
-      'text=Are you sure you want to delete the Connection? This action cannot be undone and will permanently delete the Connection.'
-    );
+    expect(
+      this.page.getByRole('heading', {
+        name: 'Are you sure you want to delete the Connection? This action cannot be undone and will permanently delete the Connection.',
+      })
+    ).toBeVisible();
     await this.confirmButton.click();
-    await this.page.waitForSelector('text=Manage SSO Connections');
+    expect(
+      this.page.getByRole('heading', {
+        name: 'Manage SSO Connections',
+      })
+    ).toBeVisible();
   }
 }

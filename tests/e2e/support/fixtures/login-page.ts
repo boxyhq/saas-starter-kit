@@ -23,6 +23,8 @@ export class LoginPage {
   private readonly logInUsingExistingButton: Locator;
   private readonly idpSignInButton: Locator;
   private readonly joinTeamButton: Locator;
+  private readonly mockSAMLLoginHeading: Locator;
+  private readonly teamSettingsHeading: Locator;
 
   constructor(public readonly page: Page) {
     this.IDP_LOGIN_URL = `${process.env.MOCKSAML_ORIGIN}/saml/login`;
@@ -66,6 +68,12 @@ export class LoginPage {
     this.joinTeamButton = this.page.getByRole('button', {
       name: 'Join the Team',
     });
+    this.mockSAMLLoginHeading = this.page.getByRole('heading', {
+      name: 'SAML SSO Login',
+    });
+    this.teamSettingsHeading = this.page.getByRole('heading', {
+      name: 'Team Settings',
+    });
   }
 
   async goto() {
@@ -79,7 +87,7 @@ export class LoginPage {
 
   async loggedInCheck(teamSlug: string) {
     await this.page.waitForURL(`/teams/${teamSlug}/settings`);
-    await this.page.waitForSelector('text=Team Settings');
+    await expect(this.teamSettingsHeading).toBeVisible();
   }
 
   async credentialLogin(email: string, password: string) {
@@ -91,11 +99,14 @@ export class LoginPage {
 
   async ssoLogin(email: string, errorCase = false) {
     await this.continueWithSSOLink.click();
-    await this.page.waitForSelector('text=Sign in with SAML SSO');
+    await expect(
+      this.page.getByRole('heading', { name: 'Sign in with SAML SSO' })
+    ).toBeVisible();
     await this.ssoEmailBox.fill(email);
     await this.continueWithSSOButton.click();
     if (!errorCase) {
-      await this.page.waitForSelector('text=SAML SSO Login');
+      // MockSAML page
+      await expect(this.mockSAMLLoginHeading).toBeVisible();
       await this.signInButton.click();
     }
   }
@@ -103,9 +114,9 @@ export class LoginPage {
   async ssoLoginWithSlug(teamSlug: string) {
     await this.slugInput.fill(teamSlug);
     await this.continueWithSSOButton.click();
-    await this.page.waitForSelector('text=SAML SSO Login');
+    await expect(this.mockSAMLLoginHeading).toBeVisible();
     await this.signInButton.click();
-    await this.page.waitForSelector('text=Team Settings');
+    await expect(this.teamSettingsHeading).toBeVisible();
   }
 
   async idpInitiatedLogin() {
@@ -149,7 +160,7 @@ export class LoginPage {
 
   public async acceptInvitation() {
     await this.joinTeamButton.click();
-    await this.page.waitForSelector('text=Team Settings');
+    await expect(this.teamSettingsHeading).toBeVisible();
   }
 
   async createNewAccountViaInvite(name: string, password: string) {
