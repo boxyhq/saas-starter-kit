@@ -134,11 +134,7 @@ export class LoginPage {
   }
 
   async isLoggedOut() {
-    expect(
-      await this.page.getByText('Welcome back', {
-        exact: true,
-      })
-    ).toBeDefined();
+    await expect(this.welcomeBackHeading).toBeVisible();
   }
 
   async gotoInviteLink(invitationLink: string, invitingCompany: string) {

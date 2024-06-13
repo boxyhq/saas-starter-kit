@@ -97,7 +97,7 @@ export class SSOPage {
 
   async openEditSSOConnectionView() {
     await this.page.getByLabel('Edit').click();
-    expect(
+    await expect(
       this.page.getByRole('heading', {
         name: 'Edit SSO Connection',
       })
@@ -122,13 +122,13 @@ export class SSOPage {
 
   async deleteSSOConnection() {
     await this.deleteButton.click();
-    expect(
+    await expect(
       this.page.getByRole('heading', {
         name: 'Are you sure you want to delete the Connection? This action cannot be undone and will permanently delete the Connection.',
       })
     ).toBeVisible();
     await this.confirmButton.click();
-    expect(
+    await expect(
       this.page.getByRole('heading', {
         name: 'Manage SSO Connections',
       })

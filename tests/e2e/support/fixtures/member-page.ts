@@ -81,7 +81,7 @@ export class MemberPage {
 
   async openInviteModal() {
     await this.inviteMemberButton.click();
-    expect(
+    await expect(
       this.page.getByRole('heading', {
         name: 'Invite New Member',
       })
