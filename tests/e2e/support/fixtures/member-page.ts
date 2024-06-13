@@ -81,7 +81,11 @@ export class MemberPage {
 
   async openInviteModal() {
     await this.inviteMemberButton.click();
-    await this.page.waitForSelector('text=Invite New Member');
+    await expect(
+      this.page.getByRole('heading', {
+        name: 'Invite New Member',
+      })
+    ).toBeVisible();
   }
 
   async fillEmailForInvite(email: string) {
@@ -126,7 +130,9 @@ export class MemberPage {
 
   async removeMember() {
     await this.removeMemberButton.click();
-    await this.page.waitForSelector('text=Confirm deletion of member');
+    await expect(
+      this.page.getByRole('heading', { name: 'Confirm deletion of member' })
+    ).toBeVisible();
     await this.deleteButtonForMember.click();
     await expect(
       this.page.getByText('Member deleted successfully.')

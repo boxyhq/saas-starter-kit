@@ -1,4 +1,4 @@
-import type { Page, Locator } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 
 export class JoinPage {
   private readonly nameBox: Locator;
@@ -6,6 +6,7 @@ export class JoinPage {
   private readonly emailBox: Locator;
   private readonly passwordBox: Locator;
   private readonly createAccountButton: Locator;
+  private readonly createAccountSuccessMessage: string;
   constructor(
     public readonly page: Page,
     public readonly user: {
@@ -22,12 +23,15 @@ export class JoinPage {
     this.createAccountButton = page.getByRole('button', {
       name: 'Create Account',
     });
+    this.createAccountSuccessMessage =
+      'You have successfully created your account.';
   }
 
   async goto() {
     await this.page.goto('/auth/join');
-    await this.page.waitForURL('/auth/join');
-    await this.page.waitForSelector('text=Get started');
+    await expect(
+      this.page.getByRole('heading', { name: 'Get started' })
+    ).toBeVisible();
   }
 
   async signUp() {
@@ -37,8 +41,8 @@ export class JoinPage {
     await this.passwordBox.fill(this.user.password);
     await this.createAccountButton.click();
     await this.page.waitForURL('/auth/login');
-    await this.page.waitForSelector(
-      'text=You have successfully created your account.'
+    await expect(this.page.getByRole('status')).toHaveText(
+      this.createAccountSuccessMessage
     );
   }
 }

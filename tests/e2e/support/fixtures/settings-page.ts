@@ -7,7 +7,9 @@ export class SettingsPage {
   private readonly createTeamDialogButton: Locator;
   private readonly removeTeamButton: Locator;
   private readonly removeTeamConfirmPrompt: Locator;
-  private readonly removeTeamSuccessMessage: Locator;
+  private readonly updateTeamSuccessMessage: string;
+  private readonly createTeamSuccessMessage: string;
+  private readonly removeTeamSuccessMessage: string;
   private readonly deleteButton: Locator;
 
   constructor(
@@ -25,9 +27,10 @@ export class SettingsPage {
     this.removeTeamConfirmPrompt = this.page.getByText(
       `Are you sure you want to delete the team? Deleting the team will delete all resources and data associated with the team forever.`
     );
-    this.removeTeamSuccessMessage = this.page.getByText(
-      'Team removed successfully.'
-    );
+    this.updateTeamSuccessMessage = 'Changes saved successfully.';
+    this.createTeamSuccessMessage = 'Team created successfully.';
+    this.removeTeamSuccessMessage = 'Team removed successfully.';
+
     this.deleteButton = page.getByRole('button', { name: 'Delete' });
   }
 
@@ -43,7 +46,9 @@ export class SettingsPage {
   }
 
   async isSettingsPageVisible() {
-    await this.page.waitForSelector('text=Team Settings');
+    await expect(
+      this.page.getByRole('heading', { name: 'Team Settings' })
+    ).toBeVisible();
   }
 
   async fillTeamName(teamName: string) {
@@ -87,9 +92,9 @@ export class SettingsPage {
   async updateTeamName(newTeamName: string) {
     await this.fillTeamName(newTeamName);
     await this.clickSaveButton();
-    await expect(
-      await this.page.getByText('Changes saved successfully.')
-    ).toBeVisible();
+    await expect(this.page.getByRole('status')).toHaveText(
+      this.updateTeamSuccessMessage
+    );
   }
 
   async fillTeamSlug(teamSlug: string) {
@@ -99,9 +104,9 @@ export class SettingsPage {
   async updateTeamSlug(newTeamSlug: string) {
     await this.fillTeamSlug(newTeamSlug);
     await this.clickSaveButton();
-    await expect(
-      await this.page.getByText('Changes saved successfully.')
-    ).toBeVisible();
+    await expect(this.page.getByRole('status')).toHaveText(
+      this.updateTeamSuccessMessage
+    );
   }
 
   async fillDomain(domain: string) {
@@ -111,9 +116,9 @@ export class SettingsPage {
   async updateDomain(domain: string) {
     await this.fillDomain(domain);
     await this.clickSaveButton();
-    await expect(
-      await this.page.getByText('Changes saved successfully.')
-    ).toBeVisible();
+    await expect(this.page.getByRole('status')).toHaveText(
+      this.updateTeamSuccessMessage
+    );
   }
 
   async checkTeamName(teamName: string) {
@@ -125,19 +130,21 @@ export class SettingsPage {
   }
 
   async checkDomain(domain: string) {
-    await expect(await this.page.locator('input[name="domain"]')).toHaveValue(
-      domain
-    );
+    await expect(this.page.locator('input[name="domain"]')).toHaveValue(domain);
   }
 
   async createNewTeam(teamName: string) {
     await this.page.getByText('Example').first().click();
     await this.newTeamMenu.click();
-    await this.page.waitForSelector('text=Create Team');
+    await expect(
+      this.page.getByRole('heading', { name: 'Create Team' })
+    ).toBeVisible();
     await this.newTeamNameInput.fill(teamName);
     await this.createTeamDialogButton.click();
 
-    await this.page.waitForSelector('text=Team created successfully.');
+    await expect(this.page.getByRole('status')).toHaveText(
+      this.createTeamSuccessMessage
+    );
   }
 
   async removeTeam(teamSlug: string) {
@@ -145,7 +152,9 @@ export class SettingsPage {
     this.removeTeamButton.click();
     await expect(this.removeTeamConfirmPrompt).toBeVisible();
     this.deleteButton.click();
-    await expect(this.removeTeamSuccessMessage).toBeVisible();
+    await expect(this.page.getByRole('status')).toHaveText(
+      this.removeTeamSuccessMessage
+    );
   }
 
   async gotoSection(pageName: 'security' | 'api-keys') {

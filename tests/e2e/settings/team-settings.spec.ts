@@ -1,6 +1,7 @@
 import { test as base } from '@playwright/test';
 import { user, team } from '../support/helper';
 import { JoinPage, LoginPage, SettingsPage } from '../support/fixtures';
+import { prisma } from '@/lib/prisma';
 
 const teamNewInfo = {
   name: 'New Team Name',
@@ -27,6 +28,13 @@ const test = base.extend<TeamSettingsFixture>({
     const settingsPage = new SettingsPage(page, team.slug);
     await use(settingsPage);
   },
+});
+
+test.afterAll(async () => {
+  await prisma.team.update({
+    where: { slug: teamNewInfo.sluggified },
+    data: { name: team.name, slug: team.slug },
+  });
 });
 
 test('Should be able to update team name', async ({

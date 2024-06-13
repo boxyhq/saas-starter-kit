@@ -27,9 +27,9 @@ test.beforeEach(async ({ loginPage }) => {
   await loginPage.loggedInCheck(team.slug);
 });
 
-test('Sign up and create SSO connection', async ({ ssoPage, loginPage }) => {
+test('IdP initiated SSO', async ({ ssoPage, loginPage }) => {
   await ssoPage.goto();
-  await ssoPage.createSSOConnection(SSO_METADATA_URL);
+  await ssoPage.createSSOConnection({ metadataUrl: SSO_METADATA_URL });
 
   await loginPage.logout(user.name);
   await loginPage.idpInitiatedLogin();

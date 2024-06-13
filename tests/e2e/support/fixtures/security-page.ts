@@ -29,11 +29,19 @@ export class SecurityPage {
 
   async removeCurrentSession() {
     await this.removeCurrentSessionButton.click();
-    await this.page.waitForSelector('text=Remove Browser Session');
+    await expect(
+      this.page.getByRole('heading', {
+        name: 'Remove Browser Session',
+      })
+    ).toBeVisible();
     await this.removeButton.click();
   }
 
   async isPageVisible() {
-    await this.page.waitForSelector('text=Browser Sessions');
+    await expect(
+      this.page.getByRole('heading', {
+        name: 'Browser Sessions',
+      })
+    ).toBeVisible();
   }
 }
