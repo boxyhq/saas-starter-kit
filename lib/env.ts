@@ -3,7 +3,7 @@ import type { SessionStrategy } from 'next-auth';
 const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
-  redirectIfAuthenticated: '/dashboard',
+  redirectIfAuthenticated: 'http://localhost:4002/dashboard',
 
   // SMTP configuration for NextAuth
   smtp: {
@@ -37,6 +37,12 @@ const env = {
   google: {
     clientId: `${process.env.GOOGLE_CLIENT_ID}`,
     clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,
+  },
+
+  //Social login: LinkedIn
+  linkedin: {
+    clientId: `${process.env.LINKEDIN_CLIENT_ID}`,
+    clientSecret: `${process.env.LINKEDIN_CLIENT_SECRET}`,
   },
 
   // Retraced configuration

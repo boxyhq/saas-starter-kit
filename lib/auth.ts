@@ -23,6 +23,7 @@ export function authProviderEnabled() {
   return {
     github: isAuthProviderEnabled('github'),
     google: isAuthProviderEnabled('google'),
+    linkedin: isAuthProviderEnabled('linkedin'),
     email: isAuthProviderEnabled('email'),
     saml: isAuthProviderEnabled('saml'),
     credentials: isAuthProviderEnabled('credentials'),

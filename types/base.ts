@@ -62,6 +62,7 @@ export type AUTH_PROVIDER =
   | 'google'
   | 'saml'
   | 'email'
+  | 'linkedin'
   | 'credentials'
   | 'idp-initiated';
 

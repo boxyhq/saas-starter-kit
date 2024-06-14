@@ -12,6 +12,7 @@ import { authProviderEnabled } from '@/lib/auth';
 import { AuthLayout } from '@/components/layouts';
 import GithubButton from '@/components/auth/GithubButton';
 import GoogleButton from '@/components/auth/GoogleButton';
+import LinkedInButton from '@/components/auth/LinkedInButton';
 import { JoinWithInvitation, Join } from '@/components/auth';
 import Head from 'next/head';
 import { Loading } from '@/components/shared';
@@ -54,9 +55,10 @@ const Signup: NextPageWithLayout<
         <div className="flex gap-2 flex-wrap">
           {authProviders.github && <GithubButton />}
           {authProviders.google && <GoogleButton />}
+          {authProviders.linkedin && <LinkedInButton />}
         </div>
 
-        {(authProviders.github || authProviders.google) &&
+        {(authProviders.github || authProviders.google || authProviders.linkedin) &&
           authProviders.credentials && <div className="divider">{t('or')}</div>}
 
         {authProviders.credentials && (

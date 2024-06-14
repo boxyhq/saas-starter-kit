@@ -9,6 +9,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import EmailProvider from 'next-auth/providers/email';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
+import LinkedInProvider from "next-auth/providers/linkedin";
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import type { Provider } from 'next-auth/providers';
 import { setCookie, getCookie } from 'cookies-next';
@@ -123,6 +124,33 @@ if (isAuthProviderEnabled('google')) {
       clientSecret: env.google.clientSecret,
       allowDangerousEmailAccountLinking: true,
     })
+  );
+}
+
+if (isAuthProviderEnabled('linkedin')) {
+  providers.push(
+    LinkedInProvider({
+      clientId: env.linkedin.clientId,
+      clientSecret: env.linkedin.clientSecret,
+      authorization: {
+        params: { scope: 'openid profile email' },
+      },
+      issuer: 'https://www.linkedin.com',
+      jwks_endpoint: 'https://www.linkedin.com/oauth/openid/jwks',
+      profile(profile, tokens) {
+        const defaultImage =
+          'https://cdn-icons-png.flaticon.com/512/174/174857.png';
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture ?? defaultImage,
+        };
+      },
+   })
+
+
+
   );
 }
 
