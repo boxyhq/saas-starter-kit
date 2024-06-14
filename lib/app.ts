@@ -3,8 +3,8 @@ import env from './env';
 
 const app = {
   version: packageInfo.version,
-  name: 'BoxyHQ',
-  logoUrl: 'https://boxyhq.com/img/logo.png',
+  name: 'RealtyIqs',
+  logoUrl: '',
   url: env.appUrl,
 };
 

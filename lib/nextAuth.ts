@@ -132,25 +132,24 @@ if (isAuthProviderEnabled('linkedin')) {
     LinkedInProvider({
       clientId: env.linkedin.clientId,
       clientSecret: env.linkedin.clientSecret,
+      allowDangerousEmailAccountLinking: true,
       authorization: {
         params: { scope: 'openid profile email' },
       },
-      issuer: 'https://www.linkedin.com',
+      issuer: 'https://www.linkedin.com/oauth',
       jwks_endpoint: 'https://www.linkedin.com/oauth/openid/jwks',
-      profile(profile, tokens) {
+      async profile(profile) {
         const defaultImage =
           'https://cdn-icons-png.flaticon.com/512/174/174857.png';
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture ?? defaultImage,
-        };
-      },
+          return {
+            id: profile.sub,
+            name: profile.name,
+            firstname: profile.given_name,
+            lastname: profile.family_name,
+            email: profile.email
+        }
+      }
    })
-
-
-
   );
 }
 
