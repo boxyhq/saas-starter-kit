@@ -11,6 +11,7 @@ import PricingSection from '@/components/defaultLanding/PricingSection';
 import useTheme from 'hooks/useTheme';
 import env from '@/lib/env';
 import Head from 'next/head';
+import Image from 'next/image';
 
 const Home: NextPageWithLayout = () => {
   const { toggleTheme, selectedTheme } = useTheme();
@@ -25,9 +26,10 @@ const Home: NextPageWithLayout = () => {
       <div className="container mx-auto">
         <div className="navbar bg-base-100 px-0 sm:px-1">
           <div className="flex-1">
-            <Link href="/" className="btn btn-ghost text-xl normal-case">
-              BoxyHQ
-            </Link>
+            <Image src="logowhite.png" alt="logo"  width={500}        
+              height={500} className="btn btn-ghost text-xl normal-case">
+             
+            </Image>
           </div>
           <div className="flex-none">
             <ul className="menu menu-horizontal flex items-center gap-2 sm:gap-4">
@@ -62,11 +64,11 @@ const Home: NextPageWithLayout = () => {
         </div>
         <HeroSection />
         <div className="divider"></div>
-        <FeatureSection />
+        {/* <FeatureSection />
         <div className="divider"></div>
         <PricingSection />
         <div className="divider"></div>
-        <FAQSection />
+        <FAQSection /> */}
       </div>
     </>
   );

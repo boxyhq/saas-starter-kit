@@ -14,7 +14,7 @@ const LinkedInButton = () => {
 
   return (
     <Button
-      className="btn btn-outline w-full"
+      className="btn btn-outline-primary w-full"
       onClick={() => {
         signIn('linkedin', {
           callbackUrl,
