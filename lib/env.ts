@@ -93,7 +93,7 @@ const env = {
     prefix: process.env.OTEL_PREFIX || 'boxyhq.saas',
   },
 
-  hideLandingPage: process.env.HIDE_LANDING_PAGE === 'true',
+  hideLandingPage: process.env.HIDE_LANDING_PAGE === 'false',
 
   darkModeEnabled: process.env.NEXT_PUBLIC_DARK_MODE !== 'false',
 

@@ -12,12 +12,11 @@ const FAQSection = () => {
           {t('frequently-asked')}
         </h2>
         <p className="text-center text-xl">
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry.
+          {faqs.tagline}
         </p>
         <div className="flex items-center justify-center">
           <div className="grid grid-cols-1 gap-2">
-            {faqs.map((faq, index) => {
+            {faqs.list.map((faq, index) => {
               return (
                 <Card key={index} className="border-none">
                   <Card.Body className="items-left dark:border-gray-200 border border-gray-300">

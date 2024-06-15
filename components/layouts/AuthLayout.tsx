@@ -1,6 +1,7 @@
 import app from '@/lib/app';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -19,13 +20,16 @@ export default function AuthLayout({
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-20 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <Image
+          {/* <Image
             src={app.logoUrl}
             className="mx-auto h-12"
             alt={app.name}
             width={48}
             height={48}
-          />
+          /> */}
+          <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+              RealtyIqs
+            </h2>
           {heading && (
             <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
               {t(heading)}

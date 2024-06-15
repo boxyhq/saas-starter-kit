@@ -1,46 +1,41 @@
-[
+{
+"tagline": "Empower Your Career with Cutting-Edge AI Resume Building Features",
+"list": [
   {
-    "name": "Create account",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+    "name": "AI-Powered Resume Structuring",
+    "description": "Leverage advanced AI to automatically structure your resume based on industry standards and best practices."
   },
   {
-    "name": "Sign in with Email and Password",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+    "name": "Professional Templates",
+    "description": "Choose from a variety of professionally designed templates tailored to different industries and roles."
   },
   {
-    "name": "Sign in with Magic link",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+    "name": "Skill and Experience Parsing",
+    "description": "Automatically extract and organize your skills and experiences to highlight your strengths effectively."
   },
   {
-    "name": "Sign in with SAML SSO",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+    "name": "Keyword Optimization",
+    "description": "Ensure your resume is optimized with relevant keywords to pass through Applicant Tracking Systems (ATS)."
   },
   {
-    "name": "Directory Sync (SCIM)",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+    "name": "Real-Time Feedback",
+    "description": "Receive instant feedback and suggestions to improve the content and format of your resume."
   },
   {
-    "name": "Update account",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+    "name": "Customizable Sections",
+    "description": "Easily add, remove, or reorder sections to fit your unique career path and achievements."
   },
   {
-    "name": "Invite users to the team",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+    "name": "Google Reviews Integration",
+    "description": "Automatically incorporate testimonials from your business's Google reviews to enhance credibility."
   },
   {
-    "name": "Manage team members",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+    "name": "Data Privacy",
+    "description": "Your data is securely stored and never shared without your consent, ensuring complete privacy."
   },
   {
-    "name": "Update team settings",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
-  },
-  {
-    "name": "Webhooks & Events",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
-  },
-  {
-    "name": "Create team",
-    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+    "name": "Download and Share",
+    "description": "Download your resume in various formats or share it directly via a unique link."
   }
 ]
+}

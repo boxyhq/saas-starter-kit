@@ -1,14 +1,41 @@
-[
-  {
-    "question": "What is BoxyHQ?",
-    "answer": "Enterprise readiness for B2B SaaS, straight out of the box."
-  },
-  {
-    "question": "What BoxyHQ offers?",
-    "answer": "At BoxyHQ we enable you to add plug-and-play enterprise-ready features to your SaaS product. Show enterprise customers and InfoSec teams you are ready to pass their processes with flying colors. We are open-source and free!"
-  },
-  {
-    "question": "Is BoxyHQ offers developer security tools?",
-    "answer": "We have curated a list of awesome open-source developer security tools.It includes security principles and controls relevant to popular compliance certifications (like ISO27001, SOC2, MVSP, etc.)"
-  }
-]
+{
+  "tagline": "Unlock Your Resume's Potential: FAQs for Our AI-Powered Resume Builder",
+  "list": [
+    {
+      "question": "What is a customized AI-powered resume builder?",
+      "answer": "A platform that uses advanced AI to help you create a professional and optimized resume tailored to your career needs."
+    },
+    {
+      "question": "How does the AI-powered resume structuring work?",
+      "answer": "The AI analyzes your input and automatically structures your resume according to industry standards and best practices."
+    },
+    {
+      "question": "What types of templates are available?",
+      "answer": "You can choose from a variety of professionally designed templates tailored to different industries and roles."
+    },
+    {
+      "question": "How does skill and experience parsing help?",
+      "answer": "It automatically extracts and organizes your skills and experiences to highlight your strengths effectively."
+    },
+    {
+      "question": "What is keyword optimization?",
+      "answer": "Keyword optimization ensures your resume includes relevant keywords to pass through Applicant Tracking Systems (ATS)."
+    },
+    {
+      "question": "What kind of feedback does the platform provide?",
+      "answer": "You receive instant feedback and suggestions to improve the content and format of your resume."
+    },
+    {
+      "question": "Can I customize the sections of my resume?",
+      "answer": "Yes, you can easily add, remove, or reorder sections to fit your unique career path and achievements."
+    },
+    {
+      "question": "How is my data protected?",
+      "answer": "Your data is securely stored and never shared without your consent, ensuring complete privacy."
+    },
+    {
+      "question": "Can I download and share my resume?",
+      "answer": "Yes, you can download your resume in various formats or share it directly via a unique link."
+    }
+  ]
+}
