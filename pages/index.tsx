@@ -26,10 +26,12 @@ const Home: NextPageWithLayout = () => {
       <div className="container mx-auto">
         <div className="navbar bg-base-100 px-0 sm:px-1">
           <div className="flex-1">
-            <Image src="logowhite.png" alt="logo"  width={500}        
-              height={500} className="btn btn-ghost text-xl normal-case">
-             
-            </Image>
+            {/* <Image src="/logo.png" alt="logo"  width={150}        
+              height={150} className="btn btn-ghost text-xl normal-case">
+            </Image> */}
+            <Link href="/" className="btn btn-ghost text-xl normal-case">
+              RealtyIqs
+            </Link>
           </div>
           <div className="flex-none">
             <ul className="menu menu-horizontal flex items-center gap-2 sm:gap-4">
