@@ -41,8 +41,10 @@ export class JoinPage {
     await this.passwordBox.fill(this.user.password);
     await this.createAccountButton.click();
     await this.page.waitForURL('/auth/login');
-    await expect(this.page.getByRole('status')).toHaveText(
-      this.createAccountSuccessMessage
-    );
+    await expect(
+      this.page
+        .getByRole('status')
+        .and(this.page.getByText(this.createAccountSuccessMessage))
+    ).toBeVisible();
   }
 }
