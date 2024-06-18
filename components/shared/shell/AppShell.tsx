@@ -5,6 +5,7 @@ import React from 'react';
 import Header from './Header';
 import Drawer from './Drawer';
 import { useRouter } from 'next/navigation';
+import Brand from './Brand';
 
 export default function AppShell({ children }) {
   const router = useRouter();
@@ -22,15 +23,45 @@ export default function AppShell({ children }) {
 
   return (
     <div>
-      <Drawer sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <div className="lg:pl-64">
-        <Header setSidebarOpen={setSidebarOpen} />
-        <main className="py-5">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <Brand />
+      {/* <Drawer sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> */}
+
+     
             {children}
-          </div>
-        </main>
-      </div>
+         
     </div>
+//  <>
+//  <div className=" columns-2">
+//    <div className="row custom-row">
+//      <div className="col-md-6 fixed-column">
+//    <div className="lg:pl-64">
+//          <Header setSidebarOpen={setSidebarOpen} /> 
+//         <main className="py-5">
+//           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+//             {children}
+//           </div>
+//         </main>
+//       </div>
+//        {/* <Sidebar
+//          formData={formData}
+//          setFormData={setFormData}
+//          handleInputChange={handleInputChange}
+//          handleAboutChange ={handleAboutChange}
+//        /> */}
+//      </div>
+//      <div className="col-md-6 scrollable-column">
+//      <h1>hello I am main contnet</h1>
+//        {/* <Theme1
+//          componentRef={componentRef}
+//          formData={formData}
+//          setFormData={setFormData}
+//        /> */}
+//      </div>
+//    </div>
+//  </div>
+// </>
+
+
+
   );
 }

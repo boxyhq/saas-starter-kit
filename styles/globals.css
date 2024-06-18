@@ -86,3 +86,402 @@ a {
 .scrollbar::-webkit-scrollbar-button {
   display: none;
 }
+
+/* Nav Bar for resumebuilder*/
+.navbar,
+.navbar-nav .nav-link,
+.navbar-brand,
+.nav-dropdown-item,
+.btn {
+  font-family: "Roboto", sans-serif;
+}
+
+.navbar-nav .nav-link {
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.btn {
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.sticky-nav {
+  position: sticky;
+  top: 0;
+}
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.container-fluid.custom-container {
+  height: 100%;
+}
+
+.custom-row {
+  display: flex;
+  height: calc(100% - 56px); /* Adjust height considering the navbar height */
+  margin: 0;
+  padding: 0;
+}
+
+.fixed-column {
+  position: sticky;
+  top: 56px; /* Adjust this value to match the height of your navbar */
+  height: calc(100vh - 56px); /* Adjust height considering the navbar height */
+  overflow-y: auto;
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.scrollable-column {
+  height: 100%;
+  overflow-y: auto;
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.main-background {
+  width: 210mm;
+  height: 296mm;
+}
+.resume-section{
+  height: 100%;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.profile-rounded{
+width: 100%;
+border-radius: 50%;
+border: 0.5px solid black;
+}
+
+.text-sm {
+  font-size: .875rem;
+  line-height: 1.25rem;
+}
+
+.font-medium {
+  font-weight: 500;
+  text-align: left;
+}
+
+.name {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.text-base {
+  text-align: left;
+  color: rgb(24, 144, 255);
+}
+
+.gap-3 {
+  gap: .75rem;
+}
+
+.icon-url{
+ margin-bottom: 10px;
+} 
+
+.summary {
+  font-size: 1rem;
+  line-height: 2.5rem;
+  position: relative;
+  text-align: left;
+  border-bottom: 4px solid #e5e7eb;
+  font-weight: 500;
+}
+
+.text-summary {
+  font-size: .75rem;
+  line-height: 1rem;
+  text-align: left;
+}
+.paddings {
+  padding-top: .375rem;
+  padding-bottom: .375rem;
+}
+
+.company-name {
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  text-align: left;
+}
+
+.job-role {
+color : rgb(24, 144, 255);
+font-weight: 400;
+font-size: 1.125rem;
+line-height: 1.75rem;
+}
+
+.text-date {
+  font-size: .75rem;
+  line-height: 1rem;
+}
+
+.list {
+  text-align: left;
+  margin-left: -12px;
+}
+
+.technical{
+  border-bottom: 2px solid #e5e7eb;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.icons{
+  width: 16px;
+  height: 16px;
+  color: #000
+}
+
+.icon-row {
+  margin: -15px 0 0 0 !important;
+  width: 50% !important;
+}
+
+.education-title {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.education-school {
+  color: rgb(24, 144, 255);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+}
+.education-date{
+  font-size: .75rem;
+  line-height: 1rem;
+}
+
+@media print {
+  html, body {
+    height: 100vh; /* Use 100% here to support printing more than a single page*/
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  #section-to-print {
+      margin-top: 10px;
+  }
+
+  .summarys{
+      width: 100%;
+  }
+
+  .objective{
+      width: 50%;
+  }
+
+  .smb{
+   width: 100%;
+      
+  }
+
+  .summary {
+      font-size: 1rem;
+      line-height: 2.5rem;
+      position: relative;
+      text-align: left;
+      border-bottom: 4px solid #e5e7eb;
+      font-weight: 500;
+      width: 100%;
+  }
+}
+
+.sidebar {
+  background-color: #e7edf3;
+  padding: 20px;
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+ 
+  /* top: 0; */
+  overflow-y: auto;
+}
+
+.back-title {
+  text-align: left;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+}
+
+.sidebar-item {
+  padding: 15px 20px;
+  margin: 10px 0;
+  background-color: #ffffff;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  color: #333;
+}
+
+.sidebar-item:hover {
+  background-color: #dfe6ed;
+}
+
+.arrow {
+  font-size: 18px;
+}
+
+.reset-button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  color: #333;
+}
+
+.reset-button:hover {
+  background-color: #dfe6ed;
+}
+
+.chat-icon {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #007bff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.chat-icon svg {
+  fill: #ffffff;
+}
+.accordion-button::after {
+    display: none
+}
+
+.accordion-item{
+    margin-top: 10px;
+}
+
+.wrapper-class {
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+.editor-class {
+  background-color:lightgray;
+  padding: 1rem;
+  border: 1px solid #ccc;
+}
+.toolbar-class {
+  border: 1px solid #ccc;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.demo-wrapper {
+  width: 100% !important;
+  display: block !important;
+  margin-bottom: 10px !important;
+}
+
+.demo-editor {
+  height: 275px !important;
+  border: 1px solid #f1f1f1 !important;
+  padding: 5px !important;
+  border-radius: 2px !important;
+}
+
+.rdw-editor-main {
+  height: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+  margin: 10px;
+}
+.rdw-editor-toolbar {
+    padding: 6px 5px 0;
+    border-radius: 2px;
+    border: 1px solid #F1F1F1;
+    display: flex;
+    justify-content: flex-start;
+    background: white;
+    flex-wrap: wrap;
+    font-size: 15px;
+    margin-bottom: 5px;
+    user-select: none;
+    margin: 10px;
+}
+
+
+
+/*Shared Button*/
+
+.btn-primary {
+  padding: 10px 10px 10px 10px !important;
+  height: 10px;
+  line-height: 1.5px !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  margin-top: 5px;
+}
+
+.modal.show .modal-dialog {
+  max-width: 900px !important;
+}
+
+.editor-class {
+  height: 250px;
+}
+
+.content-ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.content-ul li {
+  padding: 8px 12px 13px 13px;
+  background: #eff2f9;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: nowrap;
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 18px;
+  color: #000;
+  cursor: pointer;
+}
+
+.btn-plus {
+  background-color: transparent !important;
+  display: inline-block;
+  color: #0091ff !important;
+  border: none !important;
+  margin-right: 12px !important;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+}

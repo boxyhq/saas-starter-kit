@@ -3,7 +3,7 @@ import type { SessionStrategy } from 'next-auth';
 const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
-  redirectIfAuthenticated: 'http://localhost:4002/dashboard',
+  redirectIfAuthenticated: 'http://localhost:4002/resumebuilder',
 
   // SMTP configuration for NextAuth
   smtp: {
