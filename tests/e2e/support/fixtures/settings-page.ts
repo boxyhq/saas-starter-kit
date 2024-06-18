@@ -92,9 +92,11 @@ export class SettingsPage {
   async updateTeamName(newTeamName: string) {
     await this.fillTeamName(newTeamName);
     await this.clickSaveButton();
-    await expect(this.page.getByRole('status')).toHaveText(
-      this.updateTeamSuccessMessage
-    );
+    await expect(
+      this.page
+        .getByRole('status')
+        .and(this.page.getByText(this.updateTeamSuccessMessage))
+    ).toBeVisible();
   }
 
   async fillTeamSlug(teamSlug: string) {
@@ -104,9 +106,11 @@ export class SettingsPage {
   async updateTeamSlug(newTeamSlug: string) {
     await this.fillTeamSlug(newTeamSlug);
     await this.clickSaveButton();
-    await expect(this.page.getByRole('status')).toHaveText(
-      this.updateTeamSuccessMessage
-    );
+    await expect(
+      this.page
+        .getByRole('status')
+        .and(this.page.getByText(this.updateTeamSuccessMessage))
+    ).toBeVisible();
   }
 
   async fillDomain(domain: string) {
@@ -116,9 +120,11 @@ export class SettingsPage {
   async updateDomain(domain: string) {
     await this.fillDomain(domain);
     await this.clickSaveButton();
-    await expect(this.page.getByRole('status')).toHaveText(
-      this.updateTeamSuccessMessage
-    );
+    await expect(
+      this.page
+        .getByRole('status')
+        .and(this.page.getByText(this.updateTeamSuccessMessage))
+    ).toBeVisible();
   }
 
   async checkTeamName(teamName: string) {
@@ -141,10 +147,11 @@ export class SettingsPage {
     ).toBeVisible();
     await this.newTeamNameInput.fill(teamName);
     await this.createTeamDialogButton.click();
-
-    await expect(this.page.getByRole('status')).toHaveText(
-      this.createTeamSuccessMessage
-    );
+    await expect(
+      this.page
+        .getByRole('status')
+        .and(this.page.getByText(this.createTeamSuccessMessage))
+    ).toBeVisible();
   }
 
   async removeTeam(teamSlug: string) {
@@ -152,9 +159,11 @@ export class SettingsPage {
     this.removeTeamButton.click();
     await expect(this.removeTeamConfirmPrompt).toBeVisible();
     this.deleteButton.click();
-    await expect(this.page.getByRole('status')).toHaveText(
-      this.removeTeamSuccessMessage
-    );
+    await expect(
+      this.page
+        .getByRole('status')
+        .and(this.page.getByText(this.removeTeamSuccessMessage))
+    ).toBeVisible();
   }
 
   async gotoSection(pageName: 'security' | 'api-keys') {

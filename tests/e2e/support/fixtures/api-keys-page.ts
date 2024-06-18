@@ -69,9 +69,11 @@ export class ApiKeysPage {
       )
     ).toBeVisible();
     await this.revokeApiKeyConfirmationButton.click();
-    await expect(this.page.getByRole('status')).toHaveText(
-      this.apiKeyDeleteSuccessMessage
-    );
+    await expect(
+      this.page
+        .getByRole('status')
+        .and(this.page.getByText(this.apiKeyDeleteSuccessMessage))
+    ).toBeVisible();
   }
 
   async isApiKeyNameLengthErrorVisible() {
