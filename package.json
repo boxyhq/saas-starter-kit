@@ -97,5 +97,9 @@
     "ts-node": "10.9.2",
     "typescript": "5.4.5"
   },
-  "overrides": {}
+  "overrides": {
+    "typeorm": {
+      "mssql": "11.0.0"
+    }
+  }
 }
