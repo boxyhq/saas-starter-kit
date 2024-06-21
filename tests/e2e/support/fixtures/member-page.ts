@@ -66,7 +66,7 @@ export class MemberPage {
   }
 
   private memberEntryRowRole(role: string) {
-    return this.page.getByRole('cell', { name: role });
+    return this.page.getByRole('cell', { name: role, exact: true });
   }
 
   private memberEntryRowEmail(email: string) {

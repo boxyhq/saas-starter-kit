@@ -25,6 +25,7 @@ export class DirectorySyncPage {
   private readonly deleteButton;
   private readonly deleteConfirmationHeader;
   private readonly connectionDeletedMessage;
+  private productId: string = '';
 
   constructor(
     public readonly page: Page,
@@ -81,16 +82,31 @@ export class DirectorySyncPage {
     this.connectionDeletedMessage = this.page.getByText('Connection deleted');
   }
 
-  async goto() {
-    await this.page.goto(`/teams/${this.teamSlug}/directory-sync`);
-    await this.page.waitForURL(`/teams/${this.teamSlug}/directory-sync`);
+  async goto(productId?: string) {
+    const url = productId
+      ? `/products/${productId}/dsync`
+      : `/teams/${this.teamSlug}/directory-sync`;
+
+    await this.page.goto(url);
+    await this.page.waitForURL(url);
     await expect(this.pageHeader).toBeVisible();
+    this.productId = productId || '';
   }
 
-  async createConnection(name: string) {
+  async createConnection(
+    name: string,
+    tenant?: string,
+    webhookUrl?: string,
+    webhookSecret?: string
+  ) {
     await this.createDirectoryButton.click();
     await expect(this.createDsyncHeader).toBeVisible();
     await this.directoryNameField.fill(name);
+    if (tenant && webhookUrl && webhookSecret) {
+      await this.page.getByLabel('Tenant').fill(tenant);
+      await this.page.getByLabel('Webhook URL').fill(webhookUrl);
+      await this.page.getByLabel('Webhook secret').fill(webhookSecret);
+    }
     await this.createDirectorySubmitButton.click();
     await expect(this.createDirectorySuccessMessage).toBeVisible();
   }
