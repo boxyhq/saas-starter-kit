@@ -19,6 +19,11 @@ export class SecurityPage {
       .getByRole('button', { name: 'Remove' });
   }
 
+  async goto(teamSlug: string) {
+    await this.page.goto(`/teams/${teamSlug}/settings`);
+    await this.page.waitForURL(`/teams/${teamSlug}/settings`);
+  }
+
   async checkCurrentSession() {
     await expect(this.page.locator('text=This browser')).toBeVisible();
   }
