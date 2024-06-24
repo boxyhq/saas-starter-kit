@@ -218,3 +218,4 @@ model jackson_ttl {
   @@index([expiresAt], map: "_jackson_ttl_expires_at")
   @@ignore
 }
+
