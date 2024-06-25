@@ -1,5 +1,6 @@
 import type { Page, Locator } from '@playwright/test';
 import { expect } from '@playwright/test';
+import { pageHeading, loggedInPath } from './consts';
 
 export class LoginPage {
   private readonly IDP_LOGIN_URL: string;
@@ -72,7 +73,7 @@ export class LoginPage {
       name: 'SAML SSO Login',
     });
     this.pageHeading = this.page.getByRole('heading', {
-      name: 'Team Settings',
+      name: pageHeading,
     });
   }
 
@@ -86,7 +87,7 @@ export class LoginPage {
   }
 
   async loggedInCheck(teamSlug: string) {
-    await this.page.waitForURL(`/teams/${teamSlug}/settings`);
+    await this.page.waitForURL(`/teams/${teamSlug}/${loggedInPath}`);
     await expect(this.pageHeading).toBeVisible();
   }
 

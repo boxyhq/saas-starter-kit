@@ -3,6 +3,7 @@ import { chromium, expect, test as base } from '@playwright/test';
 import { prisma } from '@/lib/prisma';
 import { user, team } from '../support/helper';
 import { JoinPage, LoginPage, MemberPage } from '../support/fixtures';
+import { testRole } from '../support/fixtures/consts';
 
 let domainInviteLink = '';
 
@@ -79,7 +80,7 @@ test('Should be able to invite a new member', async ({
   await memberPage.goto();
   await memberPage.inviteByEmail(invitedUser.email);
   await memberPage.membersPageVisible();
-  await memberPage.checkPendingInvitation(invitedUser.email, 'MEMBER');
+  await memberPage.checkPendingInvitation(invitedUser.email, testRole);
 });
 
 test('New member should be able to accept the invitation', async ({
@@ -119,7 +120,9 @@ test('Existing user should be able to accept the invitation', async ({
   await expect(
     page.getByRole('cell', { name: `U ${secondUser.email}` })
   ).toBeVisible();
-  await expect(page.getByRole('cell', { name: 'MEMBER' })).toHaveCount(2);
+  await expect(
+    page.getByRole('cell', { name: testRole, exact: true })
+  ).toHaveCount(2);
 
   const invitation = await getAndVerifyInvitation(secondUser.email);
 
