@@ -45,6 +45,7 @@ test('Should be able to update team name', async ({
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
+  await settingsPage.goto(team.slug);
   await settingsPage.updateTeamName(teamNewInfo.name);
 
   await settingsPage.page.reload();
@@ -60,6 +61,7 @@ test('Should not allow to update team name with empty value', async ({
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
+  await settingsPage.goto(team.slug);
   await settingsPage.fillTeamName('');
   await settingsPage.isSaveButtonDisabled();
 });
@@ -72,6 +74,7 @@ test('Should not allow to update team name with more than 50 characters', async 
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
+  await settingsPage.goto(team.slug);
   await settingsPage.fillTeamName('a'.repeat(51));
   await settingsPage.isSaveButtonDisabled();
   await settingsPage.isTeamNameLengthErrorVisible();
@@ -85,6 +88,7 @@ test('Should be able to update team slug', async ({
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
 
+  await settingsPage.goto(team.slug);
   await settingsPage.updateTeamSlug(teamNewInfo.slug);
 
   await settingsPage.page.reload();
@@ -97,6 +101,7 @@ test('Should not allow empty slug', async ({ loginPage, settingsPage }) => {
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(teamNewInfo.sluggified);
 
+  await settingsPage.goto(teamNewInfo.sluggified);
   await settingsPage.fillTeamSlug('');
   await settingsPage.isSaveButtonDisabled();
 });
@@ -109,6 +114,7 @@ test('Should not allow to update team slug with more than 50 characters', async 
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(teamNewInfo.sluggified);
 
+  await settingsPage.goto(teamNewInfo.sluggified);
   await settingsPage.fillTeamSlug('a'.repeat(51));
   await settingsPage.isSaveButtonDisabled();
   await settingsPage.isTeamSlugLengthErrorVisible();
@@ -122,6 +128,7 @@ test('Should be able to set domain in team settings', async ({
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(teamNewInfo.sluggified);
 
+  await settingsPage.goto(teamNewInfo.sluggified);
   await settingsPage.updateDomain('example.com');
   await settingsPage.page.reload();
   await settingsPage.isSettingsPageVisible();
@@ -136,6 +143,7 @@ test('Should not allow to set domain with more than 253 characters', async ({
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(teamNewInfo.sluggified);
 
+  await settingsPage.goto(teamNewInfo.sluggified);
   await settingsPage.fillDomain('a'.repeat(256) + '.com');
   await settingsPage.isSaveButtonDisabled();
   await settingsPage.isDomainLengthErrorVisible();
@@ -149,6 +157,7 @@ test('Should not allow to set invalid domain', async ({
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(teamNewInfo.sluggified);
 
+  await settingsPage.goto(teamNewInfo.sluggified);
   await settingsPage.fillDomain('example');
   await settingsPage.isSaveButtonDisabled();
   await settingsPage.isDomainInvalidErrorVisible();

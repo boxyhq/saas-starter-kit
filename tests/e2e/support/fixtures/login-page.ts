@@ -1,5 +1,6 @@
 import type { Page, Locator } from '@playwright/test';
 import { expect } from '@playwright/test';
+import { pageHeading, loggedInPath } from './consts';
 
 export class LoginPage {
   private readonly IDP_LOGIN_URL: string;
@@ -24,7 +25,7 @@ export class LoginPage {
   private readonly idpSignInButton: Locator;
   private readonly joinTeamButton: Locator;
   private readonly mockSAMLLoginHeading: Locator;
-  private readonly teamSettingsHeading: Locator;
+  private readonly pageHeading: Locator;
 
   constructor(public readonly page: Page) {
     this.IDP_LOGIN_URL = `${process.env.MOCKSAML_ORIGIN}/saml/login`;
@@ -71,8 +72,8 @@ export class LoginPage {
     this.mockSAMLLoginHeading = this.page.getByRole('heading', {
       name: 'SAML SSO Login',
     });
-    this.teamSettingsHeading = this.page.getByRole('heading', {
-      name: 'Team Settings',
+    this.pageHeading = this.page.getByRole('heading', {
+      name: pageHeading,
     });
   }
 
@@ -86,8 +87,8 @@ export class LoginPage {
   }
 
   async loggedInCheck(teamSlug: string) {
-    await this.page.waitForURL(`/teams/${teamSlug}/settings`);
-    await expect(this.teamSettingsHeading).toBeVisible();
+    await this.page.waitForURL(`/teams/${teamSlug}/${loggedInPath}`);
+    await expect(this.pageHeading).toBeVisible();
   }
 
   async credentialLogin(email: string, password: string) {
@@ -116,7 +117,7 @@ export class LoginPage {
     await this.continueWithSSOButton.click();
     await expect(this.mockSAMLLoginHeading).toBeVisible();
     await this.signInButton.click();
-    await expect(this.teamSettingsHeading).toBeVisible();
+    await expect(this.pageHeading).toBeVisible();
   }
 
   async idpInitiatedLogin() {
@@ -156,7 +157,7 @@ export class LoginPage {
 
   public async acceptInvitation() {
     await this.joinTeamButton.click();
-    await expect(this.teamSettingsHeading).toBeVisible();
+    await expect(this.pageHeading).toBeVisible();
   }
 
   async createNewAccountViaInvite(name: string, password: string) {

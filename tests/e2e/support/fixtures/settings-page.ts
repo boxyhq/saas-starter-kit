@@ -45,6 +45,10 @@ export class SettingsPage {
     ).toBeVisible();
   }
 
+  async isLoggedIn() {
+    await this.page.waitForSelector('text=All Products');
+  }
+
   async isSettingsPageVisible() {
     await expect(
       this.page.getByRole('heading', { name: 'Team Settings' })

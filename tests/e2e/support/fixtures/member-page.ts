@@ -66,7 +66,7 @@ export class MemberPage {
   }
 
   private memberEntryRowRole(role: string) {
-    return this.page.getByRole('cell', { name: role });
+    return this.page.getByRole('cell', { name: role, exact: true });
   }
 
   private memberEntryRowEmail(email: string) {
@@ -103,7 +103,7 @@ export class MemberPage {
     await expect(this.page.getByText('Invitation sent!')).toBeVisible();
   }
 
-  async checkPendingInvitation(email: string, role: 'MEMBER' | 'OWNER') {
+  async checkPendingInvitation(email: string, role: string) {
     await this.pendingMemberVisible();
 
     await expect(this.memberEntryRowEmail(email)).toBeVisible();
