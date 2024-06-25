@@ -20,7 +20,7 @@ const setup = base.extend<LoginFixture>({
   },
 });
 
-setup('Sign up', async ({ joinPage }) => {
+setup('Sign up', async ({ joinPage, page, loginPage }) => {
   await joinPage.goto();
   await joinPage.signUp();
 });
