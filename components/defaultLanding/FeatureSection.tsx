@@ -18,15 +18,18 @@ const FeatureSection = () => {
           <div className="grid grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-2">
             {features.map((feature: any, index) => {
               return (
-                <div
-                  className="card-compact card dark:border-gray-200 border border-gray-300"
-                  key={index}
-                >
-                  <div className="card-body">
-                    <h2 className="card-title">{feature.name}</h2>
-                    <p>{feature.description}</p>
-                  </div>
-                </div>
+<div
+  className="card-compact card border ml-4 border-gray-300 dark:border-gray-200 transform transition-transform duration-400 hover:scale-105 hover:bg-[#2563eb] hover:text-white "
+  key={index}
+>
+  <div className="card-body">
+    <h2 className="card-title">{feature.name}</h2>
+    <p>{feature.description}</p>
+  </div>
+</div>
+
+
+
               );
             })}
           </div>
@@ -37,3 +40,4 @@ const FeatureSection = () => {
 };
 
 export default FeatureSection;
+
