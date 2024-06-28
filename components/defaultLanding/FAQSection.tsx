@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { Card } from 'react-daisyui';
@@ -31,7 +29,7 @@ const FAQSection = () => {
               return (
                 <Card
                   key={index}
-                  className="border-none w-4/5 mx-auto hover:bg-[#4f83f1] hover:text-white translate-x-1 duration-300 rounded-xl"
+                  className="border-none w-4/5 mx-auto hover:bg-[#2563eb] hover:text-white translate-x-1 duration-300 rounded-xl"
                 >
                   <Card.Body className="dark:border-gray-200 border-[2px] border-gray-400 text-center items-center">
                     <Card.Title
