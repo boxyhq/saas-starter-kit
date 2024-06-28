@@ -16,6 +16,11 @@ export class SSOPage {
   private readonly defaultRedirectURLInput: Locator;
   private readonly metadataRawInput: Locator;
   private readonly metadataUrlInput: Locator;
+  private readonly oidcIssuerInput: Locator;
+  private readonly oidcAuthzInput: Locator;
+  private readonly oidcTokenInput: Locator;
+  private readonly oidcJwksInput: Locator;
+  private readonly oidcUserinfoInput: Locator;
   private readonly oidcDiscoveryUrlInput: Locator;
   private readonly oidcClientIdInput: Locator;
   private readonly oidcClientSecretInput: Locator;
@@ -34,22 +39,39 @@ export class SSOPage {
     this.pageHeader = this.page.getByRole('heading', {
       name: 'Manage SSO Connections',
     });
-    this.newConnectionButton = page.getByRole('button', {
+    this.newConnectionButton = this.page.getByRole('button', {
       name: 'New Connection',
     });
     this.nameInput = this.page.getByLabel('Connection name (Optional)');
     this.ssoLabelInput = this.page.getByLabel('Connection label (Optional)');
     this.ssoDescriptionInput = this.page.getByLabel('Description (Optional)');
     this.tenantInput = this.page.getByLabel('Tenant');
-    this.redirectURLSInput = page
+    this.redirectURLSInput = this.page
       .getByRole('group')
       .filter({ hasText: 'Allowed redirect URLs' })
       .locator(page.getByRole('textbox').first());
     this.defaultRedirectURLInput = this.page.getByLabel('Default redirect URL');
-    this.metadataUrlInput = page.getByPlaceholder(
+    this.metadataUrlInput = this.page.getByPlaceholder(
       'Paste the Metadata URL here'
     );
-    this.metadataRawInput = page.getByPlaceholder('Paste the raw XML here');
+    this.metadataRawInput = this.page.getByPlaceholder(
+      'Paste the raw XML here'
+    );
+    this.oidcIssuerInput = this.page.getByPlaceholder('https://example.com', {
+      exact: true,
+    });
+    this.oidcAuthzInput = this.page.getByPlaceholder(
+      'https://example.com/oauth/authorize'
+    );
+    this.oidcTokenInput = this.page.getByPlaceholder(
+      'https://example.com/oauth/token'
+    );
+    this.oidcJwksInput = this.page.getByPlaceholder(
+      'https://example.com/.well-known/jwks.json'
+    );
+    this.oidcUserinfoInput = this.page.getByPlaceholder(
+      'https://example.com/userinfo'
+    );
     this.oidcDiscoveryUrlInput = this.page.getByLabel(
       'Well-known URL of OpenID Provider'
     );
@@ -64,9 +86,9 @@ export class SSOPage {
     this.toggleConnectionStatusLabel = this.page
       .locator('label')
       .filter({ hasText: 'Active' });
-    this.saveButton = page.getByRole('button', { name: 'Save' });
-    this.deleteButton = page.getByRole('button', { name: 'Delete' });
-    this.confirmButton = page.getByRole('button', { name: 'Confirm' });
+    this.saveButton = this.page.getByRole('button', { name: 'Save' });
+    this.deleteButton = this.page.getByRole('button', { name: 'Delete' });
+    this.confirmButton = this.page.getByRole('button', { name: 'Confirm' });
     this.productId = '';
   }
 
@@ -87,18 +109,32 @@ export class SSOPage {
 
   async createSSOConnection({
     metadataUrl,
+    oidcMetadata,
+    oidcDiscoveryUrl,
+    oidcClientId,
+    oidcClientSecret,
+    provider,
     ssoName,
     tenant,
     type = 'saml',
     index = -1,
-    mockLabClientId = MOCKLAB_CLIENT_ID,
   }: {
-    metadataUrl: string;
+    metadataUrl?: string;
+    oidcMetadata?: {
+      issuer: string;
+      authorize_endpoint: string;
+      token_endpoint: string;
+      jwks_uri: string;
+      userinfo_endpoint: string;
+    };
+    oidcDiscoveryUrl?: string;
+    oidcClientId?: string;
+    oidcClientSecret?: string;
+    provider?: string;
     ssoName?: string;
     tenant?: string;
     type?: 'saml' | 'oidc';
     index?: number;
-    mockLabClientId?: string;
   }) {
     await this.newConnectionButton.click();
     if (type === 'oidc') {
@@ -124,35 +160,47 @@ export class SSOPage {
     if (type === 'saml') {
       if (process.env.JACKSON_URL) {
         // fetch the data from metadata url
-        const response = await fetch(metadataUrl);
+        const response = await fetch(metadataUrl!);
         const data = await response.text();
         await this.metadataRawInput.fill(data);
       } else {
-        await this.metadataUrlInput.fill(metadataUrl);
+        await this.metadataUrlInput.fill(metadataUrl!);
       }
     }
     if (type === 'oidc') {
       // Enter the OIDC client credentials for mocklab in the form
-      await this.oidcClientIdInput.fill(mockLabClientId);
-      await this.oidcClientSecretInput.fill(MOCKLAB_CLIENT_SECRET);
-      // Enter the OIDC discovery url for mocklab in the form
-      await this.oidcDiscoveryUrlInput.fill(MOCKLAB_DISCOVERY_ENDPOINT);
+      await this.oidcClientIdInput.fill(oidcClientId ?? MOCKLAB_CLIENT_ID);
+      await this.oidcClientSecretInput.fill(
+        oidcClientSecret ?? MOCKLAB_CLIENT_SECRET
+      );
+      if (oidcDiscoveryUrl || !oidcMetadata) {
+        await this.oidcDiscoveryUrlInput.fill(
+          oidcDiscoveryUrl ?? MOCKLAB_DISCOVERY_ENDPOINT
+        );
+      } else if (typeof oidcMetadata === 'object') {
+        await this.oidcIssuerInput.fill(oidcMetadata.issuer);
+        await this.oidcAuthzInput.fill(oidcMetadata.authorize_endpoint);
+        await this.oidcTokenInput.fill(oidcMetadata.token_endpoint);
+        await this.oidcJwksInput.fill(oidcMetadata.jwks_uri);
+        await this.oidcUserinfoInput.fill(oidcMetadata.userinfo_endpoint);
+      }
     }
     await this.saveButton.click();
+    const _expectedproviderName =
+      provider ??
+      (type === 'saml' ? 'saml.example.com' : 'oauth.wiremockapi.cloud');
     if (index > -1) {
       await expect(
         this.page
           .getByRole('cell', {
-            name:
-              type === 'saml' ? 'saml.example.com' : 'oauth.wiremockapi.cloud',
+            name: _expectedproviderName,
           })
           .nth(index)
       ).toBeVisible();
     } else {
       await expect(
         this.page.getByRole('cell', {
-          name:
-            type === 'saml' ? 'saml.example.com' : 'oauth.wiremockapi.cloud',
+          name: _expectedproviderName,
         })
       ).toBeVisible();
     }
