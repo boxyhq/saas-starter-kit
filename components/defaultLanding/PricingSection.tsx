@@ -16,7 +16,7 @@ const PricingSection = () => {
           Lorem Ipsum is simply dummy text of the printing and typesetting
           industry.
         </p>
-        <div className="flex items-center justify-center">
+        <div className="flex items-center  justify-center">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {plans.map((plan, index) => {
               return (
