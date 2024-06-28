@@ -22,8 +22,9 @@ const PricingSection = () => {
               return (
                 <Card
                   key={`plan-${index}`}
-                  className="rounded-md dark:border-gray-200 mb-5 border border-gray-400 transform transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:bg-[#4f83f1]"
+                  className="rounded-md dark:border-gray-200 mb-5 border border-gray-400 transform transition-transform duration-400 hover:scale-105 hover:shadow-lg hover:bg-[#2563eb] "
                 >
+                  {' '}
                   <Card.Body className="transition-colors duration-400 hover:text-white">
                     <Card.Title tag="h2">
                       {plan.currency} {plan.amount} / {plan.duration}
@@ -66,3 +67,4 @@ const PricingSection = () => {
 };
 
 export default PricingSection;
+
