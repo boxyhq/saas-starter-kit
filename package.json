@@ -84,7 +84,7 @@
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.4",
     "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-i18next": "6.0.3",
+    "eslint-plugin-i18next": "6.0.7",
     "eslint-plugin-react": "7.34.3",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
