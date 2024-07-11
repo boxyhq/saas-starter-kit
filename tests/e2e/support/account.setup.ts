@@ -20,6 +20,7 @@ const setup = base.extend<LoginFixture>({
   },
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 setup('Sign up', async ({ joinPage, page, loginPage }) => {
   await joinPage.goto();
   await joinPage.signUp();

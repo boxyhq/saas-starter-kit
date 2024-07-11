@@ -2,10 +2,7 @@ import Stripe from 'stripe';
 import env from '@/lib/env';
 import { updateTeam } from 'models/team';
 
-export const stripe = new Stripe(env.stripe.secretKey ?? '', {
-  // https://github.com/stripe/stripe-node#configuration
-  apiVersion: '2024-04-10',
-});
+export const stripe = new Stripe(env.stripe.secretKey ?? '');
 
 export async function getStripeCustomerId(teamMember, session?: any) {
   let customerId = '';
