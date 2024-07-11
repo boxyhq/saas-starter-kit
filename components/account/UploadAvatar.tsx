@@ -44,12 +44,12 @@ const UploadAvatar = ({ user }: { user: Partial<User> }) => {
 
   const onAvatarUpload = (file: File) => {
     if (file.size / 1024 / 1024 > 2) {
-      toast.error('File size too big (max 2MB)');
+      toast.error(t('file-size-too-big'));
       return;
     }
 
     if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
-      toast.error('File type not supported (.png or .jpg only)');
+      toast.error(t('file-type-not-supported'));
       return;
     }
 
@@ -76,7 +76,7 @@ const UploadAvatar = ({ user }: { user: Partial<User> }) => {
 
     if (!response.ok) {
       const json = (await response.json()) as ApiResponse;
-      toast.error(json.error.message);
+      toast.error(t(json?.error?.message || 'Something went wrong'));
       return;
     }
 

@@ -52,7 +52,7 @@ const SSO: NextPageWithLayout<
       const { data, error } = await response.json();
 
       if (error) {
-        toast.error(error.message);
+        toast.error(t(error?.message || 'Something went wrong'));
         return;
       }
       if (data.useSlug) {

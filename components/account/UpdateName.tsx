@@ -38,7 +38,7 @@ const UpdateName = ({ user }: { user: Partial<User> }) => {
 
       if (!response.ok) {
         const json = (await response.json()) as ApiResponse;
-        toast.error(json.error.message);
+        toast.error(t(json?.error?.message || 'Something went wrong'));
         return;
       }
 
