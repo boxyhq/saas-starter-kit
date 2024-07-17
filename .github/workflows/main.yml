@@ -66,11 +66,11 @@ jobs:
       - uses: actions/checkout@v4
       - run: npm install
       - run: npm run check-lint
-      - run: npm run check-types
       - run: npm run check-format
       - run: npm run check-locale
       - run: npm run test
       - run: npm run build-ci
+      - run: npm run check-types
       - run: npx prisma migrate deploy
       - name: Install playwright browser dependencies
         run: npx playwright install chromium
