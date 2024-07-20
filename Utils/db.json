@@ -1,0 +1,133 @@
+{
+  "getAboutPhrases": {
+    "phrases": [
+      "Seasoned Technology Innovator: A dynamic Senior Software Engineer with a distinguished background, holding dual Master’s degrees in Technology Commercialization and Computer Science Engineering. With over 12 years of software development experience, I have consistently demonstrated a flair for driving innovation and leading the development of high-performance systems.",
+      "Proven Track Record in Cloud Infrastructure: I bring a proven track record in cloud infrastructure, RDMA, and hardware-software codesign. My expertise lies in transforming complex technical concepts into practical solutions, ensuring optimal performance and scalability.",
+      "Leadership in Cross-Functional Teams: As an experienced leader, I have successfully led cross-functional teams, fostering collaboration and driving projects to successful outcomes. My ability to inspire and mentor team members has been instrumental in achieving exceptional results.",
+      "Vision for Microsoft: With a clear vision to leverage my extensive technical expertise, I am eager to contribute to Microsoft in a leadership role. I am committed to driving innovation, delivering excellence, and contributing to Microsoft's success in the ever-evolving tech landscape."
+    ]
+  },
+  "resumeInitialData":    {
+    "name":"Alex Johnson",
+    "imageUrl":"https://randomuser.me/api/portraits/men/19.jpg",
+    "title":"Senior Software Engineer",
+    "email":"alex.johnson@email.com",
+    "websiteUrl":"www.resume.vercel.app",
+    "phone":"+1 (123)-456-7890",
+    "location":"Redmond, WA",
+    "relevantExperience":"8 Years",
+    "totalExperience":"12 Years",
+    "linkedin":"https://www.linkedin.com/in/alex-johnson/",
+    "twitter":"https://www.twitter.com/alexjohnson/",
+    "github":"https://github.com/alexjohnson/",
+    "hackerrank":"https://www.hackerrank.com/alexjohnson/",
+    "hackerearth":"https://www.hackerearth.com/alexjohnson/",
+    "codechef":"https://www.codechef.com/alexjohnson/",
+    "leetcode":"https://leetcode.com/alexjohnson/",
+    "about":{
+       "title":"Accomplished Senior Software Engineer",
+       "content":"Changed Data"
+    },
+    "educationData":{
+       "educationTitles1":{
+          "school":"Harvard University",
+          "degree":"MS",
+          "area":"Data Analytics",
+          "grade":"3.8/4.0",
+          "startDate":"01-05-2020",
+          "endDate":"01-05-2021"
+       },
+       "educationTitles2":{
+          "school":"California Institute of Technology",
+          "degree":"MS",
+          "area":"Computer Science Engineering",
+          "grade":"3.9/4.0",
+          "startDate":"01-09-2010",
+          "endDate":"01-08-2011"
+       },
+       "educationTitles3":{
+          "school":"Stanford University",
+          "degree":"Bachelor of Engineering",
+          "area":"Information Science Engineering",
+          "grade":"4.0/4.0",
+          "startDate":"01-06-2006",
+          "endDate":"01-06-2010"
+       }
+    },
+    "experienceData":{
+       "experienceTitles1":{
+          "company":"Tech Innovators Inc.",
+          "position":"Sr .Net Engineer",
+          "startDate":"01-09-2016",
+          "endDate":"01-09-2024",
+          "impact":[
+             "Led the development of automated systems, reducing costs by 80% and increasing accuracy by 98%.",
+             "Spearheaded the creation of advanced web applications, improving customer experience and increasing sales by 30%.",
+             "Mentored a team of over 20 engineers, enhancing technical skills and promoting career growth."
+          ]
+       },
+       "experienceTitles2":{
+          "company":"Global Solutions LLC",
+          "position":"Solutions Architect",
+          "startDate":"01-09-2016",
+          "endDate":"01-09-2022",
+          "impact":[
+             "Implemented clustering solutions for pricing strategies across thousands of stores, increasing code quality and productivity by 30%.",
+             "Facilitated deployment and accelerated adoption of technical solutions."
+          ]
+       },
+       "experienceTitles3":{
+          "company":"RetailTech Corp.",
+          "position":"Sr Java Engineer",
+          "startDate":"01-09-2016",
+          "endDate":"01-09-2022",
+          "impact":[
+             "Implemented clustering solutions for pricing strategies across thousands of stores, increasing code quality and productivity by 30%.",
+             "Facilitated deployment and accelerated adoption of technical solutions."
+          ]
+       },
+       "experienceTitles4":{
+          "company":"Innovative Software Solutions",
+          "position":"Software Engineer",
+          "startDate":"01-06-2012",
+          "endDate":"01-07-2014",
+          "impact":[
+             "Developed algorithms optimizing product marketing clusters, generating significant revenue.",
+             "Collaborated with team members to improve sales leads by 30%."
+          ]
+       }
+    },
+    "awardData":{
+       "awardTitles1":{
+          "award":"Best Pitch for Sustainability Award",
+          "awardby":"Harvard Innovation Labs",
+          "date":"12-09-2020",
+          "aboutaward":"Awarded for outstanding pitch presentation and innovative solutions in sustainability."
+       },
+       "awardTitles2":{
+          "award":"Excellence in Engineering Award",
+          "awardby":"Global Solutions LLC",
+          "date":"12-12-2022",
+          "aboutaward":"Recognized for exceptional contributions to software architecture and development."
+       }
+    },
+    "activities":{
+       "title":"Activities",
+       "content":"Awarded for outstanding pitch presentation and innovative solutions in sustainability."
+    },
+    "aboutModal":"",
+    "languages":{
+       "title":"Skills",
+       "technology":[
+          {
+             "id":"1",
+             "name":"Langauge : HTML, CSS, PHP "
+          },
+          {
+             "id":"2",
+             "name":"Softskills : Project Leadership, Event management"
+          }
+       ]
+    }
+ }
+}

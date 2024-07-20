@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import colors from 'tailwindcss/colors';
 import type { AppPropsWithLayout } from 'types';
 import mixpanel from 'mixpanel-browser';
-
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '@boxyhq/react-ui/dist/style.css';
 import '../styles/globals.css';
 import { useEffect } from 'react';

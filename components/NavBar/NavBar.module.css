@@ -1,0 +1,22 @@
+.navbar,
+.navbar-nav .nav-link,
+.navbar-brand,
+.nav-dropdown-item,
+.btn {
+  font-family: "Roboto", sans-serif;
+}
+
+.navbar-nav .nav-link {
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.btn {
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.sticky-nav {
+  position: sticky;
+  top: 0;
+}

@@ -1,0 +1,46 @@
+.form-label {
+  font-weight: 500;
+}
+
+.demo-wrapper {
+  width: 100% !important;
+  display: block !important;
+  margin-bottom: 10px !important;
+}
+
+.demo-editor {
+  height: 275px !important;
+  border: 1px solid #f1f1f1 !important;
+  padding: 5px !important;
+  border-radius: 2px !important;
+}
+
+.rdw-editor-main {
+  height: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+  margin: 10px;
+}
+.rdw-editor-toolbar {
+    padding: 6px 5px 0;
+    border-radius: 2px;
+    border: 1px solid #F1F1F1;
+    display: flex;
+    justify-content: flex-start;
+    background: white;
+    flex-wrap: wrap;
+    font-size: 15px;
+    margin-bottom: 5px;
+    user-select: none;
+    margin: 10px;
+}
+
+.aboutSummary {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 0;
+}
+
+.extra-padding {
+  margin: 6px;
+}
