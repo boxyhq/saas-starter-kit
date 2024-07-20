@@ -1,30 +1,33 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Modal, Button } from "react-bootstrap";
-import { EditorState, Modifier, ContentState, convertFromHTML } from "draft-js";
-import { convertToHTML } from "draft-convert";
-import RichEditor from "./RichEditor.component";
-import ResumeContext from "../../Context/ResumeContext";
-import { UseDataFetch } from "../../Utils/UseDataFetch";
+import React, { useContext, useState, useEffect } from 'react';
+import { Modal, Button } from 'react-bootstrap';
+import { EditorState, Modifier, ContentState, convertFromHTML } from 'draft-js';
+import { convertToHTML } from 'draft-convert';
+import RichEditor from './RichEditor.component';
+import ResumeContext from '../Context/ResumeContext';
+import { UseDataFetch } from '../../Utils/UseDataFetch';
 
-const SuggestedPhrasesModal = ({ initialData, handleDataChange, handleClose, show }) => {
+const SuggestedPhrasesModal = ({
+  initialData,
+  handleDataChange,
+  handleClose,
+  show,
+}) => {
   const [phrases, setPhrases] = useState([]);
   const [addedPhrases, setAddedPhrases] = useState([]);
-  const { data, error } = UseDataFetch('localApi',`/getAboutPhrases`);
-  
+  const { data, error } = UseDataFetch('localApi', `/getAboutPhrases`);
+
   const handleAddPhrase = (phrase) => {
     setAddedPhrases([...addedPhrases, phrase]);
-    handleDataChange(initialData  + `\n${phrase}`);
-   
+    handleDataChange(initialData + `\n${phrase}`);
+
     //onChange(convertToHTML(newEditorState.getCurrentContent()));
   };
 
   const handleRemovePhrase = (phrase) => {
     const newPhrases = addedPhrases.filter((p) => p !== phrase);
     setAddedPhrases(newPhrases);
-    
-   
-  
-   // onChange(convertToHTML(newEditorState.getCurrentContent()));
+
+    // onChange(convertToHTML(newEditorState.getCurrentContent()));
   };
 
   // Update form data when fetched data changes
@@ -46,23 +49,23 @@ const SuggestedPhrasesModal = ({ initialData, handleDataChange, handleClose, sho
               <ul className="content-ul">
                 {phrases.map((phrase, index) => (
                   <li key={index}>
-                  {addedPhrases.includes(phrase) ? (
-                    <span
-                      className="btn-plus"
-                      onClick={() => handleRemovePhrase(phrase)}
-                    >
-                      -
-                    </span>
-                  ) : (
-                    <span
-                      className="btn-plus"
-                      onClick={() => handleAddPhrase(phrase)}
-                    >
-                      +
-                    </span>
-                  )}
-                  {phrase}
-                </li>
+                    {addedPhrases.includes(phrase) ? (
+                      <span
+                        className="btn-plus"
+                        onClick={() => handleRemovePhrase(phrase)}
+                      >
+                        -
+                      </span>
+                    ) : (
+                      <span
+                        className="btn-plus"
+                        onClick={() => handleAddPhrase(phrase)}
+                      >
+                        +
+                      </span>
+                    )}
+                    {phrase}
+                  </li>
                 ))}
               </ul>
             </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import AppShell from '../shared/shell/AppShell';
 import { SWRConfig } from 'swr';
+import NavBar from '@/components/NavBar/NavBar';
 
 interface ResumeLayoutProps {
   children: React.ReactNode;

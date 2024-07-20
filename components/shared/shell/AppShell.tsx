@@ -6,6 +6,7 @@ import Header from './Header';
 import Drawer from './Drawer';
 import { useRouter } from 'next/navigation';
 import Brand from './Brand';
+import NavBar from '@/components/NavBar/NavBar';
 
 export default function AppShell({ children }) {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function AppShell({ children }) {
 
   return (
     <div>
-      <Brand />
+      <NavBar />
       {/* <Drawer sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> */}
 
      

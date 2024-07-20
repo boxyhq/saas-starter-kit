@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { UseDataFetch } from '../../Utils/UseDataFetch';
 import RichEditor from './RichEditor.component';
-import ResumeContext from '../../Context/ResumeContext';
+import ResumeContext from '@/components/Context/ResumeContext';
 
 const GenericModal = ({ show, handleClose }) => {
   const [showModal, setShowModal] = useState(false);

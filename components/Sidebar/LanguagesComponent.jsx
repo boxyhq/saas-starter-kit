@@ -9,7 +9,7 @@ import {
 } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import ResumeContext from '../../Context/ResumeContext';
+import ResumeContext from '@/components/Context/ResumeContext';
 
 const LanguagesComponent = ({ onBack }) => {
   const { formData, setFormData } = useContext(ResumeContext);

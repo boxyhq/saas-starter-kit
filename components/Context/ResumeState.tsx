@@ -1,7 +1,7 @@
 import ResumeContext from './ResumeContext';
 import { useState, useRef, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { UseDataFetch } from '../Utils/UseDataFetch';
+import { UseDataFetch } from '../../Utils/UseDataFetch';
 import context from 'react-bootstrap/esm/AccordionContext';
 
 const ResumeState = (props) => {
@@ -10,17 +10,30 @@ const ResumeState = (props) => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true); // Add loading state
 
-  const { data, error } = UseDataFetch('localApi', '/resumeInitialData');
+  // const { data, error } = UseDataFetch('/api/localApi', '/api/fetchLocalData');
+
+  // useEffect(() => {
+  //   if (data) {
+  //     setFormData(data);
+  //     setLoading(false); // Set loading to false once data is fetched
+  //   } else if (error) {
+  //     setLoading(false); // Set loading to false if there's an error
+  //   }
+  // }, [data, error]);
 
   useEffect(() => {
-    if (data) {
-      setFormData(data);
-      setLoading(false); // Set loading to false once data is fetched
-    } else if (error) {
-      setLoading(false); // Set loading to false if there's an error
-    }
-  }, [data, error]);
+    const fetchLocalData = async () => {
+      try {
+        const response = await fetch('/api/fetchLocalData'); // Call the local data API route
+        const data = await response.json();
+        setFormData(data);
+      } catch (err) {
+        setError(err);
+      }
+    };
 
+    fetchLocalData();
+  },  []);
   // const [formData, setFormData] = useState(initialData);
   // const { data }  = UseDataFetch('localAPI','/resumeInitialData');
 

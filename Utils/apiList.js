@@ -1,5 +1,5 @@
 // src/config/apiEndpoints.js
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'http://localhost:4002';
 
 const apiEndpoints = {
   users: {

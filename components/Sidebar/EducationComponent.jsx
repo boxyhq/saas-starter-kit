@@ -1,7 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
 import React, { useContext, useEffect, useState } from 'react';
 import { Accordion, Button, FloatingLabel, Form } from 'react-bootstrap';
-import ResumeContext from '../../Context/ResumeContext';
+import ResumeContext from '../Context/ResumeContext';
 import { FaTrash } from 'react-icons/fa';
 
 const EducationComponent = ({ onBack }) => {

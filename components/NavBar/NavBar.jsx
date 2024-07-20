@@ -2,7 +2,7 @@
 import React, { useContext, useState } from 'react';
 import { Button, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import './NavBar.module.css';
-import ResumeContext from '../../Context/ResumeContext';
+import ResumeContext from '@/components/Context/ResumeContext';
 import GenericModal from '../SharedComponent/GenericModal.component';
 import Image from 'next/image';
 
@@ -19,7 +19,7 @@ const NavBar = () => {
       <Container fluid>
         <Navbar.Brand href="#">
           <Image
-            src="./logo.png"
+            src="/logo.png"
             width="30"
             height="30"
             className="d-inline-block align-top"

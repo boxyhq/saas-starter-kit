@@ -4,7 +4,7 @@ import { Tab, Tabs, Form, FloatingLabel } from 'react-bootstrap';
 import { EditorState, ContentState, convertFromHTML } from 'draft-js';
 import { convertToHTML } from 'draft-convert';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import './BasicDetails.css';
+import './BasicDetails.module.css';
 import RichEditor from '../SharedComponent/RichEditor.component';
 
 const BasicDetails = ({
@@ -69,7 +69,7 @@ const BasicDetails = ({
                 <Form.Control
                   type="text"
                   placeholder="Enter name"
-                  value={formData.name}
+                  value={formData.name || 'name'}
                   name="name"
                   onChange={handleInputChange}
                 />
@@ -84,7 +84,7 @@ const BasicDetails = ({
                 <Form.Control
                   type="text"
                   placeholder="Enter title"
-                  value={formData.title}
+                  value={formData.title | 'name'}
                   name="title"
                   onChange={handleInputChange}
                 />
@@ -215,7 +215,7 @@ const BasicDetails = ({
                     <Form.Control
                       type="text"
                       placeholder="Enter Title"
-                      value={formData.about.title}
+                      value={formData.about?.title || ''}
                       name="title"
                       onChange={handleAboutTitleChange}
                       className="aboutSummary"
@@ -224,7 +224,7 @@ const BasicDetails = ({
                 </Form.Group>
                 <div className="m-2">
                   <RichEditor
-                    initialData={formData.about.content}
+                    initialData={formData.about?.content || 'Normal Data'}
                     handleDataChange={handleAboutContentChange}
                     showCustomButtons={true}
                   />

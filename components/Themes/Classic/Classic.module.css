@@ -1,0 +1,167 @@
+.main-background {
+  width: 210mm;
+  height: 296mm;
+}
+.resume-section {
+  height: 100%;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.profile-rounded {
+  width: 100%;
+  border-radius: 50%;
+  border: 0.5px solid black;
+}
+
+.font-medium {
+  font-weight: 500;
+  text-align: left;
+}
+
+.name {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.text-base {
+  text-align: left;
+  color: rgb(24, 144, 255);
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.icon-url {
+  margin-bottom: 10px;
+}
+
+.summary {
+  font-size: 1rem;
+  line-height: 2.5rem;
+  position: relative;
+  text-align: left;
+  border-bottom: 4px solid #e5e7eb;
+  font-weight: 500;
+}
+
+
+.paddings {
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+
+.classic-header {
+  font-weight: 500;
+  font-size: 0.85rem;
+  line-height: 1rem;
+  text-align: left;
+}
+
+.classic-mild-header {
+  font-weight: 400;
+  font-size: 0.85rem;
+  line-height: 1rem;
+  text-align: left;
+}
+
+.classic-summary {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-align: left;
+}
+
+.text-date {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.list {
+  text-align: left;
+  margin-left: -12px;
+}
+
+.technical {
+  border-bottom: 2px solid #e5e7eb;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.icons {
+  width: 16px;
+  height: 16px;
+  color: #000;
+}
+
+.icon-row {
+  margin: -15px 0 0 0 !important;
+  width: 50% !important;
+}
+
+.education-title {
+  font-size: 1.125rem;
+  line-height: 1.25rem;
+}
+
+.education-school {
+  color: rgb(24, 144, 255);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+}
+.education-date {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+@media print {
+  .resume html, .resume body {
+    height: 100vh; /* Use 100% here to support printing more than a single page */
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  #section-to-print {
+    margin-top: 10px;
+  }
+
+  .summarys {
+    width: 100%;
+  }
+
+  .objective {
+    width: 50%;
+  }
+
+  .smb {
+    width: 100%;
+  }
+
+  .summary {
+    font-size: 1rem;
+    line-height: 2.5rem;
+    position: relative;
+    text-align: left;
+    border-bottom: 4px solid #e5e7eb;
+    font-weight: 500;
+    width: 100%;
+  }
+}
+.pl-2 {
+  padding: 0.5rem 0.5rem 0 0.5rem !important;
+}
+
+.technicals ul{
+ padding: 0px;
+}
+
+.awards-top {
+  margin-top: -25px !important; 
+}
+
+.list-unstyled li {
+  margin-bottom: 10px;
+}

@@ -1,7 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
 import React, { useContext, useEffect, useState } from 'react';
 import { Accordion, Button, FloatingLabel, Form } from 'react-bootstrap';
-import ResumeContext from '../../Context/ResumeContext';
+import ResumeContext from '@/compoents/Context/ResumeContext';
 
 const AwardsComponent = ({ onBack }) => {
   const { formData, setFormData } = useContext(ResumeContext);
