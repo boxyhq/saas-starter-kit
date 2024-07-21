@@ -4,7 +4,6 @@ import { Form, FloatingLabel } from 'react-bootstrap';
 import { EditorState, ContentState, convertFromHTML } from 'draft-js';
 import { convertToHTML } from 'draft-convert';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import './BasicDetails.module.css';
 import RichEditor from '../SharedComponent/RichEditor.component';
 
 const Activity = ({ formData, setFormData, onBack }) => {

@@ -3,46 +3,30 @@ import { useState, useRef, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { UseDataFetch } from '../../Utils/UseDataFetch';
 import context from 'react-bootstrap/esm/AccordionContext';
+import axios from 'axios'
 
 const ResumeState = (props) => {
   const componentRef = useRef();
 
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true); // Add loading state
-
-  // const { data, error } = UseDataFetch('/api/localApi', '/api/fetchLocalData');
-
-  // useEffect(() => {
-  //   if (data) {
-  //     setFormData(data);
-  //     setLoading(false); // Set loading to false once data is fetched
-  //   } else if (error) {
-  //     setLoading(false); // Set loading to false if there's an error
-  //   }
-  // }, [data, error]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchLocalData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/fetchLocalData'); // Call the local data API route
-        const data = await response.json();
-        setFormData(data);
+        const response = await axios.get('/db.json'); // Replace with the actual path to your db.json
+        console.log(response)
+        setFormData(response.data.resumeInitialData);
+        setLoading(false); // Set loading to false once data is fetched
       } catch (err) {
         setError(err);
+        setLoading(false); // Set loading to false if there's an error
       }
     };
 
-    fetchLocalData();
-  },  []);
-  // const [formData, setFormData] = useState(initialData);
-  // const { data }  = UseDataFetch('localAPI','/resumeInitialData');
-
-  //   // Update form data when fetched data changes
-  //   useEffect(() => {
-  //     if (data) {
-  //       setFormData(data);
-  //     }
-  //   }, [data]);
+    fetchData();
+  }, []);
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,

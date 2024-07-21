@@ -1,12 +1,13 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Modal, Button } from "react-bootstrap";
-import { EditorState, Modifier, ContentState, convertFromHTML } from "draft-js";
-import { convertToHTML } from "draft-convert";
-import RichEditor from "./RichEditor.component";
-import ResumeContext from "../../Context/ResumeContext";
+/* eslint-disable i18next/no-literal-string */
+import React, { useContext, useState, useEffect } from 'react';
+import { Modal, Button } from 'react-bootstrap';
+import { EditorState, Modifier, ContentState, convertFromHTML } from 'draft-js';
+import { convertToHTML } from 'draft-convert';
+import RichEditor from './RichEditor.component';
+import ResumeContext from '../../Context/ResumeContext';
 
 const SuggestedPhrasesModal = ({ show, handleClose, handleAboutChange }) => {
-  const phrases = ["Phrase 1", "Phrase 2", "Phrase 3"];
+  const phrases = ['Phrase 1', 'Phrase 2', 'Phrase 3'];
   const { formData } = useContext(ResumeContext);
   const [addedPhrases, setAddedPhrases] = useState(formData.about);
 
@@ -28,12 +29,12 @@ const SuggestedPhrasesModal = ({ show, handleClose, handleAboutChange }) => {
     const newContentState = Modifier.insertText(
       contentState,
       selectionState,
-      phrase + "\n"
+      phrase + '\n'
     );
     const newEditorState = EditorState.push(
       editorState,
       newContentState,
-      "insert-characters"
+      'insert-characters'
     );
     setEditorState(newEditorState);
     const updatedAbout = convertToHTML(newEditorState.getCurrentContent());
@@ -41,16 +42,14 @@ const SuggestedPhrasesModal = ({ show, handleClose, handleAboutChange }) => {
     handleAboutChange(updatedAbout);
   };
 
-
-
   const handleRemovePhrase = (phrase) => {
     setAddedPhrases(addedPhrases.filter((p) => p !== phrase));
     const contentState = editorState.getCurrentContent();
     const blockMap = contentState.getBlockMap().map((block) => {
       const text = block.getText();
       if (text.includes(phrase)) {
-        const updatedText = text.replace(phrase, "").trim();
-        return block.set("text", updatedText);
+        const updatedText = text.replace(phrase, '').trim();
+        return block.set('text', updatedText);
       }
       return block;
     });
@@ -63,7 +62,7 @@ const SuggestedPhrasesModal = ({ show, handleClose, handleAboutChange }) => {
     const newEditorState = EditorState.push(
       editorState,
       newContentState,
-      "remove-range"
+      'remove-range'
     );
     setEditorState(newEditorState);
     const updatedAbout = convertToHTML(newEditorState.getCurrentContent());
@@ -91,7 +90,7 @@ const SuggestedPhrasesModal = ({ show, handleClose, handleAboutChange }) => {
                           : handleAddPhrase(phrase)
                       }
                     >
-                      {addedPhrases.includes(phrase) ? "-" : "+"}
+                      {addedPhrases.includes(phrase) ? '-' : '+'}
                     </span>
                     {phrase}
                   </li>

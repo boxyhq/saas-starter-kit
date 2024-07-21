@@ -41,6 +41,7 @@ export default function AuthLayout({
             </p>
           )}
         </div>
+        
         <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">{children}</div>
       </div>
     </>

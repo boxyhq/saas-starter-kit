@@ -1,7 +1,7 @@
-import React, { useContext, useState } from "react";
-import { Button } from "react-bootstrap";
-import SuggestedPhrasesModal from "./SuggestedPhrasesModal.component";
-
+/* eslint-disable i18next/no-literal-string */
+import React, { useContext, useState } from 'react';
+import { Button } from 'react-bootstrap';
+import SuggestedPhrasesModal from './SuggestedPhrasesModal.component';
 
 const SuggestedPhrasesButton = ({ editorState, onChange }) => {
   const [showModal, setShowModal] = useState(false);
@@ -9,7 +9,7 @@ const SuggestedPhrasesButton = ({ editorState, onChange }) => {
   const handleClose = () => setShowModal(false);
   return (
     <>
-      <Button variant="primary" className="btn-primary" onClick={handleOpen}>
+      <Button className="btn-primary" onClick={handleOpen}>
         Suggested Phrases
       </Button>
       <SuggestedPhrasesModal

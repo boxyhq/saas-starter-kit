@@ -1,3 +1,4 @@
+/* eslint-disable i18next/no-literal-string */
 import React, { useContext, useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { EditorState, Modifier, ContentState, convertFromHTML } from 'draft-js';
@@ -5,6 +6,7 @@ import { convertToHTML } from 'draft-convert';
 import RichEditor from './RichEditor.component';
 import ResumeContext from '../Context/ResumeContext';
 import { UseDataFetch } from '../../Utils/UseDataFetch';
+import axios from 'axios';
 
 const SuggestedPhrasesModal = ({
   initialData,
@@ -14,7 +16,7 @@ const SuggestedPhrasesModal = ({
 }) => {
   const [phrases, setPhrases] = useState([]);
   const [addedPhrases, setAddedPhrases] = useState([]);
-  const { data, error } = UseDataFetch('localApi', `/getAboutPhrases`);
+  // const { data, error } = UseDataFetch('localApi', `/getAboutPhrases`);
 
   const handleAddPhrase = (phrase) => {
     setAddedPhrases([...addedPhrases, phrase]);
@@ -29,13 +31,21 @@ const SuggestedPhrasesModal = ({
 
     // onChange(convertToHTML(newEditorState.getCurrentContent()));
   };
-
+  const [error, setError] = useState(null);
   // Update form data when fetched data changes
   useEffect(() => {
-    if (data) {
-      setPhrases(data.phrases);
-    }
-  }, [data]);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/db.json'); // Replace with the actual path to your db.json
+        console.log(response.data.getAboutPhrases.phrases);
+        setPhrases(response.data.getAboutPhrases.phrases);
+      } catch (err) {
+        setError(err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <Modal show={show} onHide={handleClose} centered>

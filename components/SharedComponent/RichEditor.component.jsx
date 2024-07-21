@@ -5,7 +5,6 @@ import { convertToHTML } from 'draft-convert';
 import dynamic from 'next/dynamic';
 import { Modal, Button } from 'react-bootstrap';
 import SuggestedPhrasesButton from '../SharedComponent/SharedButton.component';
-import styles from './SharedButton.module.css'; // Assuming this is a CSS Module
 
 // Dynamically import the Editor component with SSR disabled
 const Editor = dynamic(

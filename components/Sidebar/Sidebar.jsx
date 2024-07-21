@@ -1,7 +1,6 @@
 /* eslint-disable i18next/no-literal-string */
 import React, { useState } from 'react';
 import BasicDetails from './BasicDetails';
-import './Sidebar.module.css';
 import SkillComponent from './SkillComponent';
 import EducationComponent from './EducationComponent';
 import ExperienceComponent from './ExperienceComponent';
