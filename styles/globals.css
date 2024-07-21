@@ -776,13 +776,14 @@ line-height: 1.75rem;
   font-weight: 500 !important;
   margin-top: 5px;
 }
+.aboutSummary {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 0;
+}
 
 .extra-padding {
   margin: 6px;
-}
-
-.modal.show .modal-dialog {
-  max-width: 900px !important;
 }
 
 .editor-class {
@@ -818,4 +819,79 @@ line-height: 1.75rem;
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 18px;
+}
+
+/* SuggestedPhrasesModal.module.css */
+
+.modal-content {
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.modal-header {
+  border-bottom: none;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.content-ul {
+  list-style: none;
+  padding: 0;
+}
+
+.content-ul li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.btn-plus {
+  cursor: pointer;
+  margin-right: 10px;
+  color: green;
+}
+
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  color: var(--bs-modal-color);
+  pointer-events: auto;
+  background-color: var(--bs-modal-bg);
+  background-clip: padding-box;
+  border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
+  border-radius: var(--bs-modal-border-radius);
+  outline: 0;
+}
+
+.modal {
+  opacity: 1 !important;
+}
+
+.content-ul li {
+  padding: 8px 12px 13px 13px;
+  background: #eff2f9;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: nowrap;
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 18px;
+  color: #000;
+  cursor: pointer;
 }

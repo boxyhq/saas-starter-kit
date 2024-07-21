@@ -10,6 +10,7 @@ const SuggestedPhrasesButton = ({ initialData, handleDataChange }) => {
   const handleOpen = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
+  console.log(showModal);
   return (
     <>
       <Button className="btn-primary" onClick={handleOpen}>
