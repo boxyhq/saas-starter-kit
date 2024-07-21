@@ -1,11 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { EditorState, Modifier, ContentState, convertFromHTML } from 'draft-js';
-import { convertToHTML } from 'draft-convert';
 import RichEditor from './RichEditor.component';
-import ResumeContext from '../Context/ResumeContext';
-import { UseDataFetch } from '../../Utils/UseDataFetch';
 import axios from 'axios';
 
 const SuggestedPhrasesModal = ({
@@ -16,13 +12,12 @@ const SuggestedPhrasesModal = ({
 }) => {
   const [phrases, setPhrases] = useState([]);
   const [addedPhrases, setAddedPhrases] = useState([]);
-  // const { data, error } = UseDataFetch('localApi', `/getAboutPhrases`);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [error, setError] = useState(null);
 
   const handleAddPhrase = (phrase) => {
     setAddedPhrases([...addedPhrases, phrase]);
     handleDataChange(initialData + `\n${phrase}`);
-
-    //onChange(convertToHTML(newEditorState.getCurrentContent()));
   };
 
   const handleRemovePhrase = (phrase) => {
@@ -31,7 +26,6 @@ const SuggestedPhrasesModal = ({
 
     // onChange(convertToHTML(newEditorState.getCurrentContent()));
   };
-  const [error, setError] = useState(null);
   // Update form data when fetched data changes
   useEffect(() => {
     const fetchData = async () => {

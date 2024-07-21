@@ -1,9 +1,8 @@
 // components/RichEditor.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { EditorState, ContentState } from 'draft-js';
-import { convertToHTML } from 'draft-convert';
+import { convertToHTML, convertFromHTML } from 'draft-convert';
 import dynamic from 'next/dynamic';
-import { Modal, Button } from 'react-bootstrap';
 import SuggestedPhrasesButton from '../SharedComponent/SharedButton.component';
 
 // Dynamically import the Editor component with SSR disabled
@@ -14,15 +13,31 @@ const Editor = dynamic(
 
 const RichEditor = ({ initialData, handleDataChange, showCustomButtons }) => {
   const [editorState, setEditorState] = useState(() => {
-    const contentState = ContentState.createFromText(initialData);
-    return EditorState.createWithContent(contentState);
+    if (initialData) {
+      const contentState = convertFromHTML(initialData);
+      if (contentState) {
+        return EditorState.createWithContent(contentState);
+      }
+    }
+    return EditorState.createEmpty();
   });
 
-  function handleChange(newEditorState) {
+  useEffect(() => {
+    if (initialData) {
+      const contentState = convertFromHTML(initialData);
+      if (contentState) {
+        setEditorState(EditorState.createWithContent(contentState));
+      }
+    } else {
+      setEditorState(EditorState.createEmpty());
+    }
+  }, [initialData]);
+
+  const handleChange = (newEditorState) => {
     const html = convertToHTML(newEditorState.getCurrentContent());
     handleDataChange(html);
     setEditorState(newEditorState);
-  }
+  };
 
   return (
     <div>

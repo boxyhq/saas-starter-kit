@@ -1,7 +1,7 @@
+/* eslint-disable i18next/no-literal-string */
 import React, { useContext, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { UseDataFetch } from '../../Utils/UseDataFetch';
-import RichEditor from './RichEditor.component';
 import ResumeContext from '@/components/Context/ResumeContext';
 
 const GenericModal = ({ show, handleClose }) => {
