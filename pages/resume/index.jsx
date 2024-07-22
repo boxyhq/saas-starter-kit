@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import NavBar from '@/components/NavBar/NavBar';
 import ResumeContext from '@/components/Context/ResumeContext';
-import Theme1 from '@/components/Themes/Classic/ClassicTheme';
+import ClassicTheme from '@/components/Themes/Classic/ClassicTheme';
 import Sidebar from '@/components/Sidebar/Sidebar';
 
 const Index = () => {
@@ -26,7 +26,7 @@ const Index = () => {
             />
           </div>
           <div className="col-md-6 scrollable-column">
-            <Theme1
+            <ClassicTheme
               componentRef={componentRef}
               formData={formData}
               setFormData={setFormData}

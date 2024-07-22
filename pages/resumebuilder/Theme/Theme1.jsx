@@ -11,7 +11,7 @@ import {
   FaGlobe,
 } from "react-icons/fa";
 
-const Theme1 = (props) => {
+const ClassicTheme = (props) => {
   const { formData, componentRef } = props;
   const [convertedContent, setConvertedContent] = useState(null);
   function createMarkup(html) {
@@ -210,4 +210,4 @@ const Theme1 = (props) => {
   );
 };
 
-export default Theme1;
+export default ClassicTheme;
