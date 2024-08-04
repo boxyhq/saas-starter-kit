@@ -37,6 +37,7 @@ const useTheme = () => {
   const selectedTheme = themes.find((t) => t.id === theme) || themes[0];
 
   const toggleTheme = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     selectedTheme.id === 'light' ? applyTheme('dark') : applyTheme('light');
 
     if (selectedTheme.id === 'light') {
