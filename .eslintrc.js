@@ -33,12 +33,14 @@ module.exports = {
       files: ['*.js'],
       rules: {
         '@typescript-eslint/no-var-requires': 'off', // Disable the rule for JavaScript files
+        '@typescript-eslint/no-require-imports': 'off',
       },
     },
     {
       files: ['seed.ts'],
       rules: {
         '@typescript-eslint/no-var-requires': 'off',
+        '@typescript-eslint/no-require-imports': 'off',
       },
     },
     {

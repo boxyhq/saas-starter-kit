@@ -83,7 +83,8 @@ export const getViewerToken = async (groupId: string, actorId: string) => {
 
   try {
     return await retracedClient.getViewerToken(groupId, actorId, true);
-  } catch (_error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
     throw new Error(
       'Unable to get viewer token from Retraced. Please check Retraced configuration.'
     );

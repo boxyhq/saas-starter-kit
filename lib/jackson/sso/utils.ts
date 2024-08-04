@@ -37,6 +37,7 @@ export const oidcMetadataParse = (
     try {
       const oidcMetadata = JSON.parse(body.oidcMetadata);
       return { ...body, oidcMetadata };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       throw new ApiError(
         400,

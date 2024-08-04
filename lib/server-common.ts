@@ -5,6 +5,7 @@ import type { NextApiRequest } from 'next';
 export const forceConsume = async (response) => {
   try {
     await response.text();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // Do nothing
   }
