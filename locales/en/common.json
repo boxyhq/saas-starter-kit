@@ -246,5 +246,8 @@
   "internal-server-error": "Internal Server Error !",
   "unable-to-find": "We're unable to find out what's happening! We suggest you to",
   "try-again-later": "or visit here later.",
-  "multiple-sso-teams": "User belongs to multiple teams with SSO enabled. Please enter your team slug to get started."
+  "multiple-sso-teams": "User belongs to multiple teams with SSO enabled. Please enter your team slug to get started.",
+  "Something went wrong": "Something went wrong",
+  "file-size-too-big": "File size too big (max 2MB)",
+  "file-type-not-supported": "File type not supported (.png or .jpg only)"
 }

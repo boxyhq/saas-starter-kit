@@ -4,6 +4,7 @@ import env from '@/lib/env';
 import { options } from '../config';
 import { ApiError } from '@/lib/errors';
 import type { JacksonDsync } from './utils';
+import type { ApiResponse } from 'types';
 
 export class JacksonHosted implements JacksonDsync {
   private dsyncUrl = `${env.jackson.url}/api/v1/dsync`;
@@ -30,7 +31,7 @@ export class JacksonHosted implements JacksonDsync {
       }),
     });
 
-    const { data, error } = await response.json();
+    const { data, error } = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
       throw new ApiError(response.status, error.message);
@@ -49,7 +50,7 @@ export class JacksonHosted implements JacksonDsync {
       ...options,
     });
 
-    const { data, error } = await response.json();
+    const { data, error } = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
       throw new ApiError(response.status, error.message);
@@ -65,7 +66,7 @@ export class JacksonHosted implements JacksonDsync {
       body: JSON.stringify(params),
     });
 
-    const { data, error } = await response.json();
+    const { data, error } = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
       throw new ApiError(response.status, error.message);
@@ -80,7 +81,7 @@ export class JacksonHosted implements JacksonDsync {
       method: 'DELETE',
     });
 
-    const { data, error } = await response.json();
+    const { data, error } = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
       throw new ApiError(response.status, error.message);
@@ -94,7 +95,7 @@ export class JacksonHosted implements JacksonDsync {
       ...options,
     });
 
-    const { data, error } = await response.json();
+    const { data, error } = (await response.json()) as ApiResponse;
 
     if (!response.ok) {
       throw new ApiError(response.status, error.message);
