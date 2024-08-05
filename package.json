@@ -79,7 +79,7 @@
     "@types/react": "18.3.3",
     "@typescript-eslint/eslint-plugin": "8.0.0",
     "@typescript-eslint/parser": "8.0.0",
-    "autoprefixer": "10.4.19",
+    "autoprefixer": "10.4.20",
     "daisyui": "4.12.10",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.5",
