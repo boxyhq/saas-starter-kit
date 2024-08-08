@@ -39,6 +39,7 @@ export const sendEvent = async (
   eventType: AppEvent,
   payload: Record<string, unknown>
 ) => {
+  await createEventType(eventType);
   return await svix?.message.create(appId, {
     eventType,
     payload: {
@@ -46,4 +47,17 @@ export const sendEvent = async (
       data: payload,
     },
   });
+};
+
+export const createEventType = async (eventType: string) => {
+  try {
+    await svix?.eventType.create({
+      name: eventType,
+      description: `Event type for ${eventType}`,
+    });
+  } catch (e: any) {
+    if (e.code !== 409) {
+      throw e;
+    }
+  }
 };
