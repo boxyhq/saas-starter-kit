@@ -4,6 +4,7 @@ import {
   createWebhook,
   deleteWebhook,
   findOrCreateApp,
+  createEventType,
   listWebhooks,
 } from '@/lib/svix';
 import { throwIfNoTeamAccess } from 'models/team';
@@ -74,6 +75,10 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (eventTypes.length) {
     data['filterTypes'] = eventTypes;
+  }
+
+  for (const eventType of eventTypes) {
+    await createEventType(eventType);
   }
 
   if (!app) {
