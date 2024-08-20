@@ -18,7 +18,6 @@ const SPConfig: NextPageWithLayout<
       window.location.href = `${jacksonEnv.externalUrl}/.well-known/saml-configuration`;
     }
   }, [jacksonEnv.externalUrl, jacksonEnv.selfHosted]);
-  
 
   if (jacksonEnv.selfHosted) {
     return null;
