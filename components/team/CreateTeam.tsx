@@ -39,7 +39,7 @@ const CreateTeam = ({ visible, setVisible }: CreateTeamProps) => {
       const json = (await response.json()) as ApiResponse<Team>;
 
       if (!response.ok) {
-        toast.error(json.error.message);
+        toast.error(t(json?.error?.message || 'Something went wrong'));
         return;
       }
 

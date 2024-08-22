@@ -40,7 +40,7 @@ const APIKeys = ({ team }: APIKeysProps) => {
 
     if (!response.ok) {
       const { error } = (await response.json()) as ApiResponse;
-      toast.error(error.message);
+      toast.error(t(error?.message || 'Something went wrong'));
       return;
     }
 

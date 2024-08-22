@@ -56,10 +56,9 @@ const Members = ({ team }: { team: Team }) => {
       }
     );
 
-    const json = (await response.json()) as ApiResponse;
-
     if (!response.ok) {
-      toast.error(json.error.message);
+      const json = (await response.json()) as ApiResponse;
+      toast.error(t(json?.error?.message || 'Something went wrong'));
       return;
     }
 
