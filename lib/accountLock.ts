@@ -66,7 +66,7 @@ export const sendLockoutEmail = async (user: User, resending = false) => {
   const token = encodeURIComponent(verificationToken.token);
   const url = `${app.url}/auth/unlock-account?token=${token}`;
 
-  const html = render(AccountLocked({ subject, url }));
+  const html = await render(AccountLocked({ subject, url }));
 
   await sendEmail({
     to: user.email,
