@@ -16,7 +16,7 @@ export const sendTeamInviteEmail = async (
   const subject = `You've been invited to join ${team.name} on ${app.name}`;
   const invitationLink = `${env.appUrl}/invitations/${invitation.token}`;
 
-  const html = render(TeamInviteEmail({ invitationLink, team, subject }));
+  const html = await render(TeamInviteEmail({ invitationLink, team, subject }));
 
   await sendEmail({
     to: invitation.email,
