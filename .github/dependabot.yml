@@ -14,6 +14,16 @@ updates:
       typescript-eslint:
         patterns:
           - '@typescript-eslint/*'
+    groups:
+      react-email:
+        patterns:
+          - '@react-email/*'
+          - 'react-email'
+    groups:
+      next:
+        patterns:
+          - 'next'
+          - 'eslint-config-next'
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
