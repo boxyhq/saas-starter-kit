@@ -139,7 +139,7 @@ const UploadAvatar = ({ user }: { user: Partial<User> }) => {
               {image && (
                 <Image
                   src={image}
-                  alt={user.name}
+                  alt={user.name || 'User Avatar'}
                   className="h-full w-full rounded-full object-cover"
                 />
               )}
