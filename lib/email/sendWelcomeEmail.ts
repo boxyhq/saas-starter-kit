@@ -8,7 +8,7 @@ export const sendWelcomeEmail = async (
   team: string
 ) => {
   const subject = 'Welcome to BoxyHQ';
-  const html = render(WelcomeEmail({ name, team, subject }));
+  const html = await render(WelcomeEmail({ name, team, subject }));
 
   await sendEmail({
     to: email,

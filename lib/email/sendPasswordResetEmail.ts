@@ -9,7 +9,9 @@ export const sendPasswordResetEmail = async (user: User, token: string) => {
   const subject = `Reset your ${app.name} password`;
   const url = `${env.appUrl}/auth/reset-password/${token}`;
 
-  const html = render(ResetPasswordEmail({ url, subject, email: user.email }));
+  const html = await render(
+    ResetPasswordEmail({ url, subject, email: user.email })
+  );
 
   await sendEmail({
     to: user.email,
