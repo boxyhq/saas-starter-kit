@@ -19,7 +19,7 @@ export const sendVerificationEmail = async ({
     verificationToken.token
   )}`;
 
-  const html = render(VerificationEmail({ subject, verificationLink }));
+  const html = await render(VerificationEmail({ subject, verificationLink }));
 
   await sendEmail({
     to: user.email,
