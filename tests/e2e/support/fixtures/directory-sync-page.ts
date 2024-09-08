@@ -54,7 +54,7 @@ export class DirectorySyncPage {
       name: 'name',
     });
     this.azureScimCell = this.page.getByRole('cell', {
-      name: 'Azure SCIM v2.0',
+      name: 'Entra ID SCIM v2.0',
     });
     this.activeLabel = this.page.getByLabel('Active');
     this.editButton = this.page.getByLabel('Edit');
