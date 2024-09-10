@@ -1,6 +1,6 @@
 import { eventTypes } from '@/lib/common';
 import React, { ReactElement } from 'react';
-import type { WebookFormSchema } from 'types';
+import type { WebhookFormSchema } from 'types';
 import { Checkbox } from '../shared';
 
 const EventTypes = ({
@@ -9,7 +9,7 @@ const EventTypes = ({
   error,
 }: {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
-  values: WebookFormSchema['eventTypes'];
+  values: WebhookFormSchema['eventTypes'];
   error: string | string[] | undefined;
 }) => {
   const events: ReactElement[] = [];

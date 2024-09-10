@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 import React from 'react';
 import toast from 'react-hot-toast';
 import type { ApiResponse } from 'types';
-import type { WebookFormSchema } from 'types';
+import type { WebhookFormSchema } from 'types';
 
 import ModalForm from './Form';
 import { defaultHeaders } from '@/lib/common';
@@ -23,8 +23,8 @@ const CreateWebhook = ({
   const { t } = useTranslation('common');
 
   const onSubmit = async (
-    values: WebookFormSchema,
-    formikHelpers: FormikHelpers<WebookFormSchema>
+    values: WebhookFormSchema,
+    formikHelpers: FormikHelpers<WebhookFormSchema>
   ) => {
     const response = await fetch(`/api/teams/${team.slug}/webhooks`, {
       method: 'POST',
