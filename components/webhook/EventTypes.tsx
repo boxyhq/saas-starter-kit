@@ -1,6 +1,6 @@
 import { eventTypes } from '@/lib/common';
 import React, { ReactElement } from 'react';
-import type {WebhookFormSchema } from 'types';
+import type { WebhookFormSchema } from 'types';
 import { Checkbox } from '../shared';
 
 const EventTypes = ({
