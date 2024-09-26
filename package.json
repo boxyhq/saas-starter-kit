@@ -100,6 +100,9 @@
   "overrides": {
     "typeorm": {
       "mssql": "11.0.0"
+    },
+    "react-email": {
+      "next": ">=14.2.13"
     }
   }
 }
