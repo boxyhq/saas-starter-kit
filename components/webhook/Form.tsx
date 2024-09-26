@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { Button } from 'react-daisyui';
-import type { WebookFormSchema } from 'types';
+import type { WebhookFormSchema } from 'types';
 import * as Yup from 'yup';
 import Modal from '../shared/Modal';
 import { EventTypes } from '@/components/webhook';
@@ -13,8 +13,8 @@ import { maxLengthPolicies } from '@/lib/common';
 interface FormProps {
   visible: boolean;
   setVisible: (visible: boolean) => void;
-  initialValues: WebookFormSchema;
-  onSubmit: FormikConfig<WebookFormSchema>['onSubmit'];
+  initialValues: WebhookFormSchema;
+  onSubmit: FormikConfig<WebhookFormSchema>['onSubmit'];
   title: string;
   editMode?: boolean;
 }
@@ -27,7 +27,7 @@ const Form = ({
   title,
   editMode = false,
 }: FormProps) => {
-  const formik = useFormik<WebookFormSchema>({
+  const formik = useFormik<WebhookFormSchema>({
     validationSchema: Yup.object().shape({
       name: Yup.string().required().max(maxLengthPolicies.webhookDescription),
       url: Yup.string().required().url().max(maxLengthPolicies.webhookEndpoint),
