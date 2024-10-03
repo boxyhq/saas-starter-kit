@@ -76,7 +76,7 @@
     "@types/mixpanel-browser": "2.50.0",
     "@types/node": "22.7.4",
     "@types/nodemailer": "6.4.16",
-    "@types/react": "18.3.10",
+    "@types/react": "18.3.11",
     "@typescript-eslint/eslint-plugin": "8.8.0",
     "@typescript-eslint/parser": "8.8.0",
     "autoprefixer": "10.4.20",
