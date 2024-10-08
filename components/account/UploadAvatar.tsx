@@ -3,6 +3,7 @@ import { Button } from 'react-daisyui';
 import { useTranslation } from 'next-i18next';
 import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowUpCircleIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
 import type { ApiResponse } from 'types';
 import type { User } from '@prisma/client';
@@ -136,9 +137,9 @@ const UploadAvatar = ({ user }: { user: Partial<User> }) => {
                 />
               </div>
               {image && (
-                <img
+                <Image
                   src={image}
-                  alt={user.name}
+                  alt={user.name || 'User Avatar'}
                   className="h-full w-full rounded-full object-cover"
                 />
               )}
