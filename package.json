@@ -101,7 +101,11 @@
     "typeorm": {
       "mssql": "11.0.0"
     },
+    "next-auth": {
+      "cookie": "0.7.1"
+    },
     "react-email": {
+      "engine.io": "6.6.2",
       "next": ">=14.2.13"
     }
   }
