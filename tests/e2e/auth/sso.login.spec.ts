@@ -17,18 +17,22 @@ type SSOLoginFixture = {
 const test = base.extend<SSOLoginFixture>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(loginPage);
   },
   ssoPageTeam: async ({ page }, use) => {
     const ssoPage = new SSOPage(page, team.slug);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(ssoPage);
   },
   ssoPageSecondTeam: async ({ page }, use) => {
     const ssoPage = new SSOPage(page, secondTeam.slug);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(ssoPage);
   },
   settingsPage: async ({ page }, use) => {
     const settingsPage = new SettingsPage(page, user.name);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(settingsPage);
   },
 });

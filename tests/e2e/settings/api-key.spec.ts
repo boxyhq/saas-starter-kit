@@ -12,10 +12,12 @@ type ApiKeyFixture = {
 const test = base.extend<ApiKeyFixture>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(loginPage);
   },
   apiKeyPage: async ({ page }, use) => {
     const apiKeysPage = new ApiKeysPage(page, team.slug);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(apiKeysPage);
   },
 });

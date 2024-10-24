@@ -136,6 +136,7 @@ const UploadAvatar = ({ user }: { user: Partial<User> }) => {
                 />
               </div>
               {image && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={image}
                   alt={user.name}

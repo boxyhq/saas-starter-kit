@@ -16,15 +16,18 @@ type MemberFixture = {
 const test = base.extend<MemberFixture>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(loginPage);
   },
   memberPage: async ({ page }, use) => {
     const apiKeysPage = new MemberPage(page, team.slug);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(apiKeysPage);
   },
   secondUserJoinPage: async ({ page }, use) => {
     const joinPage = new JoinPage(page, secondUser, secondUser.team.name);
     await joinPage.goto();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(joinPage);
   },
 });
