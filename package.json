@@ -71,7 +71,7 @@
     "@playwright/test": "1.48.1",
     "@testing-library/jest-dom": "6.6.2",
     "@types/bcryptjs": "2.4.6",
-    "@types/jest": "29.5.13",
+    "@types/jest": "29.5.14",
     "@types/micromatch": "4.0.9",
     "@types/mixpanel-browser": "2.50.1",
     "@types/node": "22.7.8",
