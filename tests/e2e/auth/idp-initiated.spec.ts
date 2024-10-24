@@ -12,11 +12,13 @@ type IdpInitiatedFixture = {
 const test = base.extend<IdpInitiatedFixture>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(loginPage);
   },
 
   ssoPage: async ({ page }, use) => {
     const ssoPage = new SSOPage(page, team.slug);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(ssoPage);
   },
 });

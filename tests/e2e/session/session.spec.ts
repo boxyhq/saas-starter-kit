@@ -13,14 +13,17 @@ type SessionFixture = {
 const test = base.extend<SessionFixture>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(loginPage);
   },
   securityPage: async ({ page }, use) => {
     const ssoPage = new SecurityPage(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(ssoPage);
   },
   settingsPage: async ({ page }, use) => {
     const settingsPage = new SettingsPage(page, user.name);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(settingsPage);
   },
 });

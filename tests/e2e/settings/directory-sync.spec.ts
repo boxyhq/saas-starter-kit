@@ -13,10 +13,12 @@ type DSyncFixture = {
 const test = base.extend<DSyncFixture>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(loginPage);
   },
   dsyncPage: async ({ page }, use) => {
     const apiKeysPage = new DirectorySyncPage(page, team.slug);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(apiKeysPage);
   },
 });
