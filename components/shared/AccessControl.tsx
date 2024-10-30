@@ -1,5 +1,6 @@
 import type { Action, Resource } from '@/lib/permissions';
 import useCanAccess from 'hooks/useCanAccess';
+import useActiveSubscription from 'hooks/useActiveSubscription';
 
 interface AccessControlProps {
   children: React.ReactNode;
@@ -13,8 +14,9 @@ export const AccessControl = ({
   actions,
 }: AccessControlProps) => {
   const { canAccess } = useCanAccess();
+  const { hasActiveSubscription } = useActiveSubscription();
 
-  if (!canAccess(resource, actions)) {
+  if (!canAccess(resource, actions) || !hasActiveSubscription()) {
     return null;
   }
 

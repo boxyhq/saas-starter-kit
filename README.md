@@ -234,3 +234,138 @@ Made with [contrib.rocks](https://contrib.rocks).
 ## 🛡️ License
 
 [Apache 2.0 License](https://github.com/boxyhq/saas-starter-kit/blob/main/LICENSE)
+
+## Protecting a Page with a Specific Stripe Subscription
+
+To protect a page with a specific Stripe Subscription, follow these steps:
+
+1. **Update `middleware.ts`**: Add a check for active Stripe Subscription before allowing access to protected routes.
+
+```typescript
+import micromatch from 'micromatch';
+import { getToken } from 'next-auth/jwt';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+import env from './lib/env';
+import { getByCustomerId } from 'models/subscription';
+
+// Add routes that don't require authentication
+const unAuthenticatedRoutes = [
+  '/api/hello',
+  '/api/health',
+  '/api/auth/**',
+  '/api/oauth/**',
+  '/api/scim/v2.0/**',
+  '/api/invitations/*',
+  '/api/webhooks/stripe',
+  '/api/webhooks/dsync',
+  '/auth/**',
+  '/invitations/*',
+  '/terms-condition',
+  '/unlock-account',
+  '/login/saml',
+  '/.well-known/*',
+];
+
+export default async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  // Bypass routes that don't require authentication
+  if (micromatch.isMatch(pathname, unAuthenticatedRoutes)) {
+    return NextResponse.next();
+  }
+
+  const redirectUrl = new URL('/auth/login', req.url);
+  redirectUrl.searchParams.set('callbackUrl', encodeURI(req.url));
+
+  // JWT strategy
+  if (env.nextAuth.sessionStrategy === 'jwt') {
+    const token = await getToken({
+      req,
+    });
+
+    if (!token) {
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    // Check for active Stripe Subscription
+    const subscriptions = await getByCustomerId(token.sub);
+    const hasActiveSubscription = subscriptions.some(
+      (subscription) => subscription.active
+    );
+
+    if (!hasActiveSubscription) {
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
+  // Database strategy
+  else if (env.nextAuth.sessionStrategy === 'database') {
+    const url = new URL('/api/auth/session', req.url);
+
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        cookie: req.headers.get('cookie') || '',
+      },
+    });
+
+    const session = await response.json();
+
+    if (!session.user) {
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    // Check for active Stripe Subscription
+    const subscriptions = await getByCustomerId(session.user.id);
+    const hasActiveSubscription = subscriptions.some(
+      (subscription) => subscription.active
+    );
+
+    if (!hasActiveSubscription) {
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
+  // All good, let the request through
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/auth/session).*)'],
+};
+```
+
+2. **Update `components/shared/AccessControl.tsx`**: Add a check for active Stripe Subscription in the `useCanAccess` hook and update the `AccessControl` component to include the new check.
+
+```typescript
+import type { Action, Resource } from '@/lib/permissions';
+import useCanAccess from 'hooks/useCanAccess';
+import { getByCustomerId } from 'models/subscription';
+
+interface AccessControlProps {
+  children: React.ReactNode;
+  resource: Resource;
+  actions: Action[];
+}
+
+export const AccessControl = ({
+  children,
+  resource,
+  actions,
+}: AccessControlProps) => {
+  const { canAccess } = useCanAccess();
+
+  const checkSubscription = async () => {
+    const subscriptions = await getByCustomerId('customer_id'); // Replace 'customer_id' with actual customer ID
+    return subscriptions.some((subscription) => subscription.active);
+  };
+
+  if (!canAccess(resource, actions) || !checkSubscription()) {
+    return null;
+  }
+
+  return <>{children}</>;
+};
+```
