@@ -29,9 +29,9 @@ Next.js-based SaaS starter kit saves you months of development by starting you o
 ## 🛠️ Built With
 
 - [Next.js](https://nextjs.org)
-  This is a React framework that provides features such as server-side rendering and static site generation. It's used for building the user interface of your application. The main configuration for Next.js can be found in next.config.js.
+  This is a React framework that provides features such as server-side rendering and static site generation. It's used for building the user interface of your application. The main configuration for Next.js can be found in `next.config.js`.
 - [Tailwind CSS](https://tailwindcss.com)
-  This is a utility-first CSS framework for rapidly building custom user interfaces. It's used for styling the application. The configuration for Tailwind CSS can be found in postcss.config.js.
+  This is a utility-first CSS framework for rapidly building custom user interfaces. It's used for styling the application. The configuration for Tailwind CSS can be found in `postcss.config.js`.
 - [Postgres](https://www.postgresql.org)
   This is a powerful, open source object-relational database system. It's used for storing application data. The connection to Postgres is likely managed through Prisma.
 - [React](https://reactjs.org)
@@ -39,7 +39,7 @@ Next.js-based SaaS starter kit saves you months of development by starting you o
 - [Prisma](https://www.prisma.io)
   This is an open-source database toolkit. It's used for object-relational mapping, which simplifies the process of writing database queries. Prisma configuration and schema can be found in the prisma directory.
 - [TypeScript](https://www.typescriptlang.org)
-  This is a typed superset of JavaScript that compiles to plain JavaScript. It's used to make the code more robust and maintainable. TypeScript definitions and configurations can be found in files like next-env.d.ts and i18next.d.ts.
+  This is a typed superset of JavaScript that compiles to plain JavaScript. It's used to make the code more robust and maintainable. TypeScript definitions and configurations can be found in files like `next-env.d.ts` and `i18next.d.ts`.
 - [SAML Jackson](https://github.com/boxyhq/jackson) (Provides SAML SSO, Directory Sync)
   This is a service for handling SAML SSO (Single Sign-On). It's used to allow users to sign in with a single ID and password to any of several related systems i.e (using a single set of credentials). The implementation of SAML Jackson is primarily located within the files associated with authentication.
 - [Svix](https://www.svix.com/) (Provides Webhook Orchestration)
@@ -53,7 +53,7 @@ Next.js-based SaaS starter kit saves you months of development by starting you o
 - [Docker](https://www.docker.com) (Provides Docker Compose)
   This is a platform for developing, shipping, and running applications. It's used to containerize the application and its dependencies. The Docker configuration can be found in the Dockerfile and docker-compose.yml.
 - [NextAuth.js](https://next-auth.js.org) (Provides Authentication)
-  This is a complete open-source authentication solution for Next.js applications. It's used to handle user authentication and authorization. The NextAuth.js configuration and providers can be found in the pages/api/auth/[...nextauth].ts file.
+  This is a complete open-source authentication solution for Next.js applications. It's used to handle user authentication and authorization. The NextAuth.js configuration and providers can be found in the `pages/api/auth/[...nextauth].ts` file.
 
 ## 🚀 Deployment
 
@@ -160,6 +160,41 @@ npm run test:e2e
 ```
 
 _Note: HTML test report is generated inside the `report` folder. Currently supported browsers for test execution `chromium` and `firefox`_
+
+## ⚙️ Feature configuration
+
+To get started you only need to configure the database by following the steps above. For more advanced features, you can configure the following:
+
+### Authentication with NextAuth.js
+
+The default login options are email and GitHub. Configure below:
+
+1. Generate a secret key for NextAuth.js by running `openssl rand -base64 32` and adding it to the `.env` file as `NEXTAUTH_SECRET`.
+2. For email login, configure the `SMTP_*` environment variables in the `.env` file to send magic link login emails. You can use services like [AWS SES](https://aws.amazon.com/ses/), [Sendgrid](https://sendgrid.com/) or [Resend](https://resend.com/).
+3. For social login with GitHub and Google, you need to create OAuth apps in the respective developer consoles and add the client ID and secret to the `.env` file. The default is email login and  For GitHub, follow the instructions [here](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app). For Google, follow the instructions [here](https://support.google.com/cloud/answer/6158849?hl=en).
+
+### Svix Webhooks
+
+1. Create an account on [Svix](https://www.svix.com/)
+2. The authenticaton token and add `SVIX_API_KEY` to the `.env` file.
+
+### Stripe Payments
+
+1. Create an account on [Stripe](https://stripe.com/)
+2. Add the [Stripe API secret key](https://dashboard.stripe.com/apikeys) to the `.env` file as `STRIPE_SECRET_KEY`.
+3. Create a webhook in the [Stripe dashboard](https://dashboard.stripe.com/webhooks). The URL is your app hostname plus `/api/webhooks/stripe`. If you want to set this up locally you will need to use the [Stripe CLI forwarder](https://docs.stripe.com/webhooks#test-webhook).
+4. Once created, add the signing secret to the `.env` file as `STRIPE_WEBHOOK_SECRET`.
+
+### Recaptcha
+
+1. Create an account on [Google reCAPTCHA](https://www.google.com/recaptcha/admin/enterprise). This will create a Google Cloud account if you don't have one.
+2. From the Key Details in the [Google Cloud Console](https://console.cloud.google.com/security/recaptcha), add the reCAPTCHA ID to the `.env` file as `RECAPTCHA_SITE_KEY`.
+3. Click Key Details > Integration then click Use legacy key to get the secret key and add it to the `.env` file as `RECAPTCHA_SECRET_KEY`.
+
+### Sentry
+
+1. Create an account on [Sentry](https://sentry.io/), skip the onboarding and create a new Next.js project.
+2. At the bottom of the page, get the DSN and add it to the `.env` file as `SENTRY_DSN`. The other variables are optional.
 
 #### Fully customizable boilerplate out of the box, see images below 👇👇👇
 
