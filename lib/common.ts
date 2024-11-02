@@ -29,7 +29,7 @@ export const maxLengthPolicies = {
   name: 104,
   nameShortDisplay: 20,
   email: 254,
-  password: 128,
+  password: 70,
   team: 50,
   slug: 50,
   domain: 253,
