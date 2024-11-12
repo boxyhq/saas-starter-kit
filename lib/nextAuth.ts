@@ -395,7 +395,7 @@ export const getAuthOptions = (
     jwt: {
       encode: async (params) => {
         if (isCredentialsProviderCallbackWithDbSession) {
-          return getCookie(sessionTokenCookieName, { req, res }) || '';
+          return (await getCookie(sessionTokenCookieName, { req, res })) || '';
         }
 
         return encode(params);
