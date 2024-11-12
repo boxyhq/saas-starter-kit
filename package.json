@@ -46,7 +46,7 @@
     "formik": "2.4.6",
     "i18next": "23.16.4",
     "micromatch": "4.0.8",
-    "mixpanel-browser": "2.55.1",
+    "mixpanel-browser": "2.56.0",
     "next": "15.0.2",
     "next-auth": "4.24.10",
     "next-i18next": "15.3.1",
