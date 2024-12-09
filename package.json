@@ -48,7 +48,7 @@
     "micromatch": "4.0.8",
     "mixpanel-browser": "2.56.0",
     "next": "15.0.4",
-    "next-auth": "4.24.10",
+    "next-auth": "4.24.11",
     "next-i18next": "15.4.0",
     "nodemailer": "6.9.16",
     "react": "18.3.1",
