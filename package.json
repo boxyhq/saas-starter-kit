@@ -98,11 +98,7 @@
   },
   "overrides": {
     "typeorm": {
-      "mssql": "11.0.0"
-    },
-    "react-email": {
-      "engine.io": "6.6.2",
-      "next": ">=15.0.0"
+      "mssql": ">=11.0.0"
     }
   }
 }
