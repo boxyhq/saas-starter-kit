@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 import env from './lib/env';
+import { getByCustomerId } from 'models/subscription';
 
 // Add routes that don't require authentication
 const unAuthenticatedRoutes = [
@@ -43,6 +44,16 @@ export default async function middleware(req: NextRequest) {
     if (!token) {
       return NextResponse.redirect(redirectUrl);
     }
+
+    // Check for active Stripe Subscription
+    const subscriptions = await getByCustomerId(token.sub);
+    const hasActiveSubscription = subscriptions.some(
+      (subscription) => subscription.active
+    );
+
+    if (!hasActiveSubscription) {
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   // Database strategy
@@ -59,6 +70,16 @@ export default async function middleware(req: NextRequest) {
     const session = await response.json();
 
     if (!session.user) {
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    // Check for active Stripe Subscription
+    const subscriptions = await getByCustomerId(session.user.id);
+    const hasActiveSubscription = subscriptions.some(
+      (subscription) => subscription.active
+    );
+
+    if (!hasActiveSubscription) {
       return NextResponse.redirect(redirectUrl);
     }
   }
