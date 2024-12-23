@@ -12,19 +12,20 @@ const PricingSection = () => {
         <h2 className="text-center text-4xl font-bold normal-case">
           {t('pricing')}
         </h2>
-        <p className="text-center text-xl">
+        <p className="text-center text-xl mb-8 mx-4">
           Lorem Ipsum is simply dummy text of the printing and typesetting
           industry.
         </p>
-        <div className="flex items-center justify-center">
+        <div className="flex items-center  justify-center">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {plans.map((plan, index) => {
               return (
                 <Card
                   key={`plan-${index}`}
-                  className="rounded-md dark:border-gray-200 border border-gray-300"
+                  className="rounded-md dark:border-gray-200 mb-5 border border-gray-400 transform transition-transform duration-400 hover:scale-105 hover:shadow-lg hover:bg-[#2563eb] "
                 >
-                  <Card.Body>
+                  {' '}
+                  <Card.Body className="transition-colors duration-400 hover:text-white">
                     <Card.Title tag="h2">
                       {plan.currency} {plan.amount} / {plan.duration}
                     </Card.Title>
@@ -49,8 +50,7 @@ const PricingSection = () => {
                   </Card.Body>
                   <Card.Actions className="justify-center m-2">
                     <Button
-                      color="primary"
-                      className="md:w-full w-3/4 rounded-md"
+                      className="md:w-full bg-white border-[1px] border-gray-400 text-black font-semibold  w-3/4 rounded-lg"
                       size="md"
                     >
                       {t('buy-now')}
@@ -67,3 +67,4 @@ const PricingSection = () => {
 };
 
 export default PricingSection;
+
