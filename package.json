@@ -50,7 +50,7 @@
     "next": "15.1.4",
     "next-auth": "4.24.11",
     "next-i18next": "15.4.1",
-    "nodemailer": "6.9.16",
+    "nodemailer": "6.10.0",
     "react": "18.3.1",
     "react-daisyui": "5.0.5",
     "react-dom": "18.3.1",
