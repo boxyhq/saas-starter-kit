@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark light;
+  color-scheme: dark;
 }
 
 html,
@@ -46,7 +46,7 @@ a {
   }
 
   .btn {
-    @apply rounded normal-case;
+    @apply normal-case rounded;
   }
 
   .modal-box {
@@ -63,7 +63,7 @@ a {
 }
 
 .btn-md {
-  @apply min-h-8 h-10;
+  @apply h-10 min-h-8;
 }
 
 .scrollbar {

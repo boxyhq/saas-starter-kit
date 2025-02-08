@@ -11,6 +11,8 @@ import PricingSection from '@/components/defaultLanding/PricingSection';
 import useTheme from 'hooks/useTheme';
 import env from '@/lib/env';
 import Head from 'next/head';
+import LottieSchools from '@/components/defaultLanding/LottieSchools';
+import LogosSection from '@/components/defaultLanding/LogosSection';
 
 const Home: NextPageWithLayout = () => {
   const { toggleTheme, selectedTheme } = useTheme();
@@ -23,18 +25,18 @@ const Home: NextPageWithLayout = () => {
       </Head>
 
       <div className="container mx-auto">
-        <div className="navbar bg-base-100 px-0 sm:px-1">
+        <div className="px-0 navbar bg-base-100 sm:px-1">
           <div className="flex-1">
-            <Link href="/" className="btn btn-ghost text-xl normal-case">
-              BoxyHQ
+            <Link href="/" className="text-xl normal-case btn btn-ghost">
+              Onetap Recruit Ai 
             </Link>
           </div>
           <div className="flex-none">
-            <ul className="menu menu-horizontal flex items-center gap-2 sm:gap-4">
+            <ul className="flex gap-2 items-center menu menu-horizontal sm:gap-4">
               {env.darkModeEnabled && (
                 <li>
                   <button
-                    className="bg-none p-0 rounded-lg flex items-center justify-center"
+                    className="flex justify-center items-center p-0 bg-none rounded-lg"
                     onClick={toggleTheme}
                   >
                     <selectedTheme.icon className="w-5 h-5" />
@@ -44,7 +46,7 @@ const Home: NextPageWithLayout = () => {
               <li>
                 <Link
                   href="/auth/join"
-                  className="btn btn-primary btn-md py-3 px-2 sm:px-4 text-white"
+                  className="px-2 py-3 text-white-300 btn btn-primary btn-md sm:px-4"
                 >
                   {t('sign-up')}
                 </Link>
@@ -52,7 +54,7 @@ const Home: NextPageWithLayout = () => {
               <li>
                 <Link
                   href="/auth/login"
-                  className="btn btn-primary dark:border-zinc-600 dark:border-2 dark:text-zinc-200 btn-outline py-3 px-2 sm:px-4 btn-md"
+                  className="px-2 py-3 btn btn-primary dark:border-zinc-600 dark:border-2 dark:text-zinc-200 btn-outline sm:px-4 btn-md"
                 >
                   {t('sign-in')}
                 </Link>
@@ -61,6 +63,8 @@ const Home: NextPageWithLayout = () => {
           </div>
         </div>
         <HeroSection />
+        <LottieSchools />
+        <LogosSection />
         <div className="divider"></div>
         <FeatureSection />
         <div className="divider"></div>

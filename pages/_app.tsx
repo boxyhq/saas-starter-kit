@@ -46,8 +46,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <Toaster toastOptions={{ duration: 4000 }} />
         <Themer
           overrideTheme={{
-            '--primary-color': colors.blue['500'],
-            '--primary-hover': colors.blue['600'],
+            '--primary-color': colors.blue['950'],
+            '--primary-hover': colors.green['300'],
             '--primary-color-50': colors.blue['50'],
             '--primary-color-100': colors.blue['100'],
             '--primary-color-200': colors.blue['200'],

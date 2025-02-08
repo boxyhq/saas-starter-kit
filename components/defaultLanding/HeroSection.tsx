@@ -4,8 +4,16 @@ import Link from 'next/link';
 const HeroSection = () => {
   const { t } = useTranslation('common');
   return (
-    <div className="hero py-52">
-      <div className="hero-content text-center">
+    <div className="hero relative min-h-screen w-full">
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-screen object-cover"
+        src="https://otrai.b-cdn.net/fb-bg.mp4"
+      />
+      <div className="hero-content text-center relative z-10">
         <div className="max-w-7xl">
           <h1 className="text-5xl font-bold"> {t('enterprise-saas-kit')}</h1>
           <p className="py-6 text-2xl font-normal">

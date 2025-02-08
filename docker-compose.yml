@@ -5,6 +5,6 @@ services:
     environment:
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: admin
-      POSTGRES_DB: saas-starter-kit
+      POSTGRES_DB: otrai_
     ports:
       - 5432:5432
