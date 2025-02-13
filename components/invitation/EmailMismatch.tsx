@@ -1,6 +1,6 @@
 import { Button } from 'react-daisyui';
-import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
+import { useCustomSignOut } from 'hooks/useCustomSignout';
 
 interface EmailMismatchProps {
   email: string;
@@ -8,6 +8,7 @@ interface EmailMismatchProps {
 
 const EmailMismatch = ({ email }: EmailMismatchProps) => {
   const { t } = useTranslation('common');
+  const signOut = useCustomSignOut();
 
   return (
     <>
@@ -22,9 +23,7 @@ const EmailMismatch = ({ email }: EmailMismatchProps) => {
         color="error"
         size="md"
         variant="outline"
-        onClick={() => {
-          signOut();
-        }}
+        onClick={signOut}
       >
         {t('logout')}
       </Button>

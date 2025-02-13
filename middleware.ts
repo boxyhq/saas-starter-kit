@@ -5,6 +5,56 @@ import type { NextRequest } from 'next/server';
 
 import env from './lib/env';
 
+// Constants for security headers
+const SECURITY_HEADERS = {
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'geolocation=(), microphone=()',
+  'Cross-Origin-Embedder-Policy': 'require-corp',
+  'Cross-Origin-Opener-Policy': 'same-origin',
+  'Cross-Origin-Resource-Policy': 'same-site',
+} as const;
+
+// Generate CSP
+const generateCSP = (): string => {
+  const policies = {
+    'default-src': ["'self'"],
+    'img-src': [
+      "'self'",
+      'boxyhq.com',
+      '*.boxyhq.com',
+      '*.dicebear.com',
+      'data:',
+    ],
+    'script-src': [
+      "'self'",
+      "'unsafe-inline'",
+      "'unsafe-eval'",
+      '*.gstatic.com',
+      '*.google.com',
+    ],
+    'style-src': ["'self'", "'unsafe-inline'"],
+    'connect-src': [
+      "'self'",
+      '*.google.com',
+      '*.gstatic.com',
+      'boxyhq.com',
+      '*.ingest.sentry.io',
+      '*.mixpanel.com',
+    ],
+    'frame-src': ["'self'", '*.google.com', '*.gstatic.com'],
+    'font-src': ["'self'"],
+    'object-src': ["'none'"],
+    'base-uri': ["'self'"],
+    'form-action': ["'self'"],
+    'frame-ancestors': ["'none'"],
+  };
+
+  return Object.entries(policies)
+    .map(([key, values]) => `${key} ${values.join(' ')}`)
+    .concat(['upgrade-insecure-requests'])
+    .join('; ');
+};
+
 // Add routes that don't require authentication
 const unAuthenticatedRoutes = [
   '/api/hello',
@@ -63,8 +113,25 @@ export default async function middleware(req: NextRequest) {
     }
   }
 
+  const requestHeaders = new Headers(req.headers);
+  const csp = generateCSP();
+
+  requestHeaders.set('Content-Security-Policy', csp);
+
+  const response = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
+
+  if (env.securityHeadersEnabled) {
+    // Set security headers
+    response.headers.set('Content-Security-Policy', csp);
+    Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
+  }
+
   // All good, let the request through
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

@@ -4,6 +4,7 @@ const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
   redirectIfAuthenticated: '/dashboard',
+  securityHeadersEnabled: process.env.SECURITY_HEADERS_ENABLED ?? false,
 
   // SMTP configuration for NextAuth
   smtp: {
