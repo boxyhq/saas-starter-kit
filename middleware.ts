@@ -113,7 +113,6 @@ export default async function middleware(req: NextRequest) {
     }
   }
 
-
   const requestHeaders = new Headers(req.headers);
   const csp = generateCSP();
 
