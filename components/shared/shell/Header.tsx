@@ -10,8 +10,8 @@ import {
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import useTheme from 'hooks/useTheme';
 import env from '@/lib/env';
-import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
+import { useCustomSignOut } from 'hooks/useCustomSignout';
 
 interface HeaderProps {
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,6 +21,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
   const { toggleTheme } = useTheme();
   const { status, data } = useSession();
   const { t } = useTranslation('common');
+  const signOut = useCustomSignOut();
 
   if (status === 'loading' || !data) {
     return null;
@@ -95,7 +96,7 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
                 <button
                   className="block px-2 py-1 text-sm leading-6 text-gray-900 dark:text-gray-50 cursor-pointer"
                   type="button"
-                  onClick={() => signOut()}
+                  onClick={signOut}
                 >
                   <div className="flex items-center">
                     <ArrowRightOnRectangleIcon className="w-5 h-5 mr-1" />{' '}

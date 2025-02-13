@@ -37,7 +37,7 @@ import { forceConsume } from '@/lib/server-common';
 
 const adapter = PrismaAdapter(prisma);
 const providers: Provider[] = [];
-const sessionMaxAge = 30 * 24 * 60 * 60; // 30 days
+const sessionMaxAge = 14 * 24 * 60 * 60; // 14 days
 const useSecureCookie = env.appUrl.startsWith('https://');
 
 export const sessionTokenCookieName =
