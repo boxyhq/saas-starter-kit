@@ -39,7 +39,7 @@
     "@retracedhq/retraced": "0.7.18",
     "@sentry/nextjs": "9.1.0",
     "@tailwindcss/typography": "0.5.16",
-    "bcryptjs": "2.4.3",
+    "bcryptjs": "3.0.0",
     "classnames": "2.5.1",
     "cookies-next": "5.1.0",
     "currency-symbol-map": "5.1.0",
