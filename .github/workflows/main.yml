@@ -75,7 +75,7 @@ jobs:
       - name: Install playwright browser dependencies
         run: npx playwright install chromium
       - name: e2e tests
-        run: npx run test:e2e
+        run: npx playwright test -x
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
