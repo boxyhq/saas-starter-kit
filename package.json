@@ -17,7 +17,7 @@
     "format": "prettier --write .",
     "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
     "playwright:update": "playwright install && playwright install-deps",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test -x",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --env=jsdom",
