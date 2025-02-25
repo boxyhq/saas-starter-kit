@@ -99,6 +99,9 @@
   "overrides": {
     "typeorm": {
       "mssql": ">=11.0.0"
+    },
+    "react-email": {
+      "esbuild": ">=0.25.0"
     }
   }
 }
