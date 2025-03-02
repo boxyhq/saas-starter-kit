@@ -7,7 +7,7 @@ import colors from 'tailwindcss/colors';
 import type { AppPropsWithLayout } from 'types';
 import mixpanel from 'mixpanel-browser';
 
-import '@boxyhq/react-ui/dist/style.css';
+import '@boxyhq/react-ui/dist/react-ui.css';
 import '../styles/globals.css';
 import { useEffect } from 'react';
 import env from '@/lib/env';
