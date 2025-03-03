@@ -186,6 +186,7 @@ export class SSOPage {
       }
     }
     await this.saveButton.click();
+    await expect(this.page.getByText(`${type === 'oidc' ? 'OIDC': 'SAML'} connection created successfully.`)).toBeVisible()
     const _expectedproviderName =
       provider ??
       (type === 'saml' ? 'saml.example.com' : 'oauth.wiremockapi.cloud');
