@@ -94,7 +94,6 @@ test('Should be able to update team slug', async ({
   await settingsPage.goto(team.slug);
   await settingsPage.updateTeamSlug(teamNewInfo.slug);
 
-  await settingsPage.page.reload();
   await settingsPage.isSettingsPageVisible();
   await settingsPage.checkTeamSlug(teamNewInfo.sluggified);
 });
