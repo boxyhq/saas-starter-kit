@@ -86,9 +86,7 @@ test('Should not allow to update team name with more than 50 characters', async 
 test('Should be able to update team slug', async ({
   loginPage,
   settingsPage,
-
 }) => {
-
   await loginPage.goto();
   await loginPage.credentialLogin(user.email, user.password);
   await loginPage.loggedInCheck(team.slug);
