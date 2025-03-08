@@ -37,7 +37,7 @@
     "@react-email/render": "1.0.5",
     "@retracedhq/logs-viewer": "2.8.0",
     "@retracedhq/retraced": "0.7.19",
-    "@sentry/nextjs": "9.3.0",
+    "@sentry/nextjs": "9.5.0",
     "@tailwindcss/typography": "0.5.16",
     "bcryptjs": "3.0.2",
     "classnames": "2.5.1",
