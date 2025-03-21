@@ -103,6 +103,9 @@
     "react-email": {
       "esbuild": ">=0.25.0",
       "next": ">=15.2.3"
+    },
+    "@react-email/components" : {
+      "prismjs": ">=1.30.0"
     }
   }
 }
