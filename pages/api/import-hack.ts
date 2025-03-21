@@ -1,5 +1,7 @@
 // Leave the openid-client import to get nextjs to leave the library in node_modules after build
 import * as dummy from 'openid-client';
+import * as jose from 'jose';
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(
@@ -7,5 +9,6 @@ export default function handler(
   res: NextApiResponse<any>
 ) {
   const unused = dummy; // eslint-disable-line @typescript-eslint/no-unused-vars
+  const unused2 = jose; // eslint-disable-line @typescript-eslint/no-unused-vars
   res.status(200).json({});
 }
