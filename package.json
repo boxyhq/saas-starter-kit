@@ -35,7 +35,7 @@
     "@prisma/client": "6.5.0",
     "@react-email/components": "0.0.34",
     "@react-email/render": "1.0.5",
-    "@retracedhq/logs-viewer": "2.8.0",
+    "@retracedhq/logs-viewer": "2.9.0",
     "@retracedhq/retraced": "0.7.22",
     "@sentry/nextjs": "9.9.0",
     "@tailwindcss/typography": "0.5.16",
