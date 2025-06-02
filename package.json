@@ -91,7 +91,7 @@
     "prettier-plugin-tailwindcss": "0.6.12",
     "prisma": "6.8.2",
     "release-it": "19.0.3",
-    "tailwindcss": "3.4.17",
+    "tailwindcss": "4.1.8",
     "ts-node": "10.9.2",
     "typescript": "5.8.3"
   },
