@@ -41,7 +41,7 @@
     "@tailwindcss/typography": "0.5.16",
     "bcryptjs": "3.0.2",
     "classnames": "2.5.1",
-    "cookies-next": "5.1.0",
+    "cookies-next": "6.0.0",
     "currency-symbol-map": "5.1.0",
     "formik": "2.4.6",
     "i18next": "25.2.1",
