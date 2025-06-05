@@ -38,6 +38,7 @@
     "@retracedhq/logs-viewer": "2.10.1",
     "@retracedhq/retraced": "0.7.23",
     "@sentry/nextjs": "9.24.0",
+    "@supabase/supabase-js": "^2.39.7",
     "@tailwindcss/typography": "0.5.16",
     "bcryptjs": "3.0.2",
     "classnames": "2.5.1",
