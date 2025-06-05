@@ -1,9 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server';
 import supabase from '@/lib/supabase';
+import puppeteer from 'puppeteer';
+import OpenAI from 'openai';
+
+async function analyzeUrl(url: string) {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+  const page = await browser.newPage();
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+
+  const cookieBannerFound = await page.evaluate(() => {
+    const txt = document.body.innerText.toLowerCase();
+    return txt.includes('cookie') && txt.includes('accept');
+  });
+
+  const privacyPolicyFound = await page.evaluate(() => {
+    return Array.from(document.querySelectorAll('a')).some((a) =>
+      /privacy/.test(a.textContent || '')
+    );
+  });
+
+  const formDetected = (await page.$('form')) !== null;
+
+  await browser.close();
+
+  const score =
+    (cookieBannerFound ? 40 : 0) +
+    (privacyPolicyFound ? 30 : 0) +
+    (formDetected ? 30 : 0);
+
+  return { cookieBannerFound, privacyPolicyFound, formDetected, score };
+}
+
+async function gptSuggestions(result: any) {
+  if (!process.env.OPENAI_API_KEY) return [] as string[];
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const completion = await client.chat.completions.create({
+    model: 'gpt-4o',
+    messages: [
+      {
+        role: 'system',
+        content:
+          'You are a GDPR compliance assistant. Provide concise, actionable advice.',
+      },
+      { role: 'user', content: JSON.stringify(result) },
+    ],
+    max_tokens: 200,
+  });
+  const text = completion.choices[0].message?.content || '';
+  return text.split('\n').filter((t) => t.trim().length > 0);
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const { url, user_id } = await request.json();
+    const { url, user_id, pro } = await request.json();
 
     if (!url || !user_id) {
       return NextResponse.json(
@@ -19,12 +71,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fake scan result
+    const analysis = await analyzeUrl(url);
+
+    let suggestions: string[] = [
+      'Ensure a visible cookie banner',
+      'Provide a clear privacy policy',
+    ];
+    if (pro) {
+      try {
+        suggestions = await gptSuggestions(analysis);
+      } catch {
+        // ignore GPT errors and keep basic suggestions
+      }
+    }
+
     const payload = {
       url,
-      score: Math.floor(Math.random() * 100),
-      suggestions: ['Use a cookie banner', 'Update privacy policy'],
       user_id,
+      ...analysis,
+      suggestions,
+      pro: Boolean(pro),
     };
 
     const { error, data } = await supabase

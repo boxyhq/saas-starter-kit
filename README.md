@@ -196,6 +196,11 @@ The default login options are email and GitHub. Configure below:
 1. Create an account on [Sentry](https://sentry.io/), skip the onboarding and create a new Next.js project.
 2. At the bottom of the page, get the DSN and add it to the `.env` file as `SENTRY_DSN`. The other variables are optional.
 
+### OpenAI
+
+1. Create an API key from [OpenAI](https://platform.openai.com/).
+2. Add the key to the `.env` file as `OPENAI_API_KEY`.
+
 #### Fully customizable boilerplate out of the box, see images below 👇👇👇
 
 ![saas-starter-kit-poster](/public/saas-starter-kit-poster.png)
