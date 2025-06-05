@@ -1,6 +1,6 @@
 import { ApiError } from '@/lib/errors';
 import { Action, Resource, permissions } from '@/lib/permissions';
-import { prisma } from '@/lib/prisma';
+import supabase from '@/lib/supabase';
 import { Role, TeamMember } from '@prisma/client';
 import type { Session } from 'next-auth';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -21,36 +21,52 @@ export const createUser = async (data: {
   password?: string;
   emailVerified?: Date | null;
 }) => {
-  return await prisma.user.create({
-    data: normalizeUser(data),
-  });
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data: user, error } = await supabase
+    .from('User')
+    .insert(normalizeUser(data))
+    .select()
+    .single();
+  if (error) throw error;
+  return user;
 };
 
 export const updateUser = async ({ where, data }) => {
+  if (!supabase) throw new Error('Supabase not configured');
   data = normalizeUser(data);
-
-  return await prisma.user.update({
-    where,
-    data,
-  });
+  const key = 'id' in where ? { id: where.id } : { email: where.email };
+  const { data: user, error } = await supabase
+    .from('User')
+    .update(data)
+    .match(key)
+    .select()
+    .single();
+  if (error) throw error;
+  return user;
 };
 
 export const upsertUser = async ({ where, update, create }) => {
+  if (!supabase) throw new Error('Supabase not configured');
   update = normalizeUser(update);
   create = normalizeUser(create);
-
-  return await prisma.user.upsert({
-    where,
-    update,
-    create,
-  });
+  const key = 'id' in where ? { id: where.id } : { email: where.email };
+  const { data: user, error } = await supabase
+    .from('User')
+    .upsert({ ...create, ...key, ...update })
+    .select()
+    .single();
+  if (error) throw error;
+  return user;
 };
 
 export const getUser = async (key: { id: string } | { email: string }) => {
-  const user = await prisma.user.findUnique({
-    where: key,
-  });
-
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data: user, error } = await supabase
+    .from('User')
+    .select('*')
+    .match(key)
+    .maybeSingle();
+  if (error) throw error;
   return normalizeUser(user);
 };
 
@@ -69,16 +85,25 @@ export const getUserBySession = async (session: Session | null) => {
 };
 
 export const deleteUser = async (key: { id: string } | { email: string }) => {
-  return await prisma.user.delete({
-    where: key,
-  });
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data: user, error } = await supabase
+    .from('User')
+    .delete()
+    .match(key)
+    .select()
+    .single();
+  if (error) throw error;
+  return user;
 };
 
 export const findFirstUserOrThrow = async ({ where }) => {
-  const user = await prisma.user.findFirstOrThrow({
-    where,
-  });
-
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data: user, error } = await supabase
+    .from('User')
+    .select('*')
+    .match(where)
+    .maybeSingle();
+  if (error || !user) throw error || new Error('User not found');
   return normalizeUser(user);
 };
 

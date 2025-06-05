@@ -1,3 +1,4 @@
+import supabase from '@/lib/supabase';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import { findOrCreateApp } from '@/lib/svix';
@@ -14,12 +15,13 @@ export const createTeam = async (param: {
 }) => {
   const { userId, name, slug } = param;
 
-  const team = await prisma.team.create({
-    data: {
-      name,
-      slug,
-    },
-  });
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data: team, error } = await supabase
+    .from('Team')
+    .insert({ name, slug })
+    .select()
+    .single();
+  if (error) throw error;
 
   await addTeamMember(team.id, userId, Role.OWNER);
 
@@ -31,23 +33,37 @@ export const createTeam = async (param: {
 export const getByCustomerId = async (
   billingId: string
 ): Promise<Team | null> => {
-  return await prisma.team.findFirst({
-    where: {
-      billingId,
-    },
-  });
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data, error } = await supabase
+    .from('Team')
+    .select('*')
+    .eq('billingId', billingId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
 };
 
 export const getTeam = async (key: { id: string } | { slug: string }) => {
-  return await prisma.team.findUniqueOrThrow({
-    where: key,
-  });
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data, error } = await supabase
+    .from('Team')
+    .select('*')
+    .match(key)
+    .maybeSingle();
+  if (error || !data) throw error || new Error('Team not found');
+  return data;
 };
 
 export const deleteTeam = async (key: { id: string } | { slug: string }) => {
-  return await prisma.team.delete({
-    where: key,
-  });
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data, error } = await supabase
+    .from('Team')
+    .delete()
+    .match(key)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
 };
 
 export const addTeamMember = async (
@@ -55,33 +71,26 @@ export const addTeamMember = async (
   userId: string,
   role: Role
 ) => {
-  return await prisma.teamMember.upsert({
-    create: {
-      teamId,
-      userId,
-      role,
-    },
-    update: {
-      role,
-    },
-    where: {
-      teamId_userId: {
-        teamId,
-        userId,
-      },
-    },
-  });
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data, error } = await supabase
+    .from('TeamMember')
+    .upsert({ teamId, userId, role })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
 };
 
 export const removeTeamMember = async (teamId: string, userId: string) => {
-  return await prisma.teamMember.delete({
-    where: {
-      teamId_userId: {
-        teamId,
-        userId,
-      },
-    },
-  });
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data, error } = await supabase
+    .from('TeamMember')
+    .delete()
+    .match({ teamId, userId })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
 };
 
 // List teams for a user
