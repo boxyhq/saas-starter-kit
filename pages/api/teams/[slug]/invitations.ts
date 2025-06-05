@@ -90,8 +90,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-
-
     // Check if user already a member
     const memberExists = await countTeamMembers({
       where: {

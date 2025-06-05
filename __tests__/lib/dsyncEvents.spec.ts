@@ -32,7 +32,12 @@ describe('Lib - dsyncEvents group handling', () => {
       data: { id: 'g1', name: 'Group', raw: { a: 1 } },
     } as any);
 
-    expect(createGroup).toHaveBeenCalledWith({ id: 'g1', name: 'Group', teamId: 'team1', raw: { a: 1 } });
+    expect(createGroup).toHaveBeenCalledWith({
+      id: 'g1',
+      name: 'Group',
+      teamId: 'team1',
+      raw: { a: 1 },
+    });
   });
 
   it('should update group on group.updated', async () => {
@@ -42,7 +47,10 @@ describe('Lib - dsyncEvents group handling', () => {
       data: { id: 'g1', name: 'New Name', raw: { b: 2 } },
     } as any);
 
-    expect(updateGroup).toHaveBeenCalledWith({ where: { id: 'g1' }, data: { name: 'New Name', raw: { b: 2 } } });
+    expect(updateGroup).toHaveBeenCalledWith({
+      where: { id: 'g1' },
+      data: { name: 'New Name', raw: { b: 2 } },
+    });
   });
 
   it('should delete group on group.deleted', async () => {

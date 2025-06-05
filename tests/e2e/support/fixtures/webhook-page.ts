@@ -8,12 +8,23 @@ export class WebhookPage {
   private readonly endpointInput: Locator;
   private readonly createButton: Locator;
 
-  constructor(public readonly page: Page, public readonly teamSlug: string) {
+  constructor(
+    public readonly page: Page,
+    public readonly teamSlug: string
+  ) {
     this.heading = this.page.getByRole('heading', { name: 'Webhooks' });
-    this.addWebhookButton = this.page.getByRole('button', { name: 'Add Webhook' });
-    this.descriptionInput = this.page.getByPlaceholder('Description of what this endpoint is used for.');
-    this.endpointInput = this.page.getByPlaceholder('https://api.example.com/svix-webhooks');
-    this.createButton = this.page.getByRole('dialog').getByRole('button', { name: 'Create Webhook' });
+    this.addWebhookButton = this.page.getByRole('button', {
+      name: 'Add Webhook',
+    });
+    this.descriptionInput = this.page.getByPlaceholder(
+      'Description of what this endpoint is used for.'
+    );
+    this.endpointInput = this.page.getByPlaceholder(
+      'https://api.example.com/svix-webhooks'
+    );
+    this.createButton = this.page
+      .getByRole('dialog')
+      .getByRole('button', { name: 'Create Webhook' });
   }
 
   async goto() {
@@ -24,7 +35,9 @@ export class WebhookPage {
 
   async openCreateModal() {
     await this.addWebhookButton.click();
-    await expect(this.page.getByRole('heading', { name: 'Create Webhook' })).toBeVisible();
+    await expect(
+      this.page.getByRole('heading', { name: 'Create Webhook' })
+    ).toBeVisible();
   }
 
   async fillDescription(text: string) {

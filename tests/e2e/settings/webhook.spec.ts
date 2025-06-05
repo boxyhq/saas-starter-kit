@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { test as base, expect } from '@playwright/test';
 import { user, team } from '../support/helper';
 import { LoginPage, WebhookPage } from '../support/fixtures';
@@ -25,7 +26,9 @@ test.beforeEach(async ({ loginPage }) => {
 });
 
 // Verify that insecure webhook URLs are rejected
-test('Should not allow webhook creation with http URL', async ({ webhookPage }) => {
+test('Should not allow webhook creation with http URL', async ({
+  webhookPage,
+}) => {
   await webhookPage.goto();
   await webhookPage.openCreateModal();
   await webhookPage.fillDescription('Test Webhook');
