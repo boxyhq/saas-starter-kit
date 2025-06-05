@@ -126,6 +126,8 @@ const env = {
     anonKey: process.env.SUPABASE_ANON_KEY,
     serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
   },
+
+  openaiApiKey: process.env.OPENAI_API_KEY,
 };
 
 export default env;
