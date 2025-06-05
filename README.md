@@ -26,6 +26,21 @@ Blog - [Enterprise-ready Saas Starter Kit](https://boxyhq.com/blog/enterprise-re
 
 Next.js-based SaaS starter kit saves you months of development by starting you off with all the features that are the same in every product, so you can focus on what makes your app unique.
 
+## ⚡ Quickstart
+
+If you want to try the starter kit locally, follow these basic steps:
+
+```bash
+git clone https://github.com/boxyhq/saas-starter-kit.git
+cd saas-starter-kit
+cp .env.example .env
+npm install
+docker-compose up -d # Optional, starts a local Postgres instance
+npx prisma db push
+npm run dev
+```
+
+
 ## 🛠️ Built With
 
 - [Next.js](https://nextjs.org)
