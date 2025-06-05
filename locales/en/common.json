@@ -254,5 +254,9 @@
   "view": "View",
   "score": "Score",
   "privacy-policy": "Privacy Policy",
-  "terms-of-service": "Terms of Service"
+  "terms-of-service": "Terms of Service",
+  "privacy-paragraph-1": "GDPRcheck360 is committed to protecting your privacy. We process personal data solely to deliver and improve our services. Your information is never shared with third parties except as required by law.",
+  "privacy-paragraph-2": "We collect only the data necessary to operate the platform and store it securely. If you have any questions about how we handle your data, please contact us at <mailtoLink>support@gdprcheck360.com</mailtoLink>.",
+  "terms-paragraph-1": "By using GDPRcheck360 you agree to comply with these terms of service. You are responsible for ensuring that your use of the platform is in accordance with all applicable laws and regulations.",
+  "terms-paragraph-2": "We reserve the right to suspend or terminate access for activities that violate these terms. Your continued use of the service indicates acceptance of any updates to these terms."
 }

@@ -10,10 +10,12 @@ type ScanFixture = {
 const test = base.extend<ScanFixture>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(loginPage);
   },
   scanPage: async ({ page }, use) => {
     const scanPage = new ScanPage(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(scanPage);
   },
 });
