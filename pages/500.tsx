@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { AccountLayout } from '@/components/layouts';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import router from 'next/router';
