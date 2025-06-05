@@ -11,8 +11,7 @@ const FeatureSection = () => {
           {t('features')}
         </h2>
         <p className="text-center text-xl">
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry.
+          Discover how GDPRcheck360 helps your team stay compliant.
         </p>
         <div className="flex items-center justify-center">
           <div className="grid grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-2">

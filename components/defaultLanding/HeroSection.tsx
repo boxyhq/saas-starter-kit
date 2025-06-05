@@ -19,7 +19,7 @@ const HeroSection = () => {
               {t('get-started')}
             </Link>
             <Link
-              href="https://github.com/boxyhq/saas-starter-kit"
+              href="https://github.com/gdprcheck360/gdprcheck360"
               className="btn btn-outline px-8"
             >
               GitHub
