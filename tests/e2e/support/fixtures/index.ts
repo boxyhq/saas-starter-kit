@@ -7,3 +7,4 @@ export * from './security-page';
 export * from './settings-page';
 export * from './sso-page';
 export * from './webhook-page';
+export * from './scan-page';
