@@ -171,6 +171,12 @@ npm run playwright:update
 npm run test:e2e
 ```
 
+##### Run API tests
+
+```bash
+npm run test
+```
+
 _Note: HTML test report is generated inside the `report` folder. Currently supported browsers for test execution `chromium` and `firefox`_
 
 ## ⚙️ Feature configuration
@@ -212,6 +218,12 @@ The default login options are email and GitHub. Configure below:
 
 1. Create an API key from [OpenAI](https://platform.openai.com/).
 2. Add the key to the `.env` file as `OPENAI_API_KEY`.
+
+La funzionalità di **scansione GDPR** consente di inviare un URL
+all'endpoint `/api/scan` e ottenere un report sulla conformità.
+L'analisi usa Puppeteer per ispezionare la pagina e,
+se `OPENAI_API_KEY` è valorizzata, sfrutta OpenAI per generare
+consigli su come migliorare la privacy.
 
 #### Fully customizable boilerplate out of the box, see images below 👇👇👇
 
