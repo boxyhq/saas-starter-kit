@@ -1,14 +1,14 @@
 [
   {
     "question": "What is GDPRcheck360?",
-    "answer": "Enterprise readiness for B2B SaaS, straight out of the box."
+    "answer": "It automatically scans your site for GDPR compliance issues."
   },
   {
-    "question": "What GDPRcheck360 offers?",
-    "answer": "At GDPRcheck360 we enable you to add plug-and-play enterprise-ready features to your SaaS product. Show enterprise customers and InfoSec teams you are ready to pass their processes with flying colors. We are open-source and free!"
+    "question": "How does the scan work?",
+    "answer": "We analyze your pages with a headless browser and flag potential problems."
   },
   {
-    "question": "Does GDPRcheck360 offer developer security tools?",
-    "answer": "We have curated a list of awesome open-source developer security tools.It includes security principles and controls relevant to popular compliance certifications (like ISO27001, SOC2, MVSP, etc.)"
+    "question": "Can I get improvement suggestions?",
+    "answer": "Yes. If you configure an OpenAI key we generate privacy recommendations."
   }
 ]
