@@ -21,7 +21,14 @@
       "@/lib/*": ["lib/*"],
       "@/components/*": ["components/*"],
     },
+    "plugins": [{ "name": "next" }]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-auth.d.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "next-auth.d.ts",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"],
 }
