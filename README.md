@@ -57,7 +57,7 @@ Next.js-based SaaS starter kit saves you months of development by starting you o
 
 ## 🚀 Deployment
 
-<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fboxyhq%2Fsaas-starter-kit&env=NEXTAUTH_SECRET,SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASSWORD,SMTP_FROM,DATABASE_URL,APP_URL">
+<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fboxyhq%2Fsaas-starter-kit&env=NEXTAUTH_SECRET,SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASSWORD,SMTP_FROM,DATABASE_URL,APP_URL,SUPABASE_URL,SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY">
 <img width="90" alt="Deploy with Vercel" src="https://vercel.com/button" />
 </a>
 
@@ -124,6 +124,13 @@ docker-compose up -d
 ```bash
 npx prisma db push
 ```
+
+#### 6b. Using Supabase
+
+Create a project on [Supabase](https://supabase.com) and copy the
+`SUPABASE_URL`, `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` values to
+your `.env` file. Apply the schema from `prisma/schema.prisma` in the Supabase
+SQL editor and enable Row Level Security on your tables.
 
 #### 7. Start the server
 
