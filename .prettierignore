@@ -4,3 +4,4 @@ node_modules
 .next
 out
 eslint.config.cjs
+__tests__/api/scan.spec.ts
