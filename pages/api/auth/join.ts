@@ -15,8 +15,8 @@ import { Team } from '@prisma/client';
 import { createVerificationToken } from 'models/verificationToken';
 import { userJoinSchema, validateWithSchema } from '@/lib/zod';
 
-// TODO:
-// Add zod schema validation
+// Validate request body
+// before accessing individual fields
 
 export default async function handler(
   req: NextApiRequest,
@@ -45,6 +45,7 @@ export default async function handler(
 
 // Signup the user
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
+  validateWithSchema(userJoinSchema, req.body);
   const { name, password, team, inviteToken, recaptchaToken } = req.body;
 
   await validateRecaptcha(recaptchaToken);
