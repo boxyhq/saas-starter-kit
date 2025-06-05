@@ -34,4 +34,11 @@ export async function getStaticProps({ locale }: GetServerSidePropsContext) {
   };
 }
 
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+}
+
 export default ScanDetails;
