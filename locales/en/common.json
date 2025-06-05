@@ -247,4 +247,10 @@
   "unable-to-find": "We're unable to find out what's happening! We suggest you to",
   "try-again-later": "or visit here later.",
   "multiple-sso-teams": "User belongs to multiple teams with SSO enabled. Please enter your team slug to get started."
+  "scans": "Scans",
+  "new-scan": "New scan",
+  "scan-history": "Scan history",
+  "gdpr-suggestions": "GDPR suggestions",
+  "view": "View",
+  "score": "Score"
 }
