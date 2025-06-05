@@ -82,8 +82,22 @@ model Team {
   members         TeamMember[]
   invitations     Invitation[]
   apiKeys         ApiKey[]
+  groups          Group[]
 
   @@index([billingId])
+}
+
+model Group {
+  id        String   @id
+  teamId    String
+  name      String
+  raw       Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
 }
 
 model TeamMember {
