@@ -67,6 +67,15 @@ const Home: NextPageWithLayout = () => {
         <PricingSection />
         <div className="divider"></div>
         <FAQSection />
+        <footer className="py-4 text-center text-sm">
+          <Link href="/privacy" className="link link-hover">
+            {t('privacy-policy')}
+          </Link>
+          <span className="mx-1">|</span>
+          <Link href="/terms" className="link link-hover">
+            {t('terms-of-service')}
+          </Link>
+        </footer>
       </div>
     </>
   );

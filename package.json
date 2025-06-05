@@ -52,6 +52,7 @@
     "next-i18next": "15.4.2",
     "nodemailer": "6.10.1",
     "openai": "^5.1.0",
+    "pdf-lib": "1.17.1",
     "puppeteer": "^24.10.0",
     "react": "18.3.1",
     "react-daisyui": "5.0.5",
@@ -66,8 +67,7 @@
     "svix": "1.66.0",
     "swr": "2.3.3",
     "yup": "1.6.1",
-    "zod": "3.25.46",
-    "pdf-lib": "1.17.1"
+    "zod": "3.25.46"
   },
   "devDependencies": {
     "@faker-js/faker": "9.8.0",
