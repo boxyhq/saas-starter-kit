@@ -15,16 +15,8 @@ const Terms: NextPageWithLayout = () => {
       </Head>
       <div className="container mx-auto px-4 py-10 prose">
         <h1>{t('terms-of-service')}</h1>
-        <p>
-          By using GDPRcheck360 you agree to comply with these terms of service.
-          You are responsible for ensuring that your use of the platform is in
-          accordance with all applicable laws and regulations.
-        </p>
-        <p>
-          We reserve the right to suspend or terminate access for activities
-          that violate these terms. Your continued use of the service indicates
-          acceptance of any updates to these terms.
-        </p>
+        <p>{t('terms-paragraph-1')}</p>
+        <p>{t('terms-paragraph-2')}</p>
       </div>
     </>
   );
