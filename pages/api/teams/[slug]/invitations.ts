@@ -90,43 +90,9 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    /*
-    Aggregate  (cost=12.61..12.62 rows=1 width=8) (actual time=0.040..0.040 rows=1 loops=1)
-  ->  Nested Loop  (cost=0.42..12.60 rows=1 width=32) (actual time=0.037..0.038 rows=1 loops=1)
-        ->  Index Scan using "User_email_key" on "User" j1  (cost=0.14..8.16 rows=1 width=37) (actual time=0.025..0.026 rows=1 loops=1)
-              Index Cond: (email = 'admin@example.com'::text)
-              Filter: (id IS NOT NULL)
-        ->  Index Only Scan using "TeamMember_teamId_userId_key" on "TeamMember"  (cost=0.28..4.30 rows=1 width=37) (actual time=0.010..0.010 rows=1 loops=1)
-              Index Cond: (("teamId" = '386a5102-0427-403a-b6c1-877de86d1ce0'::text) AND ("userId" = j1.id))
-              Heap Fetches: 0
-Planning Time: 1.472 ms
-Execution Time: 0.065 ms
-    */
 
-    /*
-SELECT COUNT(*) FROM (
-    SELECT 
-        "public"."TeamMember"."id" 
-    FROM "public"."TeamMember" LEFT JOIN "public"."User" AS "j1" ON ("j1"."id") = ("public"."TeamMember"."userId") 
-    WHERE ("public"."TeamMember"."teamId" = '7974330a-c8ca-4043-9e3c-3f326d1b6973' AND ("j1"."email" = 'admin@example.com' AND ("j1"."id" IS NOT NULL))) 
-    OFFSET 0
-) AS "sub"
-*/
 
-    /*
-Aggregate  (cost=2.05..2.06 rows=1 width=8) (actual time=0.046..0.047 rows=1 loops=1)
-  ->  Nested Loop  (cost=0.00..2.04 rows=1 width=32) (actual time=0.046..0.046 rows=0 loops=1)
-        Join Filter: ("TeamMember"."userId" = j1.id)
-        Rows Removed by Join Filter: 1
-        ->  Seq Scan on "TeamMember"  (cost=0.00..1.01 rows=1 width=37) (actual time=0.028..0.028 rows=1 loops=1)
-              Filter: ("teamId" = '7974330a-c8ca-4043-9e3c-3f326d1b6973'::text)
-              Rows Removed by Filter: 4
-        ->  Seq Scan on "User" j1  (cost=0.00..1.01 rows=1 width=37) (actual time=0.011..0.011 rows=1 loops=1)
-              Filter: ((id IS NOT NULL) AND (email = 'admin@example.com'::text))
-              Rows Removed by Filter: 2
-Planning Time: 1.285 ms
-Execution Time: 0.152 ms
-*/
+    // Check if user already a member
     const memberExists = await countTeamMembers({
       where: {
         teamId: teamMember.teamId,
@@ -140,6 +106,7 @@ Execution Time: 0.152 ms
       throw new ApiError(400, 'This user is already a member of the team.');
     }
 
+    // Check for existing invitation
     const invitationExists = await getInvitationCount({
       where: {
         email,
