@@ -8,3 +8,16 @@ services:
       POSTGRES_DB: saas-starter-kit
     ports:
       - 5432:5432
+
+  web:
+    image: node:18
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    command: sh -c "npm install && npm run dev"
+    env_file:
+      - .env
+    ports:
+      - 4002:4002
+    depends_on:
+      - db

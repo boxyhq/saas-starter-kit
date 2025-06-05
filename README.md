@@ -114,10 +114,13 @@ cp .env.example .env
 #### 5. Create a database (Optional)
 
 To make the process of installing dependencies easier, we offer a `docker-compose.yml` with a Postgres container.
+It also defines a service for running the Next.js app.
 
 ```bash
 docker-compose up -d
 ```
+
+This command starts the database and launches the app at `http://localhost:4002`.
 
 #### 6. Set up database schema
 
@@ -139,6 +142,8 @@ In a development environment:
 ```bash
 npm run dev
 ```
+
+If you started the app with Docker Compose, it is already running at `http://localhost:4002`.
 
 #### 8. Start the Prisma Studio
 
