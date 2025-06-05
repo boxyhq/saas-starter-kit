@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import supabase from '@/lib/supabase';
 import puppeteer from 'puppeteer';
 import OpenAI from 'openai';
+import env from '@/lib/env';
 
 async function analyzeUrl(url: string) {
   const browser = await puppeteer.launch({
@@ -35,8 +36,8 @@ async function analyzeUrl(url: string) {
 }
 
 async function gptSuggestions(result: any) {
-  if (!process.env.OPENAI_API_KEY) return [] as string[];
-  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  if (!env.openaiApiKey) return [] as string[];
+  const client = new OpenAI({ apiKey: env.openaiApiKey });
   const completion = await client.chat.completions.create({
     model: 'gpt-4o',
     messages: [
