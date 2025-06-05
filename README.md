@@ -201,7 +201,7 @@ The default login options are email and GitHub. Configure below:
 ### Sentry
 
 1. Create an account on [Sentry](https://sentry.io/), skip the onboarding and create a new Next.js project.
-2. At the bottom of the page, get the DSN and add it to the `.env` file as `SENTRY_DSN`. The other variables are optional.
+2. At the bottom of the page, get the DSN and add it to the `.env` file as `NEXT_PUBLIC_SENTRY_DSN` (the same variable name used in `sentry.client.config.ts`). The other variables are optional.
 
 ### OpenAI
 
