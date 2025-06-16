@@ -70,7 +70,7 @@
     "@faker-js/faker": "9.8.0",
     "@playwright/test": "1.53.0",
     "@testing-library/jest-dom": "6.6.3",
-    "@types/jest": "29.5.14",
+    "@types/jest": "30.0.0",
     "@types/micromatch": "4.0.9",
     "@types/mixpanel-browser": "2.60.0",
     "@types/node": "24.0.1",
