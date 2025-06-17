@@ -86,7 +86,7 @@
     "eslint-plugin-i18next": "6.1.1",
     "jest": "30.0.0",
     "jest-environment-jsdom": "30.0.0",
-    "postcss": "8.5.5",
+    "postcss": "8.5.6",
     "prettier": "3.5.3",
     "prettier-plugin-tailwindcss": "0.6.12",
     "prisma": "6.9.0",
