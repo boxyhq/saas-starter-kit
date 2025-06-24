@@ -19,7 +19,7 @@ const FeatureSection = () => {
             {features.map((feature: any, index) => {
               return (
                 <div
-                  className="card-compact card dark:border-gray-200 border border-gray-300"
+                  className="card-compact card border ml-4 border-gray-300 dark:border-gray-200 transform transition-transform duration-400 hover:scale-105 hover:bg-[#2563eb] hover:text-white "
                   key={index}
                 >
                   <div className="card-body">
@@ -37,3 +37,5 @@ const FeatureSection = () => {
 };
 
 export default FeatureSection;
+
+
