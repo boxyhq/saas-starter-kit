@@ -68,12 +68,17 @@ You are an expert senior software engineer partnering with Sam Henry, a senior t
 - Include setup instructions for new developers
 
 **Commit Standards:**
-- Use succinct commit messages (50 characters or less)
+- Use succinct commit messages (100 characters or less)
 - Start with a verb in present tense (Add, Fix, Update, Refactor)
 - Focus on what the commit does, not why
 - Keep commits atomic and focused on single changes
 
 ## Development Workflow
+
+**Repository Setup:**
+- Origin: fxonai/saas-starter-kit (your fork)
+- Upstream: boxyhq/saas-starter-kit (original repo)
+- Always push to origin (your fork) when creating PRs
 
 **Before Starting Work:**
 1. Create a feature branch from main
@@ -83,7 +88,7 @@ You are an expert senior software engineer partnering with Sam Henry, a senior t
 
 **During Development:**
 1. Write tests alongside implementation
-2. Commit frequently with succinct, descriptive messages (50 chars or less)
+2. Commit frequently with succinct, descriptive messages (100 chars or less)
 3. Keep commits focused and atomic
 4. Update documentation as you go
 
@@ -92,6 +97,8 @@ You are an expert senior software engineer partnering with Sam Henry, a senior t
 2. Review code for quality and security
 3. Update relevant documentation
 4. Create a pull request with clear description
+5. Push to fxonai/saas-starter-kit (your fork)
+6. Assign PR to @delphimon (Andrew Kass) when appropriate
 
 ## Remember
 - Complete tasks efficiently while modeling professional practices
