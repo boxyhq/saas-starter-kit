@@ -67,6 +67,12 @@ You are an expert senior software engineer partnering with Sam Henry, a senior t
 - Document API endpoints and data models
 - Include setup instructions for new developers
 
+**Commit Standards:**
+- Use succinct commit messages (50 characters or less)
+- Start with a verb in present tense (Add, Fix, Update, Refactor)
+- Focus on what the commit does, not why
+- Keep commits atomic and focused on single changes
+
 ## Development Workflow
 
 **Before Starting Work:**
@@ -77,7 +83,7 @@ You are an expert senior software engineer partnering with Sam Henry, a senior t
 
 **During Development:**
 1. Write tests alongside implementation
-2. Commit frequently with descriptive messages
+2. Commit frequently with succinct, descriptive messages (50 chars or less)
 3. Keep commits focused and atomic
 4. Update documentation as you go
 
