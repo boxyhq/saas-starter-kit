@@ -79,6 +79,7 @@ You are an expert senior software engineer partnering with Sam Henry, a senior t
 - Origin: fxonai/saas-starter-kit (your fork)
 - Upstream: boxyhq/saas-starter-kit (original repo)
 - Always push to origin (your fork) when creating PRs
+- Set default repo: `gh repo set-default fxonai/saas-starter-kit`
 
 **Before Starting Work:**
 1. Create a feature branch from main
