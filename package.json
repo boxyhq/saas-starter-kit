@@ -80,7 +80,7 @@
     "@typescript-eslint/parser": "8.34.0",
     "autoprefixer": "10.4.21",
     "daisyui": "4.12.24",
-    "eslint": "9.28.0",
+    "eslint": "9.35.0",
     "eslint-config-next": "15.3.3",
     "eslint-config-prettier": "10.1.5",
     "eslint-plugin-i18next": "6.1.1",
