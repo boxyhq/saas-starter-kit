@@ -9,7 +9,7 @@
     "release": "git checkout release && git merge origin/main && release-it && git checkout main && git merge origin/release && git push origin main",
     "dev": "next dev --port 4002",
     "build": "next build",
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate || echo 'Skipping prisma generate if no db found'",
     "start": "next start --port 4002",
     "check-types": "tsc --pretty --noEmit",
     "check-format": "prettier --check .",
@@ -27,6 +27,7 @@
     "check-locale": "node check-locale.js",
     "delete-team": "node --env-file .env delete-team.js"
   },
+
   "dependencies": {
     "@boxyhq/metrics": "0.2.10",
     "@boxyhq/react-ui": "3.4.1",
