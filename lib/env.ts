@@ -6,6 +6,9 @@ const env = {
   redirectIfAuthenticated: '/dashboard',
   securityHeadersEnabled: process.env.SECURITY_HEADERS_ENABLED ?? false,
 
+  // Email provider selection
+  emailProvider: process.env.EMAIL_PROVIDER || 'smtp',
+
   // SMTP configuration for NextAuth
   smtp: {
     host: process.env.SMTP_HOST,
@@ -13,6 +16,16 @@ const env = {
     user: process.env.SMTP_USER,
     password: process.env.SMTP_PASSWORD,
     from: process.env.SMTP_FROM,
+  },
+
+  // SendGrid configuration
+  sendgrid: {
+    apiKey: process.env.SENDGRID_API_KEY,
+  },
+
+  // Resend configuration
+  resend: {
+    apiKey: process.env.RESEND_API_KEY,
   },
 
   // NextAuth configuration
