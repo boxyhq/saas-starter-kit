@@ -140,7 +140,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     fields: {
       Name: user.name,
       Email: user.email,
-      Team: userTeam?.name,
+      Team: userTeam?.name || 'No team',
     },
   });
 

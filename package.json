@@ -40,6 +40,7 @@
     "@retracedhq/retraced": "0.7.23",
     "@sendgrid/mail": "^8.1.6",
     "@sentry/nextjs": "9.29.0",
+    "@supabase/supabase-js": "^2.77.0",
     "@tailwindcss/typography": "0.5.16",
     "bcryptjs": "3.0.2",
     "classnames": "2.5.1",
