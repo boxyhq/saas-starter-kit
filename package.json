@@ -6,6 +6,7 @@
     "seed": "ts-node ./prisma/seed.ts"
   },
   "scripts": {
+    "preinstall": "node -e \"if(!/pnpm/.test(process.env.npm_config_user_agent||'')){console.error('This repository uses pnpm. Install: https://pnpm.io/installation'); process.exit(1)}\"",
     "release": "git checkout release && git merge origin/main && release-it && git checkout main && git merge origin/release && git push origin main",
     "dev": "next dev --port 4002",
     "build": "prisma generate && prisma db push && next build",
@@ -13,9 +14,9 @@
     "check-types": "tsc --pretty --noEmit",
     "check-format": "prettier --check .",
     "check-lint": "eslint -c eslint.config.cjs ./",
-    "check-unused": "npx knip",
+    "check-unused": "pnpm dlx knip",
     "format": "prettier --write .",
-    "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
+    "test-all": "pnpm run check-format && pnpm run check-lint && pnpm run check-types && pnpm run build",
     "playwright:update": "playwright install && playwright install-deps",
     "test:e2e": "playwright test -x",
     "test": "jest",
@@ -25,6 +26,10 @@
     "sync-stripe": "node --env-file .env sync-stripe.js",
     "check-locale": "node check-locale.js",
     "delete-team": "node --env-file .env delete-team.js"
+  },
+  "packageManager": "pnpm@9",
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
     "@boxyhq/metrics": "0.2.10",
