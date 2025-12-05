@@ -14,6 +14,7 @@ import env from '@/lib/env';
 import { Theme, applyTheme } from '@/lib/theme';
 import { Themer } from '@boxyhq/react-ui/shared';
 import { AccountLayout } from '@/components/layouts';
+import { SafeBugMailProvider } from '@/components/SafeBugMailProvider';
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const { session, ...props } = pageProps;
@@ -60,7 +61,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             '--primary-color-950': colors.blue['950'],
           }}
         >
-          {getLayout(<Component {...props} />)}
+          <SafeBugMailProvider>
+            {getLayout(<Component {...props} />)}
+          </SafeBugMailProvider>
         </Themer>
       </SessionProvider>
     </>

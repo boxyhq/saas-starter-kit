@@ -196,6 +196,22 @@ The default login options are email and GitHub. Configure below:
 1. Create an account on [Sentry](https://sentry.io/), skip the onboarding and create a new Next.js project.
 2. At the bottom of the page, get the DSN and add it to the `.env` file as `SENTRY_DSN`. The other variables are optional.
 
+### 🐛 BugMail Setup
+
+BugMail is a simple, lightweight alternative to Sentry that captures errors and sends them to your inbox.
+
+1.  **Create an Account:** Go to [BugMail.site](https://bugmail.site) and sign up.
+2.  **Create a Project:** Follow the onboarding steps to create your first project.
+3.  **Get Credentials:** Copy your **API Key** and **Project ID** from the dashboard.
+4.  **Configure Environment:** Add the following to your `.env` file:
+
+    ```bash
+    NEXT_PUBLIC_BUGMAIL_API_KEY=your_api_key_here
+    NEXT_PUBLIC_BUGMAIL_PROJECT_ID=your_project_id_here
+    ```
+
+That's it! Errors will now be captured and sent to your BugMail inbox. If you don't provide these keys, the integration will be automatically disabled.
+
 #### Fully customizable boilerplate out of the box, see images below 👇👇👇
 
 ![saas-starter-kit-poster](/public/saas-starter-kit-poster.png)
