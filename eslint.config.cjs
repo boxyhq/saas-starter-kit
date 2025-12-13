@@ -18,7 +18,8 @@ module.exports = [{
     ignores: [
         ".next",
         "**/node_modules",
-        "eslint.config.cjs"
+        "eslint.config.cjs",
+        "next-env.d.ts"
     ],
 }, ...compat.extends(
     "eslint:recommended",
