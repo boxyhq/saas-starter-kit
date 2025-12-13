@@ -53,7 +53,7 @@
     "nodemailer": "7.0.11",
     "react": "18.3.1",
     "react-daisyui": "5.0.5",
-    "react-dom": "18.3.1",
+    "react-dom": "19.2.3",
     "react-email": "5.0.8",
     "react-google-recaptcha": "3.1.0",
     "react-hot-toast": "2.6.0",
