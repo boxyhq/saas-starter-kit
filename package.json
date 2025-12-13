@@ -93,7 +93,7 @@
     "release-it": "19.0.3",
     "tailwindcss": "3.4.17",
     "ts-node": "10.9.2",
-    "typescript": "5.8.3"
+    "typescript": "5.9.3"
   },
   "overrides": {
     "typeorm": {
