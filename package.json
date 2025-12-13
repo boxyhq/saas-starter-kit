@@ -43,7 +43,7 @@
     "classnames": "2.5.1",
     "cookies-next": "6.0.0",
     "currency-symbol-map": "5.1.0",
-    "formik": "2.4.6",
+    "formik": "2.4.9",
     "i18next": "25.2.1",
     "micromatch": "4.0.8",
     "mixpanel-browser": "2.65.0",
