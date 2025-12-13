@@ -55,8 +55,7 @@ const NavigationItem = ({ menu, className }: NavigationItemProps) => {
       {menu.icon && (
         <menu.icon
           className={classNames({
-            'h-5 w-5 shrink-0 group-hover:text-gray-900 dark:group-hover:text-gray-100':
-              true,
+            'h-5 w-5 shrink-0 group-hover:text-gray-900 dark:group-hover:text-gray-100': true,
             'text-gray-100': menu.active,
           })}
           aria-hidden="true"
