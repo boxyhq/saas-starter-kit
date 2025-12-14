@@ -74,7 +74,7 @@
     "@types/micromatch": "4.0.9",
     "@types/mixpanel-browser": "2.66.0",
     "@types/node": "24.9.2",
-    "@types/nodemailer": "6.4.17",
+    "@types/nodemailer": "7.0.4",
     "@types/react": "18.3.13",
     "@typescript-eslint/eslint-plugin": "8.49.0",
     "@typescript-eslint/parser": "8.49.0",
