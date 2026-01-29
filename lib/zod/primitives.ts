@@ -241,6 +241,21 @@ export const url = z
     return false;
   });
 
+export const webhookUrl = z
+  .string({
+    invalid_type_error: 'URL must be a string',
+  })
+  .url('Enter a valid URL')
+  .min(1, 'URL is required')
+  .max(
+    maxLengthPolicies.domain,
+    `URL should have at most ${maxLengthPolicies.domain} characters`
+  )
+  .refine((url) => {
+    if (!url) return false;
+    return url.startsWith('https://');
+  }, 'Webhook URL must use HTTPS protocol for security');
+
 export const inviteToken = z
   .string({
     required_error: 'Invite token is required',

@@ -65,8 +65,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   );
   const app = await findOrCreateApp(teamMember.team.name, teamMember.team.id);
 
-  // TODO: The endpoint URL must be HTTPS.
-
   const data: EndpointIn = {
     description: name,
     url,
