@@ -251,10 +251,27 @@ export const webhookUrl = z
     maxLengthPolicies.domain,
     `URL should have at most ${maxLengthPolicies.domain} characters`
   )
-  .refine((url) => {
-    if (!url) return false;
-    return url.startsWith('https://');
-  }, 'Webhook URL must use HTTPS protocol for security');
+  .refine(
+    (url) => {
+      try {
+        const parsed = new URL(url);
+        if (parsed.protocol === 'https:') {
+          return true;
+        }
+        // Allow HTTP in non-production (local dev/testing)
+        if (
+          parsed.protocol === 'http:' &&
+          process.env.NODE_ENV !== 'production'
+        ) {
+          return true;
+        }
+        return false;
+      } catch {
+        return false;
+      }
+    },
+    { message: 'Webhook URL must use HTTPS protocol for security' }
+  );
 
 export const inviteToken = z
   .string({

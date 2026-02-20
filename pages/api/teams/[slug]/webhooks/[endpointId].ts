@@ -83,6 +83,27 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   );
 
+  // Block localhost / internal network endpoints in production
+  if (env.appUrl && !env.appUrl.includes('localhost')) {
+    const parsed = new URL(url);
+    const hostname = parsed.hostname;
+    if (
+      hostname === 'localhost' ||
+      hostname === '127.0.0.1' ||
+      hostname === '0.0.0.0' ||
+      hostname === '::1' ||
+      hostname.endsWith('.local') ||
+      hostname.startsWith('10.') ||
+      hostname.startsWith('192.168.') ||
+      /^172\.(1[6-9]|2\d|3[01])\./.test(hostname)
+    ) {
+      throw new ApiError(
+        400,
+        'Webhook URLs pointing to localhost or internal networks are not allowed in production'
+      );
+    }
+  }
+
   const app = await findOrCreateApp(teamMember.team.name, teamMember.team.id);
 
   if (!app) {
