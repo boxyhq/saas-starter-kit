@@ -1,0 +1,81 @@
+import useSWR from 'swr';
+import { useTranslation } from 'next-i18next';
+import { GetServerSidePropsContext } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import env from '@/lib/env';
+import useTeam from 'hooks/useTeam';
+import fetcher from '@/lib/fetcher';
+import { Error, Loading } from '@/components/shared';
+import MdrNavTabs from '@/components/mdr/MdrNavTabs';
+import MdrMemberList from '@/components/mdr/MdrMemberList';
+import MdrInviteForm from '@/components/mdr/MdrInviteForm';
+
+const MdrMembersPage = ({ teamFeatures }) => {
+  const { t } = useTranslation('common');
+  const router = useRouter();
+  const { mdrId } = router.query as { mdrId: string };
+  const { isLoading, isError, team } = useTeam();
+
+  const { data: projectData } = useSWR(
+    team?.slug && mdrId ? `/api/teams/${team.slug}/mdr/${mdrId}` : null,
+    fetcher
+  );
+
+  const { data: membersData, mutate: mutateMembers } = useSWR(
+    team?.slug && mdrId
+      ? `/api/teams/${team.slug}/mdr/${mdrId}/members`
+      : null,
+    fetcher
+  );
+
+  if (isLoading) return <Loading />;
+  if (isError) return <Error message={isError.message} />;
+  if (!team) return <Error message={t('team-not-found')} />;
+
+  const project = projectData?.data;
+  const members = membersData?.data?.members ?? [];
+  const invitations = membersData?.data?.invitations ?? [];
+
+  return (
+    <div className="space-y-6">
+      <MdrNavTabs
+        activeTab="members"
+        teamSlug={team.slug}
+        mdrId={mdrId}
+        projectName={project?.name}
+      />
+
+      <MdrInviteForm
+        teamSlug={team.slug}
+        mdrId={mdrId}
+        onInvited={mutateMembers}
+      />
+
+      <MdrMemberList
+        members={members}
+        invitations={invitations}
+        teamSlug={team.slug}
+        mdrId={mdrId}
+        onUpdate={mutateMembers}
+      />
+    </div>
+  );
+};
+
+export async function getServerSideProps({
+  locale,
+}: GetServerSidePropsContext) {
+  if (!env.teamFeatures.mdr) {
+    return { notFound: true };
+  }
+
+  return {
+    props: {
+      ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
+      teamFeatures: env.teamFeatures,
+    },
+  };
+}
+
+export default MdrMembersPage;

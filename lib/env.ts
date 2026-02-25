@@ -92,6 +92,58 @@ const env = {
 
   darkModeEnabled: process.env.NEXT_PUBLIC_DARK_MODE !== 'false',
 
+  recaptcha: {
+    siteKey: process.env.RECAPTCHA_SITE_KEY || null,
+    secretKey: process.env.RECAPTCHA_SECRET_KEY || null,
+  },
+
+  maxLoginAttempts: Number(process.env.MAX_LOGIN_ATTEMPTS) || 5,
+
+  slackWebhookUrl: process.env.SLACK_WEBHOOK_URL,
+
+  stripe: {
+    secretKey: process.env.STRIPE_SECRET_KEY,
+    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+  },
+
+  // AWS S3 configuration for MDR file storage
+  s3: {
+    bucket: process.env.AWS_S3_BUCKET || '',
+    region: process.env.AWS_REGION || 'us-east-1',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+  },
+
+  // Redis configuration for BullMQ job queues
+  redis: {
+    url: process.env.REDIS_URL || 'redis://localhost:6379',
+  },
+
+  // Gotenberg (DOCX/XLSX → PDF conversion)
+  gotenberg: {
+    url: process.env.GOTENBERG_URL || 'http://localhost:3001',
+  },
+
+  // MDR plan limits — JSON map of Stripe priceId → MDR project quota (-1 = unlimited)
+  mdr: {
+    planLimits: process.env.MDR_PLAN_LIMITS
+      ? (JSON.parse(process.env.MDR_PLAN_LIMITS) as Record<string, number>)
+      : {},
+    defaultLimit: Number(process.env.MDR_DEFAULT_LIMIT) || 1,
+    inboundEmailDomain: process.env.MDR_INBOUND_EMAIL_DOMAIN || '',
+  },
+
+  // Site admin emails (comma-separated)
+  adminEmails: (process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map((e) => e.trim())
+    .filter(Boolean),
+
+  // SendGrid inbound parse webhook secret
+  sendgrid: {
+    inboundWebhookSecret: process.env.SENDGRID_INBOUND_WEBHOOK_SECRET || '',
+  },
+
   teamFeatures: {
     sso: process.env.FEATURE_TEAM_SSO !== 'false',
     dsync: process.env.FEATURE_TEAM_DSYNC !== 'false',
@@ -105,20 +157,7 @@ const env = {
             process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET
           ),
     deleteTeam: process.env.FEATURE_TEAM_DELETION !== 'false',
-  },
-
-  recaptcha: {
-    siteKey: process.env.RECAPTCHA_SITE_KEY || null,
-    secretKey: process.env.RECAPTCHA_SECRET_KEY || null,
-  },
-
-  maxLoginAttempts: Number(process.env.MAX_LOGIN_ATTEMPTS) || 5,
-
-  slackWebhookUrl: process.env.SLACK_WEBHOOK_URL,
-
-  stripe: {
-    secretKey: process.env.STRIPE_SECRET_KEY,
-    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+    mdr: process.env.FEATURE_TEAM_MDR !== 'false',
   },
 };
 

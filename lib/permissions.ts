@@ -11,7 +11,9 @@ export type Resource =
   | 'team_audit_log'
   | 'team_webhook'
   | 'team_payments'
-  | 'team_api_key';
+  | 'team_api_key'
+  | 'mdr'
+  | 'mdr_inbox';
 
 type RolePermissions = {
   [role in RoleType]: Permission[];
@@ -75,6 +77,14 @@ export const permissions: RolePermissions = {
       resource: 'team_api_key',
       actions: '*',
     },
+    {
+      resource: 'mdr',
+      actions: '*',
+    },
+    {
+      resource: 'mdr_inbox',
+      actions: '*',
+    },
   ],
   ADMIN: [
     {
@@ -109,11 +119,23 @@ export const permissions: RolePermissions = {
       resource: 'team_api_key',
       actions: '*',
     },
+    {
+      resource: 'mdr',
+      actions: '*',
+    },
+    {
+      resource: 'mdr_inbox',
+      actions: '*',
+    },
   ],
   MEMBER: [
     {
       resource: 'team',
       actions: ['read', 'leave'],
+    },
+    {
+      resource: 'mdr',
+      actions: ['read'],
     },
   ],
 };

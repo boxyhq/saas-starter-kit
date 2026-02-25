@@ -13,6 +13,60 @@ enum Role {
   MEMBER
 }
 
+// MDR-specific enums
+enum MdrProjectStatus {
+  ACTIVE
+  ARCHIVED
+  FINAL
+}
+
+enum MdrFinalizeOption {
+  KEEP
+  ARCHIVE
+}
+
+enum MdrMemberRole {
+  VIEWER
+  EDITOR
+  ADMIN
+}
+
+enum MdrDocumentStatus {
+  DRAFT
+  FOR_REVIEW
+  APPROVED
+  REJECTED
+  SUPERSEDED
+  VOID
+}
+
+enum MdrTemplateType {
+  COVER
+  DIVIDER
+  BODY
+}
+
+enum MdrCompilationStatus {
+  PENDING
+  PROCESSING
+  COMPLETE
+  FAILED
+}
+
+enum MdrTransmittalPurpose {
+  IFC
+  IFA
+  IFI
+  FOR_REVIEW
+  FOR_APPROVAL
+  FOR_INFORMATION
+}
+
+enum MdrTransmittalStatus {
+  DRAFT
+  ISSUED
+}
+
 model Account {
   id                String  @id @default(uuid())
   userId            String
@@ -62,26 +116,41 @@ model User {
   updatedAt              DateTime  @default(now())
   invalid_login_attempts Int       @default(0)
   lockedAt               DateTime?
+  twoFactorEnabled       Boolean   @default(false)
+  twoFactorSecret        String?
+  suspended              Boolean   @default(false)
 
-  teamMembers TeamMember[]
-  accounts    Account[]
-  sessions    Session[]
-  invitations Invitation[]
+  teamMembers           TeamMember[]
+  accounts              Account[]
+  sessions              Session[]
+  invitations           Invitation[]
+  mdrProjectMemberships MdrProjectMember[]
 }
 
 model Team {
-  id              String       @id @default(uuid())
-  name            String
-  slug            String       @unique
-  domain          String?      @unique
-  defaultRole     Role         @default(MEMBER)
-  billingId       String?
-  billingProvider String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @default(now())
-  members         TeamMember[]
-  invitations     Invitation[]
-  apiKeys         ApiKey[]
+  id                    String    @id @default(uuid())
+  name                  String
+  slug                  String    @unique
+  domain                String?   @unique
+  defaultRole           Role      @default(MEMBER)
+  billingId             String?
+  billingProvider       String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @default(now())
+  mdrQuotaOverride      Int?
+  suspended             Boolean   @default(false)
+  trialEndsAt           DateTime?
+  trialPlanId           String?
+  onboardingDismissedAt DateTime?
+  lastStorageAlertAt    DateTime?
+  lastQuotaAlertAt      DateTime?
+
+  members     TeamMember[]
+  invitations Invitation[]
+  apiKeys     ApiKey[]
+  mdrProjects MdrProject[]
+  mdrInboxes  MdrEmailInbox[]
+  branding    TeamBranding?
 
   @@index([billingId])
 }
@@ -183,6 +252,475 @@ model Price {
 
   service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 }
+
+// ─── MDR Models ─────────────────────────────────────────────────────────────
+
+model MdrProject {
+  id             String             @id @default(uuid())
+  teamId         String
+  name           String
+  description    String?
+  clientName     String?
+  projectNumber  String?
+  discipline     String?
+  status         MdrProjectStatus   @default(ACTIVE)
+  finalizeOption MdrFinalizeOption?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  team         Team                   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  sections     MdrSection[]
+  documents    MdrDocument[]
+  templates    MdrTemplate[]
+  compilations MdrCompilation[]
+  inbox        MdrEmailInbox[]
+  members      MdrProjectMember[]
+  invitations  MdrProjectInvitation[]
+  transmittals MdrTransmittal[]
+  shareLinks   MdrShareLink[]
+
+  @@index([teamId])
+}
+
+model MdrSection {
+  id               String   @id @default(uuid())
+  mdrProjectId     String
+  parentSectionId  String?
+  title            String
+  order            Int      @default(0)
+  docNumberFormat  String?
+  requiredDocCount Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  mdrProject    MdrProject           @relation(fields: [mdrProjectId], references: [id], onDelete: Cascade)
+  parentSection MdrSection?          @relation("SectionChildren", fields: [parentSectionId], references: [id])
+  children      MdrSection[]         @relation("SectionChildren")
+  documentLinks MdrSectionDocument[]
+  templates     MdrTemplate[]
+
+  @@index([mdrProjectId])
+}
+
+model MdrDocument {
+  id           String            @id @default(uuid())
+  mdrProjectId String
+  teamId       String
+  title        String
+  docNumber    String
+  discipline   String?
+  revision     String?           @default("0")
+  status       MdrDocumentStatus @default(DRAFT)
+  s3Key        String
+  pdfS3Key     String?
+  sha256Hash   String?
+  fileSize     BigInt
+  mimeType     String
+  originalName String
+  docDate      DateTime?
+  uploadedBy   String?
+  uploadedAt   DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  mdrProject       MdrProject               @relation(fields: [mdrProjectId], references: [id], onDelete: Cascade)
+  sectionLinks     MdrSectionDocument[]
+  versions         MdrDocumentVersion[]
+  transmittalLinks MdrTransmittalDocument[]
+  inboxAttachments MdrInboxAttachment[]
+
+  @@index([mdrProjectId])
+  @@index([teamId])
+  @@index([sha256Hash])
+}
+
+model MdrDocumentVersion {
+  id           String            @id @default(uuid())
+  documentId   String
+  revision     String
+  s3Key        String
+  pdfS3Key     String?
+  fileSize     BigInt
+  mimeType     String
+  originalName String
+  status       MdrDocumentStatus
+  uploadedBy   String?
+  changeNote   String?
+  purgedAt     DateTime?
+  uploadedAt   DateTime          @default(now())
+
+  document MdrDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+}
+
+model MdrSectionDocument {
+  id         String   @id @default(uuid())
+  sectionId  String
+  documentId String
+  order      Int      @default(0)
+  addedAt    DateTime @default(now())
+
+  section  MdrSection  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  document MdrDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([sectionId, documentId])
+  @@index([sectionId])
+  @@index([documentId])
+}
+
+model MdrTransmittal {
+  id                String                @id @default(uuid())
+  mdrProjectId      String
+  transmittalNumber String
+  purpose           MdrTransmittalPurpose @default(FOR_INFORMATION)
+  status            MdrTransmittalStatus  @default(DRAFT)
+  toName            String?
+  toEmail           String?
+  fromName          String?
+  notes             String?               @db.Text
+  coverSheetS3Key   String?
+  issuedAt          DateTime?
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+
+  mdrProject MdrProject               @relation(fields: [mdrProjectId], references: [id], onDelete: Cascade)
+  documents  MdrTransmittalDocument[]
+
+  @@index([mdrProjectId])
+}
+
+model MdrTransmittalDocument {
+  id              String @id @default(uuid())
+  transmittalId   String
+  documentId      String
+  revisionAtIssue String
+
+  transmittal MdrTransmittal @relation(fields: [transmittalId], references: [id], onDelete: Cascade)
+  document    MdrDocument    @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([transmittalId, documentId])
+  @@index([transmittalId])
+}
+
+model MdrShareLink {
+  id            String   @id @default(uuid())
+  mdrProjectId  String
+  compilationId String
+  token         String   @unique @default(uuid())
+  passwordHash  String?
+  expiresAt     DateTime
+  maxDownloads  Int?
+  downloadCount Int      @default(0)
+  createdBy     String
+  createdAt     DateTime @default(now())
+
+  mdrProject  MdrProject           @relation(fields: [mdrProjectId], references: [id], onDelete: Cascade)
+  compilation MdrCompilation       @relation(fields: [compilationId], references: [id], onDelete: Cascade)
+  accesses    MdrShareLinkAccess[]
+
+  @@index([token])
+  @@index([mdrProjectId])
+}
+
+model MdrShareLinkAccess {
+  id          String   @id @default(uuid())
+  shareLinkId String
+  ip          String?
+  userAgent   String?
+  accessedAt  DateTime @default(now())
+
+  shareLink MdrShareLink @relation(fields: [shareLinkId], references: [id], onDelete: Cascade)
+
+  @@index([shareLinkId])
+}
+
+model TeamBranding {
+  id             String   @id @default(uuid())
+  teamId         String   @unique
+  logoS3Key      String?
+  logoPlacements String?
+  primaryColor   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+model MdrTemplate {
+  id           String          @id @default(uuid())
+  mdrProjectId String
+  mdrSectionId String?
+  title        String
+  s3Key        String
+  fileSize     BigInt
+  mimeType     String
+  purpose      MdrTemplateType @default(BODY)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  mdrProject MdrProject  @relation(fields: [mdrProjectId], references: [id], onDelete: Cascade)
+  mdrSection MdrSection? @relation(fields: [mdrSectionId], references: [id], onDelete: SetNull)
+
+  @@index([mdrProjectId])
+}
+
+model MdrProjectMember {
+  id           String        @id @default(uuid())
+  mdrProjectId String
+  userId       String
+  role         MdrMemberRole @default(EDITOR)
+  invitedBy    String?
+  joinedAt     DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  mdrProject MdrProject @relation(fields: [mdrProjectId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([mdrProjectId, userId])
+  @@index([mdrProjectId])
+}
+
+model MdrProjectInvitation {
+  id           String        @id @default(uuid())
+  mdrProjectId String
+  email        String
+  role         MdrMemberRole @default(EDITOR)
+  token        String        @unique @default(uuid())
+  invitedBy    String
+  expiresAt    DateTime
+  acceptedAt   DateTime?
+  createdAt    DateTime      @default(now())
+
+  mdrProject MdrProject @relation(fields: [mdrProjectId], references: [id], onDelete: Cascade)
+
+  @@index([mdrProjectId])
+  @@index([token])
+}
+
+model MdrCompilation {
+  id           String               @id @default(uuid())
+  mdrProjectId String
+  status       MdrCompilationStatus @default(PENDING)
+  s3Key        String?
+  jobId        String?
+  errorMessage String?
+  fileSize     BigInt?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  mdrProject MdrProject     @relation(fields: [mdrProjectId], references: [id], onDelete: Cascade)
+  shareLinks MdrShareLink[]
+
+  @@index([mdrProjectId])
+}
+
+model MdrEmailInbox {
+  id           String   @id @default(uuid())
+  teamId       String
+  mdrProjectId String?
+  emailAddress String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  team       Team            @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  mdrProject MdrProject?     @relation(fields: [mdrProjectId], references: [id], onDelete: SetNull)
+  emails     MdrInboxEmail[]
+
+  @@index([teamId])
+}
+
+model MdrInboxEmail {
+  id         String   @id @default(uuid())
+  inboxId    String
+  fromEmail  String
+  fromName   String?
+  subject    String?
+  bodyText   String?  @db.Text
+  s3KeyRaw   String?
+  receivedAt DateTime @default(now())
+
+  inbox       MdrEmailInbox        @relation(fields: [inboxId], references: [id], onDelete: Cascade)
+  attachments MdrInboxAttachment[]
+
+  @@index([inboxId])
+}
+
+model MdrInboxAttachment {
+  id            String    @id @default(uuid())
+  inboxEmailId  String
+  mdrDocumentId String?
+  filename      String
+  s3Key         String
+  fileSize      BigInt
+  mimeType      String
+  routedAt      DateTime?
+  createdAt     DateTime  @default(now())
+
+  inboxEmail  MdrInboxEmail @relation(fields: [inboxEmailId], references: [id], onDelete: Cascade)
+  mdrDocument MdrDocument?  @relation(fields: [mdrDocumentId], references: [id], onDelete: SetNull)
+
+  @@index([inboxEmailId])
+}
+
+// ─── Admin Impersonation ────────────────────────────────────────────────────
+
+model AdminImpersonation {
+  id           String    @id @default(uuid())
+  adminUserId  String
+  targetUserId String
+  token        String    @unique @default(uuid())
+  expiresAt    DateTime
+  usedAt       DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+// ─── Subscription Plans & Feature Matrix ───────────────────────────────────
+
+model SubscriptionPlan {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  stripeProductId String?
+  stripePriceId   String?
+  sortOrder       Int      @default(0)
+  isActive        Boolean  @default(true)
+  isDefault       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  features PlanFeature[]
+}
+
+model PlanFeature {
+  id      String  @id @default(uuid())
+  planId  String
+  feature String
+  enabled Boolean @default(false)
+  limit   Int?
+
+  plan SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([planId, feature])
+  @@index([planId])
+}
+
+// ─── Help Centre ────────────────────────────────────────────────────────────
+
+enum HelpArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model HelpCategory {
+  id          String   @id @default(uuid())
+  parentId    String?
+  slug        String   @unique
+  title       String
+  description String?
+  icon        String?
+  order       Int      @default(0)
+  planFeature String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  parent   HelpCategory?  @relation("SubCategories", fields: [parentId], references: [id])
+  children HelpCategory[] @relation("SubCategories")
+  articles HelpArticle[]
+
+  @@index([parentId])
+}
+
+model HelpArticle {
+  id          String            @id @default(uuid())
+  categoryId  String
+  slug        String            @unique
+  title       String
+  excerpt     String?
+  content     Json
+  status      HelpArticleStatus @default(DRAFT)
+  planFeature String?
+  pageContext String?
+  helpful     Int               @default(0)
+  notHelpful  Int               @default(0)
+  views       Int               @default(0)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  category HelpCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+  @@index([status])
+}
+
+// ─── CMS ────────────────────────────────────────────────────────────────────
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum PageTemplate {
+  HOME
+  ABOUT
+  FEATURES
+  PRICING
+  BLOG_POST
+  GENERIC
+}
+
+model Page {
+  id          String       @id @default(uuid())
+  slug        String       @unique
+  title       String
+  template    PageTemplate @default(GENERIC)
+  status      PageStatus   @default(DRAFT)
+  seoTitle    String?
+  seoDesc     String?
+  publishedAt DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  sections PageSection[]
+}
+
+model PageSection {
+  id        String   @id @default(uuid())
+  pageId    String
+  type      String
+  content   Json
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId])
+}
+
+model MediaAsset {
+  id         String   @id @default(uuid())
+  filename   String
+  s3Key      String   @unique
+  mimeType   String
+  fileSize   BigInt
+  width      Int?
+  height     Int?
+  alt        String?
+  uploadedBy String
+  createdAt  DateTime @default(now())
+
+  @@index([uploadedBy])
+}
+
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Jackson (SAML) ─────────────────────────────────────────────────────────
 
 model jackson_store {
   key        String    @id(map: "_jackson_store_key") @db.VarChar(1500)

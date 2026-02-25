@@ -73,4 +73,5 @@ export interface TeamFeature {
   apiKey: boolean;
   payments: boolean;
   deleteTeam: boolean;
+  mdr: boolean;
 }
