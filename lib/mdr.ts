@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
 import env from '@/lib/env';
 import { MdrMemberRole, Role } from '@prisma/client';
+import { checkLimit } from './planFeatures';
 
 /**
  * Get the MDR project quota for a team.
@@ -37,22 +38,13 @@ export async function getMdrQuota(teamId: string): Promise<number> {
 
 /**
  * Check if a team can create more MDR projects. Throws ApiError(402) if at limit.
+ * Uses the DB-backed plan feature matrix (SubscriptionPlan + PlanFeature).
  */
 export async function checkMdrQuota(teamId: string): Promise<void> {
-  const quota = await getMdrQuota(teamId);
-
-  if (quota === -1) return; // unlimited
-
   const count = await prisma.mdrProject.count({
     where: { teamId, status: { not: 'FINAL' } },
   });
-
-  if (count >= quota) {
-    throw new ApiError(
-      402,
-      `You have reached the maximum number of MDR projects (${quota}) on your current plan. Please upgrade to create more.`
-    );
-  }
+  await checkLimit(teamId, 'mdr_projects', count);
 }
 
 /**

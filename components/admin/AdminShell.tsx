@@ -8,12 +8,14 @@ import {
   BuildingOfficeIcon,
   CpuChipIcon,
   ShieldExclamationIcon,
+  CreditCardIcon,
 } from '@heroicons/react/24/outline';
 
 const adminNav = [
   { label: 'Dashboard', href: '/admin', icon: ChartBarIcon },
   { label: 'Users', href: '/admin/users', icon: UsersIcon },
   { label: 'Teams', href: '/admin/teams', icon: BuildingOfficeIcon },
+  { label: 'Plans', href: '/admin/plans', icon: CreditCardIcon },
   { label: 'Jobs', href: '/admin/jobs', icon: CpuChipIcon },
 ];
 
