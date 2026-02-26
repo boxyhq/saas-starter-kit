@@ -6,6 +6,9 @@ import { ApiError } from '@/lib/errors';
 import { assertMdrOwnership, assertTeamNotSuspended } from '@/lib/mdr';
 import { mdrAuditEvent } from '@/lib/mdrAudit';
 import env from '@/lib/env';
+import { s3Client, mdrTransmittalCoverSheetKey } from '@/lib/s3';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { generateTransmittalCoverSheet } from '@/lib/mdrTransmittalCoverSheet';
 
 /**
  * POST /api/teams/[slug]/mdr/[mdrId]/transmittals/[transmittalId]/issue
@@ -39,7 +42,14 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     where: { id: transmittalId, mdrProjectId: mdrId },
     include: {
       documents: { include: { document: true } },
-      mdrProject: { select: { name: true, projectNumber: true } },
+      mdrProject: {
+        select: {
+          name: true,
+          projectNumber: true,
+          clientName: true,
+          team: { include: { branding: true } },
+        },
+      },
     },
   });
   if (!transmittal) throw new ApiError(404, 'Transmittal not found');
@@ -58,10 +68,57 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     )
   );
 
+  const issuedAt = new Date();
+
+  // Generate branded PDF cover sheet (non-fatal — issue proceeds even on PDF error)
+  let coverSheetS3Key: string | undefined;
+  try {
+    const pdfBuffer = await generateTransmittalCoverSheet({
+      transmittalNumber: transmittal.transmittalNumber,
+      purpose: transmittal.purpose,
+      toName: transmittal.toName,
+      toEmail: transmittal.toEmail,
+      fromName: transmittal.fromName,
+      notes: transmittal.notes,
+      issuedAt,
+      projectName: transmittal.mdrProject.name,
+      projectNumber: transmittal.mdrProject.projectNumber,
+      clientName: transmittal.mdrProject.clientName,
+      documents: transmittal.documents.map((td) => ({
+        docNumber: td.document.docNumber,
+        title: td.document.title,
+        discipline: td.document.discipline,
+        revisionAtIssue: td.document.revision ?? '0',
+      })),
+      branding: transmittal.mdrProject.team.branding ?? null,
+    });
+
+    coverSheetS3Key = mdrTransmittalCoverSheetKey(
+      user.team.id,
+      mdrId,
+      transmittalId
+    );
+
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: env.s3.bucket,
+        Key: coverSheetS3Key,
+        Body: pdfBuffer,
+        ContentType: 'application/pdf',
+      })
+    );
+  } catch (pdfErr) {
+    console.error('Cover sheet generation failed (non-fatal):', pdfErr);
+  }
+
   // Issue the transmittal
   const issued = await prisma.mdrTransmittal.update({
     where: { id: transmittalId },
-    data: { status: 'ISSUED', issuedAt: new Date() },
+    data: {
+      status: 'ISSUED',
+      issuedAt,
+      ...(coverSheetS3Key ? { coverSheetS3Key } : {}),
+    },
   });
 
   await mdrAuditEvent(

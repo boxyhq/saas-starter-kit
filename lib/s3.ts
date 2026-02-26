@@ -132,6 +132,14 @@ export function mdrLogoKey(teamId: string, filename: string): string {
   return `teams/${teamId}/branding/logo/${filename}`;
 }
 
+export function mdrTransmittalCoverSheetKey(
+  teamId: string,
+  mdrId: string,
+  transmittalId: string
+): string {
+  return `teams/${teamId}/mdr/${mdrId}/transmittals/${transmittalId}/cover-sheet.pdf`;
+}
+
 export function mediaAssetKey(assetId: string, filename: string): string {
   return `media/${assetId}/${filename}`;
 }

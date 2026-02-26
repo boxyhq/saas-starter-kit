@@ -13,7 +13,7 @@ import fetcher from '@/lib/fetcher';
 import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrNavTabs from '@/components/mdr/MdrNavTabs';
 import { Button, Modal, Input, Select, Textarea, Badge } from 'react-daisyui';
-import { PlusIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PaperAirplaneIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 
 const purposeLabels: Record<string, string> = {
   IFC: 'IFC – Issued for Construction',
@@ -34,6 +34,7 @@ const MdrTransmittalsPage = ({ teamFeatures }) => {
   const { isLoading, isError, team } = useTeam();
   const [showCreate, setShowCreate] = useState(false);
   const [issuing, setIssuing] = useState<string | null>(null);
+  const [downloadingCover, setDownloadingCover] = useState<string | null>(null);
 
   const { data: projectData } = useSWR(
     team?.slug && mdrId ? `/api/teams/${team.slug}/mdr/${mdrId}` : null,
@@ -97,6 +98,22 @@ const MdrTransmittalsPage = ({ teamFeatures }) => {
       toast.error(err.message);
     } finally {
       setIssuing(null);
+    }
+  };
+
+  const handleDownloadCoverSheet = async (transmittalId: string) => {
+    setDownloadingCover(transmittalId);
+    try {
+      const res = await fetch(
+        `/api/teams/${team!.slug}/mdr/${mdrId}/transmittals/${transmittalId}/cover-sheet`
+      );
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error?.message || 'Failed to get download URL');
+      window.open(json.data.url, '_blank');
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setDownloadingCover(null);
     }
   };
 
@@ -175,7 +192,16 @@ const MdrTransmittalsPage = ({ teamFeatures }) => {
                       </Button>
                     )}
                     {tr.status === 'ISSUED' && tr.coverSheetS3Key && (
-                      <span className="text-xs text-success">PDF ready</span>
+                      <Button
+                        size="xs"
+                        color="ghost"
+                        onClick={() => handleDownloadCoverSheet(tr.id)}
+                        disabled={downloadingCover === tr.id}
+                        loading={downloadingCover === tr.id}
+                      >
+                        <ArrowDownTrayIcon className="h-3 w-3 mr-1" />
+                        Cover Sheet
+                      </Button>
                     )}
                   </td>
                 </tr>
