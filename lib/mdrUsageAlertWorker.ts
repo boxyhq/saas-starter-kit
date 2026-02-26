@@ -12,9 +12,36 @@ import { Worker, Queue } from 'bullmq';
 import { Role } from '@prisma/client';
 import { prisma } from './prisma';
 import { redisConnection, usageAlertQueue } from './mdrQueue';
-import { getMdrQuota } from './mdr';
 import { sendEmail } from './email/sendEmail';
+import env from './env';
 import app from './app';
+
+/**
+ * Inline quota resolver — mirrors lib/mdr.ts getMdrQuota() but uses only
+ * relative imports so it's safe to run under ts-node --transpile-only
+ * (which cannot resolve @/ path aliases at runtime).
+ */
+async function getTeamMdrQuota(teamId: string): Promise<number> {
+  const team = await prisma.team.findUnique({
+    where: { id: teamId },
+    select: { mdrQuotaOverride: true, billingId: true },
+  });
+  if (!team) return env.mdr.defaultLimit;
+  if (team.mdrQuotaOverride !== null && team.mdrQuotaOverride !== undefined) {
+    return team.mdrQuotaOverride;
+  }
+  if (team.billingId) {
+    const sub = await prisma.subscription.findFirst({
+      where: { customerId: team.billingId, active: true },
+      select: { priceId: true },
+    });
+    if (sub?.priceId) {
+      const planLimit = env.mdr.planLimits[sub.priceId];
+      if (planLimit !== undefined) return planLimit;
+    }
+  }
+  return env.mdr.defaultLimit;
+}
 
 const ALERT_THRESHOLD = 0.8;
 const ALERT_COOLDOWN_DAYS = 7;
@@ -41,7 +68,7 @@ async function checkTeamUsage(teamId: string): Promise<void> {
     if (daysSinceAlert < ALERT_COOLDOWN_DAYS) return;
   }
 
-  const quota = await getMdrQuota(teamId);
+  const quota = await getTeamMdrQuota(teamId);
   if (quota === -1) return; // unlimited — no alert needed
 
   const activeCount = await prisma.mdrProject.count({
