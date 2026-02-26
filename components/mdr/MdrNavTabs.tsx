@@ -11,7 +11,8 @@ interface MdrNavTabsProps {
     | 'transmittals'
     | 'share'
     | 'inbox'
-    | 'templates';
+    | 'templates'
+    | 'branding';
   teamSlug: string;
   mdrId: string;
   projectName?: string;

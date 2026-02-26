@@ -55,7 +55,6 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
         orderBy: { createdAt: 'desc' },
         take: 1,
       },
-      branding: false,
     },
   });
 

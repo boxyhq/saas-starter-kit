@@ -1,5 +1,10 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
+
+type PlanWithFeatures = Prisma.SubscriptionPlanGetPayload<{
+  include: { features: true };
+}>;
 
 /**
  * Get a plan feature for a team.
@@ -30,7 +35,7 @@ export async function getPlanFeature(
   }
 
   // Find the matching plan (by stripePriceId or isDefault)
-  let plan = null;
+  let plan: PlanWithFeatures | null = null;
 
   if (stripePriceId) {
     plan = await prisma.subscriptionPlan.findFirst({

@@ -11,7 +11,7 @@ export async function convertToPdf(
   filename: string
 ): Promise<Buffer> {
   const formData = new FormData();
-  const blob = new Blob([buffer], { type: 'application/octet-stream' });
+  const blob = new Blob([new Uint8Array(buffer)], { type: 'application/octet-stream' });
   formData.append('files', blob, filename);
 
   const response = await fetch(
