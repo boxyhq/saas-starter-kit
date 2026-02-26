@@ -49,6 +49,11 @@ const MdrNavTabs = ({
       label: t('mdr-templates'),
       href: `${base}/templates`,
     },
+    {
+      key: 'branding',
+      label: t('mdr-branding'),
+      href: `${base}/branding`,
+    },
   ];
 
   return (
