@@ -1,4 +1,4 @@
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import { TeamTab } from '@/components/team';
 import { ConnectionsWrapper } from '@boxyhq/react-ui/sso';
 import useTeam from 'hooks/useTeam';
@@ -19,11 +19,11 @@ const TeamSSO = ({ teamFeatures, SPConfigURL }) => {
   }
 
   if (isError) {
-    return <Error message={isError.message} />;
+    return <ErrorPanel message={isError.message} />;
   }
 
   if (!team) {
-    return <Error message={t('team-not-found')} />;
+    return <ErrorPanel message={t('team-not-found')} />;
   }
 
   return (

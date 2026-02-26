@@ -1,5 +1,5 @@
 import { Card } from '@/components/shared';
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import { TeamTab } from '@/components/team';
 import env from '@/lib/env';
 import { inferSSRProps } from '@/lib/inferSSRProps';
@@ -43,11 +43,11 @@ const Events: NextPageWithLayout<inferSSRProps<typeof getServerSideProps>> = ({
   }
 
   if (isError || error) {
-    return <Error message={isError?.message || error?.message} />;
+    return <ErrorPanel message={isError?.message || error?.message} />;
   }
 
   if (!team) {
-    return <Error message={t('team-not-found')} />;
+    return <ErrorPanel message={t('team-not-found')} />;
   }
 
   return (

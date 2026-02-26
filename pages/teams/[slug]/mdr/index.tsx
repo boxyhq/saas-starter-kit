@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrProjectCard from '@/components/mdr/MdrProjectCard';
 import { Button } from 'react-daisyui';
 import { PlusIcon } from '@heroicons/react/24/outline';
@@ -23,8 +23,8 @@ const MdrProjectsPage = ({ teamFeatures }) => {
   );
 
   if (isLoading) return <Loading />;
-  if (isError) return <Error message={isError.message} />;
-  if (!team) return <Error message={t('team-not-found')} />;
+  if (isError) return <ErrorPanel message={isError.message} />;
+  if (!team) return <ErrorPanel message={t('team-not-found')} />;
 
   const projects = data?.data ?? [];
 

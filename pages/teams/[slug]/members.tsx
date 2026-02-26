@@ -1,5 +1,5 @@
 import { PendingInvitations } from '@/components/invitation';
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import { Members, TeamTab } from '@/components/team';
 import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
@@ -16,11 +16,11 @@ const TeamMembers = ({ teamFeatures }) => {
   }
 
   if (isError) {
-    return <Error message={isError.message} />;
+    return <ErrorPanel message={isError.message} />;
   }
 
   if (!team) {
-    return <Error message={t('team-not-found')} />;
+    return <ErrorPanel message={t('team-not-found')} />;
   }
 
   return (

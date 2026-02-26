@@ -5,7 +5,7 @@ import { getAuthOptions } from '@/lib/nextAuth';
 import fetcher from '@/lib/fetcher';
 import AdminShell from '@/components/admin/AdminShell';
 import KpiCard from '@/components/admin/KpiCard';
-import { Loading, Error } from '@/components/shared';
+import { Loading, Error as ErrorPanel } from '@/components/shared';
 import env from '@/lib/env';
 
 const formatBytes = (bytes: number) => {
@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   return (
     <AdminShell title="Admin Dashboard">
       {isLoading && <Loading />}
-      {error && <Error message={error.message} />}
+      {error && <ErrorPanel message={error.message} />}
       {stats && (
         <div className="space-y-8">
           <div>
@@ -70,7 +70,7 @@ const AdminDashboard = () => {
 };
 
 export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
-  const session = await getServerSession(req, res, getAuthOptions());
+  const session = await getServerSession(req, res, getAuthOptions(req, res));
   if (!session) return { redirect: { destination: '/auth/login', permanent: false } };
 
   const adminEmails = env.adminEmails;

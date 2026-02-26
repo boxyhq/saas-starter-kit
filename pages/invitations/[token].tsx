@@ -8,7 +8,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import useInvitation from 'hooks/useInvitation';
 import { AuthLayout } from '@/components/layouts';
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import { extractEmailDomain } from '@/lib/email/utils';
 import EmailMismatch from '@/components/invitation/EmailMismatch';
 import AcceptInvitation from '@/components/invitation/AcceptInvitation';
@@ -25,7 +25,7 @@ const AcceptTeamInvitation: NextPageWithLayout = () => {
   }
 
   if (error || !invitation) {
-    return <Error message={error.message} />;
+    return <ErrorPanel message={error.message} />;
   }
 
   const authUser = data?.user;

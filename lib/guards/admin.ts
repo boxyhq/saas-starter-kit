@@ -10,7 +10,7 @@ import env from '@/lib/env';
  * Admin emails are configured via the ADMIN_EMAILS environment variable.
  */
 export async function requireSiteAdmin(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, getAuthOptions());
+  const session = await getServerSession(req, res, getAuthOptions(req, res));
   if (!session?.user?.id) {
     throw new ApiError(401, 'Unauthorized');
   }

@@ -1,4 +1,4 @@
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import type { Team } from '@prisma/client';
 import type { FormikHelpers } from 'formik';
 import useWebhook from 'hooks/useWebhook';
@@ -33,7 +33,7 @@ const EditWebhook = ({
   }
 
   if (isError) {
-    return <Error message={isError.message} />;
+    return <ErrorPanel message={isError.message} />;
   }
 
   const onSubmit = async (

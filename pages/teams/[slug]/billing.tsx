@@ -9,7 +9,7 @@ import fetcher from '@/lib/fetcher';
 import useCanAccess from 'hooks/useCanAccess';
 import { TeamTab } from '@/components/team';
 import Help from '@/components/billing/Help';
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import LinkToPortal from '@/components/billing/LinkToPortal';
 import Subscriptions from '@/components/billing/Subscriptions';
 import ProductPricing from '@/components/billing/ProductPricing';
@@ -28,11 +28,11 @@ const Payments = ({ teamFeatures }) => {
   }
 
   if (isError) {
-    return <Error message={isError.message} />;
+    return <ErrorPanel message={isError.message} />;
   }
 
   if (!team) {
-    return <Error message={t('team-not-found')} />;
+    return <ErrorPanel message={t('team-not-found')} />;
   }
 
   const plans = data?.data?.products || [];

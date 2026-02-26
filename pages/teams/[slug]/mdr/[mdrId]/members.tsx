@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrNavTabs from '@/components/mdr/MdrNavTabs';
 import MdrMemberList from '@/components/mdr/MdrMemberList';
 import MdrInviteForm from '@/components/mdr/MdrInviteForm';
@@ -30,8 +30,8 @@ const MdrMembersPage = ({ teamFeatures }) => {
   );
 
   if (isLoading) return <Loading />;
-  if (isError) return <Error message={isError.message} />;
-  if (!team) return <Error message={t('team-not-found')} />;
+  if (isError) return <ErrorPanel message={isError.message} />;
+  if (!team) return <ErrorPanel message={t('team-not-found')} />;
 
   const project = projectData?.data;
   const members = membersData?.data?.members ?? [];

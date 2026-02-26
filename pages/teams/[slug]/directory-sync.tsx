@@ -1,4 +1,4 @@
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import { TeamTab } from '@/components/team';
 import useTeam from 'hooks/useTeam';
 import { GetServerSidePropsContext } from 'next';
@@ -18,11 +18,11 @@ const DirectorySync = ({ teamFeatures }) => {
   }
 
   if (isError) {
-    return <Error message={isError.message} />;
+    return <ErrorPanel message={isError.message} />;
   }
 
   if (!team) {
-    return <Error message={t('team-not-found')} />;
+    return <ErrorPanel message={t('team-not-found')} />;
   }
 
   return (

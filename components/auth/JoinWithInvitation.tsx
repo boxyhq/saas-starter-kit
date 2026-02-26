@@ -1,5 +1,5 @@
 import {
-  Error,
+  Error as ErrorPanel,
   InputWithLabel,
   Loading,
   WithLoadingAndError,
@@ -100,7 +100,7 @@ const JoinWithInvitation = ({
   }
 
   if (error || !invitation) {
-    return <Error message={error.message} />;
+    return <ErrorPanel message={error.message} />;
   }
 
   return (

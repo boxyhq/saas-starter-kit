@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrNavTabs from '@/components/mdr/MdrNavTabs';
 import MdrSectionTree from '@/components/mdr/MdrSectionTree';
 
@@ -35,8 +35,8 @@ const MdrStructurePage = ({ teamFeatures }) => {
   );
 
   if (isLoading) return <Loading />;
-  if (isError) return <Error message={isError.message} />;
-  if (!team) return <Error message={t('team-not-found')} />;
+  if (isError) return <ErrorPanel message={isError.message} />;
+  if (!team) return <ErrorPanel message={t('team-not-found')} />;
 
   const project = projectData?.data;
   const sections = sectionsData?.data ?? [];

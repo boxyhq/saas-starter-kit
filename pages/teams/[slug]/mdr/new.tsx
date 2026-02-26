@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import toast from 'react-hot-toast';
 import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import { Button, Input, Textarea } from 'react-daisyui';
 
 const validationSchema = Yup.object({
@@ -24,8 +24,8 @@ const NewMdrProjectPage = ({ teamFeatures }) => {
   const { isLoading, isError, team } = useTeam();
 
   if (isLoading) return <Loading />;
-  if (isError) return <Error message={isError.message} />;
-  if (!team) return <Error message={t('team-not-found')} />;
+  if (isError) return <ErrorPanel message={isError.message} />;
+  if (!team) return <ErrorPanel message={t('team-not-found')} />;
 
   const handleSubmit = async (values: any) => {
     const res = await fetch(`/api/teams/${team.slug}/mdr`, {

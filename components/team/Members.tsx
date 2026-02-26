@@ -1,4 +1,4 @@
-import { Error, LetterAvatar, Loading } from '@/components/shared';
+import { Error as ErrorPanel, LetterAvatar, Loading } from '@/components/shared';
 import { Team, TeamMember } from '@prisma/client';
 import useCanAccess from 'hooks/useCanAccess';
 import useTeamMembers, { TeamMemberWithUser } from 'hooks/useTeamMembers';
@@ -34,7 +34,7 @@ const Members = ({ team }: { team: Team }) => {
   }
 
   if (isError) {
-    return <Error message={isError.message} />;
+    return <ErrorPanel message={isError.message} />;
   }
 
   if (!members) {

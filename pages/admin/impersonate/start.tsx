@@ -19,7 +19,7 @@ export async function getServerSideProps({ req, res, query }: GetServerSideProps
   const { token } = query as { token: string };
   if (!token) return { redirect: { destination: '/admin', permanent: false } };
 
-  const session = await getServerSession(req, res, getAuthOptions());
+  const session = await getServerSession(req, res, getAuthOptions(req, res));
   if (!session?.user?.id) {
     return { redirect: { destination: '/auth/login', permanent: false } };
   }

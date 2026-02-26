@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(405).json({ error: { message: `Method ${req.method} Not Allowed` } });
     }
 
-    const session = await getServerSession(req, res, getAuthOptions());
+    const session = await getServerSession(req, res, getAuthOptions(req, res));
     if (!session) throw new ApiError(401, 'Unauthorized');
 
     const { impersonationToken } = session as any;

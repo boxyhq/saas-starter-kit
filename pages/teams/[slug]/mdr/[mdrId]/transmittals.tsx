@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrNavTabs from '@/components/mdr/MdrNavTabs';
 import { Button, Modal, Input, Select, Textarea, Badge } from 'react-daisyui';
 import { PlusIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
@@ -101,8 +101,8 @@ const MdrTransmittalsPage = ({ teamFeatures }) => {
   };
 
   if (isLoading) return <Loading />;
-  if (isError) return <Error message={isError.message} />;
-  if (!team) return <Error message={t('team-not-found')} />;
+  if (isError) return <ErrorPanel message={isError.message} />;
+  if (!team) return <ErrorPanel message={t('team-not-found')} />;
 
   const project = projectData?.data;
   const transmittals = transmittalsData?.data ?? [];
@@ -186,7 +186,7 @@ const MdrTransmittalsPage = ({ teamFeatures }) => {
       </div>
 
       {/* Create transmittal modal */}
-      <Modal open={showCreate} onClickBackdrop={() => setShowCreate(false)}>
+      <Modal.Legacy open={showCreate} onClickBackdrop={() => setShowCreate(false)}>
         <Modal.Header className="font-bold">New Transmittal</Modal.Header>
         <Modal.Body>
           <form onSubmit={formik.handleSubmit} className="space-y-4">
@@ -243,7 +243,7 @@ const MdrTransmittalsPage = ({ teamFeatures }) => {
             Create
           </Button>
         </Modal.Actions>
-      </Modal>
+      </Modal.Legacy>
     </div>
   );
 };

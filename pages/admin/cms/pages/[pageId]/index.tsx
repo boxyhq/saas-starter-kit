@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import fetcher from '@/lib/fetcher';
 import AdminShell from '@/components/admin/AdminShell';
 import SectionEditorModal from '@/components/cms/sections/SectionEditorModal';
-import { Loading, Error } from '@/components/shared';
+import { Loading, Error as ErrorPanel } from '@/components/shared';
 import { Button, Input, Modal, Select } from 'react-daisyui';
 import {
   PlusIcon, TrashIcon, PencilSquareIcon, ArrowUpIcon, ArrowDownIcon,
@@ -140,7 +140,7 @@ const AdminPageEditor = () => {
   };
 
   if (isLoading) return <AdminShell><Loading /></AdminShell>;
-  if (error) return <AdminShell><Error message={error.message} /></AdminShell>;
+  if (error) return <AdminShell><ErrorPanel message={error.message} /></AdminShell>;
 
   const sections = page?.sections ?? [];
   const isPublished = page?.status === 'PUBLISHED';
@@ -292,7 +292,7 @@ const AdminPageEditor = () => {
 };
 
 export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
-  const session = await getServerSession(req, res, getAuthOptions());
+  const session = await getServerSession(req, res, getAuthOptions(req, res));
   if (!session) return { redirect: { destination: '/auth/login', permanent: false } };
   const adminEmails = env.adminEmails;
   if (!adminEmails?.includes((session.user as any)?.email)) return { redirect: { destination: '/', permanent: false } };

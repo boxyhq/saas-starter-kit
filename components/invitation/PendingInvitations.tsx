@@ -1,4 +1,4 @@
-import { Error, LetterAvatar, Loading } from '@/components/shared';
+import { Error as ErrorPanel, LetterAvatar, Loading } from '@/components/shared';
 import { defaultHeaders } from '@/lib/common';
 import { Team } from '@prisma/client';
 import useInvitations from 'hooks/useInvitations';
@@ -29,7 +29,7 @@ const PendingInvitations = ({ team }: { team: Team }) => {
   }
 
   if (isError) {
-    return <Error message={isError.message} />;
+    return <ErrorPanel message={isError.message} />;
   }
 
   const deleteInvitation = async (invitation: TeamInvitation | null) => {

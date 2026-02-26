@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import fetcher from '@/lib/fetcher';
 import AdminShell from '@/components/admin/AdminShell';
-import { Loading, Error } from '@/components/shared';
+import { Loading, Error as ErrorPanel } from '@/components/shared';
 import { Button, Input } from 'react-daisyui';
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import env from '@/lib/env';
@@ -92,7 +92,7 @@ const AdminCmsSettingsPage = () => {
   return (
     <AdminShell title="Site Settings">
       {isLoading && <Loading />}
-      {error && <Error message={error.message} />}
+      {error && <ErrorPanel message={error.message} />}
       {!isLoading && (
         <div className="max-w-2xl space-y-6">
           <div className="card bg-base-100 border border-base-300">
@@ -125,7 +125,7 @@ const AdminCmsSettingsPage = () => {
 };
 
 export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
-  const session = await getServerSession(req, res, getAuthOptions());
+  const session = await getServerSession(req, res, getAuthOptions(req, res));
   if (!session) return { redirect: { destination: '/auth/login', permanent: false } };
   const adminEmails = env.adminEmails;
   if (!adminEmails?.includes((session.user as any)?.email)) return { redirect: { destination: '/', permanent: false } };

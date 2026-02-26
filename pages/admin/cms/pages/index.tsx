@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import fetcher from '@/lib/fetcher';
 import AdminShell from '@/components/admin/AdminShell';
-import { Loading, Error } from '@/components/shared';
+import { Loading, Error as ErrorPanel } from '@/components/shared';
 import { Button, Modal, Input, Select } from 'react-daisyui';
 import { PlusIcon, PencilIcon, TrashIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 import env from '@/lib/env';
@@ -79,7 +79,7 @@ const AdminCmsPagesPage = () => {
         </div>
 
         {isLoading && <Loading />}
-        {error && <Error message={error.message} />}
+        {error && <ErrorPanel message={error.message} />}
 
         <div className="overflow-x-auto">
           <table className="table table-zebra w-full">
@@ -189,7 +189,7 @@ const AdminCmsPagesPage = () => {
 };
 
 export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
-  const session = await getServerSession(req, res, getAuthOptions());
+  const session = await getServerSession(req, res, getAuthOptions(req, res));
   if (!session) return { redirect: { destination: '/auth/login', permanent: false } };
   const adminEmails = env.adminEmails;
   if (!adminEmails?.includes((session.user as any)?.email)) return { redirect: { destination: '/', permanent: false } };

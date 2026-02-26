@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrNavTabs from '@/components/mdr/MdrNavTabs';
 import { Button, Input, Modal, Select } from 'react-daisyui';
 import {
@@ -48,8 +48,8 @@ const MdrSharePage = ({ teamFeatures }) => {
   );
 
   if (isLoading) return <Loading />;
-  if (isError) return <Error message={isError.message} />;
-  if (!team) return <Error message={t('team-not-found')} />;
+  if (isError) return <ErrorPanel message={isError.message} />;
+  if (!team) return <ErrorPanel message={t('team-not-found')} />;
 
   const project = projectData?.data;
   const compilations = (compilationsData?.data ?? []).filter(
@@ -225,7 +225,7 @@ const MdrSharePage = ({ teamFeatures }) => {
         </table>
       </div>
 
-      <Modal open={showCreate} onClickBackdrop={() => setShowCreate(false)}>
+      <Modal.Legacy open={showCreate} onClickBackdrop={() => setShowCreate(false)}>
         <Modal.Header className="font-bold">Create Share Link</Modal.Header>
         <Modal.Body className="space-y-4">
           <div className="form-control">
@@ -274,7 +274,7 @@ const MdrSharePage = ({ teamFeatures }) => {
             Create Link
           </Button>
         </Modal.Actions>
-      </Modal>
+      </Modal.Legacy>
     </div>
   );
 };

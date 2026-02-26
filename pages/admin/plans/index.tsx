@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import fetcher from '@/lib/fetcher';
 import AdminShell from '@/components/admin/AdminShell';
-import { Loading, Error } from '@/components/shared';
+import { Loading, Error as ErrorPanel } from '@/components/shared';
 import { Button, Modal, Input, Textarea, Badge } from 'react-daisyui';
 import { PlusIcon, PencilIcon, TrashIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import env from '@/lib/env';
@@ -81,7 +81,7 @@ const AdminPlansPage = () => {
         </div>
 
         {isLoading && <Loading />}
-        {error && <Error message={error.message} />}
+        {error && <ErrorPanel message={error.message} />}
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {plans.map((plan: any) => (
@@ -145,7 +145,7 @@ const AdminPlansPage = () => {
         </div>
       </div>
 
-      <Modal open={showCreate} onClickBackdrop={() => setShowCreate(false)}>
+      <Modal.Legacy open={showCreate} onClickBackdrop={() => setShowCreate(false)}>
         <Modal.Header className="font-bold">Create Plan</Modal.Header>
         <Modal.Body className="space-y-4">
           <div className="form-control">
@@ -172,13 +172,13 @@ const AdminPlansPage = () => {
             Create
           </Button>
         </Modal.Actions>
-      </Modal>
+      </Modal.Legacy>
     </AdminShell>
   );
 };
 
 export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
-  const session = await getServerSession(req, res, getAuthOptions());
+  const session = await getServerSession(req, res, getAuthOptions(req, res));
   if (!session) return { redirect: { destination: '/auth/login', permanent: false } };
   const adminEmails = env.adminEmails;
   const userEmail = (session.user as any)?.email;

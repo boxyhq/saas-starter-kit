@@ -6,7 +6,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import fetcher from '@/lib/fetcher';
 import AdminShell from '@/components/admin/AdminShell';
-import { Loading, Error } from '@/components/shared';
+import { Loading, Error as ErrorPanel } from '@/components/shared';
 import { Button } from 'react-daisyui';
 import { CloudArrowUpIcon, ClipboardDocumentIcon, TrashIcon } from '@heroicons/react/24/outline';
 import env from '@/lib/env';
@@ -81,7 +81,7 @@ const AdminCmsMediaPage = () => {
         </div>
 
         {isLoading && <Loading />}
-        {error && <Error message={error.message} />}
+        {error && <ErrorPanel message={error.message} />}
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4">
           {assets.map((asset: any) => (
@@ -124,7 +124,7 @@ const AdminCmsMediaPage = () => {
 };
 
 export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
-  const session = await getServerSession(req, res, getAuthOptions());
+  const session = await getServerSession(req, res, getAuthOptions(req, res));
   if (!session) return { redirect: { destination: '/auth/login', permanent: false } };
   const adminEmails = env.adminEmails;
   if (!adminEmails?.includes((session.user as any)?.email)) return { redirect: { destination: '/', permanent: false } };

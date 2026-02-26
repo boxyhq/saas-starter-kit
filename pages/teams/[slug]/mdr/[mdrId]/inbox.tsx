@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
-import { Error, Loading } from '@/components/shared';
+import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrNavTabs from '@/components/mdr/MdrNavTabs';
 import { Button, Modal, Select } from 'react-daisyui';
 import { PlusIcon, EnvelopeIcon, PaperClipIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
@@ -53,8 +53,8 @@ const MdrInboxPage = ({ teamFeatures }) => {
   );
 
   if (isLoading) return <Loading />;
-  if (isError) return <Error message={isError.message} />;
-  if (!team) return <Error message={t('team-not-found')} />;
+  if (isError) return <ErrorPanel message={isError.message} />;
+  if (!team) return <ErrorPanel message={t('team-not-found')} />;
 
   const project = projectData?.data;
   const inboxes = inboxesData?.data ?? [];
@@ -221,7 +221,7 @@ const MdrInboxPage = ({ teamFeatures }) => {
       )}
 
       {/* Route attachment modal */}
-      <Modal open={showRoute} onClickBackdrop={() => setShowRoute(false)}>
+      <Modal.Legacy open={showRoute} onClickBackdrop={() => setShowRoute(false)}>
         <Modal.Header className="font-bold">Route Attachment to Section</Modal.Header>
         <Modal.Body className="space-y-4">
           <div className="form-control">
@@ -263,7 +263,7 @@ const MdrInboxPage = ({ teamFeatures }) => {
             Route Document
           </Button>
         </Modal.Actions>
-      </Modal>
+      </Modal.Legacy>
     </div>
   );
 };

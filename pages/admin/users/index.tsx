@@ -6,7 +6,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import fetcher from '@/lib/fetcher';
 import AdminShell from '@/components/admin/AdminShell';
-import { Loading, Error } from '@/components/shared';
+import { Loading, Error as ErrorPanel } from '@/components/shared';
 import { Button, Input } from 'react-daisyui';
 import Link from 'next/link';
 import env from '@/lib/env';
@@ -73,7 +73,7 @@ const AdminUsersPage = () => {
         </form>
 
         {isLoading && <Loading />}
-        {error && <Error message={error.message} />}
+        {error && <ErrorPanel message={error.message} />}
 
         <div className="overflow-x-auto">
           <table className="table table-zebra w-full">
@@ -150,7 +150,7 @@ const AdminUsersPage = () => {
 };
 
 export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
-  const session = await getServerSession(req, res, getAuthOptions());
+  const session = await getServerSession(req, res, getAuthOptions(req, res));
   if (!session) return { redirect: { destination: '/auth/login', permanent: false } };
   const adminEmails = env.adminEmails;
   const userEmail = (session.user as any)?.email;
