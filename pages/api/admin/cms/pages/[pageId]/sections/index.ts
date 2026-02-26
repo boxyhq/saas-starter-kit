@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { requireSiteAdmin } from '@/lib/guards/admin';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 import { ApiError } from '@/lib/errors';
 import * as z from 'zod';
 
@@ -56,7 +57,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const section = await prisma.pageSection.create({
-    data: { pageId, type: parsed.data.type, content: parsed.data.content, order },
+    data: { pageId, type: parsed.data.type, content: parsed.data.content as Prisma.InputJsonValue, order },
   });
   res.status(201).json({ data: section });
 };

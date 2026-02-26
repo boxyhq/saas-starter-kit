@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { requireSiteAdmin } from '@/lib/guards/admin';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 import { ApiError } from '@/lib/errors';
 import * as z from 'zod';
 
@@ -38,9 +39,13 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
   const parsed = updateSchema.safeParse(req.body);
   if (!parsed.success) throw new ApiError(400, parsed.error.errors[0]?.message ?? 'Validation error');
 
+  const { content, ...rest } = parsed.data;
   const section = await prisma.pageSection.update({
     where: { id: sectionId },
-    data: parsed.data,
+    data: {
+      ...rest,
+      ...(content !== undefined && { content: content as Prisma.InputJsonValue }),
+    },
   });
   res.status(200).json({ data: section });
 };

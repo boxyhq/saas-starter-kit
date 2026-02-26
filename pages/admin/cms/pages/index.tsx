@@ -151,7 +151,7 @@ const AdminCmsPagesPage = () => {
         </div>
       </div>
 
-      <Modal open={showCreate} onClickBackdrop={() => setShowCreate(false)}>
+      <Modal.Legacy open={showCreate} onClickBackdrop={() => setShowCreate(false)}>
         <Modal.Header className="font-bold">Create Page</Modal.Header>
         <Modal.Body className="space-y-4">
           <div className="form-control">
@@ -183,7 +183,7 @@ const AdminCmsPagesPage = () => {
             Create
           </Button>
         </Modal.Actions>
-      </Modal>
+      </Modal.Legacy>
     </AdminShell>
   );
 };

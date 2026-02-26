@@ -94,7 +94,7 @@ const SectionEditorModal: React.FC<Props> = ({ section, pageId, open, onClose, o
   };
 
   return (
-    <Modal open={open} onClickBackdrop={onClose} className="max-w-2xl w-full">
+    <Modal.Legacy open={open} onClickBackdrop={onClose} className="max-w-2xl w-full">
       <Modal.Header className="font-bold">
         Edit Section — {SECTION_TYPE_LABELS[section?.type ?? ''] ?? section?.type}
       </Modal.Header>
@@ -107,7 +107,7 @@ const SectionEditorModal: React.FC<Props> = ({ section, pageId, open, onClose, o
           Save Section
         </Button>
       </Modal.Actions>
-    </Modal>
+    </Modal.Legacy>
   );
 };
 

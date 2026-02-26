@@ -268,7 +268,7 @@ const AdminPageEditor = () => {
       />
 
       {/* Add section type picker */}
-      <Modal open={showAddSection} onClickBackdrop={() => setShowAddSection(false)}>
+      <Modal.Legacy open={showAddSection} onClickBackdrop={() => setShowAddSection(false)}>
         <Modal.Header className="font-bold">Add Section</Modal.Header>
         <Modal.Body>
           <div className="form-control">
@@ -286,7 +286,7 @@ const AdminPageEditor = () => {
             Add
           </Button>
         </Modal.Actions>
-      </Modal>
+      </Modal.Legacy>
     </AdminShell>
   );
 };

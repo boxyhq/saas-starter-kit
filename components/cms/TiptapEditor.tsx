@@ -3,10 +3,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
-import Table from '@tiptap/extension-table';
-import TableRow from '@tiptap/extension-table/TableRow';
-import TableCell from '@tiptap/extension-table/TableCell';
-import TableHeader from '@tiptap/extension-table/TableHeader';
+import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table';
 import { useEffect } from 'react';
 
 interface Props {
@@ -55,7 +52,7 @@ const TiptapEditor: React.FC<Props> = ({ value, onChange, placeholder, className
   // Sync external value changes
   useEffect(() => {
     if (editor && value && JSON.stringify(editor.getJSON()) !== JSON.stringify(value)) {
-      editor.commands.setContent(value, false);
+      editor.commands.setContent(value);
     }
   }, [editor, value]);
 

@@ -2,10 +2,7 @@ import { generateHTML } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
-import Table from '@tiptap/extension-table';
-import TableRow from '@tiptap/extension-table/TableRow';
-import TableCell from '@tiptap/extension-table/TableCell';
-import TableHeader from '@tiptap/extension-table/TableHeader';
+import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table';
 import type { JSONContent } from '@tiptap/react';
 
 const extensions = [StarterKit, Image, Link, Table, TableRow, TableCell, TableHeader];

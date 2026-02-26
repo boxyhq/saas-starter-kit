@@ -17,22 +17,22 @@ interface Props {
 const HeroSection: React.FC<{ content: Record<string, unknown> }> = ({ content }) => (
   <section
     className="py-20 px-6 text-center"
-    style={{ backgroundImage: content.bgImage ? `url(${content.bgImage})` : undefined }}
+    style={{ backgroundImage: content.bgImage ? `url(${content.bgImage as string})` : undefined }}
   >
     <div className="max-w-3xl mx-auto">
-      {content.headline && (
+      {!!content.headline && (
         <h1 className="text-4xl md:text-5xl font-bold mb-6">{content.headline as string}</h1>
       )}
-      {content.subtext && (
+      {!!content.subtext && (
         <p className="text-lg text-base-content/70 mb-8">{content.subtext as string}</p>
       )}
       <div className="flex flex-wrap gap-4 justify-center">
-        {content.cta1Label && (
+        {!!content.cta1Label && (
           <a href={(content.cta1Url as string) ?? '#'} className="btn btn-primary btn-lg">
             {content.cta1Label as string}
           </a>
         )}
-        {content.cta2Label && (
+        {!!content.cta2Label && (
           <a href={(content.cta2Url as string) ?? '#'} className="btn btn-outline btn-lg">
             {content.cta2Label as string}
           </a>
@@ -66,9 +66,9 @@ const CtaSection: React.FC<{ content: Record<string, unknown> }> = ({ content })
     style={{ backgroundColor: (content.bgColor as string) ?? '#1a56db' }}
   >
     <div className="max-w-2xl mx-auto">
-      {content.headline && <h2 className="text-3xl font-bold mb-4">{content.headline as string}</h2>}
-      {content.subtext && <p className="text-lg opacity-90 mb-8">{content.subtext as string}</p>}
-      {content.buttonLabel && (
+      {!!content.headline && <h2 className="text-3xl font-bold mb-4">{content.headline as string}</h2>}
+      {!!content.subtext && <p className="text-lg opacity-90 mb-8">{content.subtext as string}</p>}
+      {!!content.buttonLabel && (
         <a href={(content.buttonUrl as string) ?? '#'} className="btn btn-white btn-lg">
           {content.buttonLabel as string}
         </a>
