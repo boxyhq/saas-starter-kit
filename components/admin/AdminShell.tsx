@@ -9,6 +9,7 @@ import {
   CpuChipIcon,
   ShieldExclamationIcon,
   CreditCardIcon,
+  DocumentTextIcon,
 } from '@heroicons/react/24/outline';
 
 const adminNav = [
@@ -17,6 +18,7 @@ const adminNav = [
   { label: 'Teams', href: '/admin/teams', icon: BuildingOfficeIcon },
   { label: 'Plans', href: '/admin/plans', icon: CreditCardIcon },
   { label: 'Jobs', href: '/admin/jobs', icon: CpuChipIcon },
+  { label: 'CMS', href: '/admin/cms', icon: DocumentTextIcon },
 ];
 
 interface AdminShellProps {
