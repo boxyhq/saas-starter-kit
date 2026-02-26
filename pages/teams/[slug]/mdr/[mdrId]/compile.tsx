@@ -155,8 +155,15 @@ const MdrCompilePage = ({ teamFeatures }) => {
                       </Button>
                     )}
                     {c.status === 'FAILED' && (
-                      <span className="text-xs text-error" title={c.errorMessage}>
-                        Error
+                      <span
+                        className="text-xs text-error"
+                        title={c.errorMessage || 'Unknown error'}
+                      >
+                        {c.errorMessage
+                          ? c.errorMessage.length > 60
+                            ? c.errorMessage.slice(0, 60) + '…'
+                            : c.errorMessage
+                          : 'Failed'}
                       </span>
                     )}
                   </td>

@@ -13,7 +13,7 @@ import fetcher from '@/lib/fetcher';
 import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrNavTabs from '@/components/mdr/MdrNavTabs';
 import { Button, Modal, Input, Select, Textarea, Badge } from 'react-daisyui';
-import { PlusIcon, PaperAirplaneIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PaperAirplaneIcon, ArrowDownTrayIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 
 const purposeLabels: Record<string, string> = {
   IFC: 'IFC – Issued for Construction',
@@ -35,6 +35,7 @@ const MdrTransmittalsPage = ({ teamFeatures }) => {
   const [showCreate, setShowCreate] = useState(false);
   const [issuing, setIssuing] = useState<string | null>(null);
   const [downloadingCover, setDownloadingCover] = useState<string | null>(null);
+  const [sendingEmail, setSendingEmail] = useState<string | null>(null);
 
   const { data: projectData } = useSWR(
     team?.slug && mdrId ? `/api/teams/${team.slug}/mdr/${mdrId}` : null,
@@ -117,6 +118,23 @@ const MdrTransmittalsPage = ({ teamFeatures }) => {
     }
   };
 
+  const handleSendEmail = async (transmittalId: string) => {
+    setSendingEmail(transmittalId);
+    try {
+      const res = await fetch(
+        `/api/teams/${team!.slug}/mdr/${mdrId}/transmittals/${transmittalId}/send-email`,
+        { method: 'POST' }
+      );
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error?.message || 'Failed to send email');
+      toast.success('Email sent to recipient!');
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setSendingEmail(null);
+    }
+  };
+
   if (isLoading) return <Loading />;
   if (isError) return <ErrorPanel message={isError.message} />;
   if (!team) return <ErrorPanel message={t('team-not-found')} />;
@@ -192,16 +210,31 @@ const MdrTransmittalsPage = ({ teamFeatures }) => {
                       </Button>
                     )}
                     {tr.status === 'ISSUED' && tr.coverSheetS3Key && (
-                      <Button
-                        size="xs"
-                        color="ghost"
-                        onClick={() => handleDownloadCoverSheet(tr.id)}
-                        disabled={downloadingCover === tr.id}
-                        loading={downloadingCover === tr.id}
-                      >
-                        <ArrowDownTrayIcon className="h-3 w-3 mr-1" />
-                        Cover Sheet
-                      </Button>
+                      <div className="flex gap-1">
+                        <Button
+                          size="xs"
+                          color="ghost"
+                          onClick={() => handleDownloadCoverSheet(tr.id)}
+                          disabled={downloadingCover === tr.id}
+                          loading={downloadingCover === tr.id}
+                        >
+                          <ArrowDownTrayIcon className="h-3 w-3 mr-1" />
+                          Cover Sheet
+                        </Button>
+                        {tr.toEmail && (
+                          <Button
+                            size="xs"
+                            color="ghost"
+                            onClick={() => handleSendEmail(tr.id)}
+                            disabled={sendingEmail === tr.id}
+                            loading={sendingEmail === tr.id}
+                            title={`Send to ${tr.toEmail}`}
+                          >
+                            <EnvelopeIcon className="h-3 w-3 mr-1" />
+                            Send
+                          </Button>
+                        )}
+                      </div>
                     )}
                   </td>
                 </tr>

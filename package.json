@@ -12,6 +12,8 @@
     "start": "next start --port 4002",
     "dev:worker": "ts-node --transpile-only lib/mdrWorker.ts",
     "dev:conversion-worker": "ts-node --transpile-only lib/mdrConversionWorker.ts",
+    "dev:cleanup-worker": "ts-node --transpile-only lib/mdrCleanupWorker.ts",
+    "dev:usage-alert-worker": "ts-node --transpile-only lib/mdrUsageAlertWorker.ts",
     "check-types": "tsc --pretty --noEmit",
     "check-format": "prettier --check .",
     "check-lint": "eslint -c eslint.config.cjs ./",
