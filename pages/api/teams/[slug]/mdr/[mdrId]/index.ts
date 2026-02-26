@@ -3,7 +3,7 @@ import { throwIfNoTeamAccess, getCurrentUserWithTeam } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
-import { assertMdrAccess, assertMdrOwnership } from '@/lib/mdr';
+import { assertMdrAccess, assertMdrOwnership, assertMdrNotFinal } from '@/lib/mdr';
 import { validateWithSchema, updateMdrProjectSchema } from '@/lib/zod';
 import { mdrAuditEvent } from '@/lib/mdrAudit';
 import { cleanupQueue } from '@/lib/mdrQueue';
@@ -73,13 +73,35 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const data = validateWithSchema(updateMdrProjectSchema, req.body);
 
+  // Fetch current status so we can validate the transition
+  const current = await prisma.mdrProject.findUniqueOrThrow({
+    where: { id: mdrId },
+    select: { status: true, name: true },
+  });
+
+  if (data.status !== undefined) {
+    // FINAL is irreversible
+    if (current.status === 'FINAL') {
+      throw new ApiError(409, 'A finalized project cannot be reopened.');
+    }
+    // Finalizing requires a disposition choice
+    if (data.status === 'FINAL' && !data.finalizeOption) {
+      throw new ApiError(
+        400,
+        'finalizeOption (KEEP or ARCHIVE) is required when finalizing a project.'
+      );
+    }
+  }
+
   const project = await prisma.mdrProject.update({
     where: { id: mdrId },
     data,
   });
 
-  // If transitioning to FINAL, enqueue cleanup job
-  if (data.status === 'FINAL' && data.finalizeOption) {
+  const isFinalizing = data.status === 'FINAL';
+
+  // Enqueue background cleanup when transitioning to FINAL
+  if (isFinalizing && data.finalizeOption) {
     await cleanupQueue.add('finalize_project', {
       type: 'finalize_project',
       mdrProjectId: mdrId,
@@ -93,7 +115,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     user.team.name,
     user.id,
     user.name as string,
-    'mdr_project.updated',
+    isFinalizing ? 'mdr_project.finalized' : 'mdr_project.updated',
     { id: mdrId, name: project.name, type: 'mdr_project' }
   );
 

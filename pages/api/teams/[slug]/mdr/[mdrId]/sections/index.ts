@@ -3,7 +3,7 @@ import { throwIfNoTeamAccess, getCurrentUserWithTeam } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
-import { assertMdrAccess, assertMdrOwnership } from '@/lib/mdr';
+import { assertMdrAccess, assertMdrNotFinal, assertMdrOwnership } from '@/lib/mdr';
 import {
   validateWithSchema,
   createMdrSectionSchema,
@@ -67,6 +67,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { mdrId } = req.query as { mdrId: string };
   await assertMdrOwnership(mdrId, user.team.id);
   await assertMdrAccess(mdrId, user.id, user.team.id, 'EDITOR');
+  await assertMdrNotFinal(mdrId);
 
   const data = validateWithSchema(createMdrSectionSchema, req.body);
 
@@ -102,6 +103,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
   const { mdrId } = req.query as { mdrId: string };
   await assertMdrOwnership(mdrId, user.team.id);
   await assertMdrAccess(mdrId, user.id, user.team.id, 'EDITOR');
+  await assertMdrNotFinal(mdrId);
 
   // Reorder sections
   const { orderedIds } = validateWithSchema(reorderSectionsSchema, req.body);

@@ -3,7 +3,7 @@ import { throwIfNoTeamAccess, getCurrentUserWithTeam } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
-import { assertMdrAccess, assertMdrOwnership } from '@/lib/mdr';
+import { assertMdrAccess, assertMdrNotFinal, assertMdrOwnership } from '@/lib/mdr';
 import { validateWithSchema, updateMdrSectionSchema } from '@/lib/zod';
 import env from '@/lib/env';
 
@@ -42,6 +42,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
   };
   await assertMdrOwnership(mdrId, user.team.id);
   await assertMdrAccess(mdrId, user.id, user.team.id, 'EDITOR');
+  await assertMdrNotFinal(mdrId);
 
   const data = validateWithSchema(updateMdrSectionSchema, req.body);
 
@@ -65,6 +66,7 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   };
   await assertMdrOwnership(mdrId, user.team.id);
   await assertMdrAccess(mdrId, user.id, user.team.id, 'ADMIN');
+  await assertMdrNotFinal(mdrId);
 
   await prisma.mdrSection.delete({ where: { id: sectionId } });
 

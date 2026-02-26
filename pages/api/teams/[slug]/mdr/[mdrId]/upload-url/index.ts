@@ -3,7 +3,7 @@ import { throwIfNoTeamAccess, getCurrentUserWithTeam } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
-import { assertMdrAccess, assertMdrOwnership } from '@/lib/mdr';
+import { assertMdrAccess, assertMdrNotFinal, assertMdrOwnership } from '@/lib/mdr';
 import { getPresignedPutUrl, mdrDocumentKeyUnsectioned } from '@/lib/s3';
 import { validateWithSchema, uploadUrlSchema } from '@/lib/zod';
 import env from '@/lib/env';
@@ -27,6 +27,7 @@ export default async function handler(
     const { mdrId } = req.query as { mdrId: string };
     await assertMdrOwnership(mdrId, user.team.id);
     await assertMdrAccess(mdrId, user.id, user.team.id, 'EDITOR');
+    await assertMdrNotFinal(mdrId);
 
     const { sha256Hash, mimeType, filename, sectionId } = validateWithSchema(
       uploadUrlSchema,

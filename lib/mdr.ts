@@ -112,6 +112,23 @@ export async function assertMdrOwnership(
 }
 
 /**
+ * Assert that an MDR project has NOT been finalized.
+ * Call this before any mutation that should be blocked on FINAL projects.
+ */
+export async function assertMdrNotFinal(mdrProjectId: string): Promise<void> {
+  const project = await prisma.mdrProject.findUnique({
+    where: { id: mdrProjectId },
+    select: { status: true },
+  });
+  if (project?.status === 'FINAL') {
+    throw new ApiError(
+      409,
+      'This project has been finalized and is now read-only.'
+    );
+  }
+}
+
+/**
  * Assert that a team is not suspended.
  */
 export async function assertTeamNotSuspended(teamId: string): Promise<void> {
