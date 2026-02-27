@@ -28,7 +28,7 @@ const ACTION_LABELS: Record<string, string> = {
   inbox_email_routed: 'Inbox email routed',
 };
 
-const MdrActivityPage = ({ teamFeatures }: { teamFeatures: any }) => {
+const MdrActivityPage = () => {
   const router = useRouter();
   const { mdrId } = router.query as { mdrId: string };
   const { isLoading: teamLoading, isError: teamError, team } = useTeam();

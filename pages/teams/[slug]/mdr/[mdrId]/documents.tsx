@@ -16,7 +16,7 @@ import MdrDocumentPreview from '@/components/mdr/MdrDocumentPreview';
 
 const STATUS_OPTIONS = ['DRAFT', 'FOR_REVIEW', 'APPROVED', 'REJECTED', 'SUPERSEDED', 'VOID'];
 
-const MdrDocumentsPage = ({ teamFeatures }) => {
+const MdrDocumentsPage = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { mdrId } = router.query as { mdrId: string };

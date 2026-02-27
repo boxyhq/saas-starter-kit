@@ -16,7 +16,7 @@ import { Button, Modal } from 'react-daisyui';
 import { LockClosedIcon } from '@heroicons/react/24/solid';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
-const MdrProjectDashboard = ({ teamFeatures }) => {
+const MdrProjectDashboard = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { mdrId } = router.query as { mdrId: string };

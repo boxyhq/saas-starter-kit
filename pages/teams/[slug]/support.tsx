@@ -5,16 +5,15 @@ import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
-import { Error as ErrorPanel, Loading } from '@/components/shared';
+import { Loading } from '@/components/shared';
 import env from '@/lib/env';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
-const SupportPage = ({ teamFeatures }: { teamFeatures: any }) => {
+const SupportPage = () => {
   const { team } = useTeam();
   const [q, setQ] = useState('');
   const [searchQ, setSearchQ] = useState('');
 
-  const { data: categoriesData } = useSWR('/api/help/context', fetcher);
   const { data: searchData, isLoading: searching } = useSWR(
     searchQ.length >= 2 ? `/api/help/search?q=${encodeURIComponent(searchQ)}` : null,
     fetcher
@@ -51,7 +50,7 @@ const SupportPage = ({ teamFeatures }: { teamFeatures: any }) => {
       {/* Search results */}
       {searchQ && (
         <div>
-          <h2 className="font-semibold mb-3">Results for "{searchQ}"</h2>
+          <h2 className="font-semibold mb-3">Results for &ldquo;{searchQ}&rdquo;</h2>
           {searching && <Loading />}
           {!searching && results.length === 0 && <p className="text-base-content/50 text-sm">No results found.</p>}
           <ul className="space-y-2">

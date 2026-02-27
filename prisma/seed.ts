@@ -150,30 +150,6 @@ async function seedInvitations(teams: any[], users: any[]) {
   return newInvitations;
 }
 
-// Feature keys for the MDR SaaS plan matrix
-const PLAN_FEATURES = [
-  // MDR features
-  { key: 'mdr_projects', label: 'MDR Projects', hasLimit: true },
-  { key: 'compilation', label: 'Compile to PDF', hasLimit: false },
-  { key: 'branding', label: 'Custom Branding', hasLimit: false },
-  { key: 'transmittals', label: 'Transmittal System', hasLimit: false },
-  { key: 'share_links', label: 'Public Share Links', hasLimit: false },
-  { key: 'version_history', label: 'Document Version History', hasLimit: false },
-  { key: 'export_excel', label: 'Excel/CSV Export', hasLimit: false },
-  { key: 'cross_mdr_sharing', label: 'Cross-MDR Section Sharing', hasLimit: false },
-  { key: 'email_inbox', label: 'Email Inbox', hasLimit: false },
-  { key: 'file_conversion', label: 'DOCX/XLSX→PDF Conversion', hasLimit: false },
-  // Team features
-  { key: 'team_members', label: 'Team Members', hasLimit: true },
-  { key: 'api_keys', label: 'API Keys', hasLimit: false },
-  { key: 'webhooks', label: 'Outbound Webhooks', hasLimit: false },
-  { key: 'audit_log', label: 'Audit Log', hasLimit: false },
-  // Advanced
-  { key: 'sso', label: 'SAML/OIDC SSO', hasLimit: false },
-  { key: 'dsync', label: 'SCIM Directory Sync', hasLimit: false },
-  { key: 'storage_gb', label: 'Storage (GB)', hasLimit: true },
-];
-
 type PlanConfig = {
   name: string;
   description: string;

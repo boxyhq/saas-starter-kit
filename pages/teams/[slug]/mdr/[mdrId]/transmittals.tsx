@@ -12,7 +12,7 @@ import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
 import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrNavTabs from '@/components/mdr/MdrNavTabs';
-import { Button, Modal, Input, Select, Textarea, Badge } from 'react-daisyui';
+import { Button, Modal, Input, Select, Textarea } from 'react-daisyui';
 import { PlusIcon, PaperAirplaneIcon, ArrowDownTrayIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 
 const purposeLabels: Record<string, string> = {
@@ -27,7 +27,7 @@ const purposeLabels: Record<string, string> = {
 const statusBadge = (status: string) =>
   status === 'ISSUED' ? 'badge-success' : 'badge-warning';
 
-const MdrTransmittalsPage = ({ teamFeatures }) => {
+const MdrTransmittalsPage = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { mdrId } = router.query as { mdrId: string };

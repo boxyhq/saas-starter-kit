@@ -11,7 +11,7 @@ import MdrNavTabs from '@/components/mdr/MdrNavTabs';
 import MdrMemberList from '@/components/mdr/MdrMemberList';
 import MdrInviteForm from '@/components/mdr/MdrInviteForm';
 
-const MdrMembersPage = ({ teamFeatures }) => {
+const MdrMembersPage = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { mdrId } = router.query as { mdrId: string };

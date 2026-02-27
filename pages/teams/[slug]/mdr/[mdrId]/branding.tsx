@@ -10,10 +10,10 @@ import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
 import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrNavTabs from '@/components/mdr/MdrNavTabs';
-import { Button, Input, Select } from 'react-daisyui';
+import { Button, Input } from 'react-daisyui';
 import { CloudArrowUpIcon } from '@heroicons/react/24/outline';
 
-const MdrBrandingPage = ({ teamFeatures }) => {
+const MdrBrandingPage = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { mdrId } = router.query as { mdrId: string };
@@ -31,7 +31,7 @@ const MdrBrandingPage = ({ teamFeatures }) => {
     fetcher
   );
 
-  const { data: brandingData, mutate: mutateBranding } = useSWR(
+  const { mutate: mutateBranding } = useSWR(
     team?.slug ? `/api/teams/${team.slug}/branding` : null,
     fetcher,
     {

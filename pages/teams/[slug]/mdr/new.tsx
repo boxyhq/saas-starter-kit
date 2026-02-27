@@ -18,7 +18,7 @@ const validationSchema = Yup.object({
   discipline: Yup.string().max(100),
 });
 
-const NewMdrProjectPage = ({ teamFeatures }) => {
+const NewMdrProjectPage = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { isLoading, isError, team } = useTeam();

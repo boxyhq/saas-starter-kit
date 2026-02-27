@@ -18,7 +18,7 @@ import {
   LockClosedIcon,
 } from '@heroicons/react/24/outline';
 
-const MdrSharePage = ({ teamFeatures }) => {
+const MdrSharePage = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { mdrId } = router.query as { mdrId: string };

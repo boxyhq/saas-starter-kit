@@ -4,7 +4,7 @@ import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
@@ -63,7 +63,7 @@ function suggestSectionId(
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-const MdrInboxPage = ({ teamFeatures }) => {
+const MdrInboxPage = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { mdrId } = router.query as { mdrId: string };

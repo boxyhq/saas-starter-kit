@@ -19,7 +19,7 @@ const purposeLabels: Record<string, string> = {
   BODY: 'Body Page',
 };
 
-const MdrTemplatesPage = ({ teamFeatures }) => {
+const MdrTemplatesPage = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { mdrId } = router.query as { mdrId: string };

@@ -3,7 +3,6 @@ import { useTranslation } from 'next-i18next';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
-import toast from 'react-hot-toast';
 import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
@@ -12,7 +11,7 @@ import MdrNavTabs from '@/components/mdr/MdrNavTabs';
 import MdrSectionTree from '@/components/mdr/MdrSectionTree';
 import MdrProgressBar from '@/components/mdr/MdrProgressBar';
 
-const MdrStructurePage = ({ teamFeatures }) => {
+const MdrStructurePage = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { mdrId } = router.query as { mdrId: string };

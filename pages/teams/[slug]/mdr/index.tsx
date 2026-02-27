@@ -3,7 +3,6 @@ import { useTranslation } from 'next-i18next';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import env from '@/lib/env';
 import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
@@ -12,12 +11,11 @@ import MdrProjectCard from '@/components/mdr/MdrProjectCard';
 import { Button } from 'react-daisyui';
 import { PlusIcon } from '@heroicons/react/24/outline';
 
-const MdrProjectsPage = ({ teamFeatures }) => {
+const MdrProjectsPage = () => {
   const { t } = useTranslation('common');
-  const router = useRouter();
   const { isLoading, isError, team } = useTeam();
 
-  const { data, mutate } = useSWR(
+  const { data } = useSWR(
     team?.slug ? `/api/teams/${team.slug}/mdr` : null,
     fetcher
   );

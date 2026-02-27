@@ -22,7 +22,7 @@ const statusBadge = (status: string) => {
   return map[status] ?? 'badge-neutral';
 };
 
-const MdrCompilePage = ({ teamFeatures }) => {
+const MdrCompilePage = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { mdrId } = router.query as { mdrId: string };
