@@ -8,40 +8,52 @@ type PlanWithFeatures = Prisma.SubscriptionPlanGetPayload<{
 
 /**
  * Get a plan feature for a team.
- * Falls back to the default plan if the team has no active subscription.
+ * Priority: admin-assigned trialPlanId > active Stripe subscription > default plan.
  */
 export async function getPlanFeature(
   teamId: string,
   feature: string
 ): Promise<{ enabled: boolean; limit: number | null }> {
-  // Get the team's active subscription
   const team = await prisma.team.findUnique({
     where: { id: teamId },
-    select: { billingId: true, mdrQuotaOverride: true },
+    select: { billingId: true, mdrQuotaOverride: true, trialPlanId: true, trialEndsAt: true },
   });
 
   if (!team) {
     return { enabled: false, limit: null };
   }
 
-  let stripePriceId: string | null = null;
+  // Admin-assigned trial/override plan takes precedence if not expired
+  const trialActive =
+    team.trialPlanId &&
+    (team.trialEndsAt === null || team.trialEndsAt > new Date());
 
-  if (team.billingId) {
-    const subscription = await prisma.subscription.findFirst({
-      where: { customerId: team.billingId, active: true },
-      select: { priceId: true },
-    });
-    stripePriceId = subscription?.priceId ?? null;
-  }
-
-  // Find the matching plan (by stripePriceId or isDefault)
   let plan: PlanWithFeatures | null = null;
 
-  if (stripePriceId) {
+  if (trialActive) {
     plan = await prisma.subscriptionPlan.findFirst({
-      where: { stripePriceId, isActive: true },
+      where: { id: team.trialPlanId!, isActive: true },
       include: { features: true },
     });
+  }
+
+  if (!plan) {
+    let stripePriceId: string | null = null;
+
+    if (team.billingId) {
+      const subscription = await prisma.subscription.findFirst({
+        where: { customerId: team.billingId, active: true },
+        select: { priceId: true },
+      });
+      stripePriceId = subscription?.priceId ?? null;
+    }
+
+    if (stripePriceId) {
+      plan = await prisma.subscriptionPlan.findFirst({
+        where: { stripePriceId, isActive: true },
+        include: { features: true },
+      });
+    }
   }
 
   if (!plan) {

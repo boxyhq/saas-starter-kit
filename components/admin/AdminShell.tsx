@@ -10,6 +10,7 @@ import {
   ShieldExclamationIcon,
   CreditCardIcon,
   DocumentTextIcon,
+  Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
 
 const adminNav = [
@@ -19,6 +20,7 @@ const adminNav = [
   { label: 'Plans', href: '/admin/plans', icon: CreditCardIcon },
   { label: 'Jobs', href: '/admin/jobs', icon: CpuChipIcon },
   { label: 'CMS', href: '/admin/cms', icon: DocumentTextIcon },
+  { label: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
 ];
 
 interface AdminShellProps {
