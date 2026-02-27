@@ -3,6 +3,35 @@ import { getServerSession } from 'next-auth';
 import { getAuthOptions } from '@/lib/nextAuth';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
+import { s3Client } from '@/lib/s3';
+import { ListObjectsV2Command, DeleteObjectsCommand } from '@aws-sdk/client-s3';
+import env from '@/lib/env';
+
+/** Delete all S3 objects under a given prefix (team folder). */
+async function deleteS3Prefix(prefix: string): Promise<void> {
+  let continuationToken: string | undefined;
+  do {
+    const list = await s3Client.send(
+      new ListObjectsV2Command({
+        Bucket: env.s3.bucket,
+        Prefix: prefix,
+        ContinuationToken: continuationToken,
+      })
+    );
+    if (list.Contents && list.Contents.length > 0) {
+      await s3Client.send(
+        new DeleteObjectsCommand({
+          Bucket: env.s3.bucket,
+          Delete: {
+            Objects: list.Contents.map((o) => ({ Key: o.Key! })),
+            Quiet: true,
+          },
+        })
+      );
+    }
+    continuationToken = list.IsTruncated ? list.NextContinuationToken : undefined;
+  } while (continuationToken);
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -36,6 +65,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         where: { teamId, role: 'OWNER', userId: { not: userId } },
       });
       if (otherOwners === 0) {
+        // Clean up all S3 objects for this team before deleting the DB record
+        await deleteS3Prefix(`mdr/${teamId}/`).catch(() => {/* non-fatal */});
         // Delete the team and all its MDR data via cascade
         await prisma.team.delete({ where: { id: teamId } });
       }

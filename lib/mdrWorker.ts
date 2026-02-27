@@ -23,6 +23,7 @@ import {
   redisConnection,
   type CompilationJobPayload,
 } from './mdrQueue';
+import * as Sentry from "@sentry/nextjs";
 
 async function downloadS3Buffer(key: string): Promise<Buffer> {
   const response = await s3Client.send(
@@ -334,6 +335,7 @@ const worker = new Worker<CompilationJobPayload>(
 
 worker.on('failed', async (job, error) => {
   console.error(`Compilation job ${job?.id} failed:`, error);
+  Sentry.captureException(error, { extra: { jobId: job?.id, data: job?.data } });
   if (job?.data?.compilationId) {
     await prisma.mdrCompilation.update({
       where: { id: job.data.compilationId },

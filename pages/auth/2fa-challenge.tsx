@@ -3,12 +3,14 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth';
 import { getAuthOptions } from '@/lib/nextAuth';
+import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import { Button, Input } from 'react-daisyui';
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 
 const TwoFactorChallengePage = () => {
   const router = useRouter();
+  const { update } = useSession();
   const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +27,11 @@ const TwoFactorChallengePage = () => {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error?.message || 'Invalid code');
-      router.push(returnUrl);
+
+      // Clear the pendingTwoFactor flag in the JWT token
+      await update({ twoFactorVerified: true });
+
+      router.push(decodeURIComponent(returnUrl));
     } catch (err: any) {
       toast.error(err.message);
       setToken('');
@@ -78,6 +84,10 @@ export async function getServerSideProps({ req, res }: GetServerSidePropsContext
   const session = await getServerSession(req, res, getAuthOptions(req, res));
   if (!session) {
     return { redirect: { destination: '/auth/login', permanent: false } };
+  }
+  // If 2FA is already verified (no pendingTwoFactor flag), redirect away
+  if (!(session.user as any).pendingTwoFactor) {
+    return { redirect: { destination: '/', permanent: false } };
   }
   return { props: {} };
 }

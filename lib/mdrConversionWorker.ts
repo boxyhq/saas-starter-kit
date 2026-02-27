@@ -16,6 +16,7 @@ import { prisma } from './prisma';
 import env from './env';
 import { convertToPdf } from './gotenberg';
 import { redisConnection, type ConversionJobPayload } from './mdrQueue';
+import * as Sentry from "@sentry/nextjs";
 
 async function downloadS3Buffer(key: string): Promise<Buffer> {
   const response = await s3Client.send(
@@ -73,6 +74,7 @@ const worker = new Worker<ConversionJobPayload>(
 
 worker.on('failed', (job, error) => {
   console.error(`Conversion job ${job?.id} failed:`, error);
+  Sentry.captureException(error, { extra: { jobId: job?.id, data: job?.data } });
 });
 
 worker.on('completed', (job) => {

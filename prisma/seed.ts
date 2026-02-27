@@ -403,6 +403,59 @@ async function seedHelpContent() {
   }
 }
 
+
+async function seedCmsPages() {
+  const pages = [
+    {
+      slug: 'privacy-policy',
+      title: 'Privacy Policy',
+      template: 'GENERIC' as const,
+      status: 'PUBLISHED' as const,
+      seoTitle: 'Privacy Policy',
+      seoDesc: 'How we collect, use, and protect your data.',
+      sections: [
+        {
+          type: 'richtext',
+          order: 0,
+          content: {
+            html: '<h2>Introduction</h2><p>This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.</p><h2>Data Retention</h2><p>We retain your data for as long as your account is active. You may request deletion at any time via account settings.</p><h2>Contact Us</h2><p>Questions? Email privacy@example.com</p>',
+          },
+        },
+      ],
+    },
+    {
+      slug: 'terms-of-service',
+      title: 'Terms of Service',
+      template: 'GENERIC' as const,
+      status: 'PUBLISHED' as const,
+      seoTitle: 'Terms of Service',
+      seoDesc: 'Terms and conditions governing use of our platform.',
+      sections: [
+        {
+          type: 'richtext',
+          order: 0,
+          content: {
+            html: '<h2>Agreement to Terms</h2><p>By accessing or using our platform, you agree to be bound by these Terms of Service.</p><h2>Use of Service</h2><p>You may use our service only for lawful purposes. You are responsible for all content you upload.</p><h2>Limitation of Liability</h2><p>The platform is provided on an AS IS basis. We shall not be liable for any indirect, incidental, or consequential damages.</p>',
+          },
+        },
+      ],
+    },
+  ];
+
+  for (const page of pages) {
+    const { sections, ...pageData } = page;
+    const upserted = await prisma.page.upsert({
+      where: { slug: pageData.slug },
+      create: {
+        ...pageData,
+        publishedAt: new Date(),
+        sections: { create: sections },
+      },
+      update: { title: pageData.title, status: pageData.status },
+    });
+    console.log(`Seeded CMS page: ${upserted.slug}`);
+  }
+}
 async function init() {
   const users = await seedUsers();
   const teams = await seedTeams();
@@ -410,6 +463,7 @@ async function init() {
   await seedInvitations(teams, users);
   await seedSubscriptionPlans();
   await seedHelpContent();
+  await seedCmsPages();
 }
 
 init();
