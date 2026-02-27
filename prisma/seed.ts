@@ -444,7 +444,7 @@ async function seedCmsPages() {
 
   for (const page of pages) {
     const { sections, ...pageData } = page;
-    const upserted = await prisma.page.upsert({
+    const upserted = await client.page.upsert({
       where: { slug: pageData.slug },
       create: {
         ...pageData,

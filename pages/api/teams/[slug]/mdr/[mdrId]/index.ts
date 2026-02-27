@@ -3,7 +3,7 @@ import { throwIfNoTeamAccess, getCurrentUserWithTeam } from 'models/team';
 import { throwIfNotAllowed } from 'models/user';
 import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
-import { assertMdrAccess, assertMdrOwnership, assertMdrNotFinal } from '@/lib/mdr';
+import { assertMdrAccess, assertMdrOwnership } from '@/lib/mdr';
 import { validateWithSchema, updateMdrProjectSchema } from '@/lib/zod';
 import { mdrAuditEvent } from '@/lib/mdrAudit';
 import { cleanupQueue } from '@/lib/mdrQueue';

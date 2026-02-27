@@ -416,7 +416,8 @@ export const getAuthOptions = (
 
         // Allow challenge.ts to clear the pending flag after TOTP verification
         if (trigger === 'update' && session?.twoFactorVerified === true) {
-          const { pendingTwoFactor: _removed, ...rest } = token as any;
+          const rest = { ...(token as any) };
+          delete rest.pendingTwoFactor;
           return rest;
         }
 

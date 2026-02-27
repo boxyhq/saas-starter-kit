@@ -47,18 +47,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Fall back to ILIKE if the searchVector column doesn't exist yet
     if (error.message?.includes('searchVector') || error.code === '42703') {
       try {
-        const teamMember = await throwIfNoTeamAccess(req, res);
+        const _teamMember = await throwIfNoTeamAccess(req, res);
         const { mdrId, q } = req.query as { mdrId: string; q: string };
         const results = await prisma.mdrDocument.findMany({
           where: {
             mdrProjectId: mdrId,
             OR: [
               { title: { contains: q, mode: 'insensitive' } },
-              { documentNumber: { contains: q, mode: 'insensitive' } },
-              { filename: { contains: q, mode: 'insensitive' } },
+              { docNumber: { contains: q, mode: 'insensitive' } },
+              { originalName: { contains: q, mode: 'insensitive' } },
             ],
           },
-          select: { id: true, title: true, documentNumber: true, discipline: true, filename: true, status: true, revision: true },
+          select: { id: true, title: true, docNumber: true, discipline: true, originalName: true, status: true, revision: true },
           take: 50,
         });
         return res.status(200).json({ data: { results, query: q } });

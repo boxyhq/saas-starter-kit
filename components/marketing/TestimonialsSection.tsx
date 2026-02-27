@@ -43,7 +43,7 @@ const TestimonialsSection: React.FC<Props> = ({
         {testimonials.map((t, i) => (
           <div key={i} className="card bg-base-100 shadow-sm border border-base-300">
             <div className="card-body">
-              <p className="text-base-content/80 italic mb-6">"{t.quote}"</p>
+              <p className="text-base-content/80 italic mb-6">&ldquo;{t.quote}&rdquo;</p>
               <div className="flex items-center gap-3 mt-auto">
                 {t.avatar ? (
                   <img src={t.avatar} alt={t.author} className="w-10 h-10 rounded-full object-cover" />

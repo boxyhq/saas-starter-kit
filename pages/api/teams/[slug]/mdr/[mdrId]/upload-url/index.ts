@@ -29,7 +29,7 @@ export default async function handler(
     await assertMdrAccess(mdrId, user.id, user.team.id, 'EDITOR');
     await assertMdrNotFinal(mdrId);
 
-    const { sha256Hash, mimeType, filename, sectionId } = validateWithSchema(
+    const { sha256Hash, mimeType, filename } = validateWithSchema(
       uploadUrlSchema,
       req.body
     );

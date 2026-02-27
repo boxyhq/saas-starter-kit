@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { assertMdrOwnership, assertMdrNotFinal } from '@/lib/mdr';
 import { deleteS3Object } from '@/lib/s3';
 import { ApiError } from '@/lib/errors';
+import { MdrDocumentStatus } from '@prisma/client';
 import * as z from 'zod';
 
 const schema = z.object({
@@ -62,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!status) throw new ApiError(400, 'status is required for set_status action');
       await prisma.mdrDocument.updateMany({
         where: { id: { in: docIds } },
-        data: { status },
+        data: { status: status as MdrDocumentStatus },
       });
       return res.status(200).json({ data: { affected: docs.length, action: 'set_status', status } });
     }

@@ -87,7 +87,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  const { passwordHash: _, ...safeLink } = link;
+  const { passwordHash: _passwordHash, ...safeLink } = link;
   const shareUrl = `${env.appUrl}/mdr/share/${link.token}`;
 
   res.status(201).json({ data: { ...safeLink, shareUrl, hasPassword: !!passwordHash } });

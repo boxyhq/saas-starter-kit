@@ -13,13 +13,6 @@ import { Button, Input, Select } from 'react-daisyui';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import env from '@/lib/env';
 
-const formatBytes = (bytes: number) => {
-  if (!bytes) return '0 B';
-  const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${(bytes / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`;
-};
 
 const AdminTeamDetailPage = () => {
   const router = useRouter();

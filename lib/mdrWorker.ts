@@ -19,7 +19,6 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { prisma } from './prisma';
 import env from './env';
 import {
-  compilationQueue,
   redisConnection,
   type CompilationJobPayload,
 } from './mdrQueue';
@@ -281,7 +280,7 @@ async function compileMdr(payload: CompilationJobPayload): Promise<void> {
             page.drawImage(logoImage, { x: 8, y: (ftrH - h) / 2, width: w, height: h });
           }
         });
-      } catch (err) {
+      } catch {
         // If a single document fails, insert error placeholder and continue
         const errorPage = mergedPdf.addPage(PageSizes.A4);
         errorPage.drawText(`[Error embedding: ${doc.docNumber} — ${doc.title}]`, {

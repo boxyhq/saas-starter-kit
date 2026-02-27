@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }),
       prisma.mdrProjectMember.findMany({
         where: { userId },
-        select: { role: true, createdAt: true, mdrProject: { select: { id: true, name: true } } },
+        select: { role: true, joinedAt: true, mdrProject: { select: { id: true, name: true } } },
       }),
       prisma.mdrActivityLog.findMany({
         where: { userId },

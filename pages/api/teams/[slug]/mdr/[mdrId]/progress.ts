@@ -23,13 +23,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: true,
         title: true,
         requiredDocCount: true,
-        _count: { select: { sectionDocuments: true } },
+        _count: { select: { documentLinks: true } },
       },
       orderBy: { order: 'asc' },
     });
 
     const sectionProgress = sections.map((s) => {
-      const current = s._count.sectionDocuments;
+      const current = s._count.documentLinks;
       const required = s.requiredDocCount;
       const complete = required === 0 ? true : current >= required;
       return {

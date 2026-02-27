@@ -32,7 +32,7 @@ async function downloadS3Buffer(key: string): Promise<Buffer> {
 const worker = new Worker<ConversionJobPayload>(
   'mdr-file-conversion',
   async (job) => {
-    const { documentId, teamId } = job.data;
+    const { documentId } = job.data;
 
     const doc = await prisma.mdrDocument.findUniqueOrThrow({
       where: { id: documentId },

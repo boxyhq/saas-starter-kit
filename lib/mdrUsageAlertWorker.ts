@@ -8,7 +8,7 @@
  * is >= 80% of their plan quota. If so, and if no alert was sent in the last
  * 7 days, sends a warning email to all team OWNER/ADMIN members.
  */
-import { Worker, Queue } from 'bullmq';
+import { Worker } from 'bullmq';
 import { Role } from '@prisma/client';
 import { prisma } from './prisma';
 import { redisConnection, usageAlertQueue } from './mdrQueue';
@@ -172,7 +172,7 @@ async function scheduleJob() {
 
 const worker = new Worker(
   'mdr-usage-alerts',
-  async (_job) => {
+  async () => {
     await runUsageChecks();
   },
   {

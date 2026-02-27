@@ -11,17 +11,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     await requireSiteAdmin(req, res);
 
-    if (!env.aws.accessKeyId || !env.aws.bucket) {
+    if (!env.s3.accessKeyId || !env.s3.bucket) {
       return res.status(200).json({
         data: { available: false, reason: 'AWS S3 not configured' },
       });
     }
 
     const s3 = new S3Client({
-      region: env.aws.region,
+      region: env.s3.region,
       credentials: {
-        accessKeyId: env.aws.accessKeyId,
-        secretAccessKey: env.aws.secretAccessKey,
+        accessKeyId: env.s3.accessKeyId,
+        secretAccessKey: env.s3.secretAccessKey,
       },
     });
 
@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     do {
       const cmd = new ListObjectsV2Command({
-        Bucket: env.aws.bucket,
+        Bucket: env.s3.bucket,
         Prefix: 'mdr/',
         ContinuationToken: continuationToken,
         MaxKeys: 1000,
@@ -53,8 +53,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json({
       data: {
         available: true,
-        bucket: env.aws.bucket,
-        region: env.aws.region,
+        bucket: env.s3.bucket,
+        region: env.s3.region,
         totalBytes,
         totalObjects,
       },

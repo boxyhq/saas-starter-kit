@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const doc = await prisma.mdrDocument.findFirst({
       where: { id: docId, mdrProjectId: mdrId },
-      select: { id: true, pdfS3Key: true, s3Key: true, filename: true, mimeType: true },
+      select: { id: true, pdfS3Key: true, s3Key: true, originalName: true, mimeType: true },
     });
 
     if (!doc) throw new ApiError(404, 'Document not found');
@@ -32,9 +32,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       throw new ApiError(422, 'No PDF preview available for this document yet');
     }
 
-    const url = await getPresignedGetUrl(previewKey, 300); // 5 min
+    const url = await getPresignedGetUrl(previewKey, undefined, 300); // 5 min
 
-    res.status(200).json({ data: { url, filename: doc.filename } });
+    res.status(200).json({ data: { url, filename: doc.originalName } });
   } catch (error: any) {
     res.status(error.status || 500).json({ error: { message: error.message || 'Something went wrong' } });
   }

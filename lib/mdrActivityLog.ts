@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 
 interface LogOptions {
@@ -18,7 +19,7 @@ export async function logMdrActivity(opts: LogOptions): Promise<void> {
         mdrId: opts.mdrId,
         userId: opts.userId ?? null,
         action: opts.action,
-        details: opts.details ?? {},
+        details: (opts.details ?? {}) as Prisma.InputJsonValue,
       },
     });
   } catch {

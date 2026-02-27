@@ -8,8 +8,8 @@ import Link from 'next/link';
 import fetcher from '@/lib/fetcher';
 import AdminShell from '@/components/admin/AdminShell';
 import { Loading, Error as ErrorPanel } from '@/components/shared';
-import { Button, Modal, Input, Textarea, Badge } from 'react-daisyui';
-import { PlusIcon, PencilIcon, TrashIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { Button, Modal, Input, Textarea } from 'react-daisyui';
+import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import env from '@/lib/env';
 
 const AdminPlansPage = () => {
