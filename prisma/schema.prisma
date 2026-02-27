@@ -125,6 +125,7 @@ model User {
   sessions              Session[]
   invitations           Invitation[]
   mdrProjectMemberships MdrProjectMember[]
+  mdrActivityLogs       MdrActivityLog[]
 }
 
 model Team {
@@ -277,7 +278,8 @@ model MdrProject {
   members      MdrProjectMember[]
   invitations  MdrProjectInvitation[]
   transmittals MdrTransmittal[]
-  shareLinks   MdrShareLink[]
+  shareLinks    MdrShareLink[]
+  activityLogs  MdrActivityLog[]
 
   @@index([teamId])
 }
@@ -562,6 +564,22 @@ model MdrInboxAttachment {
   mdrDocument MdrDocument?  @relation(fields: [mdrDocumentId], references: [id], onDelete: SetNull)
 
   @@index([inboxEmailId])
+}
+
+// ─── MDR Activity Log ───────────────────────────────────────────────────────
+
+model MdrActivityLog {
+  id        String   @id @default(uuid())
+  mdrId     String
+  userId    String?
+  action    String
+  details   Json?
+  createdAt DateTime @default(now())
+
+  mdrProject MdrProject @relation(fields: [mdrId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([mdrId, createdAt(sort: Desc)])
 }
 
 // ─── Admin Impersonation ────────────────────────────────────────────────────

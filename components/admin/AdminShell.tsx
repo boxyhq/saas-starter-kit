@@ -11,6 +11,7 @@ import {
   CreditCardIcon,
   DocumentTextIcon,
   Cog6ToothIcon,
+  QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline';
 
 const adminNav = [
@@ -20,6 +21,7 @@ const adminNav = [
   { label: 'Plans', href: '/admin/plans', icon: CreditCardIcon },
   { label: 'Jobs', href: '/admin/jobs', icon: CpuChipIcon },
   { label: 'CMS', href: '/admin/cms', icon: DocumentTextIcon },
+  { label: 'Help Centre', href: '/admin/help', icon: QuestionMarkCircleIcon },
   { label: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
 ];
 

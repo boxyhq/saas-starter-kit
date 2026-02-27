@@ -12,7 +12,8 @@ interface MdrNavTabsProps {
     | 'share'
     | 'inbox'
     | 'templates'
-    | 'branding';
+    | 'branding'
+    | 'activity';
   teamSlug: string;
   mdrId: string;
   projectName?: string;
@@ -54,6 +55,7 @@ const MdrNavTabs = ({
       label: t('mdr-branding'),
       href: `${base}/branding`,
     },
+    { key: 'activity', label: 'Activity', href: `${base}/activity` },
   ];
 
   return (

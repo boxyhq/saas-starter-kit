@@ -324,12 +324,92 @@ async function seedSubscriptionPlans() {
   }
 }
 
+// ─── Help Centre Seed ────────────────────────────────────────────────────────
+
+const HELP_CATEGORIES = [
+  { slug: 'getting-started', title: 'Getting Started', icon: '🚀', description: 'New to the platform? Start here.' },
+  { slug: 'mdr-projects', title: 'MDR Projects', icon: '📁', description: 'Creating and managing Master Document Registers.' },
+  { slug: 'documents', title: 'Documents', icon: '📄', description: 'Uploading, versioning, and organising documents.' },
+  { slug: 'transmittals', title: 'Transmittals', icon: '📬', description: 'Issuing and tracking document transmittals.' },
+  { slug: 'pdf-compilation', title: 'PDF Compilation', icon: '🖨️', description: 'Compiling your MDR into a single branded PDF.' },
+  { slug: 'email-inbox', title: 'Email Inbox', icon: '📥', description: 'Routing inbound emails to MDR sections.' },
+  { slug: 'team-members', title: 'Team & Members', icon: '👥', description: 'Inviting collaborators and managing roles.' },
+  { slug: 'branding', title: 'Branding', icon: '🎨', description: 'Customising your PDFs with your company branding.' },
+  { slug: 'share-links', title: 'Share Links', icon: '🔗', description: 'Sharing documents securely with external parties.' },
+  { slug: 'templates', title: 'Templates', icon: '📋', description: 'Using document templates for consistent submissions.' },
+  { slug: 'billing', title: 'Billing & Plans', icon: '💳', description: 'Managing your subscription and usage.' },
+  { slug: 'account-settings', title: 'Account Settings', icon: '⚙️', description: 'Profile, security, and notification preferences.' },
+  { slug: 'api', title: 'API & Integrations', icon: '🔌', description: 'Using the REST API and webhooks.' },
+  { slug: 'troubleshooting', title: 'Troubleshooting', icon: '🛠️', description: 'Common issues and how to fix them.' },
+  { slug: 'compliance', title: 'Compliance & GDPR', icon: '🔒', description: 'Data privacy, exports, and account deletion.' },
+];
+
+const HELP_ARTICLES: Array<{ categorySlug: string; title: string; slug: string; excerpt: string }> = [
+  { categorySlug: 'getting-started', title: 'Welcome to the Platform', slug: 'welcome', excerpt: 'A quick overview of what you can do.' },
+  { categorySlug: 'getting-started', title: 'Creating Your First Team', slug: 'create-first-team', excerpt: 'Set up your organisation in minutes.' },
+  { categorySlug: 'getting-started', title: 'Inviting Team Members', slug: 'invite-team-members', excerpt: 'Collaborate with colleagues on your projects.' },
+  { categorySlug: 'mdr-projects', title: 'Creating a New MDR Project', slug: 'create-mdr-project', excerpt: 'Start a new Master Document Register.' },
+  { categorySlug: 'mdr-projects', title: 'Understanding Project Sections', slug: 'mdr-sections', excerpt: 'How sections organise your document register.' },
+  { categorySlug: 'mdr-projects', title: 'Finalising a Project', slug: 'finalize-mdr', excerpt: 'Lock a project once all documents are submitted.' },
+  { categorySlug: 'documents', title: 'Uploading Documents', slug: 'upload-documents', excerpt: 'Supported file types and upload limits.' },
+  { categorySlug: 'documents', title: 'Document Versioning', slug: 'document-versions', excerpt: 'Track changes and restore previous versions.' },
+  { categorySlug: 'documents', title: 'Document Status Workflow', slug: 'document-status', excerpt: 'Understanding IFR, IFC, AFC and other statuses.' },
+  { categorySlug: 'transmittals', title: 'Creating a Transmittal', slug: 'create-transmittal', excerpt: 'Bundle documents for formal submission.' },
+  { categorySlug: 'transmittals', title: 'Issuing and Cover Sheets', slug: 'issue-transmittal', excerpt: 'Issue a transmittal and generate the cover sheet PDF.' },
+  { categorySlug: 'pdf-compilation', title: 'Triggering a Compilation', slug: 'trigger-compilation', excerpt: 'Generate a single merged PDF of your MDR.' },
+  { categorySlug: 'pdf-compilation', title: 'Compilation Statuses', slug: 'compilation-status', excerpt: 'What QUEUED, PROCESSING, DONE and FAILED mean.' },
+  { categorySlug: 'email-inbox', title: 'Setting Up an Email Inbox', slug: 'setup-email-inbox', excerpt: 'Receive documents by email automatically.' },
+  { categorySlug: 'email-inbox', title: 'Routing Inbound Emails', slug: 'route-email', excerpt: 'Assign attachments to the correct MDR section.' },
+  { categorySlug: 'team-members', title: 'Member Roles Explained', slug: 'member-roles', excerpt: 'Owner, Admin, Editor, Viewer — what each can do.' },
+  { categorySlug: 'branding', title: 'Adding Your Company Logo', slug: 'add-logo', excerpt: 'Upload and position your logo on compiled PDFs.' },
+  { categorySlug: 'share-links', title: 'Creating a Share Link', slug: 'create-share-link', excerpt: 'Share your MDR with clients without giving them an account.' },
+  { categorySlug: 'billing', title: 'Upgrading Your Plan', slug: 'upgrade-plan', excerpt: 'Move to a higher tier to unlock more features.' },
+  { categorySlug: 'account-settings', title: 'Enabling Two-Factor Authentication', slug: 'enable-2fa', excerpt: 'Secure your account with an authenticator app.' },
+  { categorySlug: 'compliance', title: 'Exporting Your Data', slug: 'export-data', excerpt: 'Download all your personal data under GDPR.' },
+  { categorySlug: 'troubleshooting', title: 'Compilation Failed — What to Do', slug: 'compilation-failed', excerpt: 'Common causes and fixes for failed PDF compilations.' },
+];
+
+async function seedHelpContent() {
+  // Upsert categories
+  const categoryMap: Record<string, string> = {};
+  for (let i = 0; i < HELP_CATEGORIES.length; i++) {
+    const cat = HELP_CATEGORIES[i];
+    const record = await client.helpCategory.upsert({
+      where: { slug: cat.slug },
+      create: { ...cat, order: i },
+      update: { title: cat.title, description: cat.description, icon: cat.icon, order: i },
+    });
+    categoryMap[cat.slug] = record.id;
+    console.log(`Seeded help category: ${cat.title}`);
+  }
+
+  // Upsert articles
+  for (const art of HELP_ARTICLES) {
+    const categoryId = categoryMap[art.categorySlug];
+    if (!categoryId) continue;
+    await client.helpArticle.upsert({
+      where: { slug: art.slug },
+      create: {
+        categoryId,
+        slug: art.slug,
+        title: art.title,
+        excerpt: art.excerpt,
+        content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: art.excerpt }] }] },
+        status: 'PUBLISHED',
+      },
+      update: { title: art.title, excerpt: art.excerpt, categoryId },
+    });
+    console.log(`Seeded help article: ${art.title}`);
+  }
+}
+
 async function init() {
   const users = await seedUsers();
   const teams = await seedTeams();
   await seedTeamMembers(users, teams);
   await seedInvitations(teams, users);
   await seedSubscriptionPlans();
+  await seedHelpContent();
 }
 
 init();
