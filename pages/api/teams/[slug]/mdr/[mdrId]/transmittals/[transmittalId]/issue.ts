@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
 import { assertMdrOwnership, assertTeamNotSuspended } from '@/lib/mdr';
 import { mdrAuditEvent } from '@/lib/mdrAudit';
+import { logMdrActivity } from '@/lib/mdrActivityLog';
 import env from '@/lib/env';
 import { s3Client, mdrTransmittalCoverSheetKey } from '@/lib/s3';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
@@ -130,5 +131,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     { id: transmittalId, name: transmittal.transmittalNumber, type: 'mdr_transmittal' }
   );
 
+  logMdrActivity({ mdrId, userId: user.id, action: 'transmittal_issued', details: { transmittalNumber: transmittal.transmittalNumber } });
   res.status(200).json({ data: issued });
 };

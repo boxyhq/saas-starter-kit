@@ -7,6 +7,7 @@ import { assertMdrAccess, assertMdrOwnership, assertMdrNotFinal } from '@/lib/md
 import { validateWithSchema, updateMdrProjectSchema } from '@/lib/zod';
 import { mdrAuditEvent } from '@/lib/mdrAudit';
 import { cleanupQueue } from '@/lib/mdrQueue';
+import { logMdrActivity } from '@/lib/mdrActivityLog';
 import env from '@/lib/env';
 
 export default async function handler(
@@ -118,6 +119,8 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     isFinalizing ? 'mdr_project.finalized' : 'mdr_project.updated',
     { id: mdrId, name: project.name, type: 'mdr_project' }
   );
+
+  logMdrActivity({ mdrId, userId: user.id, action: isFinalizing ? 'project_finalized' : 'project_updated', details: { name: project.name } });
 
   res.status(200).json({ data: project });
 };

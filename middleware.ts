@@ -101,6 +101,13 @@ export default async function middleware(req: NextRequest) {
     if (!token) {
       return NextResponse.redirect(redirectUrl);
     }
+
+    // If 2FA verification is pending, redirect to the challenge page
+    if ((token as any).pendingTwoFactor && !pathname.startsWith('/auth/2fa-challenge')) {
+      const challengeUrl = new URL('/auth/2fa-challenge', req.url);
+      challengeUrl.searchParams.set('returnUrl', encodeURIComponent(req.url));
+      return NextResponse.redirect(challengeUrl);
+    }
   }
 
   // Database strategy

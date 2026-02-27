@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
 import { assertMdrAccess, assertMdrNotFinal, assertMdrOwnership } from '@/lib/mdr';
 import { validateWithSchema, updateMdrSectionSchema } from '@/lib/zod';
+import { logMdrActivity } from '@/lib/mdrActivityLog';
 import env from '@/lib/env';
 
 export default async function handler(
@@ -51,6 +52,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     data,
   });
 
+  logMdrActivity({ mdrId, userId: user.id, action: 'section_updated', details: { title: section.title } });
   res.status(200).json({ data: section });
 };
 
@@ -68,7 +70,9 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
   await assertMdrAccess(mdrId, user.id, user.team.id, 'ADMIN');
   await assertMdrNotFinal(mdrId);
 
+  const section = await prisma.mdrSection.findUniqueOrThrow({ where: { id: sectionId }, select: { title: true } });
   await prisma.mdrSection.delete({ where: { id: sectionId } });
 
+  logMdrActivity({ mdrId, userId: user.id, action: 'section_deleted', details: { title: section.title } });
   res.status(204).end();
 };

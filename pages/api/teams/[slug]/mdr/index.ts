@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { ApiError } from '@/lib/errors';
 import { checkMdrQuota } from '@/lib/mdr';
 import { validateWithSchema, createMdrProjectSchema } from '@/lib/zod';
+import { logMdrActivity } from '@/lib/mdrActivityLog';
 import env from '@/lib/env';
 
 export default async function handler(
@@ -78,5 +79,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
+  logMdrActivity({ mdrId: project.id, userId: user.id, action: 'project_created', details: { name: project.name } });
   res.status(201).json({ data: project });
 };

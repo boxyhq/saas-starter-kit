@@ -10,6 +10,7 @@ import fetcher from '@/lib/fetcher';
 import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrNavTabs from '@/components/mdr/MdrNavTabs';
 import MdrSectionTree from '@/components/mdr/MdrSectionTree';
+import MdrProgressBar from '@/components/mdr/MdrProgressBar';
 
 const MdrStructurePage = ({ teamFeatures }) => {
   const { t } = useTranslation('common');
@@ -49,6 +50,8 @@ const MdrStructurePage = ({ teamFeatures }) => {
         mdrId={mdrId}
         projectName={project?.name}
       />
+
+      <MdrProgressBar teamSlug={team.slug} mdrId={mdrId} />
 
       <MdrSectionTree
         sections={sections}

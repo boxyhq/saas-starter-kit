@@ -96,6 +96,21 @@ if (isAuthProviderEnabled('credentials')) {
 
         await clearLoginAttempts(user);
 
+        // Check for suspended account
+        if ((user as any).suspended) {
+          throw new Error('account-suspended');
+        }
+
+        // If 2FA is enabled, issue a partial session — gate access until TOTP is verified
+        if ((user as any).twoFactorEnabled) {
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            pendingTwoFactor: true,
+          } as any;
+        }
+
         return {
           id: user.id,
           name: user.name,
@@ -372,10 +387,15 @@ export const getAuthOptions = (
           );
         }
 
+        // Expose 2FA pending state so the middleware and pages can act on it
+        if ((token as any)?.pendingTwoFactor) {
+          (session.user as any).pendingTwoFactor = true;
+        }
+
         return session;
       },
 
-      async jwt({ token, trigger, session, account }) {
+      async jwt({ token, trigger, session, account, user }) {
         if (trigger === 'signIn' && account?.provider === 'boxyhq-idp') {
           const userByAccount = await adapter.getUserByAccount!({
             providerAccountId: account.providerAccountId,
@@ -387,6 +407,17 @@ export const getAuthOptions = (
 
         if (trigger === 'update' && 'name' in session && session.name) {
           return { ...token, name: session.name };
+        }
+
+        // Propagate pendingTwoFactor from initial sign-in
+        if (trigger === 'signIn' && (user as any)?.pendingTwoFactor) {
+          return { ...token, pendingTwoFactor: true };
+        }
+
+        // Allow challenge.ts to clear the pending flag after TOTP verification
+        if (trigger === 'update' && session?.twoFactorVerified === true) {
+          const { pendingTwoFactor: _removed, ...rest } = token as any;
+          return rest;
         }
 
         return token;

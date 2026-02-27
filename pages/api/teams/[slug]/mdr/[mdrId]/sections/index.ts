@@ -10,6 +10,7 @@ import {
   reorderSectionsSchema,
 } from '@/lib/zod';
 import env from '@/lib/env';
+import { logMdrActivity } from '@/lib/mdrActivityLog';
 
 export default async function handler(
   req: NextApiRequest,
@@ -91,6 +92,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
+  logMdrActivity({ mdrId, userId: user.id, action: 'section_created', details: { title: section.title } });
   res.status(201).json({ data: section });
 };
 

@@ -6,6 +6,7 @@ import { ApiError } from '@/lib/errors';
 import { assertMdrAccess, assertMdrOwnership } from '@/lib/mdr';
 import { validateWithSchema, createMdrInvitationSchema } from '@/lib/zod';
 import { sendEmail } from '@/lib/email/sendEmail';
+import { logMdrActivity } from '@/lib/mdrActivityLog';
 import env from '@/lib/env';
 
 export default async function handler(
@@ -99,5 +100,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     `,
   });
 
+  logMdrActivity({ mdrId, userId: user.id, action: 'member_invited', details: { email, role } });
   res.status(201).json({ data: invitation });
 };

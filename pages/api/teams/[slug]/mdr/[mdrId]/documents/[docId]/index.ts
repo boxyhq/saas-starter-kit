@@ -8,6 +8,7 @@ import { validateWithSchema, updateMdrDocumentSchema } from '@/lib/zod';
 import { deleteS3Object } from '@/lib/s3';
 import { mdrAuditEvent } from '@/lib/mdrAudit';
 import { sendMdrEvent } from '@/lib/mdrEvents';
+import { logMdrActivity } from '@/lib/mdrActivityLog';
 import env from '@/lib/env';
 
 export default async function handler(
@@ -92,6 +93,7 @@ const handlePATCH = async (req: NextApiRequest, res: NextApiResponse) => {
     mdrProjectId: mdrId,
   });
 
+  logMdrActivity({ mdrId, userId: user.id, action: 'document_updated', details: { docNumber: doc.docNumber, title: doc.title } });
   res.status(200).json({ data: doc });
 };
 
@@ -133,5 +135,6 @@ const handleDELETE = async (req: NextApiRequest, res: NextApiResponse) => {
     mdrProjectId: mdrId,
   });
 
+  logMdrActivity({ mdrId, userId: user.id, action: 'document_deleted', details: { title: doc.title } });
   res.status(204).end();
 };

@@ -11,6 +11,7 @@ import useTeam from 'hooks/useTeam';
 import fetcher from '@/lib/fetcher';
 import { Error as ErrorPanel, Loading } from '@/components/shared';
 import MdrNavTabs from '@/components/mdr/MdrNavTabs';
+import MdrProgressBar from '@/components/mdr/MdrProgressBar';
 import { Button, Modal } from 'react-daisyui';
 import { LockClosedIcon } from '@heroicons/react/24/solid';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
@@ -84,6 +85,8 @@ const MdrProjectDashboard = ({ teamFeatures }) => {
           </div>
         </div>
       )}
+
+      <MdrProgressBar teamSlug={team.slug} mdrId={mdrId} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="stat bg-base-200 rounded-lg p-4">
