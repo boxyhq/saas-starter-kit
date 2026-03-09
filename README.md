@@ -69,7 +69,7 @@ This fork also carries a Glyph-specific same-host experiment overlay:
 
 That overlay keeps BoxyHQ as a separate stack on the same VM as Glyph, binds it to
 `127.0.0.1:4002`, joins the shared Docker network used by Glyph, and enables
-database-backed NextAuth sessions with a host-only cookie on the shared
+JWT-backed NextAuth sessions with a host-only cookie on the shared
 Tailscale MagicDNS hostname:
 
 - `https://vmi3042871-2.tailbefe96.ts.net:9443` for Glyph

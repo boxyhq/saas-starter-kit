@@ -117,8 +117,8 @@ if (isAuthProviderEnabled('credentials')) {
 if (isAuthProviderEnabled('github')) {
   providers.push(
     GitHubProvider({
-      clientId: env.github.clientId,
-      clientSecret: env.github.clientSecret,
+      clientId: env.github.clientId!,
+      clientSecret: env.github.clientSecret!,
       allowDangerousEmailAccountLinking: true,
     })
   );
@@ -127,8 +127,8 @@ if (isAuthProviderEnabled('github')) {
 if (isAuthProviderEnabled('google')) {
   providers.push(
     GoogleProvider({
-      clientId: env.google.clientId,
-      clientSecret: env.google.clientSecret,
+      clientId: env.google.clientId!,
+      clientSecret: env.google.clientSecret!,
       allowDangerousEmailAccountLinking: true,
     })
   );

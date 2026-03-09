@@ -47,8 +47,8 @@ require_var GLYPH_SHARED_DOCKER_NETWORK
 require_var BOXYHQ_SERVER_EXPERIMENT_TAILSCALE_HOSTNAME
 require_var BOXYHQ_SERVER_EXPERIMENT_HTTPS_PORT
 
-if [ "$NEXTAUTH_SESSION_STRATEGY" != "database" ]; then
-  printf 'NEXTAUTH_SESSION_STRATEGY must be database for the shared-session experiment.\n' >&2
+if [ "$NEXTAUTH_SESSION_STRATEGY" != "jwt" ]; then
+  printf 'NEXTAUTH_SESSION_STRATEGY must be jwt for the Tailscale server experiment.\n' >&2
   exit 1
 fi
 

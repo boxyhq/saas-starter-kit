@@ -1,8 +1,16 @@
 import type { SessionStrategy } from 'next-auth';
 
+const optionalEnv = (value?: string | null) => {
+  if (value === undefined || value === null || value === '') {
+    return undefined;
+  }
+
+  return value;
+};
+
 const env = {
-  databaseUrl: `${process.env.DATABASE_URL}`,
-  appUrl: `${process.env.APP_URL}`,
+  databaseUrl: process.env.DATABASE_URL || '',
+  appUrl: process.env.APP_URL || '',
   redirectIfAuthenticated: '/dashboard',
   securityHeadersEnabled: process.env.SECURITY_HEADERS_ENABLED ?? false,
 
@@ -25,20 +33,20 @@ const env = {
 
   // Svix
   svix: {
-    url: `${process.env.SVIX_URL}`,
-    apiKey: `${process.env.SVIX_API_KEY}`,
+    url: optionalEnv(process.env.SVIX_URL),
+    apiKey: optionalEnv(process.env.SVIX_API_KEY),
   },
 
   //Social login: Github
   github: {
-    clientId: `${process.env.GITHUB_CLIENT_ID}`,
-    clientSecret: `${process.env.GITHUB_CLIENT_SECRET}`,
+    clientId: optionalEnv(process.env.GITHUB_CLIENT_ID),
+    clientSecret: optionalEnv(process.env.GITHUB_CLIENT_SECRET),
   },
 
   //Social login: Google
   google: {
-    clientId: `${process.env.GOOGLE_CLIENT_ID}`,
-    clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,
+    clientId: optionalEnv(process.env.GOOGLE_CLIENT_ID),
+    clientSecret: optionalEnv(process.env.GOOGLE_CLIENT_SECRET),
   },
 
   // Retraced configuration
@@ -77,7 +85,7 @@ const env = {
 
   // Mixpanel configuration
   mixpanel: {
-    token: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
+    token: optionalEnv(process.env.NEXT_PUBLIC_MIXPANEL_TOKEN),
   },
 
   disableNonBusinessEmailSignup:
