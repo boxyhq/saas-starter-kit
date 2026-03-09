@@ -57,6 +57,23 @@ Next.js-based SaaS starter kit saves you months of development by starting you o
 
 ## 🚀 Deployment
 
+### Glyph same-host experiment
+
+This fork also carries a Glyph-specific same-host experiment overlay:
+
+- [infra/docker/boxyhq.Dockerfile](/Users/cedricnegue/Code-Main/glyph-app/repos/saas-starter-kit/infra/docker/boxyhq.Dockerfile)
+- [infra/docker/docker-compose.server-experiment.yml](/Users/cedricnegue/Code-Main/glyph-app/repos/saas-starter-kit/infra/docker/docker-compose.server-experiment.yml)
+- [infra/docker/boxyhq.server-experiment.env.example](/Users/cedricnegue/Code-Main/glyph-app/repos/saas-starter-kit/infra/docker/boxyhq.server-experiment.env.example)
+- [infra/scripts/server-experiment-preflight.sh](/Users/cedricnegue/Code-Main/glyph-app/repos/saas-starter-kit/infra/scripts/server-experiment-preflight.sh)
+- [infra/scripts/server-experiment-deploy.sh](/Users/cedricnegue/Code-Main/glyph-app/repos/saas-starter-kit/infra/scripts/server-experiment-deploy.sh)
+
+That overlay keeps BoxyHQ as a separate stack on the same VM as Glyph, binds it to
+`127.0.0.1:4002`, joins the shared Docker network used by Glyph, and enables
+database-backed NextAuth sessions with a shared cookie domain for:
+
+- `app.glyph-beta.test`
+- `account.glyph-beta.test`
+
 <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fboxyhq%2Fsaas-starter-kit&env=NEXTAUTH_SECRET,SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASSWORD,SMTP_FROM,DATABASE_URL,APP_URL">
 <img width="90" alt="Deploy with Vercel" src="https://vercel.com/button" />
 </a>

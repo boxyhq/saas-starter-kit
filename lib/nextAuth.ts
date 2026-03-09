@@ -43,6 +43,14 @@ const useSecureCookie = env.appUrl.startsWith('https://');
 export const sessionTokenCookieName =
   (useSecureCookie ? '__Secure-' : '') + 'next-auth.session-token';
 
+export const sessionTokenCookieOptions = {
+  httpOnly: true,
+  sameSite: 'lax' as const,
+  path: '/',
+  secure: useSecureCookie,
+  ...(env.nextAuth.cookieDomain ? { domain: env.nextAuth.cookieDomain } : {}),
+};
+
 if (isAuthProviderEnabled('credentials')) {
   providers.push(
     CredentialsProvider({
@@ -254,7 +262,7 @@ async function createDatabaseSession(
     req,
     res,
     expires,
-    secure: useSecureCookie,
+    ...sessionTokenCookieOptions,
   });
 }
 
@@ -282,6 +290,12 @@ export const getAuthOptions = (
       maxAge: sessionMaxAge,
     },
     secret: env.nextAuth.secret,
+    cookies: {
+      sessionToken: {
+        name: sessionTokenCookieName,
+        options: sessionTokenCookieOptions,
+      },
+    },
     callbacks: {
       async signIn({ user, account, profile }) {
         if (!user || !user.email || !account) {

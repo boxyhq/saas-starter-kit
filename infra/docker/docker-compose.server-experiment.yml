@@ -1,0 +1,36 @@
+name: boxyhq-server-experiment
+
+services:
+  boxyhq-postgres:
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_DB: ${BOXYHQ_POSTGRES_DB:-boxyhq}
+      POSTGRES_USER: ${BOXYHQ_POSTGRES_USER:-boxyhq}
+      POSTGRES_PASSWORD: ${BOXYHQ_POSTGRES_PASSWORD:?Set BOXYHQ_POSTGRES_PASSWORD}
+    volumes:
+      - ${BOXYHQ_POSTGRES_HOST_PATH:-/var/lib/boxyhq/postgres}:/var/lib/postgresql/data
+    networks:
+      - glyph_experiment
+    restart: unless-stopped
+
+  boxyhq-app:
+    image: boxyhq-server-experiment:${BOXYHQ_RELEASE_SHA:-server-experiment}
+    build:
+      context: ../..
+      dockerfile: infra/docker/boxyhq.Dockerfile
+    command: ["npx", "next", "start", "--hostname", "0.0.0.0", "--port", "4002"]
+    env_file:
+      - ${BOXYHQ_SERVER_EXPERIMENT_ENV_FILE:-/etc/boxyhq/server-experiment.env}
+    depends_on:
+      boxyhq-postgres:
+        condition: service_started
+    networks:
+      - glyph_experiment
+    ports:
+      - "127.0.0.1:${BOXYHQ_APP_PORT:-4002}:4002"
+    restart: unless-stopped
+
+networks:
+  glyph_experiment:
+    name: ${GLYPH_SHARED_DOCKER_NETWORK:-glyph-experiment}
+    external: true

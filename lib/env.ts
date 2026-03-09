@@ -20,6 +20,7 @@ const env = {
     secret: process.env.NEXTAUTH_SECRET,
     sessionStrategy: (process.env.NEXTAUTH_SESSION_STRATEGY ||
       'jwt') as SessionStrategy,
+    cookieDomain: process.env.NEXTAUTH_COOKIE_DOMAIN,
   },
 
   // Svix
