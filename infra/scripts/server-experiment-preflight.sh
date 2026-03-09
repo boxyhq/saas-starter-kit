@@ -52,10 +52,10 @@ if [ "$NEXTAUTH_SESSION_STRATEGY" != "database" ]; then
 fi
 
 case "$NEXTAUTH_URL" in
-  http://account.glyph-beta.test*)
+  https://account.glyph-beta.test*)
     ;;
   *)
-    printf 'NEXTAUTH_URL must target http://account.glyph-beta.test for the first experiment.\n' >&2
+    printf 'NEXTAUTH_URL must target https://account.glyph-beta.test for the first experiment.\n' >&2
     exit 1
     ;;
 esac

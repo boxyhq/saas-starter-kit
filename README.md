@@ -69,7 +69,8 @@ This fork also carries a Glyph-specific same-host experiment overlay:
 
 That overlay keeps BoxyHQ as a separate stack on the same VM as Glyph, binds it to
 `127.0.0.1:4002`, joins the shared Docker network used by Glyph, and enables
-database-backed NextAuth sessions with a shared cookie domain for:
+database-backed NextAuth sessions with a shared cookie domain for the sibling
+subdomains served through Caddy `tls internal`:
 
 - `app.glyph-beta.test`
 - `account.glyph-beta.test`
