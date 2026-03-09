@@ -41,32 +41,31 @@ require_var NEXTAUTH_URL
 require_var APP_URL
 require_var NEXTAUTH_SECRET
 require_var NEXTAUTH_SESSION_STRATEGY
-require_var NEXTAUTH_COOKIE_DOMAIN
 require_var DATABASE_URL
 require_var BOXYHQ_POSTGRES_PASSWORD
 require_var GLYPH_SHARED_DOCKER_NETWORK
+require_var BOXYHQ_SERVER_EXPERIMENT_TAILSCALE_HOSTNAME
+require_var BOXYHQ_SERVER_EXPERIMENT_HTTPS_PORT
 
 if [ "$NEXTAUTH_SESSION_STRATEGY" != "database" ]; then
   printf 'NEXTAUTH_SESSION_STRATEGY must be database for the shared-session experiment.\n' >&2
   exit 1
 fi
 
-case "$NEXTAUTH_URL" in
-  https://account.glyph-beta.test*)
-    ;;
-  *)
-    printf 'NEXTAUTH_URL must target https://account.glyph-beta.test for the first experiment.\n' >&2
-    exit 1
-    ;;
-esac
+expected_url="https://${BOXYHQ_SERVER_EXPERIMENT_TAILSCALE_HOSTNAME}:${BOXYHQ_SERVER_EXPERIMENT_HTTPS_PORT}"
+
+if [ "$NEXTAUTH_URL" != "$expected_url" ]; then
+  printf 'NEXTAUTH_URL must match %s for the Tailscale server experiment.\n' "$expected_url" >&2
+  exit 1
+fi
 
 if [ "$APP_URL" != "$NEXTAUTH_URL" ]; then
   printf 'APP_URL must match NEXTAUTH_URL for the first experiment.\n' >&2
   exit 1
 fi
 
-if [ "$NEXTAUTH_COOKIE_DOMAIN" != ".glyph-beta.test" ]; then
-  printf 'NEXTAUTH_COOKIE_DOMAIN must be .glyph-beta.test for the shared-session experiment.\n' >&2
+if [ -n "${NEXTAUTH_COOKIE_DOMAIN:-}" ]; then
+  printf 'NEXTAUTH_COOKIE_DOMAIN must be unset for the Tailscale server experiment so NextAuth uses a host-only cookie.\n' >&2
   exit 1
 fi
 
@@ -79,7 +78,7 @@ docker compose --env-file "$BOXYHQ_SERVER_EXPERIMENT_ENV_FILE" -f "$BOXYHQ_COMPO
 
 printf '{\n'
 printf '  "appUrl": "%s",\n' "$APP_URL"
-printf '  "cookieDomain": "%s",\n' "$NEXTAUTH_COOKIE_DOMAIN"
+printf '  "cookieDomain": null,\n'
 printf '  "composeFile": "%s",\n' "$BOXYHQ_COMPOSE_FILE"
 printf '  "sharedDockerNetwork": "%s"\n' "$GLYPH_SHARED_DOCKER_NETWORK"
 printf '}\n'

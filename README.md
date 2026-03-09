@@ -69,11 +69,11 @@ This fork also carries a Glyph-specific same-host experiment overlay:
 
 That overlay keeps BoxyHQ as a separate stack on the same VM as Glyph, binds it to
 `127.0.0.1:4002`, joins the shared Docker network used by Glyph, and enables
-database-backed NextAuth sessions with a shared cookie domain for the sibling
-subdomains served through Caddy `tls internal`:
+database-backed NextAuth sessions with a host-only cookie on the shared
+Tailscale MagicDNS hostname:
 
-- `app.glyph-beta.test`
-- `account.glyph-beta.test`
+- `https://vmi3042871-2.tailbefe96.ts.net:9443` for Glyph
+- `https://vmi3042871-2.tailbefe96.ts.net:4443` for BoxyHQ
 
 <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fboxyhq%2Fsaas-starter-kit&env=NEXTAUTH_SECRET,SMTP_HOST,SMTP_PORT,SMTP_USER,SMTP_PASSWORD,SMTP_FROM,DATABASE_URL,APP_URL">
 <img width="90" alt="Deploy with Vercel" src="https://vercel.com/button" />
