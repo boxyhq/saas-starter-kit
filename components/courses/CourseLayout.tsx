@@ -15,7 +15,6 @@ export default function CourseLayout({ course: initialCourse, userId }: any) {
 
   const outlines = course.moduleOutlines || [];
 
-  // 🔁 POLL SELVE KURSET – så vi får nye moduleOutlines fortløpende
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -33,7 +32,6 @@ export default function CourseLayout({ course: initialCourse, userId }: any) {
     return () => clearInterval(timer);
   }, [userId, course.courseId]);
 
-  // Poll innhold for aktiv modul
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -61,22 +59,52 @@ export default function CourseLayout({ course: initialCourse, userId }: any) {
     (m: any) => Number(m.moduleNumber) === activeModule
   );
 
-  const mergedTopics = (skeleton?.sections || []).map(
-    (s: any, index: number) => {
-      const generated = moduleData?.sections?.find(
-        (gen: any) => gen.sectionNumber === index + 1
-      );
+  const generatedSections = moduleData?.sections || [];
 
-      return (
-        generated || {
-          ...s,
-          topicNumber: index + 1,
-        }
-      );
-    }
+  const generatedIntro = generatedSections.find(
+    (s: any) => s.sectionId === "INTRO"
   );
 
-  // 🔥 STATUS-LOGIKK – basert på AKTUELLE outlines fra DB
+  const introTopic = generatedIntro || {
+    topicNumber: 1,
+    sectionNumber: 1,
+    sectionId: "INTRO",
+    title: "Introduksjon",
+    bodyText: "Introduksjonen genereres. Vennligst vent...",
+  };
+
+  const realTopics = (skeleton?.sections || []).map((s: any, index: number) => {
+    const expectedTopicNumber = index + 2;
+    const expectedSectionNumber = index + 2;
+
+    const generated =
+      generatedSections.find((gen: any) => gen.sectionId === s.id) ||
+      generatedSections.find(
+        (gen: any) => Number(gen.sectionNumber) === expectedSectionNumber
+      ) ||
+      generatedSections.find(
+        (gen: any) => Number(gen.topicNumber) === expectedTopicNumber
+      );
+
+    return (
+      generated || {
+        ...s,
+        topicNumber: expectedTopicNumber,
+        sectionNumber: expectedSectionNumber,
+      }
+    );
+  });
+
+  const mergedTopics = [introTopic, ...realTopics];
+
+  const topicStatusToUse: Record<string, any> = {
+    ...(moduleData?.topicStatus || {}),
+    "1": {
+      hasContent: true,
+      clickable: true,
+    },
+  };
+
   const moduleStatuses: Record<number, "locked" | "generating" | "generated"> =
     {};
 
@@ -110,18 +138,16 @@ export default function CourseLayout({ course: initialCourse, userId }: any) {
         {!loading && !activeTopic && (
           <TopicList
             topics={mergedTopics}
-            topicStatus={moduleData?.topicStatus || {}}
+            topicStatus={topicStatusToUse}
             onSelectTopic={(t: any) => setActiveTopic(t.topicNumber)}
           />
         )}
 
-        {!loading && activeTopic && moduleData && (
+        {!loading && activeTopic && (
           <TopicContent
-            topic={
-              moduleData.sections.find(
-                (s: any) => s.topicNumber === activeTopic
-              )
-            }
+            topic={mergedTopics.find(
+              (t: any) => t.topicNumber === activeTopic
+            )}
             onBack={handleBackToOverview}
             hasNext={mergedTopics.some(
               (t: any) => t.topicNumber === (activeTopic || 0) + 1
