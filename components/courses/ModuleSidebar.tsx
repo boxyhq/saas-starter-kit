@@ -12,16 +12,12 @@ type Module = {
 interface Props {
   modules: Module[];
   activeIndex: number | null;
-  isCollapsed: boolean;
-  onToggle: () => void;
   onSelect: (index: number) => void;
 }
 
 export default function ModuleSidebar({
   modules,
   activeIndex,
-  isCollapsed,
-  onToggle,
   onSelect,
 }: Props) {
 

@@ -15,7 +15,7 @@ export function useModuleStatus(
 
     const poll = async () => {
       try {
-        const res = await getModule(courseId, moduleNumber, userId);
+        const res = await getModule(userId, courseId, moduleNumber);
 
         if (res.source === "generated") {
           setStatus("generated");

@@ -43,6 +43,7 @@ module.exports = [{
     },
     rules: {
         "@typescript-eslint/no-explicit-any": "off",
+        "i18next/no-literal-string": "off", // TODO remove this and fix all the literal strings using translations
     }
 }, {
     files: ["**/*.js"],

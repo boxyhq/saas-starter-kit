@@ -47,7 +47,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, []);
+  }, [router.events]);
 
   if (env.darkModeEnabled) {
     applyTheme(localStorage.getItem('theme') as Theme);

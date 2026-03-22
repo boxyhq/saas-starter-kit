@@ -16,8 +16,6 @@ export default function CourseLayout({ course: initialCourse, userId }: any) {
   const outlines = course.moduleOutlines || [];
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-
     async function pollCourse() {
       try {
         const updated = await getCourse(userId, course.courseId);
@@ -27,14 +25,12 @@ export default function CourseLayout({ course: initialCourse, userId }: any) {
       }
     }
 
-    timer = setInterval(pollCourse, 4000);
+    const timer = setInterval(pollCourse, 4000);
 
     return () => clearInterval(timer);
   }, [userId, course.courseId]);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-
     async function poll() {
       try {
         const data = await getModule(userId, course.courseId, activeModule);
@@ -46,7 +42,7 @@ export default function CourseLayout({ course: initialCourse, userId }: any) {
     }
 
     poll();
-    timer = setInterval(poll, 3000);
+    const timer = setInterval(poll, 3000);
 
     return () => clearInterval(timer);
   }, [activeModule, userId, course.courseId]);
@@ -127,9 +123,8 @@ export default function CourseLayout({ course: initialCourse, userId }: any) {
           setActiveModule(i + 1);
           setActiveTopic(null);
         }}
-        isCollapsed={false}
-        onToggle={() => {}}
-        moduleStatuses={moduleStatuses}
+        
+        
       />
 
       <div className="p-6 flex-1">
