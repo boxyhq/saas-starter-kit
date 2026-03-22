@@ -73,7 +73,7 @@
     "@types/jest": "30.0.0",
     "@types/micromatch": "4.0.10",
     "@types/mixpanel-browser": "2.66.0",
-    "@types/node": "25.0.2",
+    "@types/node": "25.0.3",
     "@types/nodemailer": "7.0.4",
     "@types/react": "18.3.13",
     "@typescript-eslint/eslint-plugin": "8.49.0",
