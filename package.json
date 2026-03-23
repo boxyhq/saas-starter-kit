@@ -67,7 +67,7 @@
     "zod": "3.25.64"
   },
   "devDependencies": {
-    "@faker-js/faker": "10.1.0",
+    "@faker-js/faker": "10.3.0",
     "@playwright/test": "1.58.2",
     "@testing-library/jest-dom": "6.9.1",
     "@types/jest": "30.0.0",
