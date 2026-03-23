@@ -49,7 +49,7 @@
     "mixpanel-browser": "2.76.0",
     "next": "15.5.14",
     "next-auth": "4.24.13",
-    "next-i18next": "15.4.3",
+    "next-i18next": "16.0.0",
     "nodemailer": "7.0.11",
     "react": "18.3.1",
     "react-daisyui": "5.0.5",
