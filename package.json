@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@boxyhq/metrics": "0.2.12",
-    "@boxyhq/react-ui": "3.5.1",
+    "@boxyhq/react-ui": "3.5.3",
     "@boxyhq/saml-jackson": "26.2.0",
     "@heroicons/react": "2.2.0",
     "@next-auth/prisma-adapter": "1.0.7",
