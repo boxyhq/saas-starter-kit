@@ -241,6 +241,38 @@ export const url = z
     return false;
   });
 
+export const webhookUrl = z
+  .string({
+    invalid_type_error: 'URL must be a string',
+  })
+  .url('Enter a valid URL')
+  .min(1, 'URL is required')
+  .max(
+    maxLengthPolicies.domain,
+    `URL should have at most ${maxLengthPolicies.domain} characters`
+  )
+  .refine(
+    (url) => {
+      try {
+        const parsed = new URL(url);
+        if (parsed.protocol === 'https:') {
+          return true;
+        }
+        // Allow HTTP in non-production (local dev/testing)
+        if (
+          parsed.protocol === 'http:' &&
+          process.env.NODE_ENV !== 'production'
+        ) {
+          return true;
+        }
+        return false;
+      } catch {
+        return false;
+      }
+    },
+    { message: 'Webhook URL must use HTTPS protocol for security' }
+  );
+
 export const inviteToken = z
   .string({
     required_error: 'Invite token is required',
