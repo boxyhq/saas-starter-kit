@@ -19,6 +19,7 @@ import {
   memberId,
   inviteToken,
   url,
+  webhookUrl,
   endpointId,
   sentViaEmailString,
   invitationId,
@@ -134,7 +135,7 @@ export const getInvitationSchema = z.object({
 
 export const webhookEndpointSchema = z.object({
   name: name(),
-  url,
+  url: webhookUrl,
   eventTypes,
 });
 
