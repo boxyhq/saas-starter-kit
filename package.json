@@ -68,7 +68,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "10.4.0",
-    "@playwright/test": "1.58.2",
+    "@playwright/test": "1.59.1",
     "@testing-library/jest-dom": "6.9.1",
     "@types/jest": "30.0.0",
     "@types/micromatch": "4.0.10",
