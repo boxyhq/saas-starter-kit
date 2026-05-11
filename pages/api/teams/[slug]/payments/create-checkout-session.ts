@@ -4,6 +4,7 @@ import { getSession } from '@/lib/session';
 import { throwIfNoTeamAccess } from 'models/team';
 import { stripe, getStripeCustomerId } from '@/lib/stripe';
 import env from '@/lib/env';
+import { throwIfNotAllowed } from 'models/user';
 import { checkoutSessionSchema, validateWithSchema } from '@/lib/zod';
 
 export default async function handler(
@@ -36,6 +37,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   );
 
   const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember, 'team_payments', 'create');
   const session = await getSession(req, res);
   const customer = await getStripeCustomerId(teamMember, session);
 

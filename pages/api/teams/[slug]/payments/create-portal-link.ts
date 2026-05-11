@@ -30,6 +30,8 @@ export default async function handler(
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember, 'team_payments', 'create');
+  
   const session = await getSession(req, res);
   const customerId = await getStripeCustomerId(teamMember, session);
 
