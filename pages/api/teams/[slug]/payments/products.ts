@@ -6,6 +6,7 @@ import { throwIfNoTeamAccess } from 'models/team';
 import { getAllServices } from 'models/service';
 import { getAllPrices } from 'models/price';
 import { getByCustomerId } from 'models/subscription';
+import { throwIfNotAllowed } from 'models/user';
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,6 +34,7 @@ export default async function handler(
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(req, res);
   const teamMember = await throwIfNoTeamAccess(req, res);
+  throwIfNotAllowed(teamMember, 'team_payments', 'read');
   if (!session?.user?.id) {
     throw Error('Could not get user');
   }
