@@ -15,6 +15,15 @@ const env = {
     from: process.env.SMTP_FROM,
   },
 
+  // Mail provider: 'smtp' (default, uses the SMTP_* settings above) or 'mailkite'
+  // (sends through the MailKite API at https://mailkite.dev, no SMTP server needed).
+  mailProvider: (process.env.MAIL_PROVIDER || 'smtp') as 'smtp' | 'mailkite',
+  mailkite: {
+    apiKey: process.env.MAILKITE_API_KEY,
+    // Optional override of the MailKite API base URL (e.g. self-hosted / testing).
+    baseUrl: process.env.MAILKITE_BASE_URL,
+  },
+
   // NextAuth configuration
   nextAuth: {
     secret: process.env.NEXTAUTH_SECRET,

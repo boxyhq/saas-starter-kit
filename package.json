@@ -51,6 +51,7 @@
     "next-auth": "4.24.13",
     "next-i18next": "15.4.3",
     "nodemailer": "7.0.11",
+    "nodemailer-mailkite-transport": "0.1.1",
     "react": "18.3.1",
     "react-daisyui": "5.0.5",
     "react-dom": "18.3.1",
