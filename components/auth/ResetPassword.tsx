@@ -54,7 +54,7 @@ const ResetPassword = () => {
       setSubmitting(false);
 
       if (!response.ok) {
-        toast.error(json.error.message);
+        toast.error(t(json?.error?.message || 'Something went wrong'));
         return;
       }
 

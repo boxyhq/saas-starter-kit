@@ -85,7 +85,7 @@ const JoinWithInvitation = ({
       recaptchaRef.current?.reset();
 
       if (!response.ok) {
-        toast.error(json.error.message);
+        toast.error(t(json?.error?.message || 'Something went wrong'));
         return;
       }
 

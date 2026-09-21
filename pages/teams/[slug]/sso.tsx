@@ -57,7 +57,7 @@ const TeamSSO = ({ teamFeatures, SPConfigURL }) => {
             toast.success(`Contents copied to clipboard`);
           }
         }}
-        errorCallback={(errMessage) => toast.error(errMessage)}
+        errorCallback={(errMessage) => toast.error(t(errMessage || 'Something went wrong'))}
         classNames={BOXYHQ_UI_CSS}
         componentProps={{
           connectionList: {
