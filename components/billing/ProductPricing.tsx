@@ -34,9 +34,11 @@ const ProductPricing = ({ plans, subscriptions }: ProductPricingProps) => {
       window.open(data.data.url, '_blank', 'noopener,noreferrer');
     } else {
       toast.error(
-        data?.error?.message ||
-          data?.error?.raw?.message ||
-          t('stripe-checkout-fallback-error')
+        t(
+          data?.error?.message ||
+            data?.error?.raw?.message ||
+            'stripe-checkout-fallback-error'
+        )
       );
     }
   };

@@ -45,7 +45,7 @@ const ManageSessions = () => {
         window.location.reload();
       }
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(t(error?.message || 'Something went wrong'));
     } finally {
       mutate();
       setSessionToDelete(null);
