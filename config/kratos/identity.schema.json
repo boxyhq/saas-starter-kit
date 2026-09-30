@@ -1,0 +1,44 @@
+{
+  "$id": "https://saas-starter-kit/identity.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Person",
+  "type": "object",
+  "properties": {
+    "traits": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "title": "E-Mail",
+          "minLength": 3,
+          "ory.sh/kratos": {
+            "credentials": {
+              "password": {
+                "identifier": true
+              },
+              "code": {
+                "identifier": true,
+                "via": "email"
+              }
+            },
+            "recovery": {
+              "via": "email"
+            },
+            "verification": {
+              "via": "email"
+            }
+          },
+          "maxLength": 320
+        },
+        "name": {
+          "type": "string",
+          "title": "Full name",
+          "maxLength": 104
+        }
+      },
+      "required": ["email"],
+      "additionalProperties": false
+    }
+  }
+}

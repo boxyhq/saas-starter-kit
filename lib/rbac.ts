@@ -9,6 +9,12 @@ export async function validateMembershipOperation(
     role?: Role;
   }
 ) {
+  if (memberId === teamMember.userId) {
+    throw new ApiError(
+      403,
+      'Use Leave team to remove yourself; you cannot change your own role.'
+    );
+  }
   const updatingMember = await getTeamMember(memberId, teamMember.team.slug);
   // Member and Admin can't update the role of Owner
   if (

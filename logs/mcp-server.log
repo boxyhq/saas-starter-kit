@@ -1,0 +1,4 @@
+2026-09-08T14:12:07.453Z [INFO] stdio-transport: Starting MCP server with stdio transport
+2026-09-08T14:12:07.455Z [INFO] mcp-server: MCP server initialized | {"name":"kapa-ai-server","version":"1.0.0"}
+2026-09-08T14:12:07.455Z [INFO] stdio-transport: Configuration loaded | {"serverName":"kapa-ai-server","serverVersion":"1.0.0","baseUrl":"https://api.kapa.ai","rateLimitPerMinute":20}
+2026-09-08T14:12:07.455Z [INFO] stdio-transport: MCP server running with stdio transport

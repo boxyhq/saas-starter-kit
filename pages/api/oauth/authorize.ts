@@ -1,6 +1,22 @@
 import env from '@/lib/env';
 import jackson from '@/lib/jackson';
+import { SSO_TENANT_COOKIE } from '@/lib/sso';
 import { NextApiRequest, NextApiResponse } from 'next';
+
+export const injectTenant = (
+  params: Record<string, any>,
+  tenant: string | undefined,
+  product: string
+): Record<string, any> => {
+  if (!tenant) {
+    return params;
+  }
+  return {
+    ...params,
+    tenant,
+    product,
+  };
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,6 +24,7 @@ export default async function handler(
 ) {
   if (!env.teamFeatures.sso) {
     res.status(404).json({ error: { message: 'Not Found' } });
+    return;
   }
 
   const { method } = req;
@@ -36,8 +53,20 @@ const handleAuthorize = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const requestParams = req.method === 'GET' ? req.query : req.body;
 
-  const { redirect_url, authorize_form } =
-    await oauthController.authorize(requestParams);
+  const tenant = req.cookies[SSO_TENANT_COOKIE]
+    ? decodeURIComponent(req.cookies[SSO_TENANT_COOKIE] as string)
+    : undefined;
+
+  const clientId = String(requestParams.client_id || '');
+  const hasTenantContext = tenant || clientId.includes('tenant=');
+  if (!hasTenantContext) {
+    res.redirect(302, '/auth/sso');
+    return;
+  }
+
+  const { redirect_url, authorize_form } = await oauthController.authorize(
+    injectTenant(requestParams, tenant, env.jackson.productId) as any
+  );
 
   if (redirect_url) {
     res.redirect(302, redirect_url);

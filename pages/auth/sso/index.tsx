@@ -1,9 +1,7 @@
 import { AuthLayout } from '@/components/layouts';
-import { InputWithLabel, Loading } from '@/components/shared';
-import env from '@/lib/env';
+import { InputWithLabel } from '@/components/shared';
 import { useFormik } from 'formik';
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { signIn, useSession } from 'next-auth/react';
+import { GetServerSidePropsContext } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
@@ -16,12 +14,13 @@ import * as Yup from 'yup';
 import Head from 'next/head';
 import { maxLengthPolicies } from '@/lib/common';
 
-const SSO: NextPageWithLayout<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ jacksonProductId }) => {
+import { startKratosSSO } from '@/lib/startSSO';
+
+const SSO: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
-  const { status } = useSession();
-  const router = useRouter();
+  const { query } = useRouter();
+  const returnTo =
+    typeof query.return_to === 'string' ? query.return_to : undefined;
   const [useEmail, setUseEmail] = useState(true);
 
   const formik = useFormik({
@@ -55,26 +54,33 @@ const SSO: NextPageWithLayout<
         toast.error(error.message);
         return;
       }
+
       if (data.useSlug) {
         formik.resetForm();
         setUseEmail(false);
         toast.error(t('multiple-sso-teams'));
         return;
       }
-      await signIn('boxyhq-saml', undefined, {
-        tenant: data.teamId,
-        product: jacksonProductId,
+
+      const startRes = await fetch('/api/auth/sso/start', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ teamId: data.teamId }),
       });
+
+      if (!startRes.ok) {
+        const { error: startError } = await startRes.json().catch(() => ({}));
+        toast.error(startError?.message || 'Unable to start SSO login.');
+        return;
+      }
+
+      try {
+        await startKratosSSO(returnTo);
+      } catch (err: any) {
+        toast.error(err.message || 'Unable to start SSO login.');
+      }
     },
   });
-
-  if (status === 'loading') {
-    return <Loading />;
-  }
-
-  if (status === 'authenticated') {
-    router.push(env.redirectIfAuthenticated);
-  }
 
   return (
     <>
@@ -89,7 +95,7 @@ const SSO: NextPageWithLayout<
                 type="email"
                 label="Email"
                 name="email"
-                placeholder="user@boxyhq.com"
+                placeholder="user@ory.com"
                 value={formik.values.email}
                 error={formik.touched.email ? formik.errors.email : undefined}
                 onChange={formik.handleChange}
@@ -99,7 +105,7 @@ const SSO: NextPageWithLayout<
                 type="text"
                 label="Team slug"
                 name="slug"
-                placeholder="boxyhq"
+                placeholder="ory"
                 value={formik.values.slug}
                 descriptionText="Contact your administrator to get your team slug"
                 error={formik.touched.slug ? formik.errors.slug : undefined}
@@ -120,11 +126,14 @@ const SSO: NextPageWithLayout<
         </form>
         <div className="divider"></div>
         <div className="space-y-3">
-          <Link href="/auth/login" className="btn btn-outline w-full">
+          <Link
+            href={{
+              pathname: '/auth/login',
+              query: returnTo ? { return_to: returnTo } : {},
+            }}
+            className="btn btn-outline w-full"
+          >
             {t('sign-in-with-password')}
-          </Link>
-          <Link href="/auth/magic-link" className="btn btn-outline w-full">
-            {t('sign-in-with-email')}
           </Link>
         </div>
       </div>
@@ -149,7 +158,6 @@ export async function getServerSideProps({
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
-      jacksonProductId: env.jackson.productId,
     },
   };
 }

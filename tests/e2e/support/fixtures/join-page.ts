@@ -1,12 +1,12 @@
 import { type Page, type Locator, expect } from '@playwright/test';
 
 export class JoinPage {
-  private readonly nameBox: Locator;
-  private readonly teamNameBox: Locator;
   private readonly emailBox: Locator;
+  private readonly nameBox: Locator;
+  private readonly signUpButton: Locator;
+  private readonly passwordMethodButton: Locator;
   private readonly passwordBox: Locator;
-  private readonly createAccountButton: Locator;
-  private readonly createAccountSuccessMessage: string;
+
   constructor(
     public readonly page: Page,
     public readonly user: {
@@ -16,35 +16,34 @@ export class JoinPage {
     },
     public readonly teamName: string
   ) {
-    this.nameBox = this.page.getByPlaceholder('Your Name');
-    this.teamNameBox = this.page.getByPlaceholder('Team Name');
-    this.emailBox = this.page.getByPlaceholder('example@boxyhq.com');
-    this.passwordBox = this.page.getByPlaceholder('Password');
-    this.createAccountButton = page.getByRole('button', {
-      name: 'Create Account',
+    this.emailBox = this.page.locator('input[name="traits.email"]');
+    this.nameBox = this.page.locator('input[name="traits.name"]');
+    this.signUpButton = this.page.getByRole('button', {
+      name: 'Sign up',
+      exact: true,
     });
-    this.createAccountSuccessMessage =
-      'You have successfully created your account.';
+    this.passwordMethodButton = this.page.getByRole('button', {
+      name: /Password/,
+    });
+    this.passwordBox = this.page.locator('input[name="password"]');
   }
 
   async goto() {
     await this.page.goto('/auth/join');
-    await expect(
-      this.page.getByRole('heading', { name: 'Get started' })
-    ).toBeVisible();
+    await expect(this.emailBox).toBeVisible();
   }
 
   async signUp() {
-    await this.nameBox.fill(this.user.name);
-    await this.teamNameBox.fill(this.teamName);
     await this.emailBox.fill(this.user.email);
+    await this.nameBox.fill(this.user.name);
+    await this.signUpButton.click();
+
+    await this.passwordMethodButton.click();
+
+    await expect(this.passwordBox).toBeVisible();
     await this.passwordBox.fill(this.user.password);
-    await this.createAccountButton.click();
-    await this.page.waitForURL('/auth/login');
-    await expect(
-      this.page
-        .getByRole('status')
-        .and(this.page.getByText(this.createAccountSuccessMessage))
-    ).toBeVisible();
+    await this.signUpButton.click();
+
+    await this.page.waitForURL(/\/auth\/verify-email|\/dashboard|\/teams/);
   }
 }

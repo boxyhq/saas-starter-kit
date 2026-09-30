@@ -1,9 +1,15 @@
 import type { Team } from '@prisma/client';
 import { Client } from '@retracedhq/retraced';
 import type { CRUD, Event } from '@retracedhq/retraced';
-import type { User } from 'next-auth';
 
 import env from './env';
+
+type User = {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+};
 
 type EventType =
   | 'member.invitation.create'
@@ -27,7 +33,6 @@ type Request = {
   user: User;
   team: Team;
   crud: CRUD;
-  // target: Target;
 };
 
 let retracedClient: Client;

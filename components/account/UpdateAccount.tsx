@@ -1,20 +1,25 @@
 import type { User } from '@prisma/client';
 import UploadAvatar from './UploadAvatar';
-import UpdateName from './UpdateName';
-import UpdateEmail from './UpdateEmail';
+import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
 import UpdateTheme from './UpdateTheme';
 import env from '@/lib/env';
 
 interface UpdateAccountProps {
   user: Partial<User>;
-  allowEmailChange: boolean;
 }
 
-const UpdateAccount = ({ user, allowEmailChange }: UpdateAccountProps) => {
+const UpdateAccount = ({ user }: UpdateAccountProps) => {
+  const { t } = useTranslation('common');
   return (
     <div className="flex gap-6 flex-col">
-      <UpdateName user={user} />
-      <UpdateEmail user={user} allowEmailChange={allowEmailChange} />
+      <div className="rounded border p-6 space-y-3">
+        <p>{user.name}</p>
+        <p>{user.email}</p>
+        <Link className="btn btn-primary btn-sm" href="/auth/settings">
+          {t('manage-profile-settings')}
+        </Link>
+      </div>
       <UploadAvatar user={user} />
       {env.darkModeEnabled && <UpdateTheme />}
     </div>

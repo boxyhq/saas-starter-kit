@@ -1,5 +1,5 @@
 import app from '@/lib/app';
-import { SessionProvider } from 'next-auth/react';
+import { SessionProvider } from '@/lib/orySession';
 import { appWithTranslation } from 'next-i18next';
 import Head from 'next/head';
 import { Toaster } from 'react-hot-toast';
@@ -8,6 +8,7 @@ import type { AppPropsWithLayout } from 'types';
 import mixpanel from 'mixpanel-browser';
 
 import '@boxyhq/react-ui/dist/react-ui.css';
+import '@ory/elements-react/theme/styles.css';
 import '../styles/globals.css';
 import { useEffect } from 'react';
 import env from '@/lib/env';
@@ -42,7 +43,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <title>{app.name}</title>
         <link rel="icon" href="https://boxyhq.com/img/favicon.ico" />
       </Head>
-      <SessionProvider session={session}>
+      <SessionProvider>
         <Toaster toastOptions={{ duration: 4000 }} />
         <Themer
           overrideTheme={{

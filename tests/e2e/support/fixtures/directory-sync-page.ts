@@ -25,7 +25,6 @@ export class DirectorySyncPage {
   private readonly deleteButton;
   private readonly deleteConfirmationHeader;
   private readonly connectionDeletedMessage;
-  private productId: string = '';
 
   constructor(
     public readonly page: Page,
@@ -90,7 +89,6 @@ export class DirectorySyncPage {
     await this.page.goto(url);
     await this.page.waitForURL(url);
     await expect(this.pageHeader).toBeVisible();
-    this.productId = productId || '';
   }
 
   async createConnection(

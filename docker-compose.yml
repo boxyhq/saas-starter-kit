@@ -8,3 +8,62 @@ services:
       POSTGRES_DB: saas-starter-kit
     ports:
       - 5432:5432
+    volumes:
+      - ./config/postgres/init-kratos-db.sh:/docker-entrypoint-initdb.d/init-kratos-db.sh:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U admin -d saas-starter-kit']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  kratos-migrate:
+    image: oryd/kratos:v1.3.1
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DSN: postgres://admin:admin@db:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+      SECRETS_COOKIE: ${KRATOS_COOKIE_SECRET:-CHANGE-ME-cookie-secret-at-least-32-characters}
+      SECRETS_CIPHER: ${KRATOS_CIPHER_SECRET:-0123456789abcdef0123456789abcdef}
+    volumes:
+      - ./config/kratos:/etc/config/kratos:ro
+    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
+    restart: on-failure
+
+  kratos:
+    image: oryd/kratos:v1.3.1
+    depends_on:
+      kratos-migrate:
+        condition: service_completed_successfully
+      mailslurper:
+        condition: service_started
+    ports:
+      - 4433:4433
+      - 4434:4434
+    environment:
+      DSN: postgres://admin:admin@db:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+      LOG_LEVEL: trace
+      SECRETS_COOKIE: ${KRATOS_COOKIE_SECRET:-CHANGE-ME-cookie-secret-at-least-32-characters}
+      SECRETS_CIPHER: ${KRATOS_CIPHER_SECRET:-0123456789abcdef0123456789abcdef}
+      COURIER_SMTP_CONNECTION_URI: smtps://test:test@mailslurper:1025/?skip_ssl_verify=true&legacy_ssl=true
+    volumes:
+      - ./config/kratos:/etc/config/kratos:ro
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'wget -qO- http://127.0.0.1:4433/health/ready >/dev/null 2>&1 || exit 1',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mailslurper:
+    image: oryd/mailslurper:latest-smtps
+    ports:
+      - 4436:4436
+      - 4437:4437

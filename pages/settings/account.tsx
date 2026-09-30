@@ -8,15 +8,11 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getSession } from '@/lib/session';
 import { getUserBySession } from 'models/user';
 import { UpdateAccount } from '@/components/account';
-import env from '@/lib/env';
 
 type AccountProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Account: NextPageWithLayout<AccountProps> = ({
-  user,
-  allowEmailChange,
-}) => {
-  return <UpdateAccount user={user} allowEmailChange={allowEmailChange} />;
+const Account: NextPageWithLayout<AccountProps> = ({ user }) => {
+  return <UpdateAccount user={user} />;
 };
 
 export const getServerSideProps = async (
@@ -41,7 +37,6 @@ export const getServerSideProps = async (
         name: user.name,
         image: user.image,
       },
-      allowEmailChange: env.confirmEmail === false,
     },
   };
 };

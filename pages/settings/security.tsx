@@ -1,20 +1,26 @@
-import type {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import type { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
+import { Button } from 'react-daisyui';
 
-import env from '@/lib/env';
-import { UpdatePassword } from '@/components/account';
-import ManageSessions from '@/components/account/ManageSessions';
+const Security = () => {
+  const { t } = useTranslation('common');
 
-type SecurityProps = InferGetServerSidePropsType<typeof getServerSideProps>;
-
-const Security = ({ sessionStrategy }: SecurityProps) => {
   return (
-    <div className="flex gap-10 flex-col">
-      <UpdatePassword />
-      {sessionStrategy === 'database' && <ManageSessions />}
+    <div className="flex flex-col gap-4 rounded border p-6">
+      <div>
+        <h2 className="text-xl font-medium">{t('security') || 'Security'}</h2>
+        <p className="mt-1 text-sm text-gray-500">
+          {t('manage-password-mfa') ||
+            'Manage your password, two-factor authentication, passkeys, and active sessions.'}
+        </p>
+      </div>
+      <Link href="/auth/settings">
+        <Button color="primary" size="md">
+          {t('manage-security-settings') || 'Manage security settings'}
+        </Button>
+      </Link>
     </div>
   );
 };
@@ -22,12 +28,9 @@ const Security = ({ sessionStrategy }: SecurityProps) => {
 export const getServerSideProps = async ({
   locale,
 }: GetServerSidePropsContext) => {
-  const { sessionStrategy } = env.nextAuth;
-
   return {
     props: {
       ...(locale ? await serverSideTranslations(locale, ['common']) : {}),
-      sessionStrategy,
     },
   };
 };

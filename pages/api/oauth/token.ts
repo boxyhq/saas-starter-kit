@@ -1,4 +1,6 @@
 import jackson from '@/lib/jackson';
+import { redeemJacksonCode } from '@/lib/jacksonToken';
+import { recordSSOGrant } from '@/lib/ssoGrant';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -29,7 +31,11 @@ export default async function handler(
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   const { oauthController } = await jackson();
 
-  const token = await oauthController.token(req.body);
+  const token = await redeemJacksonCode(req.body, req.headers.authorization);
+  if (token.id_token) {
+    const profile = await oauthController.userInfo(token.access_token);
+    await recordSSOGrant(profile);
+  }
 
   res.json(token);
 };

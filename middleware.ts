@@ -1,11 +1,26 @@
 import micromatch from 'micromatch';
-import { getToken } from 'next-auth/jwt';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createOryMiddleware } from '@ory/nextjs/middleware';
 
 import env from './lib/env';
+import oryConfig from './lib/ory.config';
 
-// Constants for security headers
+const orySdkUrl =
+  process.env.ORY_SDK_URL ||
+  process.env.NEXT_PUBLIC_ORY_SDK_URL ||
+  'http://localhost:4433';
+
+const oryMiddleware = createOryMiddleware(oryConfig);
+
+const oryProxyPrefixes = [
+  '/self-service',
+  '/sessions',
+  '/ui',
+  '/.ory',
+  '/.well-known/ory',
+];
+
 const SECURITY_HEADERS = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'geolocation=(), microphone=()',
@@ -14,7 +29,6 @@ const SECURITY_HEADERS = {
   'Cross-Origin-Resource-Policy': 'same-site',
 } as const;
 
-// Generate CSP
 const generateCSP = (): string => {
   const policies = {
     'default-src': ["'self'"],
@@ -35,6 +49,7 @@ const generateCSP = (): string => {
     'style-src': ["'self'", "'unsafe-inline'"],
     'connect-src': [
       "'self'",
+      orySdkUrl,
       '*.google.com',
       '*.gstatic.com',
       'boxyhq.com',
@@ -45,7 +60,7 @@ const generateCSP = (): string => {
     'font-src': ["'self'"],
     'object-src': ["'none'"],
     'base-uri': ["'self'"],
-    'form-action': ["'self'"],
+    'form-action': ["'self'", orySdkUrl],
     'frame-ancestors': ["'none'"],
   };
 
@@ -55,7 +70,6 @@ const generateCSP = (): string => {
     .join('; ');
 };
 
-// Add routes that don't require authentication
 const unAuthenticatedRoutes = [
   '/api/hello',
   '/api/health',
@@ -71,46 +85,39 @@ const unAuthenticatedRoutes = [
   '/unlock-account',
   '/login/saml',
   '/.well-known/*',
+  '/oauth/jwks',
 ];
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Bypass routes that don't require authentication
+  if (oryProxyPrefixes.some((prefix) => pathname.startsWith(prefix))) {
+    return oryMiddleware(req);
+  }
+
   if (micromatch.isMatch(pathname, unAuthenticatedRoutes)) {
     return NextResponse.next();
   }
 
   const redirectUrl = new URL('/auth/login', req.url);
-  redirectUrl.searchParams.set('callbackUrl', encodeURI(req.url));
+  redirectUrl.searchParams.set('return_to', req.url);
 
-  // JWT strategy
-  if (env.nextAuth.sessionStrategy === 'jwt') {
-    const token = await getToken({
-      req,
-    });
+  const cookie = req.headers.get('cookie') || '';
+  let authenticated = false;
 
-    if (!token) {
-      return NextResponse.redirect(redirectUrl);
+  if (cookie) {
+    try {
+      const response = await fetch(`${orySdkUrl}/sessions/whoami`, {
+        headers: { cookie, accept: 'application/json' },
+      });
+      authenticated = response.ok;
+    } catch {
+      authenticated = false;
     }
   }
 
-  // Database strategy
-  else if (env.nextAuth.sessionStrategy === 'database') {
-    const url = new URL('/api/auth/session', req.url);
-
-    const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        cookie: req.headers.get('cookie') || '',
-      },
-    });
-
-    const session = await response.json();
-
-    if (!session.user) {
-      return NextResponse.redirect(redirectUrl);
-    }
+  if (!authenticated) {
+    return NextResponse.redirect(redirectUrl);
   }
 
   const requestHeaders = new Headers(req.headers);
@@ -123,14 +130,12 @@ export default async function middleware(req: NextRequest) {
   });
 
   if (env.securityHeadersEnabled) {
-    // Set security headers
     response.headers.set('Content-Security-Policy', csp);
     Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
       response.headers.set(key, value);
     });
   }
 
-  // All good, let the request through
   return response;
 }
 

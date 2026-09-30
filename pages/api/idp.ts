@@ -2,7 +2,7 @@ import jackson from '@/lib/jackson';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { directorySync } = await jackson();

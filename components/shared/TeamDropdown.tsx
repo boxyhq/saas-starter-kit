@@ -6,7 +6,7 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import useTeams from 'hooks/useTeams';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/lib/orySession';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

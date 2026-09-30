@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { ReactElement } from 'react';
 import { NextPageWithLayout } from 'types';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/lib/orySession';
 import { useTranslation } from 'next-i18next';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';

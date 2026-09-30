@@ -135,7 +135,7 @@ const InviteViaLink = ({ team }: InviteViaLinkProps) => {
           name="domains"
           onChange={formik.handleChange}
           value={formik.values.domains}
-          placeholder="Restrict domain: boxyhq.com"
+          placeholder="Restrict domain: ory.com"
           className="text-sm w-1/2"
         />
         <select

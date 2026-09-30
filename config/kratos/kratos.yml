@@ -1,0 +1,146 @@
+version: v1.3.1
+
+serve:
+  public:
+    base_url: http://localhost:4433/
+    cors:
+      enabled: true
+      allowed_origins:
+        - http://localhost:4002
+      allowed_methods:
+        - POST
+        - GET
+        - PUT
+        - PATCH
+        - DELETE
+      allowed_headers:
+        - Authorization
+        - Cookie
+        - Content-Type
+        - X-Session-Token
+      exposed_headers:
+        - Content-Type
+        - Set-Cookie
+      allow_credentials: true
+  admin:
+    base_url: http://localhost:4434/
+
+selfservice:
+  default_browser_return_url: http://localhost:4002/dashboard
+  allowed_return_urls:
+    - http://localhost:4002
+
+  methods:
+    password:
+      enabled: true
+      config:
+        haveibeenpwned_enabled: true
+        max_breaches: 0
+        min_password_length: 8
+    code:
+      enabled: true
+      passwordless_enabled: true
+    link:
+      enabled: false
+    totp:
+      enabled: true
+      config:
+        issuer: SaaS Starter Kit
+    oidc:
+      enabled: true
+      config:
+        providers:
+          - id: sso
+            provider: generic
+            label: SAML SSO
+            client_id: dummy
+            client_secret: dummy
+            issuer_url: http://host.docker.internal:4002
+            scope:
+              - openid
+              - email
+              - profile
+            mapper_url: file:///etc/config/kratos/oidc/sso.jsonnet
+
+  flows:
+    error:
+      ui_url: http://localhost:4002/auth/error
+
+    settings:
+      ui_url: http://localhost:4002/auth/settings
+      privileged_session_max_age: 15m
+      required_aal: highest_available
+
+    recovery:
+      enabled: true
+      ui_url: http://localhost:4002/auth/forgot-password
+      use: code
+      after:
+        default_browser_return_url: http://localhost:4002/auth/login
+
+    verification:
+      enabled: true
+      ui_url: http://localhost:4002/auth/verify-email
+      use: code
+      after:
+        default_browser_return_url: http://localhost:4002/
+
+    logout:
+      after:
+        default_browser_return_url: http://localhost:4002/auth/login
+
+    login:
+      ui_url: http://localhost:4002/auth/login
+      lifespan: 10m
+
+    registration:
+      lifespan: 10m
+      ui_url: http://localhost:4002/auth/join
+      after:
+        password:
+          hooks:
+            - hook: session
+        code:
+          hooks:
+            - hook: session
+        oidc:
+          hooks:
+            - hook: session
+
+log:
+  level: info
+  format: text
+  leak_sensitive_values: false
+
+secrets:
+  cookie:
+    - CHANGE-ME-cookie-secret-at-least-32-characters
+  cipher:
+    - 0123456789abcdef0123456789abcdef
+
+ciphers:
+  algorithm: xchacha20-poly1305
+
+hashers:
+  algorithm: bcrypt
+  bcrypt:
+    cost: 12
+
+identity:
+  default_schema_id: default
+  schemas:
+    - id: default
+      url: file:///etc/config/kratos/identity.schema.json
+
+courier:
+  smtp:
+    from_address: no-reply@saas-starter-kit.local
+    from_name: SaaS Starter Kit
+
+session:
+  lifespan: 14h
+  cookie:
+    persistent: true
+
+feature_flags:
+  use_continue_with_transitions: true

@@ -232,7 +232,7 @@ test('Should not allow email with invalid length', async ({
 
   await memberPage.openInviteModal();
 
-  await memberPage.fillEmailForInvite('a'.repeat(256) + '@boxyhq.com');
+  await memberPage.fillEmailForInvite('a'.repeat(256) + '@ory.com');
 
   await memberPage.isInviteButtonDisabled();
 });

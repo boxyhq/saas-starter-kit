@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/lib/orySession';
 import {
   ArrowRightOnRectangleIcon,
   Bars3Icon,

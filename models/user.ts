@@ -2,9 +2,8 @@ import { ApiError } from '@/lib/errors';
 import { Action, Resource, permissions } from '@/lib/permissions';
 import { prisma } from '@/lib/prisma';
 import { Role, TeamMember } from '@prisma/client';
-import type { Session } from 'next-auth';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from '@/lib/session';
+import { getSession, type AppSession } from '@/lib/session';
 import { maxLengthPolicies } from '@/lib/common';
 
 export const normalizeUser = (user) => {
@@ -54,11 +53,7 @@ export const getUser = async (key: { id: string } | { email: string }) => {
   return normalizeUser(user);
 };
 
-export const getUserBySession = async (session: Session | null) => {
-  if (session === null || session.user === null) {
-    return null;
-  }
-
+export const getUserBySession = async (session: AppSession | null) => {
   const id = session?.user?.id;
 
   if (!id) {

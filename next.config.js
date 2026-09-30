@@ -4,7 +4,9 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
+  transpilePackages: ['@ory/elements-react', '@ory/nextjs'],
+  serverExternalPackages: ['@boxyhq/saml-jackson', 'jose', 'openid-client'],
   images: {
     remotePatterns: [
       {
@@ -27,6 +29,14 @@ const nextConfig = {
       {
         source: '/.well-known/saml-configuration',
         destination: '/well-known/saml-configuration',
+      },
+      {
+        source: '/.well-known/openid-configuration',
+        destination: '/api/well-known/openid-configuration',
+      },
+      {
+        source: '/oauth/jwks',
+        destination: '/api/oauth/jwks',
       },
     ];
   },
@@ -53,8 +63,6 @@ const nextConfig = {
   },
 };
 
-// Additional config options for the Sentry webpack plugin.
-// For all available options: https://github.com/getsentry/sentry-webpack-plugin#options.
 const sentryWebpackPluginOptions = {
   silent: true,
   hideSourceMaps: true,

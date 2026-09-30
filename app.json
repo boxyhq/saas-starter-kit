@@ -1,15 +1,26 @@
 {
-  "name": "BoxyHQ Enterprise SaaS Starter Kit",
-  "description": "The Open Source Next.js Enterprise SaaS Starter Kit. Next.js based SaaS starter kit that saves you months of development by starting you off with all the features that are the same in every product, so you can focus on what makes your app unique.",
+  "name": "Ory Enterprise SaaS Starter Kit",
+  "description": "An open-source Next.js Enterprise SaaS Starter Kit powered by Ory identity infrastructure. Start with authentication, enterprise access, and the features every SaaS product needs so you can focus on what makes your app unique.",
   "repository": "https://github.com/boxyhq/saas-starter-kit",
   "logo": "https://boxyhq.com/img/logo.png",
   "keywords": ["saas", "starter", "kit", "enterprise"],
   "env": {
-    "NEXTAUTH_URL": {
-      "description": "Next.js authentication URL."
+    "ORY_SDK_URL": {
+      "description": "Ory Kratos public API URL (Ory Network or a self-hosted Kratos)."
     },
-    "NEXTAUTH_SECRET": {
-      "description": "Next.js authentication secret."
+    "ORY_ADMIN_URL": {
+      "description": "Ory Kratos admin API URL."
+    },
+    "NEXT_PUBLIC_ORY_SDK_URL": {
+      "description": "Browser-facing Ory Kratos public API URL."
+    },
+    "POLIS_OPENID_PRIVATE_KEY": {
+      "description": "Base64-encoded PEM (PKCS#8) RS256 private key for Ory Polis id_token signing.",
+      "required": false
+    },
+    "POLIS_OPENID_PUBLIC_KEY": {
+      "description": "Base64-encoded PEM (SPKI) RS256 public key for Ory Polis id_token signing.",
+      "required": false
     },
     "SMTP_HOST": {
       "description": "SMTP server host name."

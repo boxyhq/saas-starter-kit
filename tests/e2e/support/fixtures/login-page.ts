@@ -13,7 +13,6 @@ export class LoginPage {
   private readonly continueWithSSOLink: Locator;
   private readonly ssoEmailBox: Locator;
   private readonly slugInput: Locator;
-  private readonly welcomeBackHeading: Locator;
   private readonly multipleTeamErrorText: Locator;
   private readonly createNewAccountButton: Locator;
   private readonly yourNameInput: Locator;
@@ -31,20 +30,19 @@ export class LoginPage {
     this.IDP_LOGIN_URL = `${process.env.MOCKSAML_ORIGIN}/saml/login`;
     this.ACS_URL = `${process.env.JACKSON_URL || process.env.APP_URL}/api/oauth/saml`;
 
-    this.emailBox = this.page.getByPlaceholder('Email');
-    this.passwordBox = this.page.getByPlaceholder('Password');
-    this.signInButton = this.page.getByRole('button', { name: 'Sign in' });
+    this.emailBox = this.page.locator('input[name="identifier"]');
+    this.passwordBox = this.page.locator('input[name="password"]');
+    this.signInButton = this.page.getByRole('button', {
+      name: 'Sign in with password',
+    });
     this.continueWithSSOButton = this.page.getByRole('button', {
       name: 'Continue with SSO',
     });
     this.continueWithSSOLink = this.page.getByRole('link', {
       name: 'Continue with SSO',
     });
-    this.ssoEmailBox = this.page.getByPlaceholder('user@boxyhq.com');
-    this.slugInput = this.page.getByPlaceholder('boxyhq');
-    this.welcomeBackHeading = this.page.getByText('Welcome back', {
-      exact: true,
-    });
+    this.ssoEmailBox = this.page.getByPlaceholder('user@ory.com');
+    this.slugInput = this.page.getByPlaceholder('ory');
     this.multipleTeamErrorText = this.page.getByText(
       'User belongs to multiple'
     );
@@ -92,7 +90,7 @@ export class LoginPage {
   }
 
   async credentialLogin(email: string, password: string) {
-    await expect(this.welcomeBackHeading).toBeVisible();
+    await expect(this.emailBox).toBeVisible();
     await this.emailBox.fill(email);
     await this.passwordBox.fill(password);
     await this.signInButton.click();
@@ -131,11 +129,13 @@ export class LoginPage {
   async logout(name: string) {
     await this.page.locator('button').filter({ hasText: name }).click();
     await this.page.getByRole('button', { name: 'Sign out' }).click();
-    await expect(this.welcomeBackHeading).toBeVisible();
+    await this.page.waitForURL(/\/auth\/login/);
+    await expect(this.emailBox).toBeVisible();
   }
 
   async isLoggedOut() {
-    await expect(this.welcomeBackHeading).toBeVisible();
+    await this.page.waitForURL(/\/auth\/login/);
+    await expect(this.emailBox).toBeVisible();
   }
 
   async gotoInviteLink(invitationLink: string, invitingCompany: string) {

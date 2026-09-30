@@ -1,12 +1,9 @@
-import type { SessionStrategy } from 'next-auth';
-
 const env = {
   databaseUrl: `${process.env.DATABASE_URL}`,
   appUrl: `${process.env.APP_URL}`,
   redirectIfAuthenticated: '/dashboard',
   securityHeadersEnabled: process.env.SECURITY_HEADERS_ENABLED ?? false,
 
-  // SMTP configuration for NextAuth
   smtp: {
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT),
@@ -15,32 +12,30 @@ const env = {
     from: process.env.SMTP_FROM,
   },
 
-  // NextAuth configuration
-  nextAuth: {
-    secret: process.env.NEXTAUTH_SECRET,
-    sessionStrategy: (process.env.NEXTAUTH_SESSION_STRATEGY ||
-      'jwt') as SessionStrategy,
+  ory: {
+    sdkUrl:
+      process.env.ORY_SDK_URL ||
+      process.env.NEXT_PUBLIC_ORY_SDK_URL ||
+      'http://localhost:4433',
+    adminUrl: process.env.ORY_ADMIN_URL || 'http://localhost:4434',
+    apiKey: process.env.ORY_API_KEY,
   },
 
-  // Svix
   svix: {
-    url: `${process.env.SVIX_URL}`,
-    apiKey: `${process.env.SVIX_API_KEY}`,
+    url: process.env.SVIX_URL,
+    apiKey: process.env.SVIX_API_KEY,
   },
 
-  //Social login: Github
   github: {
     clientId: `${process.env.GITHUB_CLIENT_ID}`,
     clientSecret: `${process.env.GITHUB_CLIENT_SECRET}`,
   },
 
-  //Social login: Google
   google: {
     clientId: `${process.env.GOOGLE_CLIENT_ID}`,
     clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,
   },
 
-  // Retraced configuration
   retraced: {
     url: process.env.RETRACED_URL
       ? `${process.env.RETRACED_URL}/auditlog`
@@ -51,13 +46,17 @@ const env = {
 
   groupPrefix: process.env.GROUP_PREFIX,
 
-  // SAML Jackson configuration
   jackson: {
     url: process.env.JACKSON_URL,
     externalUrl: process.env.JACKSON_EXTERNAL_URL || process.env.JACKSON_URL,
     apiKey: process.env.JACKSON_API_KEY,
     productId: process.env.JACKSON_PRODUCT_ID || 'boxyhq',
     selfHosted: process.env.JACKSON_URL !== undefined,
+    openid: {
+      jwsAlg: 'RS256',
+      privateKey: process.env.POLIS_OPENID_PRIVATE_KEY,
+      publicKey: process.env.POLIS_OPENID_PUBLIC_KEY,
+    },
     sso: {
       callback: `${process.env.APP_URL}`,
       issuer: 'https://saml.boxyhq.com',
@@ -71,10 +70,8 @@ const env = {
     },
   },
 
-  // Users will need to confirm their email before accessing the app feature
   confirmEmail: process.env.CONFIRM_EMAIL === 'true',
 
-  // Mixpanel configuration
   mixpanel: {
     token: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
   },

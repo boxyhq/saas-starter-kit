@@ -6,11 +6,13 @@ spec:
         branch: main
         repo_clone_url: https://github.com/boxyhq/saas-starter-kit.git
       envs:
-        - key: NEXTAUTH_URL
-          value: ${APP_URL}
         - key: APP_URL
           value: ${APP_URL}
-        - key: NEXTAUTH_SECRET
+        - key: ORY_SDK_URL
+        - key: ORY_ADMIN_URL
+        - key: NEXT_PUBLIC_ORY_SDK_URL
+        - key: POLIS_OPENID_PRIVATE_KEY
+        - key: POLIS_OPENID_PUBLIC_KEY
         - key: SMTP_HOST
         - key: SMTP_PORT
         - key: SMTP_USER
