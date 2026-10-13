@@ -69,6 +69,12 @@ Next.js-based SaaS starter kit saves you months of development by starting you o
 <img width="200" alt="Deploy to DO" src="https://www.deploytodo.com/do-btn-blue-ghost.svg" />
 </a>
 
+<a href="https://zop.dev/zopday/app/deploy?repo=https://github.com/boxyhq/saas-starter-kit&amp;port=4002&amp;name=saas-starter-kit&amp;utm_source=github&amp;utm_medium=one_click&amp;utm_content=saas-starter-kit" alt="Deploy to ZopDay">
+<img alt="Deploy to ZopDay" src="https://zop.dev/deploytozopday-inkhard.svg" />
+</a>
+
+The ZopDay button builds this repo and runs it on port 4002, on managed ZopCloud or in an AWS or GCP account you already own. Set `DATABASE_URL` (PostgreSQL), `NEXTAUTH_SECRET`, `NEXTAUTH_URL` and `APP_URL` before launch.
+
 ## ✨ Getting Started
 
 Please follow these simple steps to get a local copy up and running.
