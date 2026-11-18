@@ -1,0 +1,23 @@
+{
+  "rule": "A late customer.subscription.updated must not recreate a subscription that customer.subscription.deleted removed",
+  "setup": "INSERT INTO subscription(id,customer_id,active) VALUES ('sub_1','cus_1',true); INSERT INTO stripe_truth VALUES ('sub_1','canceled')",
+  "invariant": "SELECT NOT EXISTS (SELECT 1 FROM subscription WHERE src='late_updated')",
+  "isolation": [
+    "read committed"
+  ],
+  "notes": "SQL transliteration of the webhook handler; covers bounded SQL orders only, not HTTP or Stripe.",
+  "requests": [
+    {
+      "statements": [
+        "SELECT set_config('app.f1',(SELECT count(*)::text FROM subscription WHERE id='sub_1'),false)",
+        "UPDATE subscription SET active=true WHERE id='sub_1' AND current_setting('app.f1')='1'",
+        "INSERT INTO subscription(id,customer_id,active,src) SELECT 'sub_1','cus_1',true,'late_updated' WHERE current_setting('app.f1')='0' AND NOT EXISTS (SELECT 1 FROM stripe_truth WHERE id='sub_1' AND status IN ('canceled','incomplete_expired'))"
+      ]
+    },
+    {
+      "statements": [
+        "DELETE FROM subscription WHERE id='sub_1'"
+      ]
+    }
+  ]
+}

@@ -185,6 +185,10 @@ The default login options are email and GitHub. Configure below:
 3. Create a webhook in the [Stripe dashboard](https://dashboard.stripe.com/webhooks). The URL is your app hostname plus `/api/webhooks/stripe`. If you want to set this up locally you will need to use the [Stripe CLI forwarder](https://docs.stripe.com/webhooks#test-webhook).
 4. Once created, add the signing secret to the `.env` file as `STRIPE_WEBHOOK_SECRET`.
 
+### Webhook concurrency test
+
+Stripe can deliver webhook events late, twice, or out of order. `npm run test:race` runs the Stripe webhook's database writes in every possible order on a real Postgres with [VibeRaven](https://viberaven.dev) (`npx -y viberaven race`) and fails if any order breaks the rule in `race/webhook.race.json`. It also runs in `npm test`. Add a rule there when you add a webhook handler.
+
 ### Recaptcha
 
 1. Create an account on [Google reCAPTCHA](https://www.google.com/recaptcha/admin/enterprise). This will create a Google Cloud account if you don't have one.
