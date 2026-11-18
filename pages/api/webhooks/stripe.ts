@@ -94,6 +94,14 @@ async function handleSubscriptionUpdated(event: Stripe.Event) {
     if (!teamExists) {
       return;
     } else {
+      // The row can be missing because customer.subscription.deleted already
+      // ran and this updated event arrived late. Check the live subscription
+      // before recreating it, so a late event cannot bring a cancelled
+      // subscription back.
+      const current = await stripe.subscriptions.retrieve(id);
+      if (['canceled', 'incomplete_expired'].includes(current.status)) {
+        return;
+      }
       await handleSubscriptionCreated(event);
     }
   } else {
